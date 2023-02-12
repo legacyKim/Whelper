@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { TransitionGroup, CSSTransition } from "react-transition-group";
 
 import {
@@ -15,9 +15,13 @@ import Memo from './components/Memo'
 import Write from './components/Write'
 import Side from './components/Side'
 import Search from './components/Search'
+import View from './components/View'
+
+import WriteContentData from './data'
 
 function Menu() {
 
+    let [WriteListData] = useState(WriteContentData);
     const location = useLocation();
 
     return (
@@ -35,8 +39,9 @@ function Menu() {
 
                         <Route exact path="/components/List" element={<List />} />
                         <Route path="/components/Memo" element={<Memo />} />
-                        {/* <Route path="/components/View" element={<View />} /> */}
-                        <Route path="/components/Write" element={<Write />} />
+
+                        <Route path="/components/Write" element={<Write WriteListData={WriteListData}/>} />
+                        <Route path="/components/View/:id" element={<View WriteListData={WriteListData}/>} />
                         {/* <Route path="/components/Correct" element={<Correct />} /> */}
 
                     </Routes>

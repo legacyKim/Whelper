@@ -3,6 +3,7 @@ html, body {
 	width: 100%;
 /*	overflow-x : hidden;*/
 background: #111;
+color: #fff;
 }
 
 /** 아래 코드는 reset.css의 원본 내용 */

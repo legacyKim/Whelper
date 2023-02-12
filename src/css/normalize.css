@@ -384,3 +384,8 @@ template {
 [hidden] {
   display: none;
 }
+
+div {
+  position: relative;
+  display: block;
+}

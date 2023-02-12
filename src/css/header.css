@@ -12,12 +12,12 @@
     position: fixed;
     top: 0;
     display: block;
-    border-bottom: 1px solid #fff;
 
     margin: 0 auto;
     z-index: 9;
     width: 100%;
     background: rgba(5, 7, 26, 1);
+    border-bottom: 1px solid #fff;
 }
 
 .Header_area {
@@ -26,8 +26,6 @@
     width: 1600px;
     padding: 0 40px;
     margin: 0 auto;
-    border-right : 1px solid #fff;
-    border-left : 1px solid #fff;
 }
 
 .header_pos {
@@ -64,7 +62,7 @@
     justify-content: space-between;
     text-align: center;
 
-    width: 214px;
+    width: 320px;
 }
 
 .header_btn>div {
