@@ -1,12 +1,15 @@
-import React, { useState } from 'react';
-import WriteContentData from '../data'
+import React, { useState, useEffect } from 'react';
 
 import '../css/components.css';
-import { Link } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
+
+// import { getWriteList } from '../Api';
 
 function Write(props) {
 
-    let [WriteListData] = useState(WriteContentData);
+    const [showComponent, setShowComponent] = useState();
+
+    console.log(props);
 
     return (
 
@@ -14,46 +17,76 @@ function Write(props) {
             <div className='content_area'>
 
                 {
-                    WriteListData.map(function (a, i) {
-
+                    props.WriteListData.map(function (a, i) {
                         return (
-
-                            <div className='WriteDiv' key={i}>
-                                <WriteList WriteListData={WriteListData[i]} i={i} />
+                            <div className='WriteDiv' key={i} onClick={() => { setShowComponent(a, a.id) }}>
+                                <WriteList props={props.WriteListData[i]} i={i} />
                             </div>
-
                         )
                     })
                 }
 
+                {showComponent && <View props={props.WriteListData} id={showComponent} />}
+
                 {/* <Routes>
-                    <Route path="/components/View/:id" element={<View WriteListData={WriteListData}/>} />
-                </Routes> */}
+                        <Route path="/components/View/:id" element={<View WriteListData={WriteListData}/>} />
+                    </Routes> */}
 
             </div>
         </div>
 
     )
 
-}
+    function WriteList(props) {
 
-function WriteList(props) {
-
-    return (
-
-        <Link to={`/components/View/${props.WriteListData.id}`}>
+        const navigate = useNavigate();
+    
+        return (
+    
             <div className='write_list'>
                 <div className='write_list_btn'>
                     <button></button>
                     <button></button>
                 </div>
-                <span>{props.WriteListData.title}</span>
-                <strong>{props.WriteListData.subTitle}</strong>
-                <p>{props.WriteListData.content}</p>
+                <span>{props.props.title}</span>
+                <strong>{props.props.subTitle}</strong>
+                <p>{props.props.content}</p>
             </div>
-        </Link>
+    
+        )
+    
+    }
+    
+    function View(props) {
 
-    )
+        console.log(props);
+    
+        let [fade, setFade] = useState('')
+    
+        useEffect(() => {
+            const fadeTimer = setTimeout(() => { setFade('showThis') }, 100)
+            return () => {
+                clearTimeout(fadeTimer);
+                setFade('')
+            }
+        }, props)
+    
+        return (
+    
+            <div className={`view_page ${props.id ? fade : ""}`}>
+                <div className='view_content'>
+                    <title>{props.id.title}</title>
+                    <span>{props.id.subTitle}</span>
+                    <p>{props.id.content}</p>
+                </div>
+    
+                <button className='color_w' onClick={() => setShowComponent()}>임시 닫기 버튼</button>
+            </div>
+    
+        )
+    
+    }
+    
 
 }
 

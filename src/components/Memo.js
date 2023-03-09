@@ -1,13 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-
-import MemoContentData from '../memoList'
 
 import '../css/components.css';
 
-function Memo() {
-
-    let [MainMemoData, MainMemoCorrect] = useState(MemoContentData);
+function Memo(props) {
 
     // textarea 열고 닫기
     let [MainMemoActive, MainMemoDirect] = useState(false);
@@ -26,22 +22,22 @@ function Memo() {
 
             <div className='Main_memo_textarea'>
 
-                <textarea onInput={(e) => {
+                {/* <textarea onInput={(e) => {
                     correctMainMemoInput(e.target.value);
                 }}>
                     {props.MainMemoData.memo}
-                </textarea>
+                </textarea> */}
 
                 <ul className='main_textarea_correct'>
                     <li>
-                        <button
+                        {/* <button
                             onClick={(i) => {
-                                let dataCorrect = [...MainMemoData];
+                                let dataCorrect = [...props.MainMemoData];
                                 dataCorrect[i].unshift(correctMainMemo);
                                 correctMainMemoInput(dataCorrect)
 
                             }}>확인
-                        </button>
+                        </button> */}
                     </li>
                     <li>
                         <button onClick={(i) => {
@@ -57,61 +53,73 @@ function Memo() {
 
     }
 
-    return (
+    if(props) {
+        
+        return (
 
-        <div className='common_page'>
-
-            <div className='content_area'>
-
-                {/* 추후에 추가될 내용. : 범주화가 가능해야 한다. */}
-
-                <div className='memo_btn'>
-                    <button href='#' onClick={() => {
-                        let dataCorrect = [...MainMemoData];
-                        dataCorrect.unshift(AddMainMemo);
-                        MainMemoCorrect(dataCorrect)
-                    }}>메모 추가하는 버튼</button>
-                </div>
-
-                <div className='memo_input'>
-
-                    <textarea onInput={(e) => {
-                        AddMainMemoInput(e.target.value);
-                    }}>
-
-                    </textarea>
-
-                </div>
-
-                <div className='memo_wrap'>
-                    {
-                        MainMemoData.map(function (a, id, i) {
-                            
-                            return (
-                                <div className='memo_content' key={id} onClick={() => { setShowComponent(a, a.id) }}>
-                                    <p className='font_text'>{MainMemoData[id].memo}</p>
-                                </div>  
-                            )
-
-                        })
-
-                    }
-
-                    {showComponent && <AnnotationContent MainMemoData={MainMemoData} id={showComponent} />}
-                    
+            <div className='common_page'>
+    
+                <div className='content_area'>
+    
+                    {/* 추후에 추가될 내용. : 범주화가 가능해야 한다. */}
+    
+                    <div className='memo_btn'>
+                        <button href='#' onClick={() => {
+    
+                            console.log(props);
+                            let dataCorrect = [...props.MainMemoData];
+                            dataCorrect.unshift(AddMainMemo);
+                            props.MainMemoCorrect(dataCorrect);
+                        }}>메모 추가하는 버튼</button>
+                    </div>
+    
+                    <div className='memo_input'>
+    
+                        <textarea onInput={(e) => {
+                            AddMainMemoInput(e.target.value);
+                        }}>
+    
+                        </textarea>
+    
+                    </div>
+    
+                    <div className='memo_wrap'>
+    
+                        {
+                            props.MainMemoData.map(function (a, i) {
+                                return (
+                                    <div className='memo_content' key={i} onClick={() => { setShowComponent(a, a.id) }}>
+                                        <p className='font_text'>{props.MainMemoData[i].memo}</p>
+                                    </div>
+                                )
+                            })
+                        }
+    
+                        {showComponent && <AnnotationContent props={props.MainMemoData} id={showComponent} />}
+    
+                    </div>
                 </div>
             </div>
-        </div>
+    
+        )
 
-    )
+    }
 
     function AnnotationContent(props) {
 
+        let [fade, setFade] = useState('')
+
+        useEffect(() => {
+            const fadeTimer = setTimeout(() => { setFade('showThis') }, 100)
+            return () => {
+                clearTimeout(fadeTimer);
+                setFade('')
+            }
+        }, props)
+
         return (
 
-            // memo 버튼 추가. 수정, 삭제, 주석 추가 등...
-
-            <div className={`annotation_content ${props.id ? "showThis" : ""}`}>
+            <div className={`annotation_content ${props.id ? fade : ""}`}>
 
                 <div className='annotation_content_pos'>
                     <title className='font_text color_w'>{props.id.memo}</title>
@@ -124,23 +132,6 @@ function Memo() {
         )
 
     }
-
-
-}
-
-// 데이터베이스에서 불러오는 컴포넌트
-
-function Annotation() {
-
-    return (
-
-        <div className='Annotation'>
-
-            <textarea></textarea>
-
-        </div>
-
-    )
 
 }
 
