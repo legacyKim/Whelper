@@ -77,7 +77,7 @@
     position: relative;
     display: flex;
     justify-content: flex-end;
-    margin-bottom: 24px;
+    margin-bottom: 14px;
 }
 
 .memo_btn>button {
@@ -160,7 +160,7 @@
     position: relative;
     display: block;
 
-    margin-bottom: 24px;
+    margin-bottom: 14px;
 }
 
 .memo_input>textarea {
@@ -189,16 +189,32 @@
 .memo_wrap {
     display: flex;
     justify-content: flex-start;
-    align-items: center;
+    align-items: unset;
     flex-wrap: wrap;
 }
 
 .memo_content {
     width: 24%;
+    margin-right: 1.33%;
+    margin-bottom: 16px;
     padding: 16px;
     border: 1px solid #fff;
     border-radius: 4px;
     cursor: pointer;
+}
+
+.memo_content:nth-child(4n) {
+    margin-right: 0;
+}
+
+.memo_content>p {
+    height: 81px;
+
+    display: -webkit-box;
+    -webkit-line-clamp: 3; /* 라인 수 */
+    -webkit-box-orient: vertical;
+    text-overflow: ellipsis;
+    overflow: hidden;
 }
 
 /* End :: memo */
@@ -304,6 +320,7 @@
     border: 1px solid rgba(255, 255, 255, 0.4);
     padding: 16px;
     margin-bottom: 16px;
+    cursor: pointer;
 }
 
 .write_list>span {

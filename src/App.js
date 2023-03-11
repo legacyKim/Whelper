@@ -31,7 +31,7 @@ function App() {
 
             <div className='header_btn'>
               <div className='write_btn'>
-                <NavLink to="/components/Write" onClick={()=>{navigate('/components/Write')}}>
+                <NavLink to="/components/WriteList" onClick={()=>{navigate('/components/WriteList')}}>
                   WRITE
                 </NavLink>
               </div>

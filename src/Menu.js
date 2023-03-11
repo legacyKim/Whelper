@@ -11,7 +11,7 @@ import './css/header.css';
 
 import List from './components/List'
 import Memo from './components/Memo'
-import Write from './components/Write'
+import WriteList from './components/WriteList'
 import Side from './components/Side'
 import Search from './components/Search'
 import View from './components/View'
@@ -24,7 +24,7 @@ function Menu() {
 
     useEffect(async () => {
         try {
-            const response = await axios.get(`http://localhost:3000/api/Write`);
+            const response = await axios.get(`http://localhost:3000/api/WriteList`);
             setWriteListData(response.data);
         } catch (error) {
             console.error(error);
@@ -56,7 +56,7 @@ function Menu() {
                         <Route path="/components/List" element={<List />} />
                         <Route path="/components/Memo" element={<Memo MainMemoData={MainMemoData} />} />
 
-                        <Route path="/components/Write" element={<Write WriteListData={WriteListData} />} />
+                        <Route path="/components/WriteList" element={<WriteList WriteListData={WriteListData} />} />
 
                     </Routes>
                 </CSSTransition>
