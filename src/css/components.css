@@ -1,446 +1,95 @@
-.common_page {
-    position: relative;
-    display: block;
-    width: 100%;
-    min-height: 100%;
-}
+.common_page { position: relative; display: block; width: 100%; min-height: 100%; } 
 
 /* begin :: side */
 
-.menu {
-    position: relative;
-    display: block;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.8);
-    -webkit-backdrop-filter: blur(10px);
-    backdrop-filter: blur(10px);
-
-    z-index: 99;
-}
-
-.Nav {
-    position: relative;
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-
-    height: 100%;
-}
-
-.Nav>li {
-    position: relative;
-    display: block;
-    text-align: right;
-}
-
-.Nav>li>a {
-    position: relative;
-    display: inline-block;
-
-    text-align: left;
-
-    font-size: 24px;
-    font-weight: 400;
-    line-height: 1.5;
-    margin-bottom: 8px;
-    color: #fff;
-
-    width: 100px;
-}
-
-.menu_close {
-    position: absolute;
-    top: 66px;
-    right: 0;
-    display: block;
-
-    width: 40px;
-    height: 40px;
-
-    border: 1px solid #fff;
-    background: #333;
-}
+.menu { position: relative; display: block; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.8); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); z-index: 99; } 
+.Nav { position: relative; display: flex; justify-content: center; flex-direction: column; height: 100%; } 
+.Nav>li { position: relative; display: block; text-align: right; } 
+.Nav>li>a { position: relative; display: inline-block; text-align: left; font-size: 24px; font-weight: 400; line-height: 1.5; margin-bottom: 8px; color: #fff; width: 100px; } 
+.menu_close { position: absolute; top: 66px; right: 0; display: block; width: 40px; height: 40px; border: 1px solid #fff; background: #333; } 
 
 /* end :: side */
 
 /* begin :: Memo */
 
-.memo {
-    position: relative;
-    display: block;
-
-    margin: 16px;
-}
-
-.memo_btn {
-    position: relative;
-    display: flex;
-    justify-content: flex-end;
-    margin-bottom: 24px;
-}
-
-.memo_btn>button {
-    position: relative;
-    display: block;
-    color: #fff;
-
-    padding: 16px;
-    border: 1px solid #fff;
-    background: transparent;
-
-    width: 200px;
-    height: 48px;
-    text-align: center;
-}
-
-.memo_text {
-    position: relative;
-    display: none;
-
-    border: 1px solid #fff;
-    border-radius: 8px;
-
-    margin-bottom: 24px;
-}
-
-.memo_box {
-    position: relative;
-    display: block;
-    padding: 16px;
-}
-
-.memo_box_annotaion {
-    padding-top: 0;
-}
-
-.content_memo_btn {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    margin-bottom: 12px;
-    display: none;
-
-    /* 230209 */
-}
-
-.content_memo_btn>li {
-    position: relative;
-    display: block;
-    margin-right: 8px;
-}
-
-.content_memo_btn>li>button {
-    font-size: 14px;
-    font-weight: 600;
-    color: #fff;
-}
-
-.main_memo {
-    position: relative;
-    display: block;
-
-    color: #fff;
-    line-height: 1.5;
-    border: 1px solid #fff;
-}
-
-.sub_memo {
-    position: relative;
-    display: block;
-    color: #fff;
-    line-height: 1.5;
-    border: 1px solid #fff;
-
-    display: none;
-    /* 230909 */
-}
-
-.memo_input {
-    position: relative;
-    display: block;
-
-    margin-bottom: 24px;
-}
-
-.memo_input>textarea {
-    position: relative;
-    display: block;
-
-    background: rgba(5, 7, 26, 1);
-
-    width: 100%;
-    height: 200px;
-    resize: none;
-
-    padding: 12px;
-
-    font-size: 18px;
-    font-weight: 400;
-    line-height: 1.5;
-
-    border-radius: 8px;
-    color: #fff;
-    border: 1px solid #fff;
-}
+.memo { position: relative; display: block; margin: 16px; } 
+.memo_btn { position: relative; display: flex; justify-content: flex-end; margin-bottom: 24px; } 
+.memo_btn>button { position: relative; display: block; color: #fff; padding: 16px; border: 1px solid #fff; background: transparent; width: 200px; height: 48px; text-align: center; } 
+.memo_text { position: relative; display: none; border: 1px solid #fff; border-radius: 8px; margin-bottom: 24px; } 
+.memo_box { position: relative; display: block; padding: 16px; } 
+.memo_box_annotaion { padding-top: 0; } 
+.content_memo_btn { display: flex; justify-content: flex-end; align-items: center; margin-bottom: 12px; display: none; /* 230209 */ } 
+.content_memo_btn>li { position: relative; display: block; margin-right: 8px; } 
+.content_memo_btn>li>button { font-size: 14px; font-weight: 600; color: #fff; } 
+.main_memo { position: relative; display: block; color: #fff; line-height: 1.5; border: 1px solid #fff; } 
+.sub_memo { position: relative; display: block; color: #fff; line-height: 1.5; border: 1px solid #fff; display: none; /* 230909 */ } 
+.memo_input { position: relative; display: block; margin-bottom: 24px; } 
+.memo_input>textarea { position: relative; display: block; background: rgba(5, 7, 26, 1); width: 100%; height: 200px; resize: none; padding: 12px; font-size: 18px; font-weight: 400; line-height: 1.5; border-radius: 8px; color: #fff; border: 1px solid #fff; } 
 
 /* 230209 */
 
-.memo_wrap {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-}
-
-.memo_content {
-    width: 24%;
-    padding: 16px;
-    border: 1px solid #fff;
-    border-radius: 4px;
-    cursor: pointer;
-}
+.memo_wrap { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; } 
+.memo_content { width: 24%; padding: 16px; border: 1px solid #fff; border-radius: 4px; cursor: pointer; } 
 
 /* End :: memo */
 
 /* End :: Annotation */
 
-.Annotation {
-    position: relative;
-    display: block;
-}
-
-.Annotation>textarea {
-    position: relative;
-    display: block;
-
-    background: #fff;
-
-    width: 100%;
-    height: 100px;
-    font-size: 18px;
-    font-weight: 400;
-    line-height: 1.5;
-    padding: 12px;
-
-    border-radius: 8px;
-    resize: none;
-}
-
-.memo_annotation {
-    position: relative;
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-
-    margin-bottom: 16px;
-}
-
-.memo_annotation>button {
-    padding: 12px;
-    border: 1px solid #fff;
-    color: #fff;
-}
-
-.memo_box_annotaion {
-    position: relative;
-    display: block;
-}
-
-.annotation_content {
-    position: fixed;
-    display: block;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-
-    width: 100%;
-    height: 100%;
-
-    transition: opacity 1s ease-in-out;
-    opacity: 0;
-    backdrop-filter: blur(10px);
-}
-
-.annotation_content_pos {
-    position: absolute;
-    top: 16%;
-    left: 50%;
-    display: block;
-    transform: translate(-50%, -50%);
-    width: 80%;
-    /* height: 80%; */
-    background: rgba(5, 7, 26, 1);
-    border: 1px solid #fff;
-    border-radius: 10px;
-    padding: 20px;
-}
-
-.annotation_content_pos>title {
-    position: relative;
-    display: block;
-}
-
-.annotation_content>button {
-    position: relative;
-    display: block;
-}
+.Annotation { position: relative; display: block; } 
+.Annotation>textarea { position: relative; display: block; background: #fff; width: 100%; height: 100px; font-size: 18px; font-weight: 400; line-height: 1.5; padding: 12px; border-radius: 8px; resize: none; } 
+.memo_annotation { position: relative; display: flex; justify-content: flex-end; align-items: center; margin-bottom: 16px; } 
+.memo_annotation>button { padding: 12px; border: 1px solid #fff; color: #fff; } 
+.memo_box_annotaion { position: relative; display: block; } 
+.annotation_content { position: fixed; display: block; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 100%; height: 100%; transition: opacity 1s ease-in-out; opacity: 0; backdrop-filter: blur(10px); } 
+.annotation_content_pos { position: absolute; top: 16%; left: 50%; display: block; transform: translate(-50%, -50%); width: 80%; /* height: 80%; */
+ background: rgba(5, 7, 26, 1); border: 1px solid #fff; border-radius: 10px; padding: 20px; } 
+.annotation_content_pos>title { position: relative; display: block; } 
+.annotation_content>button { position: relative; display: block; } 
 
 /* Write */
 
-.WriteDiv {
-    position: relative;
-    display: block;
-}
+.WriteDiv { position: relative; display: block; } 
 
-.write {
-    position: relative;
-    display: block;
-}
+.write { position: relative; display: block; } 
+.write_list { position: relative; display: block; border: 1px solid rgba(255, 255, 255, 0.4); padding: 16px; margin-bottom: 16px; } 
+.write_list>span { position: relative; display: block; font-size: 24px; font-weight: 400; line-height: 1.5; color: #fff; padding-bottom: 16px; margin-bottom: 16px; border-bottom: 1px solid rgba(255, 255, 255, 0.4); } 
+.write_list>strong { position: relative; display: block; font-size: 20px; font-weight: 400; line-height: 1.5; color: #fff; padding-bottom: 16px; margin-bottom: 16px; border-bottom: 1px solid rgba(255, 255, 255, 0.4); } 
+.write_list>p { position: relative; display: block; font-size: 16px; font-weight: 400; line-height: 1.5; color: #fff; display: -webkit-box; word-wrap: break-word; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; height: 74px; text-align: justify; } 
 
-.write_list {
-    position: relative;
-    display: block;
-
-    border: 1px solid rgba(255, 255, 255, 0.4);
-    padding: 16px;
-    margin-bottom: 16px;
-}
-
-.write_list>span {
-    position: relative;
-    display: block;
-
-    font-size: 24px;
-    font-weight: 400;
-    line-height: 1.5;
-    color: #fff;
-    padding-bottom: 16px;
-    margin-bottom: 16px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.4);
-}
-
-.write_list>strong {
-    position: relative;
-    display: block;
-
-    font-size: 20px;
-    font-weight: 400;
-    line-height: 1.5;
-    color: #fff;
-
-    padding-bottom: 16px;
-    margin-bottom: 16px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.4);
-}
-
-.write_list>p {
-    position: relative;
-    display: block;
-
-    font-size: 16px;
-    font-weight: 400;
-    line-height: 1.5;
-    color: #fff;
-
-    display: -webkit-box;
-    word-wrap: break-word;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    text-overflow: ellipsis;
-
-    height: 74px;
-
-    text-align: justify;
-}
+/* 글쓰기 */
+ .write_page { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+ width: 100%; height: 100%;
+ transition: opacity 1s ease-in-out; opacity: 0; backdrop-filter: blur(10px); } 
+.write_page_pos { position: absolute; top: 50%; left: 50%; display: block; transform: translate(-50%, -50%); width: 80%; height: 80%; background: rgba(5, 7, 26, 1); border: 1px solid #fff; border-radius: 10px; padding: 20px; } 
+.write_page_pos form { position: relative; display: block; height: 100%; } 
+.write_page input { position: relative; display: block; background: transparent;
+ width: 100%; border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+ padding: 8px 0px; margin-bottom: 20px; } 
+.write_title { font-size: 32px; font-weight: 600; line-height: 1.8; } 
+.write_subtitle { font-size: 24px; font-weight: 600; line-height: 1.8; } 
+.write_textarea { position: relative; display: block; background: transparent;
+ width: 100%; height: 71%; border: 0;
+ font-size: 16px; font-weight: 600; line-height: 1.5; color: #fff; resize: none; } 
+.write_textarea::-webkit-scrollbar { width: 6px; } 
+.write_textarea::-webkit-scrollbar-thumb { height: 30%; background: #217af4; border-radius: 10px; } 
+.write_textarea::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.3); } 
 
 /* main memo textarea */
 
-.Main_memo_textarea {
-    position: relative;
-    display: block;
-}
-
-.Main_memo_textarea>textarea {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.4);
-    color: #333;
-    resize: none;
-    margin-bottom: 16px;
-}
-
-.main_textarea_correct {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    margin-bottom: 16px;
-}
-
-.main_textarea_correct>li {
-    position: relative;
-    display: block;
-    margin-left: 10px;
-}
-
-.main_textarea_correct>li>button {
-    position: relative;
-    display: block;
-
-    padding: 8px;
-    border: 1px solid #fff;
-    background-color: transparent;
-    color: #fff;
-
-    font-size: 14px;
-    font-weight: 400;
-    line-height: 1.5;
-}
+.Main_memo_textarea { position: relative; display: block; } 
+.Main_memo_textarea>textarea { width: 100%; padding: 12px; border: 1px solid rgba(255, 255, 255, 0.4); color: #333; resize: none; margin-bottom: 16px; } 
+.main_textarea_correct { display: flex; justify-content: flex-end; align-items: center; margin-bottom: 16px; } 
+.main_textarea_correct>li { position: relative; display: block; margin-left: 10px; } 
+.main_textarea_correct>li>button { position: relative; display: block; padding: 8px; border: 1px solid #fff; background-color: transparent; color: #fff; font-size: 14px; font-weight: 400; line-height: 1.5; } 
 
 /* textarea scroll custom */
 
 /* end :: Memo */
 
-.view_page {
-    position: relative;
-    display: block;
-    min-height: 100%;
-}
-
-.view_content>title {
-    position: relative;
-    display: block;
-
-    font-size: 32px;
-    font-weight: 600;
-    line-height: 1.5;
-    color: #fff;
-
-    padding-bottom: 14px;
-}
-
-.view_content>span {
-    position: relative;
-    display: block;
-
-    font-size: 24px;
-    font-weight: 400;
-    line-height: 1.5;
-    color: #fff;
-
-    padding-bottom: 14px;
-}
-
-.view_content>p {
-    position: relative;
-    display: block;
-
-    font-size: 18px;
-    font-weight: 400;
-    line-height: 1.5;
-    color: #fff;
-}
+.view_page { position: relative; display: block; min-height: 100%; } 
+.view_content>title { position: relative; display: block; font-size: 32px; font-weight: 600; line-height: 1.5; color: #fff; padding-bottom: 14px; } 
+.view_content>span { position: relative; display: block; font-size: 24px; font-weight: 400; line-height: 1.5; color: #fff; padding-bottom: 14px; } 
+.view_content>p { position: relative; display: block; font-size: 18px; font-weight: 400; line-height: 1.5; color: #fff; } 
 
 
 
@@ -474,8 +123,24 @@
 
 /* 동적 작업을 위한.... 23.02.10 */
 
-.showThis {
-    opacity: 1;
-    transition: opacity 1s ease-in-out;
-    z-index: 999;
+.showThis { opacity: 1; transition: opacity 1s ease-in-out; z-index: 999; } 
+
+/* 버튼 공통 */
+
+
+.write_btn_save,
+.memo_btn_save,
+.content_write_save {
+    background-color: #217af4;
+    border-radius: 50%;
+    width: 16px;
+    height: 16px;
+}
+
+.write_btn_cancel,
+.memo_view_close {
+    background-color: salmon;
+    border-radius: 50%;
+    width: 16px;
+    height: 16px;
 }
