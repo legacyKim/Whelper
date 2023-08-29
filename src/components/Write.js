@@ -1,10 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useSelector } from "react-redux"
 import WriteContentData from '../data'
 
 import '../css/components.css';
 import { Link } from 'react-router-dom';
 
 function WriteList(props) {
+
+    let writeListState = useSelector((state) => state.writeData)
 
     let [WriteListData, swtWriteListData] = useState(WriteContentData);
 
@@ -24,19 +27,16 @@ function WriteList(props) {
                 </div>
 
                 {
-                    WriteListData.map(function (a, i) {
-
+                    writeListState.map(function (a, i) {
                         return (
-
                             <div className='WriteDiv' key={i}>
-                                <WriteShowContents WriteListData={WriteListData[i]} i={i} />
+                                <WriteShowContents writeListState={writeListState[i]} i={i} />
                             </div>
-
                         )
                     })
                 }
 
-                {isWriteOn ? <Write WriteListData={WriteListData} /> : null}
+                {isWriteOn ? <Write writeListState={writeListState} /> : null}
 
             </div>
         </div>
@@ -44,8 +44,6 @@ function WriteList(props) {
     )
 
     function Write(props) {
-
-        console.log(props);
 
         let [fade, setFade] = useState('')
 
@@ -58,18 +56,22 @@ function WriteList(props) {
         }, []);
 
         // UPDATE
-        const undateWriteListData = (id, newTitle, newSubTitle, newContent) => {
-            swtWriteListData(prevData => prevData.map(item => (item.id === id ? { ...item, title: newTitle, subTitle: newSubTitle, content: newContent } : item)));
+        const updateWriteListData = (id, newTitle, newSubTitle, newContent) => {
+            swtWriteListData(prevData =>
+                prevData.map(item =>
+                    item.id === id ? { ...item, title: newTitle, subTitle: newSubTitle, content: newContent } : item
+                )
+            );
         };
 
-        const addData = (props) => {
+        const addData = () => {
             const newData = {
-                // id: props.length + 1,
-                title: newTitle,
-                subTitle: newSubTitle,
-                content: newContent,
+                title: newTitle.current.value,
+                subTitle: newSubTitle.current.value,
+                content: newContent.current.value,
             };
             swtWriteListData(prevData => [...prevData, newData]);
+            WriteOn()
         };
 
         const newTitle = useRef();
@@ -91,26 +93,27 @@ function WriteList(props) {
         )
     }
 
-}
+    function WriteShowContents(props) {
 
-function WriteShowContents(props) {
+        return (
 
-    return (
-
-        <Link to={`/components/View/${props.WriteListData.id}`}>
-            <div className='write_list'>
-                <div className='write_list_btn'>
-                    <button></button>
-                    <button></button>
+            <Link to={`/components/View/${props.writeListState.id}`}>
+                <div className='write_list'>
+                    <div className='write_list_btn'>
+                        <button></button>
+                        <button></button>
+                    </div>
+                    <span>{props.writeListState.title}</span>
+                    <strong>{props.writeListState.subTitle}</strong>
+                    <p>{props.writeListState.content}</p>
                 </div>
-                <span>{props.WriteListData.title}</span>
-                <strong>{props.WriteListData.subTitle}</strong>
-                <p>{props.WriteListData.content}</p>
-            </div>
-        </Link>
+            </Link>
 
-    )
+        )
 
+    }
 }
+
+
 
 export default WriteList;
