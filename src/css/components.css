@@ -31,6 +31,20 @@
 .memo_wrap { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; } 
 .memo_content { width: 24%; padding: 16px; border: 1px solid #fff; border-radius: 4px; cursor: pointer; } 
 
+.memo_content:nth-child(4n) {
+    margin-right: 0;
+}
+
+.memo_content>p {
+    height: 81px;
+
+    display: -webkit-box;
+    -webkit-line-clamp: 3; /* 라인 수 */
+    -webkit-box-orient: vertical;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
 /* End :: memo */
 
 /* End :: Annotation */

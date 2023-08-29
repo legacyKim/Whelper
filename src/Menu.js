@@ -1,48 +1,62 @@
-import React, {useState} from 'react';
+import React, { useState, useEffect } from 'react';
 import { TransitionGroup, CSSTransition } from "react-transition-group";
 
-import {
-    Route,
-    Routes,
-    useLocation
-} from "react-router-dom";
+import axios from 'axios';
+
+import { Route, Routes, useLocation, useParams } from "react-router-dom";
+import history from './history.ts'
 
 import './css/App.css';
 import './css/header.css';
 
 import List from './components/List'
 import Memo from './components/Memo'
-import Write from './components/Write'
+import WriteList from './components/WriteList'
 import Side from './components/Side'
 import Search from './components/Search'
 import View from './components/View'
 
-import WriteContentData from './data'
-
 function Menu() {
 
-    let [WriteListData] = useState(WriteContentData);
     const location = useLocation();
+    const [WriteListData, setWriteListData] = useState([]);
+    const [MainMemoData, MainMemoCorrect] = useState([]);
 
+    useEffect(async () => {
+        try {
+            const response = await axios.get(`http://localhost:3000/api/WriteList`);
+            setWriteListData(response.data);
+        } catch (error) {
+            console.error(error);
+        }
+    }, []);
+
+    useEffect(async () => {
+        try {
+            const response = await axios.get(`http://localhost:3000/api/Memo`);
+            MainMemoCorrect(response.data);
+        } catch (error) {
+            console.error(error);
+        }
+    }, []);
+    
     return (
 
         <div className='menuWrap'>
 
             <TransitionGroup component={null}>
                 <CSSTransition key={location.key} classNames="fade" timeout={300}>
-                    <Routes location={location}>
+                    <Routes location={location} history={history}>
 
                         <Route exact path="/" />
 
-                        <Route exact path="/components/Side" element={<Side />} />
-                        <Route exact path="/components/Search" element={<Search />} />
+                        <Route path="/components/Side" element={<Side />} />
+                        <Route path="/components/Search" element={<Search />} />
 
-                        <Route exact path="/components/List" element={<List />} />
-                        <Route path="/components/Memo" element={<Memo />} />
+                        <Route path="/components/List" element={<List />} />
+                        <Route path="/components/Memo" element={<Memo MainMemoData={MainMemoData} />} />
 
-                        <Route path="/components/Write" element={<Write WriteListData={WriteListData}/>} />
-                        <Route path="/components/View/:id" element={<View WriteListData={WriteListData}/>} />
-                        {/* <Route path="/components/Correct" element={<Correct />} /> */}
+                        <Route path="/components/WriteList" element={<WriteList WriteListData={WriteListData} />} />
 
                     </Routes>
                 </CSSTransition>

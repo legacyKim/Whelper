@@ -39,19 +39,14 @@
 .logo {
     position: relative;
     display: block;
-    width: 166px;
-    height: 32px;
-    color: #333;
+
     text-align: center;
-    line-height: 27px;
 }
 
 .logo>a {
     position: relative;
     display: block;
 
-    width: 100%;
-    height: 100%;
     z-index: 9;
     background: #333;
 }

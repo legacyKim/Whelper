@@ -1,104 +1,76 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-
-import MemoContentData from '../memoList'
-
 import '../css/components.css';
 
-function Memo() {
+import axios from 'axios';
 
-    let [MainMemoData, MainMemoCorrect] = useState(MemoContentData);
+function Memo(props) {
 
-    // textarea 열고 닫기
-    let [MainMemoActive, MainMemoDirect] = useState(false);
-
-    // 새로 작성되는 글이 담기는 곳.
-    let [AddMainMemo, AddMainMemoInput] = useState('');
+    const { id } = useParams();
 
     const [showComponent, setShowComponent] = useState();
 
-    function MainMemoSet(props) {
+    const [Memo, setMemo] = useState(props);
+    const [newMemo, setNewMemo] = useState('');
 
-        // 메모 수정
-        let [correctMainMemo, correctMainMemoInput] = useState('');
+    const memoSubmit = async (event) => {
 
-        return (
+        try {
+            const response = await axios.post('http://localhost:3000/api/Memo', { memo: newMemo });
+            setMemo([...props, response.data]);
+            setNewMemo('');
+        } catch (err) {
+            console.error(err);
+        }
+    }
 
-            <div className='Main_memo_textarea'>
+    const memoDelete = async (a) => {
 
-                <textarea onInput={(e) => {
-                    correctMainMemoInput(e.target.value);
-                }}>
-                    {props.MainMemoData.memo}
-                </textarea>
-
-                <ul className='main_textarea_correct'>
-                    <li>
-                        <button
-                            onClick={(i) => {
-                                let dataCorrect = [...MainMemoData];
-                                dataCorrect[i].unshift(correctMainMemo);
-                                correctMainMemoInput(dataCorrect)
-
-                            }}>확인
-                        </button>
-                    </li>
-                    <li>
-                        <button onClick={(i) => {
-                            MainMemoDirect(false, i);
-                        }}>취소</button>
-                    </li>
-                </ul>
-
-                <div></div>
-            </div>
-
-        )
-
+        try {
+            const response = await axios.delete(`http://localhost:3000/api/Memo`, { data: { memo: a.memo } });
+            const updatedMemoList = props.MainMemoData.filter(memo => memo.memo !== a.memo);
+            setMemo(updatedMemoList);
+        } catch (err) {
+            console.error(err);
+        }
     }
 
     return (
 
         <div className='common_page'>
-
             <div className='content_area'>
 
-                {/* 추후에 추가될 내용. : 범주화가 가능해야 한다. */}
+                <form onSubmit={memoSubmit}>
+                    <div className='memo_btn'>
+                        <button href='#'>메모 추가하는 버튼</button>
+                    </div>
 
-                <div className='memo_btn'>
-                    <button href='#' onClick={() => {
-                        let dataCorrect = [...MainMemoData];
-                        dataCorrect.unshift(AddMainMemo);
-                        MainMemoCorrect(dataCorrect)
-                    }}>메모 추가하는 버튼</button>
-                </div>
+                    <div className='memo_input'>
+                        <textarea onInput={(e) => {
+                            setNewMemo(e.target.value.replaceAll("<br>", "\r\n"))
+                        }}>
 
-                <div className='memo_input'>
-
-                    <textarea onInput={(e) => {
-                        AddMainMemoInput(e.target.value);
-                    }}>
-
-                    </textarea>
-
-                </div>
+                        </textarea>
+                    </div>
+                </form>
 
                 <div className='memo_wrap'>
+
                     {
-                        MainMemoData.map(function (a, id, i) {
-                            
+                        props.MainMemoData.map(function (a, i) {
                             return (
-                                <div className='memo_content' key={id} onClick={() => { setShowComponent(a, a.id) }}>
-                                    <p className='font_text'>{MainMemoData[id].memo}</p>
-                                </div>  
+                                <div className='memo_content' key={i}>
+                                    <p className='font_text' onClick={(e) => { setShowComponent(a, a.id) }} style={{ whiteSpace: 'pre-wrap' }}>{props.MainMemoData[i].memo}</p>
+                                    <form>
+                                        <button onClick={() => memoDelete(a)}>임시 버튼</button>
+                                    </form>
+                                </div>
                             )
-
                         })
-
                     }
 
-                    {showComponent && <AnnotationContent MainMemoData={MainMemoData} id={showComponent} />}
-                    
+                    {showComponent && <AnnotationContent props={props.MainMemoData} id={showComponent} />}
+
                 </div>
             </div>
         </div>
@@ -107,14 +79,22 @@ function Memo() {
 
     function AnnotationContent(props) {
 
+        let [fade, setFade] = useState('')
+
+        useEffect(() => {
+            const fadeTimer = setTimeout(() => { setFade('showThis') }, 100)
+            return () => {
+                clearTimeout(fadeTimer);
+                setFade('')
+            }
+        }, props.id)
+
         return (
 
-            // memo 버튼 추가. 수정, 삭제, 주석 추가 등...
-
-            <div className={`annotation_content ${props.id ? "showThis" : ""}`}>
+            <div className={`annotation_content ${props.id ? fade : ""}`}>
 
                 <div className='annotation_content_pos'>
-                    <title className='font_text color_w'>{props.id.memo}</title>
+                    <title className='font_text color_w'>{props.id.memo.replaceAll("<br>", "\r\n")}</title>
                 </div>
 
                 <button className='color_w' onClick={() => setShowComponent()}>임시 닫기 버튼</button>
@@ -124,23 +104,6 @@ function Memo() {
         )
 
     }
-
-
-}
-
-// 데이터베이스에서 불러오는 컴포넌트
-
-function Annotation() {
-
-    return (
-
-        <div className='Annotation'>
-
-            <textarea></textarea>
-
-        </div>
-
-    )
 
 }
 
