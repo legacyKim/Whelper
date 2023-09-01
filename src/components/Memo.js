@@ -6,6 +6,8 @@ import axios from 'axios';
 
 function Memo(props) {
 
+    // console.log('test memo');
+
     const { id } = useParams();
 
     const [showComponent, setShowComponent] = useState();

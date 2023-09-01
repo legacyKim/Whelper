@@ -6,7 +6,9 @@ import { Link } from 'react-router-dom';
 
 function WriteList() {
 
-    let writeListState = useSelector((state) => state.writeData)
+    let writeListState = useSelector((state) => state.WriteData)
+
+    console.log(writeListState);
 
     const [isWriteOn, setIsWriteOn] = useState(false);
 
@@ -33,7 +35,7 @@ function WriteList() {
                     })
                 }
 
-                {isWriteOn ? <Write writeListState={writeListState} /> : null}
+                {isWriteOn ? <Write /> : null}
 
             </div>
         </div>
@@ -52,19 +54,9 @@ function WriteList() {
             }
         }, []);
 
-
         const newTitle = useRef();
         const newSubTitle = useRef();
         const newContent = useRef();
-
-        // UPDATE
-        const updateWriteListData = (id, newTitle, newSubTitle, newContent) => {
-            swtWriteListData(prevData =>
-                prevData.map(item =>
-                    item.id === id ? { ...item, title: newTitle, subTitle: newSubTitle, content: newContent } : item
-                )
-            );
-        };
 
         const addData = () => {
             const newData = {
@@ -79,11 +71,11 @@ function WriteList() {
         return (
             <div className={`write_page ${fade}`}>
                 <div className='write_page_pos'>
-                    <input type="text" placeholder="TITLE" className="write_title" ref={newTitle}></input>
-                    <input type="text" placeholder="SUBTITLE" className="write_subtitle" ref={newSubTitle}></input>
-                    <textarea type="text" placeholder="CONTENT" className="write_textarea" ref={newContent}></textarea>
+                    <input type="text" placeholder="TITLE" className="write_title" ref={this.newTitle}></input>
+                    <input type="text" placeholder="SUBTITLE" className="write_subtitle" ref={this.newSubTitle}></input>
+                    <textarea type="text" placeholder="CONTENT" className="write_textarea" ref={this.newContent}></textarea>
                     <div className='write_page_btn'>
-                        <button className='write_btn_save' onClick={() => addData(writeListState.id, newTitle.current.value, newSubTitle.current.value, newContent.current.value)}>Save</button>
+                        <button className='write_btn_save' onClick={() => addData(newTitle.current.value, newSubTitle.current.value, newContent.current.value)}>Save</button>
                         <button className='write_btn_cancel' onClick={WriteOn}></button>
                     </div>
                 </div>
@@ -92,6 +84,15 @@ function WriteList() {
     }
 
     function WriteShowContents() {
+
+        // UPDATE
+        const updateWriteListData = (id, newTitle, newSubTitle, newContent) => {
+            swtWriteListData(prevData =>
+                prevData.map(item =>
+                    item.id === id ? { ...item, title: newTitle, subTitle: newSubTitle, content: newContent } : item
+                )
+            );
+        };
 
         return (
 
