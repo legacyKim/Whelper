@@ -9,17 +9,23 @@ let WriteData = [
 
     {
         id: 1,
-        memo: "test 02",
+        title: "test 01",
+        subTitle : "test subtitle 01",
+        content : "content 01"
     },
 
     {
         id: 2,
-        memo: "test 03",
+        title: "test 01",
+        subTitle : "test subtitle 01",
+        content : "content 01"
     },
 
     {
         id: 3,
-        memo: "test 04",
+        title: "test 01",
+        subTitle : "test subtitle 01",
+        content : "content 01"
     },
 
 
