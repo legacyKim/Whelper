@@ -11,10 +11,10 @@ let WriteData = createSlice({
     }
 })
 
-export let writeListDataCorrect = WriteData.actions
+export const { writeListDataCorrect } = WriteData.actions;
 
 export default configureStore({
     reducer: {
         WriteData: WriteData.reducer,
-    }
-})
+    },
+});
