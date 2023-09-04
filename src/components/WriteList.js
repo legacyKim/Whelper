@@ -40,7 +40,7 @@ function WriteLista() {
 
     )
 
-    function Write(props) {
+    function Write() {
 
         let [fade, setFade] = useState('')
 
@@ -85,11 +85,8 @@ function WriteLista() {
 
     function WriteShowContents({ i }) {
 
-        // useSelector를 사용하여 리덕스 스토어의 상태를 직접 가져옴
         const writeListState = useSelector((state) => state.WriteData);
 
-        console.log(writeListState[i]);
-        
         return (
             <Link to={`/components/View/${writeListState[i].id}`}>
                 <div className='write_list'>

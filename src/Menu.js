@@ -52,11 +52,10 @@ function Menu() {
 
                         <Route path="/components/Side" element={<Side />} />
                         <Route path="/components/Search" element={<Search />} />
-
                         <Route path="/components/List" element={<List />} />
                         <Route path="/components/Memo" element={<Memo MainMemoData={MainMemoData} />} />
-
-                        <Route path="/components/WriteList" element={<WriteList WriteListData={WriteListData} />} />
+                        <Route path="/components/WriteList" element={<WriteList />} />
+                        <Route path="/components/View/:id" element={<View />} />
 
                     </Routes>
                 </CSSTransition>

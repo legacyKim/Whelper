@@ -4,11 +4,9 @@ import { useSelector } from "react-redux"
 import '../css/components.css';
 import { Link } from 'react-router-dom';
 
-function WriteLista() {
+function WriteList() {
 
     let writeListState = useSelector((state) => state.WriteData)
-
-    console.log(writeListState);
 
     const [isWriteOn, setIsWriteOn] = useState(false);
 
@@ -85,6 +83,10 @@ function WriteLista() {
 
     function WriteShowContents() {
 
+        let writeListState = useSelector((state) => state.WriteData)
+
+        console.log(writeListState[0]);
+
         // UPDATE
         const updateWriteListData = (id, newTitle, newSubTitle, newContent) => {
             swtWriteListData(prevData =>
@@ -113,4 +115,4 @@ function WriteLista() {
     }
 }
 
-export default WriteLista;
+export default WriteList;

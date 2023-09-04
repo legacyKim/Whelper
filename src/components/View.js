@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from 'react';
+
+import { useSelector } from "react-redux"
 import { useParams } from 'react-router-dom';
 import '../css/components.css';
 
 import axios from 'axios';
 
-function View(props) {
+function View() {
 
+    const writeListState = useSelector((state) => state.WriteData);
+    let {id} = useParams();
 
     return (
 
@@ -13,9 +17,9 @@ function View(props) {
             <div className='common_page'>
                 <div className='content_area'>
                     <div className='view_content'>
-                        <title>{props.viewData.title}</title>
-                        <span>{props.viewData.subTitle}</span>
-                        <p>{props.viewData.content}</p>
+                        <title>{writeListState[id].title}</title>
+                        <span>{writeListState[id].subTitle}</span>
+                        <p>{writeListState[id].content}</p>
                     </div>
                 </div>
             </div>
