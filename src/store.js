@@ -1,3 +1,5 @@
+import React, {  useRef } from 'react';
+
 import { configureStore, createSlice } from '@reduxjs/toolkit'
 import WriteContentData from './data'
 
@@ -5,13 +7,14 @@ let WriteData = createSlice({
     name: 'WriteData',
     initialState: WriteContentData,
     reducers: {
-        writeListDataCorrect(state) {
-            return 'john ' + state
+        WriteListDataCorrect(state) {
+
+            console.log(state)
         }
     }
 })
 
-export const { writeListDataCorrect } = WriteData.actions;
+export const { WriteListDataCorrect } = WriteData.actions;
 
 export default configureStore({
     reducer: {

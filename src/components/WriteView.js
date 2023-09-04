@@ -2,11 +2,11 @@ import React, { useState, useEffect } from 'react';
 
 import { useSelector } from "react-redux"
 import { useParams } from 'react-router-dom';
-import '../css/components.css';
 
+import '../css/style.css';
 import axios from 'axios';
 
-function View() {
+function WriteView() {
 
     const writeListState = useSelector((state) => state.WriteData);
     let {id} = useParams();
@@ -29,4 +29,4 @@ function View() {
 
 }
 
-export default View;
+export default WriteView;

@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useSelector } from "react-redux"
 
-import '../css/components.css';
+import '../css/style.css';
 import { Link } from 'react-router-dom';
 
-function WriteLista() {
+function WriteList() {
 
     let writeListState = useSelector((state) => state.WriteData)
 
@@ -33,62 +33,19 @@ function WriteLista() {
                     })
                 }
 
-                {isWriteOn ? <Write /> : null}
+                {/* {isWriteOn ? <Write /> : null} */}
 
             </div>
         </div>
 
     )
 
-    function Write() {
-
-        let [fade, setFade] = useState('')
-
-        useEffect(() => {
-            const fadeTimer = setTimeout(() => { setFade('showThis') }, 100)
-            return () => {
-                clearTimeout(fadeTimer);
-                setFade('')
-            }
-        }, []);
-
-        const newTitle = useRef();
-        const newSubTitle = useRef();
-        const newContent = useRef();
-
-        // const addData = () => {
-        //     const newData = {
-        //         title: newTitle.current.value,
-        //         subTitle: newSubTitle.current.value,
-        //         content: newContent.current.value,
-        //     };
-        //     writeListDataCorrect(prevData => [...prevData, newData]);
-        //     WriteOn()
-        // };
-
-        return (
-            <div className={`write_page ${fade}`}>
-                <div className='write_page_pos'>
-                    <input type="text" placeholder="TITLE" className="write_title" ref={newTitle}></input>
-                    <input type="text" placeholder="SUBTITLE" className="write_subtitle" ref={newSubTitle}></input>
-                    <textarea type="text" placeholder="CONTENT" className="write_textarea" ref={newContent}></textarea>
-                    <div className='write_page_btn'>
-                        <button className='write_btn_save'>Save</button>
-                        <button className='write_btn_cancel' onClick={WriteOn}></button>
-                    </div>
-
-                    {/* onClick={() => addData(newTitle.current.value, newSubTitle.current.value, newContent.current.value)} */}
-                </div>
-            </div>
-        )
-    }
-
     function WriteShowContents({ i }) {
 
         const writeListState = useSelector((state) => state.WriteData);
 
         return (
-            <Link to={`/components/View/${writeListState[i].id}`}>
+            <Link to={`/components/WriteView/${writeListState[i].id}`}>
                 <div className='write_list'>
                     <div className='write_list_btn'>
                         <button></button>
@@ -103,4 +60,4 @@ function WriteLista() {
     }
 }
 
-export default WriteLista;
+export default WriteList;

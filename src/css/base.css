@@ -1,9 +1,18 @@
 /** 추가내용: 웹 브라우저 기본 사이즈 정의 */
+
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700;900&family=Noto+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
 html, body {
 	width: 100%;
-/*	overflow-x : hidden;*/
-background: #111;
-color: #fff;
+    height: 100%;
+
+    /*	overflow-x : hidden;*/
+
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.6;
+
+    font-family: 'Noto Sans KR','Noto Sans', 'Sofia Sans', sans-serif;
 }
 
 /** 아래 코드는 reset.css의 원본 내용 */
@@ -16,8 +25,8 @@ b, u, i, center,
 dl, dt, dd, ol, ul, li,
 fieldset, form, label, legend,
 table, caption, tbody, tfoot, thead, tr, th, td,
-article, aside, canvas, details, embed, 
-figure, figcaption, footer, header, hgroup, 
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
 menu, nav, output, ruby, section, summary,
 time, mark, audio, video,button,select,input{
 	margin: 0;
@@ -27,10 +36,9 @@ time, mark, audio, video,button,select,input{
 	/*font: inherit;*/
 	vertical-align: baseline;
 	text-decoration:none;
-	color: #fff;
 }
 /* HTML5 display-role reset for older browsers */
-article, aside, details, figcaption, figure, 
+article, aside, details, figcaption, figure,
 footer, header, hgroup, menu, nav, section {
 	display: block;
 }
@@ -285,43 +293,43 @@ button{cursor: pointer;}
 .clearfix:after {content:''; display:block; clear:both;}
 
 
-.m_bg { 
+.m_bg {
 	background : #0039bd !important;
 }
 
-.s_bg { 
+.s_bg {
 	background : #F5CA01 !important;
 }
 
-.ss_bg { 
+.ss_bg {
 	background : #beb7b1 !important;
 }
 
-.w_bg { 
+.w_bg {
 	background : #fff !important;
 }
 
-.m_color { 
+.m_color {
 	color : #eebc44 !important;
 }
 
-.s_color { 
+.s_color {
 	color : #F5CA01;
 }
 
-.ss_color { 
+.ss_color {
 	color : #002060;
 }
 
-.w_color { 
+.w_color {
 	color : #fff !important;
 }
 
-.b_color { 
+.b_color {
 	color : #3a3c3b !important;
 }
 
-.submenu>li>a:hover { 
+.submenu>li>a:hover {
 	color : #b5abbb;
 }
 
@@ -379,67 +387,67 @@ button{cursor: pointer;}
 .fts_59 { font-size : 59px !important }
 .fts_60 { font-size : 60px !important }
 
-.b_1 { 
+.b_1 {
 	border : 1px solid #e5e5e5;
 }
-		
-.overflowH { 
+
+.overflowH {
 	overflow : hidden;
 }
 
-.fw100 { 
+.fw100 {
 	font-weight : 100 !important;
 }
 
-.fw200 { 
+.fw200 {
 	font-weight : 200 !important;
 }
 
-.fw300 { 
+.fw300 {
 	font-weight : 300 !important;
 }
 
-.fw400 { 
+.fw400 {
 	font-weight : 400 !important;
 }
 
-.fw500 { 
+.fw500 {
 	font-weight : 500 !important;
 }
 
-.fw600 { 
+.fw600 {
 	font-weight : 600 !important;
 }
 
-.fw700 { 
+.fw700 {
 	font-weight : 700 !important;
 }
 
-.fw800 { 
+.fw800 {
 	font-weight : 800 !important;
 }
 
-.fw900 { 
+.fw900 {
 	font-weight : 900 !important;
 }
 
-.fl { 
+.fl {
 	float : left !important;
 }
 
-.fr { 
+.fr {
 	float : right !important;
 }
 
-.tal { 
+.tal {
 	text-align : left !important;
 }
 
-.tar { 
+.tar {
 	text-align : right !important;
 }
 
-.tac { 
+.tac {
 	text-align : center !important;
 }
 
@@ -792,3 +800,7 @@ template {
 [hidden] {
   display: none;
 }
+div {
+    position: relative;
+    display: block;
+  }

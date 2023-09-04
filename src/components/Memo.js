@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import '../css/components.css';
+import '../css/style.css';
 
 import axios from 'axios';
 

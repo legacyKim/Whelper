@@ -1,12 +1,12 @@
-import React from 'react';
+import { React, useState } from 'react';
+
 // import type { FC } from "react";
 
 import {
     NavLink, useNavigate
 } from "react-router-dom";
 
-import './css/App.css';
-import './css/header.css';
+import './css/style.css';
 
 import Menu from './Menu'
 
@@ -14,45 +14,43 @@ function App() {
 
     const navigate = useNavigate();
 
+    const [theme, themeChange] = useState('dark');
+
+    const themeChangeBtn = () => {
+        if (theme === 'dark') {
+            themeChange('light');
+            console.log(theme)
+        } else {
+            themeChange('dark');
+            console.log(theme)
+        }
+    }
+
     // const Page: FC<{ to: string }> = (props) => <main><Link {...props} /></main>; // prettier-ignore
 
     return (
 
-        <div className="App">
+        <div className={`App ${theme}`}>
             <div className='header'>
-                <div className='Header_area'>
-                    <div className='header_pos'>
 
-                        <div className='logo'>
-                            <NavLink to="/" onClick={() => { navigate('/') }}>
-                                React Project
-                            </NavLink>
-                        </div>
-
-                        <div className='header_btn'>
-                            <div className='write_btn'>
-                                <NavLink to="/components/WriteList" onClick={() => { navigate('/components/WriteList') }}>
-                                    WRITE
-                                </NavLink>
-                            </div>
-                            <div className='write_btn'>
-                                <NavLink to="/components/Memo" onClick={() => { navigate('/components/Memo') }}>
-                                    MEMO
-                                </NavLink>
-                            </div>
-                            <div className='search_bar'>
-                                <NavLink to="/components/Search" onClick={() => { navigate('/components/Search') }}>
-                                    SEARCH
-                                </NavLink>
-                            </div>
-                            <div className='index_btn'>
-                                <NavLink to="" onClick={() => { navigate('/components/Side') }}>
-                                    SIDE
-                                </NavLink>
-                            </div>
-                        </div>
-                    </div>
+                <div className='logo'>
+                    <NavLink to="/" className='icon-github-circled-alt2' onClick={() => { navigate('/') }}></NavLink>
                 </div>
+
+                <ul className='header_btn'>
+                    <li className='btn'><NavLink to="/components/Write" className='icon-vector-pencil' onClick={() => { navigate('/components/Write') }}></NavLink></li>
+                    <li className='btn'><NavLink to="/components/WriteList" className='icon-clipboard' onClick={() => { navigate('/components/WriteList') }}></NavLink></li>
+                    <li className='btn'><NavLink to="/components/Memo" className='' onClick={() => { navigate('/components/Memo') }}></NavLink></li>
+                    <li className='btn'><NavLink to="/components/Search" className='icon-search' onClick={() => { navigate('/components/Search') }}></NavLink></li>
+                    <li className='index_btn'>
+                        <NavLink to="" onClick={() => { navigate('/components/Side') }}>
+                            SIDE
+                        </NavLink>
+                    </li>
+                    <li>
+                        <div id='theme_screen' className='icon-arrows-ccw' onClick={themeChangeBtn}></div>
+                    </li>
+                </ul>
             </div>
 
             <Menu></Menu>

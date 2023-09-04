@@ -1,3 +1,60 @@
+.font_main { font-size: 32px; font-weight: 600; line-height: 2; }
+.font_sub { font-size: 24px; font-weight: 400; line-height: 1.5; }
+.font_text { font-size: 18px; font-weight: 400; line-height: 1.5; }
+
+/* common */
+
+.content_area { position: relative; display: block; width:100%; min-height: 100%; margin: 0 auto; padding: 0 40px; padding-top: 98px; padding-bottom: 32px; }
+.page { position: relative !important; display: block !important; width: 100%; height: 100%; }
+
+.App { position: relative; display: block; width: 100%; min-height: 100%; background: var(--background-color); color: var(--font-color); transition: all 0.3s ease-in-out; }
+.App.dark { --background-color: #202632; --font-color: #fff; --grey-color: #dbdbdb; }
+.App.light { --background-color: #fff; --font-color: #202632; --grey-color: #5e5e5e; }
+
+main { position: absolute; display: block; top: 50%; left: 50%; transform: translate(-50%, -50%); color: var(--font-color); text-align: center; }
+
+/* animation */
+
+.fade-enter { opacity: 0; }
+.fade-enter-active { opacity: 1; transition: all 0.3s ease-in-out; }
+.fade-exit { opacity: 1; }
+.fade-exit-active { opacity: 0; transition: all 0.3s ease-in-out; }
+
+
+
+
+
+
+/* header */
+
+.menuWrap { position: relative; display: block; width: 100%; height: 100%; }
+
+.header { position: fixed; top: 0; display: block; margin: 0 auto; z-index: 9; width: 100%;  }
+.logo { position: fixed; top: 32px; left:32px; display: block; text-align: center; }
+.logo>a { position: relative; display: block; z-index: 9; font-size: 32px; color: var(--font-color); }
+.header_btn { position: fixed; top: 32px; right: 32px; display: flex; justify-content: space-between; text-align: center; width: 187px; }
+.header_btn>li { position: relative; display: flex; justify-content: center; align-items: center;
+ cursor : pointer; }
+.header_btn>li>* { position: relative; display: block; width: 100%; height: 100%; z-index: 9; color: var(--font-color); font-size: 22px; }
+
+/* menu */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 .common_page { position: relative; display: block; width: 100%; min-height: 100%; }
 
 /* begin :: side */
@@ -56,7 +113,7 @@
 
 .WriteDiv { position: relative; display: block; }
 
-.write { position: relative; display: block; }
+.write { position: relative; display: block; height: 100vh; }
 .write_list { position: relative; display: block; border: 1px solid var(--grey-color); padding: 16px; margin-bottom: 16px; }
 .write_list>span { position: relative; display: block; font-size: 24px; font-weight: 400; line-height: 1.5; color: var(--font-color); padding-bottom: 16px; margin-bottom: 16px; border-bottom: 1px solid var(--grey-color); }
 .write_list>strong { position: relative; display: block; font-size: 20px; font-weight: 400; line-height: 1.5; color: var(--font-color); padding-bottom: 16px; margin-bottom: 16px; border-bottom: 1px solid var(--grey-color); }
@@ -64,12 +121,12 @@
 
 /* 글쓰기 */
  .write_page { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 100%; height: 100%; transition: opacity 1s ease-in-out; opacity: 0; backdrop-filter: blur(10px); }
-.write_page_pos { position: absolute; top: 50%; left: 50%; display: block; transform: translate(-50%, -50%); width: 80%; height: 80%; background: rgba(5, 7, 26, 1); border: 1px solid var(--font-color); border-radius: 10px; padding: 20px; }
-.write_page_pos form { position: relative; display: block; height: 100%; }
-.write_page input { position: relative; display: block; background: transparent; width: 100%; border-bottom: 1px solid var(--grey-color); padding: 8px 0px; margin-bottom: 20px; }
+.Write { position:relative; display: block; padding: 20px; padding-top: 100px; }
+.Write form { position: relative; display: block; height: 100%; }
+.Write input { position: relative; display: block; background: transparent; width: 100%; border-bottom: 1px solid var(--grey-color); padding: 8px 0px; margin-bottom: 20px; color: var(--font-color); }
 .write_title { font-size: 32px; font-weight: 600; line-height: 1.8; }
 .write_subtitle { font-size: 24px; font-weight: 600; line-height: 1.8; }
-.write_textarea { position: relative; display: block; background: transparent; width: 100%; height: 71%; border: 0; font-size: 16px; font-weight: 600; line-height: 1.5; color: var(--font-color); resize: none; }
+.write_textarea { position: relative; display: block; background: transparent; width: 100%; height: 66vh; border: 0; font-size: 16px; font-weight: 600; line-height: 1.5; color: var(--font-color); resize: none; }
 .write_textarea::-webkit-scrollbar { width: 6px; }
 .write_textarea::-webkit-scrollbar-thumb { height: 30%; background: #217af4; border-radius: 10px; }
 .write_textarea::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.3); }

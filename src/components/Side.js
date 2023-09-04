@@ -10,7 +10,6 @@ import {
     useLocation
   } from "react-router-dom";
 
-import '../css/components.css';
 
 class Side extends Component {
 

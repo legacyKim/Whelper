@@ -6,15 +6,14 @@ import axios from 'axios';
 import { Route, Routes, useLocation, useParams } from "react-router-dom";
 import history from './history.ts'
 
-import './css/App.css';
-import './css/header.css';
+import './css/style.css';
 
-import List from './components/List'
 import Memo from './components/Memo'
+import Write from './components/Write'
 import WriteList from './components/WriteList'
 import Side from './components/Side'
 import Search from './components/Search'
-import View from './components/View'
+import WriteView from './components/WriteView'
 
 function Menu() {
 
@@ -52,10 +51,12 @@ function Menu() {
 
                         <Route path="/components/Side" element={<Side />} />
                         <Route path="/components/Search" element={<Search />} />
-                        <Route path="/components/List" element={<List />} />
-                        <Route path="/components/Memo" element={<Memo MainMemoData={MainMemoData} />} />
+
+                        <Route path="/components/Write" element={<Write />} />
                         <Route path="/components/WriteList" element={<WriteList />} />
-                        <Route path="/components/View/:id" element={<View />} />
+                        <Route path="/components/WriteView/:id" element={<WriteView />} />
+
+                        <Route path="/components/Memo" element={<Memo MainMemoData={MainMemoData} />} />
 
                     </Routes>
                 </CSSTransition>

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import '../css/components.css';
+import '../css/style.css';
 
 class Correct extends Component {
 
