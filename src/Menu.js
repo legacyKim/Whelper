@@ -51,7 +51,6 @@ function Menu() {
                         <Route exact path="/" />
 
                         <Route path="/components/Side" element={<Side />} />
-                        <Route path="/components/Search" element={<Search />} />
 
                         <Route path="/components/Write" element={<Write />} />
                         <Route path="/components/WriteList" element={<WriteList />} />
