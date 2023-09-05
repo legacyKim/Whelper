@@ -33,8 +33,7 @@
 
 .memo_content:nth-child(4n) { margin-right: 0; }
 
-.memo_content>p { height: 81px;
- display: -webkit-box; -webkit-line-clamp: 3; /* 라인 수 */
+.memo_content>p { height: 81px; display: -webkit-box; -webkit-line-clamp: 3; /* 라인 수 */
  -webkit-box-orient: vertical; text-overflow: ellipsis; overflow: hidden; }
 
 /* End :: memo */
@@ -90,7 +89,6 @@
 .view_content>title { position: relative; display: block; font-size: 32px; font-weight: 600; line-height: 1.5; color: var(--font-color); padding-bottom: 14px; }
 .view_content>span { position: relative; display: block; font-size: 24px; font-weight: 400; line-height: 1.5; color: var(--font-color); padding-bottom: 14px; }
 .view_content>p { position: relative; display: block; font-size: 18px; font-weight: 400; line-height: 1.5; color: var(--font-color); }
-
 
 
 

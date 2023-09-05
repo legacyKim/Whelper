@@ -40,8 +40,10 @@ function App() {
                 <ul className='header_btn'>
                     <li className='btn'><NavLink to="/components/Write" className='icon-vector-pencil' onClick={() => { navigate('/components/Write') }}></NavLink></li>
                     <li className='btn'><NavLink to="/components/WriteList" className='icon-clipboard' onClick={() => { navigate('/components/WriteList') }}></NavLink></li>
+
                     <li className='btn'><NavLink to="/components/Memo" className='' onClick={() => { navigate('/components/Memo') }}></NavLink></li>
                     <li className='btn'><NavLink to="/components/Search" className='icon-search' onClick={() => { navigate('/components/Search') }}></NavLink></li>
+
                     <li className='index_btn'>
                         <NavLink to="" onClick={() => { navigate('/components/Side') }}>
                             SIDE

@@ -14,6 +14,7 @@ import WriteList from './components/WriteList'
 import Side from './components/Side'
 import Search from './components/Search'
 import WriteView from './components/WriteView'
+import WriteCorrect from './components/WriteCorrect'
 
 function Menu() {
 
@@ -55,6 +56,7 @@ function Menu() {
                         <Route path="/components/Write" element={<Write />} />
                         <Route path="/components/WriteList" element={<WriteList />} />
                         <Route path="/components/WriteView/:id" element={<WriteView />} />
+                        <Route path="/components/WriteCorrect/:id" element={<WriteCorrect />} />
 
                         <Route path="/components/Memo" element={<Memo MainMemoData={MainMemoData} />} />
 

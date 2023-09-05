@@ -1,4 +1,4 @@
-let WriteData = [
+let WriteListData = [
 
     {
       id: 0,
@@ -43,4 +43,4 @@ let WriteData = [
     }
   ]
 
-  export default WriteData;
+  export default WriteListData;

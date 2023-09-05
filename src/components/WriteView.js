@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 
 import { useSelector } from "react-redux"
 import { useParams } from 'react-router-dom';
@@ -9,7 +10,7 @@ import axios from 'axios';
 function WriteView() {
 
     const writeListState = useSelector((state) => state.WriteData);
-    let {id} = useParams();
+    let { id } = useParams();
 
     return (
 
@@ -21,6 +22,10 @@ function WriteView() {
                         <span>{writeListState[id].subTitle}</span>
                         <p>{writeListState[id].content}</p>
                     </div>
+
+                    <button className='view_correct_btn'>
+                        <Link to={`/components/WriteCorrect/${id}`}></Link>
+                    </button>
                 </div>
             </div>
         </div>

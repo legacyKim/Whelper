@@ -8,8 +8,8 @@
 .page { position: relative !important; display: block !important; width: 100%; height: 100%; }
 
 .App { position: relative; display: block; width: 100%; min-height: 100%; background: var(--background-color); color: var(--font-color); transition: all 0.3s ease-in-out; }
-.App.dark { --background-color: #202632; --font-color: #fff; --grey-color: #dbdbdb; }
-.App.light { --background-color: #fff; --font-color: #202632; --grey-color: #5e5e5e; }
+.App.dark { --background-color: #202632; --font-color: #fff; --grey-color: #dbdbdb; --main-color:#217af4; }
+.App.light { --background-color: #fff; --font-color: #202632; --grey-color: #5e5e5e; --main-color:#217af4; }
 
 main { position: absolute; display: block; top: 50%; left: 50%; transform: translate(-50%, -50%); color: var(--font-color); text-align: center; }
 
@@ -29,12 +29,11 @@ main { position: absolute; display: block; top: 50%; left: 50%; transform: trans
 
 .menuWrap { position: relative; display: block; width: 100%; height: 100%; }
 
-.header { position: fixed; top: 0; display: block; margin: 0 auto; z-index: 9; width: 100%;  }
+.header { position: fixed; top: 0; display: block; margin: 0 auto; z-index: 9; width: 100%; }
 .logo { position: fixed; top: 32px; left:32px; display: block; text-align: center; }
 .logo>a { position: relative; display: block; z-index: 9; font-size: 32px; color: var(--font-color); }
 .header_btn { position: fixed; top: 32px; right: 32px; display: flex; justify-content: space-between; text-align: center; width: 187px; }
-.header_btn>li { position: relative; display: flex; justify-content: center; align-items: center;
- cursor : pointer; }
+.header_btn>li { position: relative; display: flex; justify-content: center; align-items: center; cursor : pointer; }
 .header_btn>li>* { position: relative; display: block; width: 100%; height: 100%; z-index: 9; color: var(--font-color); font-size: 22px; }
 
 /* menu */
@@ -90,8 +89,7 @@ main { position: absolute; display: block; top: 50%; left: 50%; transform: trans
 
 .memo_content:nth-child(4n) { margin-right: 0; }
 
-.memo_content>p { height: 81px;
- display: -webkit-box; -webkit-line-clamp: 3; /* 라인 수 */
+.memo_content>p { height: 81px; display: -webkit-box; -webkit-line-clamp: 3; /* 라인 수 */
  -webkit-box-orient: vertical; text-overflow: ellipsis; overflow: hidden; }
 
 /* End :: memo */
@@ -148,6 +146,8 @@ main { position: absolute; display: block; top: 50%; left: 50%; transform: trans
 .view_content>span { position: relative; display: block; font-size: 24px; font-weight: 400; line-height: 1.5; color: var(--font-color); padding-bottom: 14px; }
 .view_content>p { position: relative; display: block; font-size: 18px; font-weight: 400; line-height: 1.5; color: var(--font-color); }
 
+.view_correct_btn { position: absolute; top: 50%; left: 98%; display: block; }
+.view_correct_btn>a { position: relative; display: block; width: 24px; height: 24px; background: var(--main-color); border-radius: 50%; }
 
 
 

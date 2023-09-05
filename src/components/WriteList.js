@@ -6,10 +6,9 @@ import { Link } from 'react-router-dom';
 
 function WriteList() {
 
-    let writeListState = useSelector((state) => state.WriteData)
+    let writeListState = useSelector((state) => state.WriteData);
 
     const [isWriteOn, setIsWriteOn] = useState(false);
-
     const WriteOn = () => {
         setIsWriteOn(!isWriteOn);
     }
@@ -45,17 +44,24 @@ function WriteList() {
         const writeListState = useSelector((state) => state.WriteData);
 
         return (
-            <Link to={`/components/WriteView/${writeListState[i].id}`}>
-                <div className='write_list'>
-                    <div className='write_list_btn'>
-                        <button></button>
-                        <button></button>
+            <div>
+                <Link to={`/components/WriteView/${writeListState[i].id}`}>
+                    <div className='write_list'>
+                        <div className='write_list_btn'>
+
+                            <button></button>
+                        </div>
+                        <span>{writeListState[i].title}</span>
+                        <strong>{writeListState[i].subTitle}</strong>
+                        <p>{writeListState[i].content}</p>
                     </div>
-                    <span>{writeListState[i].title}</span>
-                    <strong>{writeListState[i].subTitle}</strong>
-                    <p>{writeListState[i].content}</p>
+                </Link>
+                <div className='view_correct_btn'>
+                    <Link to={`/components/WriteCorrect/${writeListState[i].id}`}></Link>
                 </div>
-            </Link>
+            </div>
+
+
         )
     }
 }
