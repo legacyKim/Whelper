@@ -7,7 +7,7 @@ import {
 } from "react-router-dom";
 
 import './css/style.css';
-import Menu from './Menu'
+import Routes from './Routes'
 
 function App() {
 
@@ -18,16 +18,15 @@ function App() {
     const themeChangeBtn = () => {
         if (theme === 'dark') {
             themeChange('light');
-            console.log(theme)
         } else {
             themeChange('dark');
-            console.log(theme)
         }
     }
 
-    const [isSearchOn, setIsSearchOn] = useState(false);
-    const searchOn = () => {
-        setIsSearchOn(!isSearchOn);
+    const [isSearchOn, setIsSearchOn] = useState('');
+    const searchOn = (e) => {
+        setIsSearchOn('active');
+        // e.stopPropagaion();
     }
 
     // const Page: FC<{ to: string }> = (props) => <main><Link {...props} /></main>; // prettier-ignore
@@ -57,9 +56,8 @@ function App() {
                 </ul>
             </div>
 
-            <Menu></Menu>
-
-            {isSearchOn ? <Search /> : null}
+            <Routes></Routes>
+            <Search></Search>
 
         </div>
 
@@ -75,9 +73,8 @@ function App() {
 
         return (
 
-            <div className="search">
-                <div className='search_bg'></div>
-                <div className={`search_box ${isSearchOn != false ? active : ""}`}>
+            <div className={`search ${isSearchOn != false ? active : ""}`}>
+                <div className="search_box">
                     <input type='text'></input>
                     <button className='w_color' onClick={searchOn}>
                         임시닫기

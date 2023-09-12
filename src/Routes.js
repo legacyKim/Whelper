@@ -8,13 +8,13 @@ import history from './history.ts'
 
 import './css/style.css';
 
-import Memo from './components/Memo'
-import Write from './components/Write'
-import WriteList from './components/WriteList'
-import Side from './components/Side'
-import Search from './components/Search'
-import WriteView from './components/WriteView'
-import WriteCorrect from './components/WriteCorrect'
+import Memo from './components/Memo.js'
+import Write from './components/Write.js'
+import WriteList from './components/WriteList.js'
+import Side from './components/Side.js'
+import Search from './components/Search.js'
+import WriteView from './components/WriteView.js'
+import WriteCorrect from './components/WriteCorrect.js'
 
 function Menu() {
 
