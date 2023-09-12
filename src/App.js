@@ -23,9 +23,9 @@ function App() {
         }
     }
 
-    const [isSearchOn, setIsSearchOn] = useState('');
+    const [isSearchOn, setIsSearchOn] = useState(false);
     const searchOn = (e) => {
-        setIsSearchOn('active');
+        setIsSearchOn(!isSearchOn);
         // e.stopPropagaion();
     }
 
@@ -65,18 +65,30 @@ function App() {
 
     function Search() {
 
-        let [active, setActive] = useState('')
+        let [searchActive, setSearchActive] = useState('')
+
+        const closeSearch = () => {
+            setTimeout(() => {
+              setIsSearchOn(false);
+            }, 300);
+        
+            setSearchActive('');
+          };
 
         useEffect(() => {
-            setActive('active')
+            if (isSearchOn) {
+                setSearchActive('active');
+              } else {
+                setSearchActive('');
+              }
         }, [isSearchOn]);
 
         return (
 
-            <div className={`search ${isSearchOn != false ? active : ""}`}>
+            <div className={`search ${isSearchOn != false ? searchActive : ""}`}>
                 <div className="search_box">
                     <input type='text'></input>
-                    <button className='w_color' onClick={searchOn}>
+                    <button className='w_color' onClick={closeSearch}>
                         임시닫기
                     </button>
                 </div>
