@@ -5,4 +5,12 @@
 .icon-cancel:before { content: '\e803'; } /* '' */
 .icon-link:before { content: '\e804'; } /* '' */
 .icon-clipboard:before { content: '\e805'; } /* '' */
+.icon-link-1:before { content: '\e806'; } /* '' */
+.icon-lock:before { content: '\e807'; } /* '' */
+.icon-lock-open:before { content: '\e808'; } /* '' */
+.icon-cancel-squared:before { content: '\e809'; } /* '' */
+.icon-pin:before { content: '\e80a'; } /* '' */
+.icon-calendar:before { content: '\e80b'; } /* '' */
+.icon-arrows-cw:before { content: '\e80c'; } /* '' */
+.icon-comment:before { content: '\e80d'; } /* '' */
 .icon-github-circled-alt2:before { content: '\f056'; } /* '' */
