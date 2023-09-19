@@ -1,5 +1,5 @@
 import { React, useEffect, useState } from 'react';
-
+import { Link } from 'react-router-dom';
 // import type { FC } from "react";
 
 import {
@@ -55,10 +55,13 @@ function App() {
     const updateScroll = () => {
         setScrollPosition(window.scrollY || document.documentElement.scrollTop);
     };
-    
+
     useEffect(() => {
         window.addEventListener('scroll', updateScroll);
     }, []);
+
+    let searchListContent = ['검색어 1', '검색어 2', '검색어 3']
+    const [searchList, setSearchList] = useState(searchListContent);
 
     return (
 
@@ -95,15 +98,32 @@ function App() {
                         <input type='text'></input>
                     </div>
                     <ol className='search_list'>
-                        <li>
-                        </li>
-
+                        {
+                            searchList.map(function (a, i) {
+                                return (
+                                    <li key={i}>
+                                        <SearchListCom i={i} />
+                                    </li>
+                                )
+                            })
+                        }
                     </ol>
                 </div>
             </div>
         </div>
 
     )
+
+    function SearchListCom() {
+
+        return (
+            <div>
+                <Link>검색어</Link>
+                <button className='icon-cancel-squared'></button>
+            </div>
+        )
+
+    }
 
 }
 

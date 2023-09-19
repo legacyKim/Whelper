@@ -1,5 +1,6 @@
 import { configureStore, createSlice } from '@reduxjs/toolkit'
 import WriteListData from './data'
+import SearchListData from './searchData'
 
 let WriteData = createSlice({
     name: 'WriteData',

@@ -162,16 +162,18 @@ main { position: absolute; display: block; top: 50%; left: 50%; transform: trans
 
 /* search */
 
-.search { position: absolute; top: 0; left: 100%; transform: translateX(0); width: 480px; height: 100vh; transition: transform 0.3s ease-in-out; z-index: 9; } 
+.search { position: fixed; top: 0; left: 100%; transform: translateX(0); width: 480px; height: 100vh; transition: transform 0.3s ease-in-out; z-index: 9; } 
 .search.active { transform: translateX(-480px); } 
 .search_bg { position:absolute; top: 0; left: 0; width: 100%; height: 100%; filter: blur(1.5rem); } 
-.search_box { position: relative; display: flex; flex-direction: column; justify-content: flex-start; align-content: baseline; width: 100%; height: 100%; background: #000000; z-index: 999; transition: all .3s ease-in-out; padding: 16px; padding-left: 24px; } 
-.search_box input { padding: 4px 0 5px; padding-left: 10px; width: calc(100% - 42px); font-size: 18px; font-weight: 700; line-height: 1.6; border-radius: 8px; } 
-.search_box>button { position: absolute; top: 19px; right: 16px; z-index: 9; font-size: 22px; font-weight: 700; color: var(--font-color); background: transparent; } 
+.search_box { position: relative; display: flex; flex-direction: column; justify-content: flex-start; align-content: baseline; width: 100%; height: 100%; background: #26292e; z-index: 999; transition: all .3s ease-in-out; padding: 24px; } 
+.search_box input { padding: 4px 0 5px; padding-left: 10px; width: calc(100% - 34px); font-size: 18px; font-weight: 700; line-height: 1.6; border-radius: 8px; } 
+.search_box>button { position: absolute; top: 27px; right: 16px; z-index: 9; font-size: 22px; font-weight: 700; color: var(--font-color); background: transparent; } 
 
-
-
-
+.search_list { padding-top: 12px; } 
+.search_list>li>div { display: flex; justify-content: space-between; align-items: center; } 
+.search_list>li>div>a { padding: 8px; font-size: 16px; font-weight: 700; line-height: 1.4; opacity: 0.7; transition: all 0.3s ease-in-out; width: calc(100% - 24px); white-space: nowrap; text-overflow: ellipsis; overflow: hidden; } 
+.search_list>li>div>a:hover { opacity: 1; } 
+.search_list>li>div>button { font-size: 20px; margin-right: -6px; } 
 
 
 

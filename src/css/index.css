@@ -3,6 +3,7 @@
 	padding: 0;
 	box-sizing: border-box;
 	outline-style: none;
+	color: var(--font-color);
 }
 
 ul,
