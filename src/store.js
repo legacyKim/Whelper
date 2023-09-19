@@ -11,21 +11,35 @@ let WriteData = createSlice({
             return newWrite;
         },
         writeListDataUpdate(state, updateWriteList) {
-
             const updateWriteId = updateWriteList.payload.id;
-
             state[updateWriteId].title = updateWriteList.payload.updateTitle;
             state[updateWriteId].subTitle = updateWriteList.payload.updateSubTitle;
             state[updateWriteId].content = updateWriteList.payload.updateContent;
+        }
+    }
+})
 
+let SearchData = createSlice({
+    name: 'SearchData',
+    initialState: SearchListData,
+    reducers: {
+        searchListDataCorrect(state, newSearchList) {
+            const newSearch = [...state, newSearchList.payload];
+            return newSearch;
+        },
+        searchListDataDelete(state, deleteSearchList) {
+            const deleteSearchId = deleteSearchList.payload.id;
+            state[deleteSearchId].title = deleteSearchList.payload.updateTitle;
         }
     }
 })
 
 export const { writeListDataCorrect, writeListDataUpdate } = WriteData.actions;
+export const { searchListDataCorrect, searchListDataDelete } = SearchData.actions;
 
 export default configureStore({
     reducer: {
         WriteData: WriteData.reducer,
+        SearchData: SearchData.reducer,
     },
 });

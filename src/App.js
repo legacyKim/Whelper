@@ -1,5 +1,8 @@
 import { React, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+
+import { useSelector } from "react-redux"
+
 // import type { FC } from "react";
 
 import {
@@ -10,6 +13,8 @@ import './css/style.css';
 import Routes from './Routes'
 
 function App() {
+
+    let searchListState = useSelector((state) => state.SearchData);
 
     const navigate = useNavigate();
     const [theme, themeChange] = useState('dark');
@@ -60,9 +65,6 @@ function App() {
         window.addEventListener('scroll', updateScroll);
     }, []);
 
-    let searchListContent = ['검색어 1', '검색어 2', '검색어 3']
-    const [searchList, setSearchList] = useState(searchListContent);
-
     return (
 
         <div id='app' className={`App ${theme}`}>
@@ -99,10 +101,10 @@ function App() {
                     </div>
                     <ol className='search_list'>
                         {
-                            searchList.map(function (a, i) {
+                            searchListState.map(function (a, i) {
                                 return (
                                     <li key={i}>
-                                        <SearchListCom i={i} />
+                                        <SearchListContents i={i} />
                                     </li>
                                 )
                             })
@@ -114,11 +116,13 @@ function App() {
 
     )
 
-    function SearchListCom() {
+    function SearchListContents({ i }) {
+
+        let searchListState = useSelector((state) => state.SearchData);
 
         return (
             <div>
-                <Link>검색어</Link>
+                <Link>{searchListState[i].searchContent}</Link>
                 <button className='icon-cancel-squared'></button>
             </div>
         )
