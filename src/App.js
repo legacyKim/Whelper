@@ -91,13 +91,13 @@ function App() {
             </div>
 
             <Routes></Routes>
-            {/* <Search isSearchOn={isSearchOn} searchActive={searchActive}></Search> */}
 
             <div className={`search ${searchActive ? searchActive : ""}`}>
                 <div className="search_box">
                     <button className='w_color icon-cancel' onClick={closeSearch}></button>
                     <div className="search_input">
                         <input type='text'></input>
+                        <button></button>
                     </div>
                     <ol className='search_list'>
                         {
@@ -122,7 +122,7 @@ function App() {
 
         return (
             <div>
-                <Link>{searchListState[i].searchContent}</Link>
+                <span>{searchListState[i].searchContent}</span>
                 <button className='icon-cancel-squared'></button>
             </div>
         )

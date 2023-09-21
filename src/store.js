@@ -23,9 +23,9 @@ let SearchData = createSlice({
     name: 'SearchData',
     initialState: SearchListData,
     reducers: {
-        searchListDataCorrect(state, newSearchList) {
-            const newSearch = [...state, newSearchList.payload];
-            return newSearch;
+        searchListDataCorrect(state, recentSerachList) {
+            const recentSerach = [...state, recentSerachList.payload];
+            return recentSerach;
         },
         searchListDataDelete(state, deleteSearchList) {
             const deleteSearchId = deleteSearchList.payload.id;
