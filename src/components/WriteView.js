@@ -23,8 +23,8 @@ function WriteView() {
                         <p>{writeListState[id].content}</p>
                     </div>
 
-                    <button className='view_correct_btn'>
-                        <Link to={`/components/WriteCorrect/${id}`}></Link>
+                    <button className='page_btn'>
+                        <Link className='icon-edit-alt' to={`/components/WriteCorrect/${id}`}></Link>
                     </button>
                 </div>
             </div>

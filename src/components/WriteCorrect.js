@@ -2,11 +2,13 @@ import React, { useRef } from 'react';
 import { useDispatch, useSelector } from "react-redux"
 import { writeListDataUpdate } from "../store.js"
 
-import { useParams } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 
 import '../css/style.css';
 
 function WriteCorrect() {
+
+    const navigate = useNavigate();
 
     const writeListState = useSelector((state) => state.WriteData);
     let { id } = useParams();
@@ -29,8 +31,8 @@ function WriteCorrect() {
             <input type="text" placeholder="TITLE" className="write_title" defaultValue={writeListState[id].title} ref={newTitle}></input>
             <input type="text" placeholder="SUBTITLE" className="write_subtitle" defaultValue={writeListState[id].subTitle} ref={newSubTitle}></input>
             <textarea type="text" placeholder="CONTENT" className="write_textarea" defaultValue={writeListState[id].content} ref={newContent}></textarea>
-            <div className='write_page_btn'>
-                <button className='write_btn_save' onClick={WriteCorrectBtn}>Save</button>
+            <div className='page_btn'>
+                <Link to="/components/WriteList" className='icon-ok-circled write_btn_save' onClick={() => { navigate('/components/WriteList'); WriteCorrectBtn(); }}></Link>
             </div>
         </div>
     )

@@ -15,6 +15,10 @@ let WriteData = createSlice({
             state[updateWriteId].title = updateWriteList.payload.updateTitle;
             state[updateWriteId].subTitle = updateWriteList.payload.updateSubTitle;
             state[updateWriteId].content = updateWriteList.payload.updateContent;
+        },
+        writeListDataDelete(state, deleteWriteList) {
+            const deleteWriteId = deleteWriteList.payload.id;
+            return state.filter(item => item.id !== deleteWriteId);
         }
     }
 })
@@ -23,18 +27,18 @@ let SearchData = createSlice({
     name: 'SearchData',
     initialState: SearchListData,
     reducers: {
-        searchListDataCorrect(state, newSearchList) {
-            const newSearch = [...state, newSearchList.payload];
-            return newSearch;
+        searchListDataCorrect(state, recentSerachList) {
+            const recentSerach = [...state, recentSerachList.payload];
+            return recentSerach;
         },
         searchListDataDelete(state, deleteSearchList) {
             const deleteSearchId = deleteSearchList.payload.id;
-            state[deleteSearchId].title = deleteSearchList.payload.updateTitle;
+            return state.filter(item => item.id !== deleteSearchId);
         }
     }
 })
 
-export const { writeListDataCorrect, writeListDataUpdate } = WriteData.actions;
+export const { writeListDataCorrect, writeListDataUpdate, writeListDataDelete } = WriteData.actions;
 export const { searchListDataCorrect, searchListDataDelete } = SearchData.actions;
 
 export default configureStore({

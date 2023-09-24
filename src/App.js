@@ -1,7 +1,8 @@
-import { React, useEffect, useState } from 'react';
+import { React, useEffect, useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 
-import { useSelector } from "react-redux"
+import { searchListDataCorrect, searchListDataDelete } from "./store.js"
+import { useSelector, useDispatch } from "react-redux"
 
 // import type { FC } from "react";
 
@@ -13,8 +14,6 @@ import './css/style.css';
 import Routes from './Routes'
 
 function App() {
-
-    let searchListState = useSelector((state) => state.SearchData);
 
     const navigate = useNavigate();
     const [theme, themeChange] = useState('dark');
@@ -39,7 +38,7 @@ function App() {
         }
     };
 
-    const closeSearch = () => {
+    const searchClose = () => {
         setTimeout(() => {
             setIsSearchOn(false);
         }, 300);
@@ -65,9 +64,27 @@ function App() {
         window.addEventListener('scroll', updateScroll);
     }, []);
 
+    let searchListState = useSelector((state) => state.SearchData);
+    
+    const dispatch = useDispatch();
+    const newSearch = useRef();
+    let newSearchBtn = () => {
+        const id = searchListState.length;
+        const searchContent = newSearch.current.value;
+
+        dispatch(searchListDataCorrect({ id, searchContent }));
+    }
+
+    const recentId = searchListState.length;
+
+    const [searchInputValue, setSearchInputValue] = useState('');
+
     return (
 
         <div id='app' className={`App ${theme}`}>
+
+            <Routes></Routes>
+
             <div className={`header ${scrollPosition > 0 ? "active" : ""}`}>
 
                 <div className='logo'>
@@ -90,14 +107,12 @@ function App() {
                 </ul>
             </div>
 
-            <Routes></Routes>
-            {/* <Search isSearchOn={isSearchOn} searchActive={searchActive}></Search> */}
-
             <div className={`search ${searchActive ? searchActive : ""}`}>
                 <div className="search_box">
-                    <button className='w_color icon-cancel' onClick={closeSearch}></button>
+                    <button className='w_color icon-cancel' onClick={searchClose}></button>
                     <div className="search_input">
-                        <input type='text'></input>
+                        <input type='text' ref={newSearch} value={searchInputValue} onChange={(e) => setSearchInputValue(e.target.value)}></input>
+                        <Link to={`/components/Search/${recentId}`} className='icon-search' onClick={newSearchBtn}></Link>
                     </div>
                     <ol className='search_list'>
                         {
@@ -118,12 +133,19 @@ function App() {
 
     function SearchListContents({ i }) {
 
-        let searchListState = useSelector((state) => state.SearchData);
+        let delSearchBtn = () => {
+            dispatch(searchListDataDelete({ id: searchListState[i].id }));
+        }
+
+        const searchValueClick = searchListState[i].searchContent;
+        const searchVal = () => {
+            setSearchInputValue(searchValueClick);
+        }
 
         return (
             <div>
-                <Link>{searchListState[i].searchContent}</Link>
-                <button className='icon-cancel-squared'></button>
+                <span onClick={searchVal}>{searchListState[i].searchContent}</span>
+                <button className='icon-cancel-squared' onClick={delSearchBtn}></button>
             </div>
         )
 

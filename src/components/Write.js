@@ -1,5 +1,7 @@
 import React, { useRef } from 'react';
 import { useDispatch, useSelector } from "react-redux"
+import { useParams, Link } from 'react-router-dom';
+
 import { writeListDataCorrect } from "../store.js"
 import '../css/style.css';
 
@@ -21,13 +23,15 @@ function Write() {
         dispatch(writeListDataCorrect({ id, title, subTitle, content }));
     };
 
+    const recentId = writeListState.length;
+
     return (
         <div className='Write'>
             <input type="text" placeholder="TITLE" className="write_title" ref={newTitle}></input>
             <input type="text" placeholder="SUBTITLE" className="write_subtitle" ref={newSubTitle}></input>
             <textarea type="text" placeholder="CONTENT" className="write_textarea" ref={newContent}></textarea>
-            <div className='write_page_btn'>
-                <button className='write_btn_save' onClick={WriteSaveBtn}>Save</button>
+            <div className='page_btn'>
+                <Link to={`/components/WriteView/${recentId}`} className='icon-ok-circled write_btn_save' onClick={() => { WriteSaveBtn(); }}></Link>
             </div>
         </div>
     )

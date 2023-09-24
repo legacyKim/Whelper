@@ -10,7 +10,7 @@
 .page { position: relative !important; display: block !important; width: 100%; height: 100%; } 
 
 .App { position: relative; display: block; width: 100%; min-height: 100%; background: var(--background-color); color: var(--font-color); transition: all 0.3s ease-in-out; } 
-.App.dark { --background-color: #202632; --font-color: #fff; --grey-color: #dbdbdb; --main-color:#217af4; --shadow-color :rgba(255, 255, 255, 0.3); } 
+.App.dark { --background-color: #202632; --font-color: #fff; --font-reverse-color:#202632; --grey-color: #dbdbdb; --main-color:#217af4; --shadow-color :rgba(255, 255, 255, 0.3); } 
 .App.light { --background-color: #fff; --font-color: #202632; --grey-color: #5e5e5e; --main-color:#217af4; --shadow-color:rgba(32, 38, 50, 0.3); } 
 
 main { position: absolute; display: block; top: 50%; left: 50%; transform: translate(-50%, -50%); color: var(--font-color); text-align: center; } 
@@ -37,7 +37,7 @@ main { position: absolute; display: block; top: 50%; left: 50%; transform: trans
 .header_btn { position: relative; display: flex; justify-content: space-between; align-items: baseline; text-align: center; width: 187px; } 
 .header_btn>li { position: relative; display: flex; justify-content: center; align-items: center; cursor : pointer; } 
 .header_btn>li>* { position: relative; display: block; width: 100%; height: 100%; z-index: 9; color: var(--font-color); font-size: 22px; background-color: transparent; } 
-.header.active { top:24px; background-color: var(--background-color); margin: 24px; margin-top: 0; box-shadow: 0px 0px 15px 10px var(--shadow-color); border-radius: 16px; width: calc(100% - 48px); } 
+.header.active { top:16px; background-color: var(--background-color); margin: 16px; margin-top: 0; box-shadow: 0px 0px 15px 10px var(--shadow-color); border-radius: 16px; width: calc(100% - 32px); } 
 /* menu */
 
 
@@ -147,17 +147,8 @@ main { position: absolute; display: block; top: 50%; left: 50%; transform: trans
 .view_content>span { position: relative; display: block; font-size: 24px; font-weight: 400; line-height: 1.5; color: var(--font-color); padding-bottom: 14px; } 
 .view_content>p { position: relative; display: block; font-size: 18px; font-weight: 400; line-height: 1.5; color: var(--font-color); } 
 
-.view_correct_btn { position: absolute; top: 50%; left: 98%; display: block; } 
-.view_correct_btn>a { position: relative; display: block; width: 24px; height: 24px; background: var(--main-color); border-radius: 50%; } 
-
-
-
-
-
-
-
-
-
+.write_btn { position: relative; display: flex; justify-content: flex-end; align-items: center; } 
+.write_btn>* { position: relative; display: block; border-radius: 50%; font-size:16px; margin-left: 6px; margin-bottom: 10px; } 
 
 
 /* search */
@@ -166,16 +157,19 @@ main { position: absolute; display: block; top: 50%; left: 50%; transform: trans
 .search.active { transform: translateX(-480px); } 
 .search_bg { position:absolute; top: 0; left: 0; width: 100%; height: 100%; filter: blur(1.5rem); } 
 .search_box { position: relative; display: flex; flex-direction: column; justify-content: flex-start; align-content: baseline; width: 100%; height: 100%; background: #26292e; z-index: 999; transition: all .3s ease-in-out; padding: 24px; } 
-.search_box input { padding: 4px 0 5px; padding-left: 10px; width: calc(100% - 34px); font-size: 18px; font-weight: 700; line-height: 1.6; border-radius: 8px; } 
 .search_box>button { position: absolute; top: 27px; right: 16px; z-index: 9; font-size: 22px; font-weight: 700; color: var(--font-color); background: transparent; } 
 
 .search_list { padding-top: 12px; } 
 .search_list>li>div { display: flex; justify-content: space-between; align-items: center; } 
-.search_list>li>div>a { padding: 8px; font-size: 16px; font-weight: 700; line-height: 1.4; opacity: 0.7; transition: all 0.3s ease-in-out; width: calc(100% - 24px); white-space: nowrap; text-overflow: ellipsis; overflow: hidden; } 
-.search_list>li>div>a:hover { opacity: 1; } 
-.search_list>li>div>button { font-size: 20px; margin-right: -6px; } 
+.search_list>li>div>span { padding: 8px; font-size: 16px; font-weight: 700; line-height: 1.4; opacity: 0.7; transition: all 0.3s ease-in-out; width: calc(100% - 24px); white-space: nowrap; text-overflow: ellipsis; overflow: hidden; cursor: pointer; } 
+.search_list>li>div>span:hover { opacity: 1; } 
+.search_list>li>div>button { font-size: 20px; margin-right: -6px; opacity:0.7; transition: all 0.3s ease-in-out; } 
+.search_list>li>div>button:hover { font-size: 20px; margin-right: -6px; opacity:1; } 
 
-
+.search_input { position: relative; display: flex; justify-content:flex-start; align-items: center; width: calc(100% - 23px); padding-left: 6px; } 
+.search_input input { padding: 4px 0 5px; font-size: 18px; font-weight: 700; line-height: 1.6; border-radius: 8px; color: #26292e; padding-left: 10px; margin-right:12px; width:calc(100% - 38px); } 
+.search_input a { display: block; font-size: 21px; right: 0vw; border-radius: 50%; top: 44%; position: absolute; transform: translateY(-50%); transition: all 0.3s ease-in-out; } 
+.search_input a:hover { color: var(--main-color); } 
 
 
 
@@ -192,10 +186,12 @@ main { position: absolute; display: block; top: 50%; left: 50%; transform: trans
 
 /* 버튼 공통 */
 
+.page_btn { position: fixed; bottom: 24px; right: 24px; display: flex; justify-content: flex-start; flex-direction: column; align-items: center; } 
+.page_btn>* { font-size: 22px; border-radius: 50%; color: var(--font-color); } 
 
 .write_btn_save,
 .memo_btn_save,
-.content_write_save { background-color: #217af4; border-radius: 50%; width: 16px; height: 16px; } 
+.content_write_save { } 
 
 .write_btn_cancel,
 .memo_view_close { background-color: salmon; border-radius: 50%; width: 16px; height: 16px; } 

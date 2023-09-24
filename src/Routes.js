@@ -9,12 +9,13 @@ import history from './history.ts'
 import './css/style.css';
 
 import Memo from './components/Memo.js'
+
 import Write from './components/Write.js'
 import WriteList from './components/WriteList.js'
-import Side from './components/Side.js'
-import Search from './components/Search.js'
 import WriteView from './components/WriteView.js'
 import WriteCorrect from './components/WriteCorrect.js'
+
+import Search from './components/Search.js'
 
 function Menu() {
 
@@ -50,12 +51,12 @@ function Menu() {
 
                         <Route exact path="/" />
 
-                        <Route path="/components/Side" element={<Side />} />
-
                         <Route path="/components/Write" element={<Write />} />
                         <Route path="/components/WriteList" element={<WriteList />} />
                         <Route path="/components/WriteView/:id" element={<WriteView />} />
                         <Route path="/components/WriteCorrect/:id" element={<WriteCorrect />} />
+
+                        <Route path="/components/Search/:id" element={<Search />} />
 
                         <Route path="/components/Memo" element={<Memo MainMemoData={MainMemoData} />} />
 
