@@ -6,13 +6,13 @@ import { useParams } from 'react-router-dom';
 function Search () {
 
     let searchListState = useSelector((state) => state.SearchData);
-    let { id } = useParams();
+    let { searchInputValue } = useParams();
 
     return (
 
         <div className='search_result'>
 
-            <span>검색어 :: <strong>{searchListState[id].searchContent}</strong></span>
+            <span>검색어 :: <strong>{searchInputValue}</strong></span>
 
         </div>
 

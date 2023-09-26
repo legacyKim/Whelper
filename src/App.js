@@ -65,7 +65,7 @@ function App() {
     }, []);
 
     let searchListState = useSelector((state) => state.SearchData);
-    
+
     const dispatch = useDispatch();
     const newSearch = useRef();
     let newSearchBtn = () => {
@@ -74,8 +74,6 @@ function App() {
 
         dispatch(searchListDataCorrect({ id, searchContent }));
     }
-
-    const recentId = searchListState.length;
 
     const [searchInputValue, setSearchInputValue] = useState('');
 
@@ -98,9 +96,6 @@ function App() {
                     <li className='btn'><NavLink to="/components/Memo" className='icon-comment' onClick={() => { navigate('/components/Memo') }}></NavLink></li>
                     <li className='btn'><button className='icon-search' onClick={searchOn}></button></li>
 
-                    {/* <li className='index_btn'>
-                        <NavLink to="" onClick={() => { navigate('/components/Side') }}>SIDE</NavLink>
-                    </li> */}
                     <li>
                         <div id='theme_screen' className='icon-arrows-ccw' onClick={themeChangeBtn}></div>
                     </li>
@@ -112,7 +107,7 @@ function App() {
                     <button className='w_color icon-cancel' onClick={searchClose}></button>
                     <div className="search_input">
                         <input type='text' ref={newSearch} value={searchInputValue} onChange={(e) => setSearchInputValue(e.target.value)}></input>
-                        <Link to={`/components/Search/${recentId}`} className='icon-search' onClick={newSearchBtn}></Link>
+                        <Link to={`/components/Search/${searchInputValue}`} className='icon-search' onClick={newSearchBtn}></Link>
                     </div>
                     <ol className='search_list'>
                         {
