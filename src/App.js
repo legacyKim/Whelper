@@ -65,7 +65,6 @@ function App() {
     }, []);
 
     let searchListState = useSelector((state) => state.SearchData);
-    // let searchListStateRe = searchListState.reverse();
 
     const dispatch = useDispatch();
     const newSearch = useRef();
@@ -100,13 +99,9 @@ function App() {
                 <ul className='header_btn'>
                     <li className='btn'><NavLink to="/components/Write" className='icon-vector-pencil' onClick={() => { navigate('/components/Write') }}></NavLink></li>
                     <li className='btn'><NavLink to="/components/WriteList" className='icon-clipboard' onClick={() => { navigate('/components/WriteList') }}></NavLink></li>
-
                     <li className='btn'><NavLink to="/components/Memo" className='icon-comment' onClick={() => { navigate('/components/Memo') }}></NavLink></li>
                     <li className='btn'><button className='icon-search' onClick={searchOn}></button></li>
-
-                    <li>
-                        <div id='theme_screen' className='icon-arrows-ccw' onClick={themeChangeBtn}></div>
-                    </li>
+                    <li><div id='theme_screen' className='icon-arrows-ccw' onClick={themeChangeBtn}></div></li>
                 </ul>
             </div>
 
