@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { TransitionGroup, CSSTransition } from "react-transition-group";
 
 import axios from 'axios';
 
-import { Route, Routes, useLocation, useParams } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 import history from './history.ts'
 
 import './css/style.css';
@@ -20,7 +20,6 @@ import Search from './components/Search.js'
 function Menu() {
 
     const location = useLocation();
-    const [WriteListData, setWriteListData] = useState([]);
     const [MainMemoData, MainMemoCorrect] = useState([]);
 
     // useEffect(async () => {

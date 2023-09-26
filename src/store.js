@@ -32,8 +32,8 @@ let SearchData = createSlice({
             return recentSerach;
         },
         searchListDataDelete(state, deleteSearchList) {
-            const deleteSearchId = deleteSearchList.payload.id;
-            return state.filter(item => item.id !== deleteSearchId);
+            const deleteSearchContent = deleteSearchList.payload.searchContent;
+            return state.filter(item => item.searchContent !== deleteSearchContent);
         }
     }
 })

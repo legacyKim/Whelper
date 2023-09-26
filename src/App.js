@@ -65,14 +65,22 @@ function App() {
     }, []);
 
     let searchListState = useSelector((state) => state.SearchData);
+    // let searchListStateRe = searchListState.reverse();
 
     const dispatch = useDispatch();
     const newSearch = useRef();
     let newSearchBtn = () => {
-        const id = searchListState.length;
         const searchContent = newSearch.current.value;
 
-        dispatch(searchListDataCorrect({ id, searchContent }));
+        const searchContentDupli = searchListState.filter(item => item.searchContent === searchContent);
+        console.log(searchContentDupli);
+
+        if (searchContentDupli.length !== 0) {
+            dispatch(searchListDataDelete({ searchContent: searchContentDupli[0].searchContent }));
+        }
+
+        dispatch(searchListDataCorrect({ searchContent }));
+
     }
 
     const [searchInputValue, setSearchInputValue] = useState('');
@@ -129,7 +137,7 @@ function App() {
     function SearchListContents({ i }) {
 
         let delSearchBtn = () => {
-            dispatch(searchListDataDelete({ id: searchListState[i].id }));
+            dispatch(searchListDataDelete({ searchContent: searchListState[i].searchContent }));
         }
 
         const searchValueClick = searchListState[i].searchContent;
