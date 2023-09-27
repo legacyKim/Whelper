@@ -101,11 +101,9 @@ function App() {
             <Routes></Routes>
 
             <div className={`header ${scrollPosition > 0 ? "active" : ""}`}>
-
                 <div className='logo'>
                     <NavLink to="/" className='icon-github-circled-alt2' onClick={() => { navigate('/') }}></NavLink>
                 </div>
-
                 <ul className='header_btn'>
                     <li className='btn'><NavLink to="/components/Write" className='icon-vector-pencil' onClick={() => { navigate('/components/Write') }}></NavLink></li>
                     <li className='btn'><NavLink to="/components/WriteList" className='icon-clipboard' onClick={() => { navigate('/components/WriteList') }}></NavLink></li>

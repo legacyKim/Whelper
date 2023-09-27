@@ -36,7 +36,7 @@ function WriteList() {
         const delWriteList = () => {
             dispatch(writeListDataDelete({id : writeListState[i].id}))
         }
-        
+
         return (
 
             <div>
@@ -51,7 +51,6 @@ function WriteList() {
                         <p>{writeListState[i].content}</p>
                     </div>
                 </Link>
-                
             </div>
 
         )
