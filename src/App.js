@@ -18,6 +18,7 @@ function App() {
     const navigate = useNavigate();
     const [theme, themeChange] = useState('dark');
 
+    // about change theme
     const themeChangeBtn = () => {
         if (theme === 'dark') {
             themeChange('light');
@@ -25,7 +26,9 @@ function App() {
             themeChange('dark');
         }
     }
+    //// about change theme
 
+    // about search ShowHide
     const [isSearchOn, setIsSearchOn] = useState(false);
     const [searchActive, setSearchActive] = useState('');
 
@@ -53,7 +56,9 @@ function App() {
             setSearchActive('');
         }
     }, [searchActive]);
+    //// about search ShowHide
 
+    // about header scroll
     const [scrollPosition, setScrollPosition] = useState(0);
 
     const updateScroll = () => {
@@ -63,7 +68,9 @@ function App() {
     useEffect(() => {
         window.addEventListener('scroll', updateScroll);
     }, []);
+    //// about header scroll
 
+    // about search
     let searchListState = useSelector((state) => state.SearchData);
 
     const dispatch = useDispatch();
@@ -77,10 +84,15 @@ function App() {
         }
 
         dispatch(searchListDataCorrect({ searchContent }));
-
     }
 
-    const [searchInputValue, setSearchInputValue] = useState('');
+    const [searchInputValue, setSearchInputValue] = useState(searchListState[searchListState.length - 1].searchContent);
+    const searchLastValue = useRef();
+    useEffect(() => {
+        searchLastValue.current = searchListState[searchListState.length - 1].searchContent;
+        setSearchInputValue(searchLastValue.current);
+    }, [searchListState]);
+    //// about search
 
     return (
 
@@ -89,15 +101,14 @@ function App() {
             <Routes></Routes>
 
             <div className={`header ${scrollPosition > 0 ? "active" : ""}`}>
-
                 <div className='logo'>
                     <NavLink to="/" className='icon-github-circled-alt2' onClick={() => { navigate('/') }}></NavLink>
                 </div>
-
                 <ul className='header_btn'>
                     <li className='btn'><NavLink to="/components/Write" className='icon-vector-pencil' onClick={() => { navigate('/components/Write') }}></NavLink></li>
                     <li className='btn'><NavLink to="/components/WriteList" className='icon-clipboard' onClick={() => { navigate('/components/WriteList') }}></NavLink></li>
                     <li className='btn'><NavLink to="/components/Memo" className='icon-comment' onClick={() => { navigate('/components/Memo') }}></NavLink></li>
+                    <li className='btn'><NavLink to={`/components/Search/${searchInputValue}`} className='icon-link-1' onClick={() => { navigate('/components/Search') }}></NavLink></li>
                     <li className='btn'><button className='icon-search' onClick={searchOn}></button></li>
                     <li><div id='theme_screen' className='icon-arrows-ccw' onClick={themeChangeBtn}></div></li>
                 </ul>
@@ -108,7 +119,7 @@ function App() {
                     <button className='w_color icon-cancel' onClick={searchClose}></button>
                     <div className="search_input">
                         <input type='text' ref={newSearch} value={searchInputValue} onChange={(e) => setSearchInputValue(e.target.value)}></input>
-                        <Link to={`/components/Search/${searchInputValue}`} className='icon-search' onClick={newSearchBtn}></Link>
+                        <Link to={`/components/Search/${searchInputValue}`} className='icon-search search_input_btn' onClick={newSearchBtn}></Link>
                     </div>
                     <ol className='search_list'>
                         {
