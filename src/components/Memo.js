@@ -44,25 +44,29 @@ function Memo() {
     const [memo, setMemo] = useState(memoListState);
 
     const dispatch = useDispatch();
-
-    var [newMemoComment, setNewMemoComment] = useState();
-    var [newMemoKeyword, setNewMemoKeyword] = useState();
-    var [newMemoOwner, setNewMemoOwner] = useState();
-    var [newMemoSource, setNewMemoSource] = useState();
+    var newMemoKeyword = useRef(null);
+    var newMemoOwner = useRef(null);
+    var newMemoSource = useRef(null);
+    var newMemoComment = useRef(null);
 
     const MemoSaveBtn = () => {
         const id = memoListState.length;
-        const memoComment = newMemoComment;
-
-        console.log(memoComment);
-        const memoKeyword = newMemoKeyword;
-        const memoOwner = newMemoOwner;
-        const memoSource = newMemoSource;
+        const memoComment = newMemoComment.current.value;
+        const memoKeyword = newMemoKeyword.current.value;
+        const memoOwner = newMemoOwner.current.value;
+        const memoSource = newMemoSource.current.value;
 
         dispatch(memoListDataAdd({ id, memoComment, memoKeyword, memoOwner, memoSource }));
         setMemo((prevMemo) => [...prevMemo, { id, memoComment, memoKeyword, memoOwner, memoSource }]);
 
     };
+
+    useEffect(() => {
+        newMemoComment.current.value = null;
+        newMemoKeyword.current.value = null;
+        newMemoOwner.current.value = null;
+        newMemoSource.current.value = null;
+    }, [memoListState]);
 
     return (
 
@@ -74,11 +78,11 @@ function Memo() {
                 </div>
 
                 <div className='memo_add'>
-                    <textarea className='scroll' placeholder='newMemoComment' onInput={(e)=>setNewMemoComment(e.target.value)}></textarea>
+                    <textarea className='scroll' placeholder='newMemoComment' ref={newMemoComment}></textarea>
                     <div className='memo_input'>
-                    <input type='text' placeholder='newMemoKeyword' onInput={(e)=>setNewMemoKeyword(e.target.value)}></input>
-                        <input type='text' placeholder='newMemoOwner' onInput={(e)=>setNewMemoOwner(e.target.value)}></input>
-                        <input type='text' placeholder='newMemoSource' onInput={(e)=>setNewMemoSource(e.target.value)}></input>
+                        <input type='text' placeholder='newMemoKeyword' ref={newMemoKeyword}></input>
+                        <input type='text' placeholder='newMemoOwner' ref={newMemoOwner}></input>
+                        <input type='text' placeholder='newMemoSource' ref={newMemoSource}></input>
                     </div>
                 </div>
 
