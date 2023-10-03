@@ -92,6 +92,10 @@ function Memo() {
                         memo.map(function (a, i) {
                             return (
                                 <div className='memo_content' key={i}>
+                                    <div className='memoList_btn'>
+                                        <button className='icon-edit-alt'></button>
+                                        <button className='icon-trash'></button>
+                                    </div>
                                     <p className='font_text' onClick={() => memoDetailOn(i)}>{memo[i].memoComment}</p>
                                 </div>
                             )
