@@ -10,7 +10,8 @@ import '../css/style.css';
 function Search() {
 
     let { searchInputValue } = useParams();
-    const [searchPageInput, setSearchPageInput] = useState(searchInputValue);
+    const [searchFrist, setFirstSearch] = useState(searchInputValue);
+    const [searchPageInput, setSearchPageInput] = useState(searchFrist);
 
     // about search
     let searchListState = useSelector((state) => state.SearchData);
@@ -26,6 +27,8 @@ function Search() {
         }
 
         dispatch(searchListDataCorrect({ searchContent }));
+        
+        setSearchPageInput(searchFrist);
     }
     //// about search
 
@@ -43,7 +46,7 @@ function Search() {
         <div className='content_area'>
             <div className='search_result'>
                 <span className='search_input search_input_limit'>
-                    <input type='text' ref={newSearch} value={searchPageInput} onInput={(e) => setSearchPageInput(e.target.value)}></input>
+                    <input type='text' ref={newSearch} value={searchFrist} onInput={(e) => setFirstSearch(e.target.value)}></input>
                     <button className='icon-search search_input_btn' onClick={newSearchBtn}></button>
                 </span>
                 <ul className='search_result_list'>

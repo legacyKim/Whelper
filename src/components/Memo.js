@@ -1,77 +1,105 @@
-import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import React, { useState, useEffect, useRef } from 'react';
+import { useSelector, useDispatch } from "react-redux"
+
 import '../css/style.css';
+import { memoListDataAdd } from "../store.js"
 
-import axios from 'axios';
 
-function Memo(props) {
+function Memo() {
 
-    // console.log('test memo');
+    let memoListState = useSelector((state) => state.memoData);
 
-    const { id } = useParams();
+    // about memoDetail ShowHide
+    const [isMemoDetail, setIsMemoDetail] = useState(false);
+    const [memoActive, setMemoActive] = useState('');
+    const [selectedMemoIndex, setSelectedMemoIndex] = useState(null);
 
-    const [showComponent, setShowComponent] = useState();
-
-    const [Memo, setMemo] = useState(props);
-    const [newMemo, setNewMemo] = useState('');
-
-    const memoSubmit = async (event) => {
-
-        try {
-            const response = await axios.post('http://localhost:3000/api/Memo', { memo: newMemo });
-            setMemo([...props, response.data]);
-            setNewMemo('');
-        } catch (err) {
-            console.error(err);
+    const memoDetailOn = (i) => {
+        setSelectedMemoIndex(!isMemoDetail);
+        if (!isMemoDetail) {
+            setMemoActive('active');
+        } else {
+            setMemoActive('');
         }
-    }
+        setSelectedMemoIndex(i);
+    };
 
-    const memoDelete = async (a) => {
+    const memoDetailClose = () => {
+        setTimeout(() => {
+            setIsMemoDetail(false);
+        }, 300);
 
-        try {
-            const response = await axios.delete(`http://localhost:3000/api/Memo`, { data: { memo: a.memo } });
-            const updatedMemoList = props.MainMemoData.filter(memo => memo.memo !== a.memo);
-            setMemo(updatedMemoList);
-        } catch (err) {
-            console.error(err);
+        setMemoActive('');
+    };
+
+    useEffect(() => {
+        if (memoActive) {
+            setMemoActive('active');
+        } else {
+            setMemoActive('');
         }
-    }
+    }, [memoActive]);
+    //// about memoDetail ShowHide
+
+    const [memo, setMemo] = useState(memoListState);
+
+    const dispatch = useDispatch();
+
+    var [newMemoComment, setNewMemoComment] = useState();
+    var [newMemoKeyword, setNewMemoKeyword] = useState();
+    var [newMemoOwner, setNewMemoOwner] = useState();
+    var [newMemoSource, setNewMemoSource] = useState();
+
+    const MemoSaveBtn = () => {
+        const id = memoListState.length;
+        const memoComment = newMemoComment;
+
+        console.log(memoComment);
+        const memoKeyword = newMemoKeyword;
+        const memoOwner = newMemoOwner;
+        const memoSource = newMemoSource;
+
+        dispatch(memoListDataAdd({ id, memoComment, memoKeyword, memoOwner, memoSource }));
+        setMemo((prevMemo) => [...prevMemo, { id, memoComment, memoKeyword, memoOwner, memoSource }]);
+
+    };
 
     return (
 
         <div className='common_page'>
             <div className='content_area'>
 
-                <form onSubmit={memoSubmit}>
-                    <div className='memo_btn'>
-                        <button href='#'>메모 추가하는 버튼</button>
-                    </div>
+                <div className='memo_btn'>
+                    <button onClick={MemoSaveBtn} className='icon-ok-circled'></button>
+                </div>
 
+                <div className='memo_add'>
+                    <textarea className='scroll' placeholder='newMemoComment' onInput={(e)=>setNewMemoComment(e.target.value)}></textarea>
                     <div className='memo_input'>
-                        <textarea onInput={(e) => {
-                            setNewMemo(e.target.value.replaceAll("<br>", "\r\n"))
-                        }}>
-
-                        </textarea>
+                    <input type='text' placeholder='newMemoKeyword' onInput={(e)=>setNewMemoKeyword(e.target.value)}></input>
+                        <input type='text' placeholder='newMemoOwner' onInput={(e)=>setNewMemoOwner(e.target.value)}></input>
+                        <input type='text' placeholder='newMemoSource' onInput={(e)=>setNewMemoSource(e.target.value)}></input>
                     </div>
-                </form>
+                </div>
 
                 <div className='memo_wrap'>
 
                     {
-                        props.MainMemoData.map(function (a, i) {
+                        memo.map(function (a, i) {
                             return (
                                 <div className='memo_content' key={i}>
-                                    <p className='font_text' onClick={(e) => { setShowComponent(a, a.id) }} style={{ whiteSpace: 'pre-wrap' }}>{props.MainMemoData[i].memo}</p>
-                                    <form>
-                                        <button onClick={() => memoDelete(a)}>임시 버튼</button>
-                                    </form>
+                                    <p className='font_text' onClick={() => memoDetailOn(i)}>{memo[i].memoComment}</p>
                                 </div>
                             )
                         })
                     }
 
-                    {showComponent && <AnnotationContent props={props.MainMemoData} id={showComponent} />}
+                    {/* memoDetail */}
+                    <div className={`memoDetail_content ${memoActive ? memoActive : ""}`}>
+                        {selectedMemoIndex !== null && <MemoView memo={memoListState[selectedMemoIndex]} />}
+                        <button className='w_color icon-cancel' onClick={memoDetailClose}></button>
+                    </div>
+                    {/* memoDetail */}
 
                 </div>
             </div>
@@ -79,30 +107,15 @@ function Memo(props) {
 
     )
 
-    function AnnotationContent(props) {
-
-        let [fade, setFade] = useState('')
-
-        useEffect(() => {
-            const fadeTimer = setTimeout(() => { setFade('showThis') }, 100)
-            return () => {
-                clearTimeout(fadeTimer);
-                setFade('')
-            }
-        }, props.id)
+    function MemoView({ memo }) {
 
         return (
-
-            <div className={`annotation_content ${props.id ? fade : ""}`}>
-
-                <div className='annotation_content_pos'>
-                    <title className='font_text color_w'>{props.id.memo.replaceAll("<br>", "\r\n")}</title>
-                </div>
-
-                <button className='color_w' onClick={() => setShowComponent()}>임시 닫기 버튼</button>
-
+            <div className='memoDetail_content_pos'>
+                <title className='font_text color_w'>{memo.memoComment}</title>
+                <span className='font_text color_w'>{memo.memoSource}</span>
+                <span className='font_text color_w'>{memo.memoOwner}</span>
+                <span className='font_text color_w'>{memo.memoKeyword}</span>
             </div>
-
         )
 
     }
@@ -110,3 +123,25 @@ function Memo(props) {
 }
 
 export default Memo;
+
+// const memoSubmit = async (event) => {
+
+//     try {
+//         const response = await axios.post('http://localhost:3000/api/Memo', { memo: newMemo });
+//         setMemo([...props, response.data]);
+//         setNewMemo('');
+//     } catch (err) {
+//         console.error(err);
+//     }
+// }
+
+// const memoDelete = async (a) => {
+
+//     try {
+//         const response = await axios.delete(`http://localhost:3000/api/Memo`, { data: { memo: a.memo } });
+//         const updatedMemoList = props.MainMemoData.filter(memo => memo.memo !== a.memo);
+//         setMemo(updatedMemoList);
+//     } catch (err) {
+//         console.error(err);
+//     }
+// }

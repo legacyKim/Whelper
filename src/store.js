@@ -1,12 +1,13 @@
 import { configureStore, createSlice } from '@reduxjs/toolkit'
 import WriteListData from './data'
 import SearchListData from './searchData'
+import memoListData from './dataMemo'
 
 let WriteData = createSlice({
     name: 'WriteData',
     initialState: WriteListData,
     reducers: {
-        writeListDataCorrect(state, newWriteList) {
+        writeListDataAdd(state, newWriteList) {
             const newWrite = [...state, newWriteList.payload];
             return newWrite;
         },
@@ -38,12 +39,36 @@ let SearchData = createSlice({
     }
 })
 
-export const { writeListDataCorrect, writeListDataUpdate, writeListDataDelete } = WriteData.actions;
+let memoData = createSlice({
+    name: 'memoData',
+    initialState: memoListData,
+    reducers: {
+        memoListDataAdd(state, newMemoList) {
+            const newMemo = [...state, newMemoList.payload];
+            return newMemo;
+        },
+        memoListDataUpdate(state, updateMemoList) {
+            const updateMemoId = updateMemoList.payload.id;
+            state[updateMemoId].memoKeyword = updateMemoList.payload.updateMemoKeyword;
+            state[updateMemoId].memoOwner = updateMemoList.payload.updateMemoOwner;
+            state[updateMemoId].memoSource = updateMemoList.payload.updateMemoSource;
+            state[updateMemoId].memoComment = updateMemoList.payload.updateMemoComment;
+        },
+        memoListDataDelete(state, deleteMemoList) {
+            const deleteMemoId = deleteMemoList.payload.id;
+            return state.filter(item => item.id !== deleteMemoId);
+        }
+    }
+})
+
+export const { writeListDataAdd, writeListDataUpdate, writeListDataDelete } = WriteData.actions;
 export const { searchListDataCorrect, searchListDataDelete } = SearchData.actions;
+export const { memoListDataAdd } = memoData.actions;
 
 export default configureStore({
     reducer: {
         WriteData: WriteData.reducer,
         SearchData: SearchData.reducer,
+        memoData: memoData.reducer,
     },
 });

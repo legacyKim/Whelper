@@ -2,7 +2,7 @@ import React, { useRef } from 'react';
 import { useDispatch, useSelector } from "react-redux"
 import { useParams, Link } from 'react-router-dom';
 
-import { writeListDataCorrect } from "../store.js"
+import { writeListDataAdd } from "../store.js"
 import '../css/style.css';
 
 function Write() {
@@ -20,7 +20,7 @@ function Write() {
         const subTitle = newSubTitle.current.value;
         const content = newContent.current.value;
 
-        dispatch(writeListDataCorrect({ id, title, subTitle, content }));
+        dispatch(writeListDataAdd({ id, title, subTitle, content }));
     };
 
     const recentId = writeListState.length;
@@ -29,7 +29,7 @@ function Write() {
         <div className='Write'>
             <input type="text" placeholder="TITLE" className="write_title" ref={newTitle}></input>
             <input type="text" placeholder="SUBTITLE" className="write_subtitle" ref={newSubTitle}></input>
-            <textarea type="text" placeholder="CONTENT" className="write_textarea" ref={newContent}></textarea>
+            <textarea type="text" placeholder="CONTENT" className="scroll write_textarea" ref={newContent}></textarea>
             <div className='page_btn'>
                 <Link to={`/components/WriteView/${recentId}`} className='icon-ok-circled write_btn_save' onClick={() => { WriteSaveBtn(); }}></Link>
             </div>
