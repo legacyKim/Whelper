@@ -2,8 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from "react-redux"
 
 import '../css/style.css';
-import { memoListDataAdd } from "../store.js"
-
+import { memoListDataAdd, memoListDataDelete } from "../store.js"
 
 function Memo() {
 
@@ -61,6 +60,10 @@ function Memo() {
 
     };
 
+    const delMemoList = (i) => {
+        dispatch(memoListDataDelete({id : memo[i].id}))
+    }
+
     useEffect(() => {
         newMemoComment.current.value = null;
         newMemoKeyword.current.value = null;
@@ -94,7 +97,7 @@ function Memo() {
                                 <div className='memo_content' key={i}>
                                     <div className='memoList_btn'>
                                         <button className='icon-edit-alt'></button>
-                                        <button className='icon-trash'></button>
+                                        <button className='icon-trash' onClick={() => delMemoList(i)}></button>
                                     </div>
                                     <p className='font_text' onClick={() => memoDetailOn(i)}>{memo[i].memoComment}</p>
                                 </div>

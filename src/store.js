@@ -47,13 +47,13 @@ let memoData = createSlice({
             const newMemo = [...state, newMemoList.payload];
             return newMemo;
         },
-        memoListDataUpdate(state, updateMemoList) {
-            const updateMemoId = updateMemoList.payload.id;
-            state[updateMemoId].memoKeyword = updateMemoList.payload.updateMemoKeyword;
-            state[updateMemoId].memoOwner = updateMemoList.payload.updateMemoOwner;
-            state[updateMemoId].memoSource = updateMemoList.payload.updateMemoSource;
-            state[updateMemoId].memoComment = updateMemoList.payload.updateMemoComment;
-        },
+        // memoListDataUpdate(state, updateMemoList) {
+        //     const updateMemoId = updateMemoList.payload.id;
+        //     state[updateMemoId].memoKeyword = updateMemoList.payload.updateMemoKeyword;
+        //     state[updateMemoId].memoOwner = updateMemoList.payload.updateMemoOwner;
+        //     state[updateMemoId].memoSource = updateMemoList.payload.updateMemoSource;
+        //     state[updateMemoId].memoComment = updateMemoList.payload.updateMemoComment;
+        // },
         memoListDataDelete(state, deleteMemoList) {
             const deleteMemoId = deleteMemoList.payload.id;
             return state.filter(item => item.id !== deleteMemoId);
@@ -63,7 +63,7 @@ let memoData = createSlice({
 
 export const { writeListDataAdd, writeListDataUpdate, writeListDataDelete } = WriteData.actions;
 export const { searchListDataCorrect, searchListDataDelete } = SearchData.actions;
-export const { memoListDataAdd } = memoData.actions;
+export const { memoListDataAdd, memoListDataDelete } = memoData.actions;
 
 export default configureStore({
     reducer: {
