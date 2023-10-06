@@ -40,7 +40,7 @@ function Memo() {
     }, [memoActive]);
     //// about memoDetail ShowHide
 
-    // about memoDetail ShowHide
+    // about memoCorrect ShowHide
     const [isMemoCorrect, setIsMemoCorrect] = useState(false);
     const [memoCorrectActive, setMemoCorrectActive] = useState('');
     const [memoCorrectIndex, setMemoCorrectIndex] = useState(null);
@@ -70,7 +70,7 @@ function Memo() {
             setMemoCorrectActive('');
         }
     }, [memoCorrectActive]);
-    //// about memoDetail ShowHide
+    //// about memoCorrect ShowHide
 
     const [memo, setMemo] = useState(memoListState);
 
@@ -96,12 +96,32 @@ function Memo() {
         dispatch(memoListDataDelete({ id: memo[i].id }))
     }
 
-    useEffect(() => {
+    // memo correct btn
+    var correctMemoKeyword = useRef();
+    var correctMemoOwner = useRef();
+    var correctMemoSource = useRef();
+    var correctMemoComment = useRef();
+
+    const memoCorrectBtn = (memoCorrectIndex) => {
+        const memoId = memoCorrectIndex;
+        const updateMemoKeyword = correctMemoKeyword.current.value;
+        const updateMemoOwner = correctMemoOwner.current.value;
+        const updateMemoSource = correctMemoSource.current.value;
+        const updateMemoComment = correctMemoComment.current.value;
+
+        dispatch(memoListDataUpdate({ memoId, updateMemoKeyword, updateMemoOwner, updateMemoSource, updateMemoComment }));
+        setMemoCorrectActive('');
+    };
+    // memo correct btn
+
+    useEffect(()=>{
         newMemoComment.current.value = null;
         newMemoKeyword.current.value = null;
         newMemoOwner.current.value = null;
         newMemoSource.current.value = null;
-    }, [memoListState]);
+
+        setMemo(memoListState);
+    }, [memoListState])
 
     return (
 
@@ -148,6 +168,9 @@ function Memo() {
                     <div className={`memoDetail_content ${memoCorrectActive ? memoCorrectActive : ""}`}>
                         {memoCorrectIndex !== null && <MemoCorrect memo={memoListState[memoCorrectIndex]} />}
                         <button className='w_color icon-cancel' onClick={memoCorrectClose}></button>
+                        <div className='page_btn'>
+                            <button className='icon-ok-circled' onClick={() => memoCorrectBtn(memoCorrectIndex)}></button>
+                        </div>
                     </div>
                     {/* memoCorrect */}
 
@@ -162,42 +185,38 @@ function Memo() {
         return (
             <div className='memoDetail_content_pos'>
                 <title className='font_text color_w'>{memo.memoComment}</title>
-                <span className='font_text color_w'>{memo.memoSource}</span>
-                <span className='font_text color_w'>{memo.memoOwner}</span>
-                <span className='font_text color_w'>{memo.memoKeyword}</span>
+
+                <div className='memoDetail_content_info'>
+                    <strong>출처</strong>
+                    <span className='font_text color_w'>{memo.memoSource}</span>
+                    <strong>저자</strong>
+                    <span className='font_text color_w'>{memo.memoOwner}</span>
+                    <strong>키워드</strong>
+                    <span className='font_text color_w'>{memo.memoKeyword}</span>
+                </div>
+
             </div>
         )
 
     }
 
     function MemoCorrect({ memo }) {
-
-        const dispatch = useDispatch();
-        var correctMemoKeyword = useRef(null);
-        var correctMemoOwner = useRef(null);
-        var correctMemoSource = useRef(null);
-        var correctMemoComment = useRef(null);
-
-        const memoCorrectBtn = () => {
-            const memoId = memo.id;
-            const memoKeyword = correctMemoKeyword.current.value;
-            const memoOwner = correctMemoOwner.current.value;
-            const memoSource = correctMemoSource.current.value;
-            const memoComment = correctMemoComment.current.value;
-
-            dispatch(memoListDataUpdate({memoId, memoComment, memoKeyword, memoOwner, memoSource }));
-        };
-
+        
         return (
-            <div className='memoCorrect_content_pos'>
-                <input type="text" placeholder="correctMemoKeyword" className="write_title" defaultValue={memo.memoKeyword} ref={correctMemoKeyword}></input>
-                <input type="text" placeholder="correctMemoOwner" className="write_subtitle" defaultValue={memo.memoOwner} ref={correctMemoOwner}></input>
-                <input type="text" placeholder="correctMemoSource" className="write_subtitle" defaultValue={memo.memoSource} ref={correctMemoSource}></input>
-                <textarea type="text" placeholder="correctMemoComment" className="write_textarea" defaultValue={memo.memoComment} ref={correctMemoComment}></textarea>
-                <div className='page_btn'>
-                    <button className='icon-ok-circled write_btn_save' onClick={() => memoCorrectBtn}></button>
+            <div className='memoCorrect_pos'>
+                <div className='memoCorrect_info'>
+                    <strong>출처</strong>
+                    <input type="text" placeholder="correctMemoSource" className="memo_source" defaultValue={memo.memoSource} ref={correctMemoSource}></input>
                 </div>
-
+                <div className='memoCorrect_info'>
+                    <strong>저자</strong>
+                    <input type="text" placeholder="correctMemoOwner" className="memo_owner" defaultValue={memo.memoOwner} ref={correctMemoOwner}></input>
+                </div>
+                <div className='memoCorrect_info'>
+                    <strong>키워드</strong>
+                    <input type="text" placeholder="correctMemoKeyword" className="memo_keyword" defaultValue={memo.memoKeyword} ref={correctMemoKeyword}></input>
+                </div>
+                <textarea type="text" placeholder="correctMemoComment" className="memo_comment" defaultValue={memo.memoComment} ref={correctMemoComment}></textarea>
             </div>
 
         )

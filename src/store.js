@@ -48,7 +48,7 @@ let memoData = createSlice({
             return newMemo;
         },
         memoListDataUpdate(state, updateMemoList) {
-            const updateMemoId = updateMemoList.payload.id;
+            const updateMemoId = updateMemoList.payload.memoId;
             state[updateMemoId].memoKeyword = updateMemoList.payload.updateMemoKeyword;
             state[updateMemoId].memoOwner = updateMemoList.payload.updateMemoOwner;
             state[updateMemoId].memoSource = updateMemoList.payload.updateMemoSource;

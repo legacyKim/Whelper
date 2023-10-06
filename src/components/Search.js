@@ -27,7 +27,6 @@ function Search() {
         }
 
         dispatch(searchListDataCorrect({ searchContent }));
-        
         setSearchPageInput(searchFrist);
     }
     //// about search
