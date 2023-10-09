@@ -116,8 +116,8 @@ function App() {
 
             <div className={`search ${searchActive ? searchActive : ""}`}>
                 <div className="search_box">
-                    <button className='w_color icon-cancel' onClick={searchClose}></button>
-                    <div className="search_input">
+                    <button className='icon-cancel' onClick={searchClose}></button>
+                    <div className="search_input search_toggle">
                         <input type='text' ref={newSearch} value={searchInputValue} onChange={(e) => setSearchInputValue(e.target.value)}></input>
                         <Link to={`/components/Search/${searchInputValue}`} className='icon-search search_input_btn' onClick={newSearchBtn}></Link>
                     </div>

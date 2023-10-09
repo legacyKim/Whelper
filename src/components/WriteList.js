@@ -34,25 +34,43 @@ function WriteList() {
         const writeListState = useSelector((state) => state.WriteData);
         const dispatch = useDispatch();
         const delWriteList = () => {
-            dispatch(writeListDataDelete({id : writeListState[i].id}))
+            dispatch(writeListDataDelete({ id: writeListState[i].id }))
         }
+
+        console.log(writeListState[i].keyword);
 
         return (
 
             <div>
                 <div className='write_btn'>
                     <Link className='icon-edit-alt' to={`/components/WriteCorrect/${writeListState[i].id}`}></Link>
-                    <button className='icon-trash' onClick={delWriteList}></button>
+                    {/* <button className='icon-trash' onClick={delWriteList}></button> */}
                 </div>
                 <Link to={`/components/WriteView/${writeListState[i].id}`}>
                     <div className='write_list'>
                         <span>{writeListState[i].title}</span>
                         <strong>{writeListState[i].subTitle}</strong>
                         <p>{writeListState[i].content}</p>
+
+                        <div className='write_keyword'>
+                            {
+                                writeListState[i].keyword.map(function (k, index) {
+                                    <WriteKeyword />
+                                })
+                            }
+                        </div>
+
                     </div>
                 </Link>
             </div>
 
+        )
+    }
+
+    function WriteKeyword({writeListKeyword}) {
+
+        return (
+            <Link>{writeListKeyword}</Link>
         )
     }
 }

@@ -92,9 +92,9 @@ function Memo() {
 
     };
 
-    const delMemoList = (i) => {
-        dispatch(memoListDataDelete({ id: memo[i].id }))
-    }
+    // const delMemoList = (i) => {
+    //     dispatch(memoListDataDelete({ id: memo[i].id }))
+    // }
 
     // memo correct btn
     var correctMemoKeyword = useRef();
@@ -114,7 +114,7 @@ function Memo() {
     };
     // memo correct btn
 
-    useEffect(()=>{
+    useEffect(() => {
         newMemoComment.current.value = null;
         newMemoKeyword.current.value = null;
         newMemoOwner.current.value = null;
@@ -133,12 +133,12 @@ function Memo() {
                 </div>
 
                 <div className='memo_add'>
-                    <textarea className='scroll' placeholder='newMemoComment' ref={newMemoComment}></textarea>
                     <div className='memo_input'>
-                        <input type='text' placeholder='newMemoKeyword' ref={newMemoKeyword}></input>
-                        <input type='text' placeholder='newMemoOwner' ref={newMemoOwner}></input>
                         <input type='text' placeholder='newMemoSource' ref={newMemoSource}></input>
+                        <input type='text' placeholder='newMemoOwner' ref={newMemoOwner}></input>
+                        <input type='text' placeholder='newMemoKeyword' ref={newMemoKeyword}></input>
                     </div>
+                    <textarea className='scroll' placeholder='newMemoComment' ref={newMemoComment}></textarea>
                 </div>
 
                 <div className='memo_wrap'>
@@ -149,9 +149,11 @@ function Memo() {
                                 <div className='memo_content' key={i}>
                                     <div className='memoList_btn'>
                                         <button className='icon-edit-alt' onClick={() => memoCorrectOn(i)}></button>
-                                        <button className='icon-trash' onClick={() => delMemoList(i)}></button>
+                                        {/* <button className='icon-trash' onClick={() => delMemoList(i)}></button> */}
                                     </div>
-                                    <p className='font_text' onClick={() => memoDetailOn(i)}>{memo[i].memoComment}</p>
+                                    <div className='memo_content_box'>
+                                        <p className='font_text' onClick={() => memoDetailOn(i)}>{memo[i].memoComment}</p>
+                                    </div>
                                 </div>
                             )
                         })
@@ -160,14 +162,28 @@ function Memo() {
                     {/* memoDetail */}
                     <div className={`memoDetail_content ${memoActive ? memoActive : ""}`}>
                         {selectedMemoIndex !== null && <MemoView memo={memoListState[selectedMemoIndex]} />}
-                        <button className='w_color icon-cancel' onClick={memoDetailClose}></button>
+                        <div className='memoDetail_btn'>
+                            <button className='icon-edit-alt'
+                                onClick={() => {
+                                    memoCorrectOn(selectedMemoIndex);
+                                    memoDetailClose();
+                                }}></button>
+                            <button className='icon-cancel' onClick={memoDetailClose}></button>
+                        </div>
                     </div>
                     {/* memoDetail */}
 
                     {/* memoCorrect */}
                     <div className={`memoDetail_content ${memoCorrectActive ? memoCorrectActive : ""}`}>
                         {memoCorrectIndex !== null && <MemoCorrect memo={memoListState[memoCorrectIndex]} />}
-                        <button className='w_color icon-cancel' onClick={memoCorrectClose}></button>
+                        <div className='memoDetail_btn'>
+                            <button className='icon-clipboard'
+                                onClick={() => {
+                                    memoDetailOn(memoCorrectIndex);
+                                    memoCorrectClose();
+                                }}></button>
+                            <button className='icon-cancel' onClick={memoCorrectClose}></button>
+                        </div>
                         <div className='page_btn'>
                             <button className='icon-ok-circled' onClick={() => memoCorrectBtn(memoCorrectIndex)}></button>
                         </div>
@@ -176,7 +192,7 @@ function Memo() {
 
                 </div>
             </div>
-        </div>
+        </div >
 
     )
 
@@ -184,41 +200,48 @@ function Memo() {
 
         return (
             <div className='memoDetail_content_pos'>
-                <title className='font_text color_w'>{memo.memoComment}</title>
-
-                <div className='memoDetail_content_info'>
-                    <strong>출처</strong>
-                    <span className='font_text color_w'>{memo.memoSource}</span>
-                    <strong>저자</strong>
-                    <span className='font_text color_w'>{memo.memoOwner}</span>
-                    <strong>키워드</strong>
-                    <span className='font_text color_w'>{memo.memoKeyword}</span>
+                <ul className='memoDetail_content_info'>
+                    <li>
+                        <strong>출처</strong>
+                        <span className='font_text color_w'>{memo.memoSource}</span>
+                    </li>
+                    <li>
+                        <strong>저자</strong>
+                        <span className='font_text color_w'>{memo.memoOwner}</span>
+                    </li>
+                    <li>
+                        <strong>키워드</strong>
+                        <span className='font_text color_w'>{memo.memoKeyword}</span>
+                    </li>
+                </ul>
+                <div className='scroll'>
+                    <p className='font_text color_w'>{memo.memoComment}</p>
                 </div>
-
             </div>
         )
 
     }
 
     function MemoCorrect({ memo }) {
-        
-        return (
-            <div className='memoCorrect_pos'>
-                <div className='memoCorrect_info'>
-                    <strong>출처</strong>
-                    <input type="text" placeholder="correctMemoSource" className="memo_source" defaultValue={memo.memoSource} ref={correctMemoSource}></input>
-                </div>
-                <div className='memoCorrect_info'>
-                    <strong>저자</strong>
-                    <input type="text" placeholder="correctMemoOwner" className="memo_owner" defaultValue={memo.memoOwner} ref={correctMemoOwner}></input>
-                </div>
-                <div className='memoCorrect_info'>
-                    <strong>키워드</strong>
-                    <input type="text" placeholder="correctMemoKeyword" className="memo_keyword" defaultValue={memo.memoKeyword} ref={correctMemoKeyword}></input>
-                </div>
-                <textarea type="text" placeholder="correctMemoComment" className="memo_comment" defaultValue={memo.memoComment} ref={correctMemoComment}></textarea>
-            </div>
 
+        return (
+            <div className="memoCorrect_content_pos">
+                <ul className='memoCorrect_info'>
+                    <li>
+                        <strong>출처</strong>
+                        <input type="text" placeholder="correctMemoSource" className="memo_source" defaultValue={memo.memoSource} ref={correctMemoSource}></input>
+                    </li>
+                    <li>
+                        <strong>저자</strong>
+                        <input type="text" placeholder="correctMemoOwner" className="memo_owner" defaultValue={memo.memoOwner} ref={correctMemoOwner}></input>
+                    </li>
+                    <li>
+                        <strong>키워드</strong>
+                        <input type="text" placeholder="correctMemoKeyword" className="memo_keyword" defaultValue={memo.memoKeyword} ref={correctMemoKeyword}></input>
+                    </li>
+                </ul>
+                <textarea type="text" plsaceholder="correctMemoComment" className="memo_comment scroll" defaultValue={memo.memoComment} ref={correctMemoComment}></textarea>
+            </div>
         )
     }
 
