@@ -37,8 +37,6 @@ function WriteList() {
             dispatch(writeListDataDelete({ id: writeListState[i].id }))
         }
 
-        console.log(writeListState[i].keyword);
-
         return (
 
             <div>
@@ -54,9 +52,9 @@ function WriteList() {
 
                         <div className='write_keyword'>
                             {
-                                writeListState[i].keyword.map(function (k, index) {
-                                    <WriteKeyword />
-                                })
+                                writeListState[i].keyword.map((k, index) => (
+                                    <WriteKeyword key={index} writeListKeyword={k} />
+                                ))
                             }
                         </div>
 
@@ -67,11 +65,10 @@ function WriteList() {
         )
     }
 
-    function WriteKeyword({writeListKeyword}) {
-
+    function WriteKeyword({ writeListKeyword }) {
         return (
             <Link>{writeListKeyword}</Link>
-        )
+        );
     }
 }
 
