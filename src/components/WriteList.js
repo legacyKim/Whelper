@@ -53,7 +53,7 @@ function WriteList() {
                         <div className='write_keyword'>
                             {
                                 writeListState[i].keyword.map((k, index) => (
-                                    <WriteKeyword key={index} writeListKeyword={k} />
+                                    <WriteKeyword writeListKeyword={k} />
                                 ))
                             }
                         </div>
