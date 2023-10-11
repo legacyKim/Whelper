@@ -72,7 +72,9 @@ function WriteList() {
         return (
             <Link onClick={writekeywordClick}>{writeListKeyword}</Link>
         );
+
     }
+    
 }
 
 export default WriteList;
