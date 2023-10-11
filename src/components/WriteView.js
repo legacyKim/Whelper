@@ -21,6 +21,13 @@ function WriteView() {
                         <title>{writeListState[id].title}</title>
                         <span>{writeListState[id].subTitle}</span>
                         <p>{writeListState[id].content}</p>
+                        <div className='write_keyword_view'>
+                            {
+                                writeListState[id].keyword.map((k, index) => (
+                                    <WriteKeyword writeListKeyword={k} />
+                                ))
+                            }
+                        </div>
                     </div>
 
                     <button className='page_btn'>
@@ -31,6 +38,18 @@ function WriteView() {
         </div>
 
     )
+
+    function WriteKeyword({ writeListKeyword }) {
+
+        var writekeywordClick = (e) => {
+            e.stopPropagation();
+        }
+
+        return (
+            <Link to={`/components/Search/${writeListKeyword}`} onClick={writekeywordClick}>#{writeListKeyword}</Link>
+        );
+
+    }
 
 }
 
