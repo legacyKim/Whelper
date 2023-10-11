@@ -44,30 +44,33 @@ function WriteList() {
                     <Link className='icon-edit-alt' to={`/components/WriteCorrect/${writeListState[i].id}`}></Link>
                     {/* <button className='icon-trash' onClick={delWriteList}></button> */}
                 </div>
-                <Link to={`/components/WriteView/${writeListState[i].id}`}>
-                    <div className='write_list'>
+                <div className='write_list' >
+                    <Link to={`/components/WriteView/${writeListState[i].id}`}>
                         <span>{writeListState[i].title}</span>
                         <strong>{writeListState[i].subTitle}</strong>
                         <p>{writeListState[i].content}</p>
-
-                        <div className='write_keyword'>
-                            {
-                                writeListState[i].keyword.map((k, index) => (
-                                    <WriteKeyword writeListKeyword={k} />
-                                ))
-                            }
-                        </div>
-
+                    </Link>
+                    <div className='write_keyword'>
+                        {
+                            writeListState[i].keyword.map((k, index) => (
+                                <WriteKeyword writeListKeyword={k} />
+                            ))
+                        }
                     </div>
-                </Link>
+                </div>
             </div>
 
         )
     }
 
     function WriteKeyword({ writeListKeyword }) {
+
+        var writekeywordClick = (e) => {
+            e.stopPropagation();
+        }
+
         return (
-            <Link>{writeListKeyword}</Link>
+            <Link onClick={writekeywordClick}>{writeListKeyword}</Link>
         );
     }
 }

@@ -145,15 +145,23 @@ main { position: absolute; display: block; top: 50%; left: 50%; transform: trans
 /* 글쓰기 */
 .write_page { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 100%; height: 100%; transition: opacity 1s ease-in-out; opacity: 0; backdrop-filter: blur(10px); } 
 .Write { position:relative; display: block; padding: 20px; padding: 16px; padding-top: 110px; } 
-.write_list { position: relative; display: block; border: none; background: var(--box-color); border-radius: 8px; padding: 16px; margin-bottom: 16px; } 
-.write_list>span { position: relative; display: block; font-size: 26px; font-weight: 700; line-height: 1.5; color: var(--font-color); padding-bottom: 8px; } 
-.write_list>strong { position: relative; display: block; font-size: 18px; font-weight: 700; line-height: 1.5; color: var(--font-color); padding-bottom: 8px; } 
-.write_list>p { position: relative; display: block; font-size: 14px; font-weight: 400; line-height: 1.5; color: var(--font-color); display: -webkit-box; word-wrap: break-word; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; white-space:pre-wrap; height: 66px; text-align: justify; } 
+.write_list {background: var(--box-color); border-radius: 8px; padding: 16px; margin-bottom: 16px; }
+.write_list>a { position: relative; display: block; border: none; } 
+.write_list>a>span { position: relative; display: block; font-size: 26px; font-weight: 700; line-height: 1.5; color: var(--font-color); padding-bottom: 8px; } 
+.write_list>a>strong { position: relative; display: block; font-size: 18px; font-weight: 700; line-height: 1.5; color: var(--font-color); padding-bottom: 8px; } 
+.write_list>a>p { position: relative; display: block; font-size: 14px; font-weight: 400; line-height: 1.5; color: var(--font-color); display: -webkit-box; word-wrap: break-word; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; white-space:pre-wrap; height: 66px; text-align: justify; margin-bottom: 8px; } 
 .Write form { position: relative; display: block; height: 100%; } 
 .Write input { position: relative; display: block; background: transparent; width: 100%; margin-bottom: 16px; color: var(--font-color); } 
 .write_title { font-size: 32px; font-weight: 600; line-height: 1.8; } 
 .write_subtitle { font-size: 24px; font-weight: 600; line-height: 1.8; } 
 .write_textarea { position: relative; display: block; background: transparent; width: 100%; height: 62vh; border: 0; font-size: 16px; font-weight: 600; line-height: 1.5; color: var(--font-color); resize: none; } 
+
+.write_keyword { display: flex; justify-content: flex-start; align-items: center;}
+.write_keyword a {font-size: 13px; font-weight: 700; line-height: 1.6; background-color: var(--grey-color); color: var(--background-color); padding: 3px 6px 2px; margin-right: 6px; border-radius: 4px; transition: all 0.3s ease-in-out; }
+.write_keyword a:hover {
+    color: #fff;
+    background-color: var(--main-color);
+}
 
 /* main memo textarea */
 
