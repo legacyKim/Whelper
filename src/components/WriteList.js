@@ -70,7 +70,7 @@ function WriteList() {
         }
 
         return (
-            <Link onClick={writekeywordClick}>{writeListKeyword}</Link>
+            <Link to={`/components/Search/${writeListKeyword}`} onClick={writekeywordClick}>{writeListKeyword}</Link>
         );
 
     }
