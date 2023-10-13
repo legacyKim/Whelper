@@ -38,6 +38,7 @@ function Search() {
         var searchCompare = a.content;
         return searchCompare.includes(searchPageInput);
     });
+
     //// about search result filter
 
     return (

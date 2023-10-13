@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from "react-redux"
-import { writeListDataDelete } from "../store"
+import { writeListDataDelete, searchListDataCorrect, searchListDataDelete } from "../store"
 
 import '../css/style.css';
 import { Link } from 'react-router-dom';
@@ -65,8 +65,20 @@ function WriteList() {
 
     function WriteKeyword({ writeListKeyword }) {
 
+        const dispatch = useDispatch();
+        let searchListState = useSelector((state) => state.SearchData);
+        
         var writekeywordClick = (e) => {
             e.stopPropagation();
+
+            const searchContent = writeListKeyword;
+            const searchContentDupli = searchListState.filter(item => item.searchContent === searchContent);
+
+            if (searchContentDupli.length !== 0) {
+                dispatch(searchListDataDelete({ searchContent: searchContentDupli[0].searchContent }));
+            }
+
+            dispatch(searchListDataCorrect({ searchContent }));
         }
 
         return (
@@ -74,7 +86,7 @@ function WriteList() {
         );
 
     }
-    
+
 }
 
 export default WriteList;
