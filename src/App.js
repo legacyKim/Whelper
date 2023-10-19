@@ -109,6 +109,7 @@ function App() {
                     <li className='btn'><NavLink to="/components/WriteList" className='icon-clipboard' onClick={() => { navigate('/components/WriteList') }}></NavLink></li>
                     <li className='btn'><NavLink to="/components/Memo" className='icon-comment' onClick={() => { navigate('/components/Memo') }}></NavLink></li>
                     <li className='btn'><NavLink to={`/components/Search/${searchInputValue}`} className='icon-link-1' onClick={() => { navigate('/components/Search') }}></NavLink></li>
+                    <li className='btn'><NavLink to={`/components/Date`} className='icon-link-1' onClick={() => { navigate('/components/Date') }}></NavLink></li>
                     <li className='btn'><button className='icon-search' onClick={searchOn}></button></li>
                     <li><div id='theme_screen' className='icon-arrows-ccw' onClick={themeChangeBtn}></div></li>
                 </ul>
