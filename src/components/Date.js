@@ -10,7 +10,9 @@ function Date() {
         <div className='content_area'>
             <ul className='date_list'>
                 <li>
-                    <link></link>
+                    <Link to={`/components/`}>
+                        내용
+                    </Link>
                 </li>
             </ul>
         </div>
