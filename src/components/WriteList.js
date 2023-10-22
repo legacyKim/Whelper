@@ -51,11 +51,16 @@ function WriteList() {
                         <p>{writeListState[i].content}</p>
                     </Link>
                     <div className='write_keyword'>
-                        {
-                            writeListState[i].keyword.map((k, index) => (
-                                <WriteKeyword writeListKeyword={k} />
-                            ))
-                        }
+                        <ul className='write_keyword_list'>
+                            {
+                                writeListState[i].keyword.map((k, index) => (
+                                    <WriteKeyword writeListKeyword={k} />
+                                ))
+                            }
+                        </ul>
+
+                        <b className='write_date'>{writeListState[i].date}</b>
+
                     </div>
                 </div>
             </div>
@@ -67,7 +72,7 @@ function WriteList() {
 
         const dispatch = useDispatch();
         let searchListState = useSelector((state) => state.SearchData);
-        
+
         var writekeywordClick = (e) => {
             e.stopPropagation();
 
@@ -82,7 +87,9 @@ function WriteList() {
         }
 
         return (
-            <Link to={`/components/Search/${writeListKeyword}`} onClick={writekeywordClick}>#{writeListKeyword}</Link>
+            <li>
+                <Link to={`/components/Search/${writeListKeyword}`} onClick={writekeywordClick}>#{writeListKeyword}</Link>
+            </li>
         );
 
     }
