@@ -1,7 +1,8 @@
 import { configureStore, createSlice } from '@reduxjs/toolkit'
-import WriteListData from './data'
-import SearchListData from './searchData'
-import memoListData from './dataMemo'
+import WriteListData from './data/data'
+import SearchListData from './data/searchData'
+import memoListData from './data/dataMemo'
+import CateListData from './data/cateData'
 
 let WriteData = createSlice({
     name: 'WriteData',
@@ -61,14 +62,27 @@ let memoData = createSlice({
     }
 })
 
+let cateData = createSlice({
+    name: 'cateData',
+    initialState: CateListData,
+    reducers: {
+        cateListDataAdd(state, newCateList) {
+            const newCate = [...state, newCate.payload];
+            return newCate;
+        },
+    }
+})
+
 export const { writeListDataAdd, writeListDataUpdate, writeListDataDelete } = WriteData.actions;
 export const { searchListDataCorrect, searchListDataDelete } = SearchData.actions;
 export const { memoListDataAdd, memoListDataDelete, memoListDataUpdate } = memoData.actions;
+export const { cateListDataAdd } = cateData.actions;
 
 export default configureStore({
     reducer: {
         WriteData: WriteData.reducer,
         SearchData: SearchData.reducer,
         memoData: memoData.reducer,
+        cateData: cateData.reducer,
     },
 });

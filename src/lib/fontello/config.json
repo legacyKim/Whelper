@@ -221,6 +221,12 @@
       "css": "clock-1",
       "code": 59423,
       "src": "iconic"
+    },
+    {
+      "uid": "f04a5d24e9e659145b966739c4fde82a",
+      "css": "bookmark",
+      "code": 59424,
+      "src": "fontawesome"
     }
   ]
 }

@@ -19,7 +19,7 @@ function Write() {
         const title = newTitle.current.value;
         const subTitle = newSubTitle.current.value;
         const content = newContent.current.value;
-        const date = new Date(); ;
+        const date = new Date();
 
         dispatch(writeListDataAdd({ id, title, subTitle, content, date }));
     };
@@ -36,6 +36,14 @@ function Write() {
             </div>
         </div>
     )
+
+    function CateSelect() {
+        return (
+            <div className='popup'>
+                
+            </div>
+        )
+    }
 }
 
 export default Write;
