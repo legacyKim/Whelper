@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { useDispatch, useSelector } from "react-redux"
 import { useParams, Link } from 'react-router-dom';
 
@@ -34,15 +34,59 @@ function Write() {
             <div className='page_btn'>
                 <Link to={`/components/WriteView/${recentId}`} className='icon-ok-circled write_btn_save' onClick={() => { WriteSaveBtn(); }}></Link>
             </div>
+
+            <CateSelect></CateSelect>
+
         </div>
     )
 
     function CateSelect() {
+
+        let cateListData = useSelector((state) => state.cateData);
+
         return (
             <div className='popup'>
-                
+                <div className='popup_cate'>
+                    {
+                        cateListData.map(function (a, i) {
+                            return (
+                                <div key={i}>
+                                    <CateListFac i={i}></CateListFac>
+                                </div>
+                            )
+                        })
+                    }
+                </div>
+                <div className='popup_btn'>
+
+                </div>
             </div>
         )
+
+        function CateListFac({ i }) {
+
+            const [testArr, setTestArr] = useState([]);
+
+            const [cateActive, cateActiveAttr] = useState(false);
+            const cateClick = () => {
+                cateActiveAttr(!cateActive);
+                if (!cateActive) {
+                    cateActiveAttr('active');
+                } else {
+                    cateActiveAttr('');
+                }
+
+                setTestArr(cateListData[i])
+
+                console.log(testArr);
+            };
+
+            return (
+                <span className={`${cateActive ? "active" : ""}`} onClick={cateClick}>{cateListData[i]}</span>
+            )
+
+        }
+
     }
 }
 
