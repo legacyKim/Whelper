@@ -237,4 +237,12 @@ main { position: absolute; display: block; top: 50%; left: 50%; transform: trans
 .popup_cate { position: absolute; top: 16%; left: 50%; display: flex; justify-content: flex-start; align-items: center; flex-wrap: wrap; transform: translateX(-50%); width: 80%; border-radius: 10px; padding: 16px 0; } 
 .popup_cate span { position: relative; display: block; margin-right: 8px; margin-bottom: 4px; font-size: 15px; font-weight: 700; line-height: 1.6; color: var(--font-color); cursor: pointer; } 
 .popup_cate span:hover { color: var(--main-color); } 
-.popup_cate span.active {color: var(--main-color);}
+.popup_cate span.active { color: var(--main-color); } 
+
+
+/* cate */
+.cate_list_pos { position:fixed; top: 50%; transform: translateY(-50%); width: 200px; height: 447.8px; overflow-y: scroll; overflow-x: hidden; } 
+.cate_list_pos::-webkit-scrollbar {display: none;}
+.cate_list { position: absolute; top: 0; left: 32px; width: 100%;} 
+.cate_list li span { position: relative; display: inline; font-size: 14px; font-weight: 700; line-height: 1.6; color: var(--font-color); cursor: pointer; } 
+.cate_list li span.active {color: var(--main-color);}
