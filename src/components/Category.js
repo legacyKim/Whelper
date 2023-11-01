@@ -17,7 +17,7 @@ function Category() {
                 cateListData.map(function (a, i) {
                     return (
                         <div key={i}>
-                            test test
+                            test
                             <CategoryList cate={a}></CategoryList>
                         </div>
                     )
