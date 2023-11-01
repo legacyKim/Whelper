@@ -15,13 +15,10 @@ function Category() {
 
     const cateScrollMove = () => {
         cateScrollPos(cateScrollArea.current.scrollTop);
-        console.log(cateScrollArea);
-        console.log(cateScrollArea.current);
-        console.log(cateScrollArea.current.scrollTop);
     };
 
     useEffect(() => {
-        cateScrollArea.addEventListener('scroll', cateScrollMove);
+        // cateScrollArea.addEventListener('scroll', cateScrollMove);
         console.log(cateScroll);
     }, [cateScroll]);
     // catelist scroll event
@@ -29,7 +26,7 @@ function Category() {
     return (
 
         <div className='content_area'>
-            <div className='cate_list_pos'>
+            <div className='cate_list_pos' onScroll={cateScrollMove} >
                 <ul className='cate_list' ref={cateScrollArea}>
                     {
                         cateListData.map(function (a, i) {
