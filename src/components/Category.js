@@ -13,6 +13,8 @@ function Category() {
     const [cateScroll, cateScrollPos] = useState(0);
     var cateScrollArea = useRef();
 
+    const [scrollDistance, setScrollDistance] = useState(0);
+
     const cateScrollMove = () => {
         cateScrollPos(cateScrollArea.current.scrollTop);
     };
