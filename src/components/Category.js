@@ -10,26 +10,26 @@ function Category() {
     let cateListData = useSelector((state) => state.cateData);
 
     // catelist scroll event
-    const [cateScroll, cateScrollPos] = useState(0);
+    const [scrollYPos, setScrollYPos] = useState(0);
     var cateScrollArea = useRef();
 
-    const [scrollDistance, setScrollDistance] = useState(0);
-
     const cateScrollMove = () => {
-        cateScrollPos(cateScrollArea.current.scrollTop);
+        const currentScroll = cateScrollArea.current.scrollTop;
+        console.log(currentScroll);
+
     };
 
-    useEffect(() => {
-        // cateScrollArea.addEventListener('scroll', cateScrollMove);
-        console.log(cateScroll);
-    }, [cateScroll]);
+    useEffect(()=>{
+        cateScrollArea.current.addEventListener('scroll', cateScrollMove);
+    },[])
+
     // catelist scroll event
 
     return (
 
         <div className='content_area'>
-            <div className='cate_list_pos' onScroll={cateScrollMove} >
-                <ul className='cate_list' ref={cateScrollArea}>
+            <div className='cate_list_pos' ref={cateScrollArea}>
+                <ul className='cate_list'>
                     {
                         cateListData.map(function (a, i) {
                             return (
