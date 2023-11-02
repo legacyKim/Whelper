@@ -67,18 +67,17 @@ function Write() {
 
             const [testArr, setTestArr] = useState([]);
 
-            const [cateActive, cateActiveAttr] = useState(false);
+            const [cateActive, cateActiveStyle] = useState(false);
             const cateClick = () => {
-                cateActiveAttr(!cateActive);
+                cateActiveStyle(!cateActive);
                 if (!cateActive) {
-                    cateActiveAttr('active');
+                    cateActiveStyle('active');
                 } else {
-                    cateActiveAttr('');
+                    cateActiveStyle('');
                 }
 
                 setTestArr(cateListData[i])
 
-                console.log(testArr);
             };
 
             return (
@@ -88,6 +87,7 @@ function Write() {
         }
 
     }
+
 }
 
 export default Write;
