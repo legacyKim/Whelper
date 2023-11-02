@@ -14,9 +14,8 @@ function Category() {
     var cateScrollArea = useRef();
 
     const cateScrollMove = () => {
-        const currentScroll = cateScrollArea.current.scrollTop;
-        console.log(currentScroll);
-
+        cateScrollPos(cateScrollArea.current.scrollTop);
+        console.log(cateScroll);
     };
 
     useEffect(()=>{
@@ -28,7 +27,7 @@ function Category() {
     return (
 
         <div className='content_area'>
-            <div className='cate_list_pos' ref={cateScrollArea}>
+            <div className='cate_list_pos' onScroll={cateScrollMove} ref={cateScrollArea} >
                 <ul className='cate_list'>
                     {
                         cateListData.map(function (a, i) {
