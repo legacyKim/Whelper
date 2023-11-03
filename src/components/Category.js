@@ -5,29 +5,63 @@ import { useSelector, useDispatch } from "react-redux"
 
 import '../css/style.css';
 
+
 function Category() {
 
     let cateListData = useSelector((state) => state.cateData);
 
     // catelist scroll event
-    const [scrollYPos, setScrollYPos] = useState(0);
     var cateScrollArea = useRef();
 
+    // scroll direction
+    const [currentY, setCruuentY] = useState(0);
+    const [recentY, setRecentY] = useState(0);
+
+    const [scrollDirection, setScrollDirection] = useState(false);
+
     const cateScrollMove = () => {
-        cateScrollPos(cateScrollArea.current.scrollTop);
-        console.log(cateScroll);
+        setCruuentY(cateScrollArea.current.scrollTop);
+
+        // const {
+        //     current: { scrollHeight, clientHeight },
+        // } = cateScrollArea;
+
+        // const scrollDirection = currentY !== 0 && deltaY >= 0;
+
+        // setScrollDirection(scrollDirection);
+
+        const deltaY = currentY - recentY;
+
+        if (deltaY > 0) {
+            console.log("아래로")
+        } else {
+            console.log("위로")
+        }
+
     };
 
-    useEffect(()=>{
-        cateScrollArea.current.addEventListener('scroll', cateScrollMove);
-    },[])
+    const cateScrollRecent = () => {
+        setRecentY(cateScrollArea.current.scrollTop);
+
+        return recentY;
+    }
+
+    useEffect(() => {
+        cateScrollArea.current.addEventListener("scroll", cateScrollMove);
+        cateScrollArea.current.addEventListener("scrollend", cateScrollRecent);
+    
+        return () => {
+            cateScrollArea.current.removeEventListener("scroll", cateScrollMove);
+            cateScrollArea.current.removeEventListener("scrollend", cateScrollRecent);
+        }
+    }, [currentY, recentY])
 
     // catelist scroll event
 
     return (
 
         <div className='content_area'>
-            <div className='cate_list_pos' onScroll={cateScrollMove} ref={cateScrollArea} >
+            <div className='cate_list_pos' ref={cateScrollArea} >
                 <ul className='cate_list'>
                     {
                         cateListData.map(function (a, i) {
