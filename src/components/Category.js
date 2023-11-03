@@ -17,32 +17,22 @@ function Category() {
     const [currentY, setCruuentY] = useState(0);
     const [recentY, setRecentY] = useState(0);
 
-    const [scrollDirection, setScrollDirection] = useState(false);
-
     const cateScrollMove = () => {
         setCruuentY(cateScrollArea.current.scrollTop);
+        const diffY = currentY - recentY;
 
-        // const {
-        //     current: { scrollHeight, clientHeight },
-        // } = cateScrollArea;
-
-        // const scrollDirection = currentY !== 0 && deltaY >= 0;
-
-        // setScrollDirection(scrollDirection);
-
-        const deltaY = currentY - recentY;
-
-        if (deltaY > 0) {
+        if (diffY === 0) {
+            console.log("무시")
+        } else if (diffY > 0) {
             console.log("아래로")
         } else {
-            console.log("위로")
+            console.log("위로");
         }
 
     };
 
     const cateScrollRecent = () => {
         setRecentY(cateScrollArea.current.scrollTop);
-
         return recentY;
     }
 
@@ -54,7 +44,7 @@ function Category() {
             cateScrollArea.current.removeEventListener("scroll", cateScrollMove);
             cateScrollArea.current.removeEventListener("scrollend", cateScrollRecent);
         }
-    }, [currentY, recentY])
+    }, [])
 
     // catelist scroll event
 
