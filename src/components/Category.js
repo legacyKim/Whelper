@@ -12,47 +12,42 @@ function Category() {
 
     // catelist scroll event
     var cateScrollArea = useRef();
+    var cateScrollPos = useRef();
+
+    var currentY = 0;
+    var previousY = 0;
+    var scrollAmount = 22.4; // 원하는 스크롤 이동량
 
     // scroll direction
-    const [currentY, setCruuentY] = useState(0);
-    const [recentY, setRecentY] = useState(0);
+    const cateScrollMove = (e) => {
+        currentY = cateScrollArea.current.scrollTop;
 
-    const cateScrollMove = () => {
-        setCruuentY(cateScrollArea.current.scrollTop);
-        const diffY = currentY - recentY;
-
-        if (diffY === 0) {
-            console.log("무시")
-        } else if (diffY > 0) {
-            console.log("아래로")
+        if (e.deltaY > 0) {
+            // 휠을 아래로 내렸을 때
+            currentY += scrollAmount;
         } else {
-            console.log("위로");
+            // 휠을 위로 올렸을 때
+            currentY -= scrollAmount;
         }
 
+        // 스크롤 위치를 업데이트
+        cateScrollArea.current.scrollTop = currentY;
+
+        // 이전 스크롤 위치 업데이트
+        previousY = currentY;
     };
 
-    const cateScrollRecent = () => {
-        setRecentY(cateScrollArea.current.scrollTop);
-        return recentY;
-    }
-
     useEffect(() => {
-        cateScrollArea.current.addEventListener("scroll", cateScrollMove);
-        cateScrollArea.current.addEventListener("scrollend", cateScrollRecent);
-    
-        return () => {
-            cateScrollArea.current.removeEventListener("scroll", cateScrollMove);
-            cateScrollArea.current.removeEventListener("scrollend", cateScrollRecent);
-        }
+        cateScrollArea.current.addEventListener("wheel", cateScrollMove);
+        return () => cateScrollArea.current.removeEventListener("wheel", cateScrollMove);
     }, [])
-
     // catelist scroll event
 
     return (
 
         <div className='content_area'>
             <div className='cate_list_pos' ref={cateScrollArea} >
-                <ul className='cate_list'>
+                <ul className='cate_list' ref={cateScrollPos}>
                     {
                         cateListData.map(function (a, i) {
                             return (
