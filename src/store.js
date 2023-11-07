@@ -17,11 +17,12 @@ let WriteData = createSlice({
             state[updateWriteId].title = updateWriteList.payload.updateTitle;
             state[updateWriteId].subTitle = updateWriteList.payload.updateSubTitle;
             state[updateWriteId].content = updateWriteList.payload.updateContent;
+            state[updateWriteId].keyword = updateWriteList.payload.updateKeyword;
         },
         writeListDataDelete(state, deleteWriteList) {
             const deleteWriteId = deleteWriteList.payload.id;
             return state.filter(item => item.id !== deleteWriteId);
-        }
+        },
     }
 })
 

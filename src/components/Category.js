@@ -39,7 +39,6 @@ function Category() {
 
     useEffect(() => {
         cateScrollArea.current.addEventListener("wheel", cateScrollMove);
-        return () => cateScrollArea.current.removeEventListener("wheel", cateScrollMove);
     }, [])
     // catelist scroll event
 

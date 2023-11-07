@@ -37,6 +37,13 @@ function WriteList() {
             dispatch(writeListDataDelete({ id: writeListState[i].id }))
         }
 
+        function writeDateFomatt(date) {
+            const options = { day: '2-digit', month: '2-digit', year: '2-digit' };
+            return date.toLocaleDateString('en-US', options).replace(/\//g, '.');
+        }
+    
+        const writeDate = writeDateFomatt(writeListState[i].date);
+
         return (
 
             <div>
@@ -59,7 +66,7 @@ function WriteList() {
                             }
                         </ul>
 
-                        <b className='write_date'>{writeListState[i].date}</b>
+                        <b className='write_date'>{writeDate}</b>
 
                     </div>
                 </div>

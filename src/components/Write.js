@@ -9,21 +9,34 @@ function Write() {
 
     const writeListState = useSelector((state) => state.WriteData);
 
-    const dispatch = useDispatch();
     const newTitle = useRef();
     const newSubTitle = useRef();
     const newContent = useRef();
 
+    const [popupActive, popupActiveStyle] = useState(false);
+    const popupClick = () => {
+        popupActiveStyle(!popupActive);
+        if (!popupActive) {
+            popupActiveStyle('active');
+        } else {
+            popupActiveStyle('');
+        }
+    };
+
+    let cateListData = useSelector((state) => state.cateData);
+    const [keywordArr, setKeywordArr] = useState([]);
+
+    const dispatch = useDispatch();
     const WriteSaveBtn = () => {
         const id = writeListState.length;
         const title = newTitle.current.value;
         const subTitle = newSubTitle.current.value;
         const content = newContent.current.value;
+        const keyword = keywordArr;
         const date = new Date();
 
-        dispatch(writeListDataAdd({ id, title, subTitle, content, date }));
+        dispatch(writeListDataAdd({ id, title, subTitle, content, keyword, date }));
     };
-
     const recentId = writeListState.length;
 
     return (
@@ -32,20 +45,11 @@ function Write() {
             <input type="text" placeholder="SUBTITLE" className="write_subtitle" ref={newSubTitle}></input>
             <textarea type="text" placeholder="CONTENT" className="scroll write_textarea" ref={newContent}></textarea>
             <div className='page_btn'>
-                <Link to={`/components/WriteView/${recentId}`} className='icon-ok-circled write_btn_save' onClick={() => { WriteSaveBtn(); }}></Link>
+                <button className='icon-ok-circled write_btn_save' onClick={() => { popupClick(); }}></button>
             </div>
 
-            <CateSelect></CateSelect>
-
-        </div>
-    )
-
-    function CateSelect() {
-
-        let cateListData = useSelector((state) => state.cateData);
-
-        return (
-            <div className='popup'>
+            {/* category popup */}
+            <div className={`popup ${popupActive ? popupActive : ""}`}>
                 <div className='popup_cate'>
                     {
                         cateListData.map(function (a, i) {
@@ -57,34 +61,30 @@ function Write() {
                         })
                     }
                 </div>
-                <div className='popup_btn'>
-
+                <div className='page_btn'>
+                    <Link to={`/components/WriteView/${recentId}`} className='icon-ok-circled write_btn_save' onClick={() => { WriteSaveBtn(); }}></Link>
                 </div>
             </div>
+        </div>
+    )
+
+    function CateListFac({ i }) {
+
+        const [cateActive, cateActiveStyle] = useState(false);
+        const cateClick = () => {
+            cateActiveStyle(!cateActive);
+            if (!cateActive) {
+                cateActiveStyle('active');
+                setKeywordArr((prevKeywordArr) => [...prevKeywordArr, cateListData[i]]);
+            } else {
+                cateActiveStyle('');
+            }
+
+        };
+
+        return (
+            <span className={`${cateActive ? cateActive : ""}`} onClick={cateClick}>{cateListData[i]}</span>
         )
-
-        function CateListFac({ i }) {
-
-            const [testArr, setTestArr] = useState([]);
-
-            const [cateActive, cateActiveStyle] = useState(false);
-            const cateClick = () => {
-                cateActiveStyle(!cateActive);
-                if (!cateActive) {
-                    cateActiveStyle('active');
-                } else {
-                    cateActiveStyle('');
-                }
-
-                setTestArr(cateListData[i])
-
-            };
-
-            return (
-                <span className={`${cateActive ? "active" : ""}`} onClick={cateClick}>{cateListData[i]}</span>
-            )
-
-        }
 
     }
 
