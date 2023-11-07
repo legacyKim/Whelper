@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { useDispatch, useSelector } from "react-redux"
-import { useParams, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import { writeListDataAdd } from "../store.js"
 import '../css/style.css';
@@ -68,7 +68,7 @@ function Write() {
         </div>
     )
 
-    function CateListFac({ i }) {
+    function CateListFac({ i, keywordArr }) {
 
         const [cateActive, cateActiveStyle] = useState(false);
         const cateClick = () => {
