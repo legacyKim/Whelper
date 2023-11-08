@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { useDispatch, useSelector } from "react-redux"
 import { Link } from 'react-router-dom';
 
@@ -55,7 +55,7 @@ function Write() {
                         cateListData.map(function (a, i) {
                             return (
                                 <div key={i}>
-                                    <CateListFac i={i} keywordArr={keywordArr} setKeywordArr={setKeywordArr}></CateListFac>
+                                    <CateListFac i={i}></CateListFac>
                                 </div>
                             )
                         })
@@ -68,22 +68,21 @@ function Write() {
         </div>
     )
 
-    function CateListFac({ i, keywordArr, setKeywordArr }) {
+    function CateListFac({ i }) {
 
         const [cateActive, cateActiveStyle] = useState(false);
         const cateClick = () => {
             cateActiveStyle(!cateActive);
             if (!cateActive) {
-                cateActiveStyle('active');
+                cateActiveStyle(true);
                 setKeywordArr((prevKeywordArr) => [...prevKeywordArr, cateListData[i]]);
             } else {
-                cateActiveStyle('');
+                cateActiveStyle(false);
             }
-
         };
 
         return (
-            <span className={`${cateActive ? cateActive : ""}`} onClick={cateClick}>{cateListData[i]}</span>
+            <span className={`${cateActive ? "active" : ""}`} onClick={cateClick}>{cateListData[i]}</span>
         )
 
     }
