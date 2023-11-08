@@ -55,7 +55,7 @@ function Write() {
                         cateListData.map(function (a, i) {
                             return (
                                 <div key={i}>
-                                    <CateListFac i={i}></CateListFac>
+                                    <CateListFac i={i} keywordArr={keywordArr} setKeywordArr={setKeywordArr}></CateListFac>
                                 </div>
                             )
                         })
@@ -68,7 +68,7 @@ function Write() {
         </div>
     )
 
-    function CateListFac({ i, keywordArr }) {
+    function CateListFac({ i, keywordArr, setKeywordArr }) {
 
         const [cateActive, cateActiveStyle] = useState(false);
         const cateClick = () => {
