@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState } from 'react';
 import { useDispatch, useSelector } from "react-redux"
 import { Link } from 'react-router-dom';
 
@@ -54,9 +54,7 @@ function Write() {
                     {
                         cateListData.map(function (a, i) {
                             return (
-                                <div key={i}>
-                                    <CateListFac i={i}></CateListFac>
-                                </div>
+                                <CateListFac i={i}></CateListFac>
                             )
                         })
                     }
@@ -74,8 +72,12 @@ function Write() {
         const cateClick = () => {
             cateActiveStyle(!cateActive);
             if (!cateActive) {
-                cateActiveStyle(true);
                 setKeywordArr((prevKeywordArr) => [...prevKeywordArr, cateListData[i]]);
+            }
+
+            // 이 부분을 수정하여 클래스를 동적으로 추가/제거합니다.
+            if (!cateActive) {
+                cateActiveStyle(true);
             } else {
                 cateActiveStyle(false);
             }
