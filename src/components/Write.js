@@ -26,6 +26,12 @@ function Write() {
     let cateListData = useSelector((state) => state.cateData);
     const [keywordArr, setKeywordArr] = useState([]);
 
+    const keywordArrUpd = (newKeywordArr) => {
+        setKeywordArr((prevKeywordArr) => [...prevKeywordArr, newKeywordArr]);
+    }
+
+    console.log(keywordArrUpd);
+
     const dispatch = useDispatch();
     const WriteSaveBtn = () => {
         const id = writeListState.length;
@@ -54,7 +60,7 @@ function Write() {
                     {
                         cateListData.map(function (a, i) {
                             return (
-                                <CateListFac i={i}></CateListFac>
+                                <CateListFac i={i} setKeywordArrUpd={keywordArrUpd}></CateListFac>
                             )
                         })
                     }
@@ -66,18 +72,14 @@ function Write() {
         </div>
     )
 
-    function CateListFac({ i }) {
+    function CateListFac({ i, setKeywordArrUpd }) {
 
         const [cateActive, cateActiveStyle] = useState(false);
         const cateClick = () => {
             cateActiveStyle(!cateActive);
             if (!cateActive) {
-                setKeywordArr((prevKeywordArr) => [...prevKeywordArr, cateListData[i]]);
-            }
-
-            // 이 부분을 수정하여 클래스를 동적으로 추가/제거합니다.
-            if (!cateActive) {
                 cateActiveStyle(true);
+                setKeywordArrUpd(cateListData[i])
             } else {
                 cateActiveStyle(false);
             }
