@@ -223,7 +223,7 @@ main { position: absolute; display: block; top: 50%; left: 50%; transform: trans
 /* 버튼 공통 */
 
 .page_btn { position: fixed; bottom: 24px; right: 24px; display: flex; justify-content: flex-start; flex-direction: column; align-items: center; } 
-.page_btn>* { font-size: 22px; border-radius: 50%; color: var(--font-color); transition: all 0.3s ease-in-out; } 
+.page_btn>* { margin-top: 8px; font-size: 22px; border-radius: 50%; color: var(--font-color); transition: all 0.3s ease-in-out; } 
 .page_btn>*:hover { color: var(--main-color); } 
 
 .write_btn_save,

@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useCallback } from 'react';
 import { useDispatch, useSelector } from "react-redux"
 import { Link } from 'react-router-dom';
 
@@ -26,12 +26,6 @@ function Write() {
     let cateListData = useSelector((state) => state.cateData);
     const [keywordArr, setKeywordArr] = useState([]);
 
-    const keywordArrUpd = (newKeywordArr) => {
-        setKeywordArr((prevKeywordArr) => [...prevKeywordArr, newKeywordArr]);
-    }
-
-    console.log(keywordArrUpd);
-
     const dispatch = useDispatch();
     const WriteSaveBtn = () => {
         const id = writeListState.length;
@@ -44,8 +38,6 @@ function Write() {
         dispatch(writeListDataAdd({ id, title, subTitle, content, keyword, date }));
     };
     const recentId = writeListState.length;
-
-    console.log('rendering');
 
     return (
         <div className='Write'>
@@ -70,23 +62,24 @@ function Write() {
                     }
                 </div>
                 <div className='page_btn'>
+                    <button className="write_btn_back icon-reply" onClick={popupClick}></button>
                     <Link to={`/components/WriteView/${recentId}`} className='icon-ok-circled write_btn_save' onClick={() => { WriteSaveBtn(); }}></Link>
                 </div>
             </div>
         </div>
     )
 
-    function CateListFac({ i, setKeywordArrUpd }) {
+    function CateListFac({ i, keywordArr, setKeywordArr }) {
 
         const [cateActive, setCateActive] = useState(keywordArr.includes(cateListData[i]));
         const cateClick = () => {
-            cateActiveStyle(!cateActive);
-            if (!cateActive) {
-                cateActiveStyle(true);
-                setKeywordArrUpd(cateListData[i])
-            } else {
-                cateActiveStyle(false);
-            }
+            setKeywordArr((prevKeywordArr) =>
+                keywordArr.includes(cateListData[i])
+                    ? prevKeywordArr.filter((item) => item !== cateListData[i])
+                    : [...prevKeywordArr, cateListData[i]]
+            );
+
+            setCateActive((prevCateActive) => !prevCateActive);
         };
 
         return (

@@ -32,6 +32,11 @@
 .icon-hash:before { content: '\e81e'; } /* '' */
 .icon-clock-1:before { content: '\e81f'; } /* '' */
 .icon-bookmark:before { content: '\e820'; } /* '' */
+.icon-undo:before { content: '\e821'; } /* '' */
+.icon-reply:before { content: '\e822'; } /* '' */
+.icon-spin4:before { content: '\e834'; } /* '' */
+.icon-spin5:before { content: '\e838'; } /* '' */
+.icon-spin6:before { content: '\e839'; } /* '' */
 .icon-github-circled-alt2:before { content: '\f056'; } /* '' */
 .icon-plus-squared:before { content: '\f0fe'; } /* '' */
 .icon-minus-squared:before { content: '\f146'; } /* '' */

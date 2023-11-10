@@ -31,8 +31,6 @@ function WriteCorrect() {
     let cateListData = useSelector((state) => state.cateData);
     const [keywordArr, setKeywordArr] = useState(writeListState[id].keyword);
 
-    console.log(keywordArr);
-
     const WriteCorrectBtn = () => {
         const updateTitle = newTitle.current.value;
         const updateSubTitle = newSubTitle.current.value;
@@ -48,6 +46,7 @@ function WriteCorrect() {
             <input type="text" placeholder="SUBTITLE" className="write_subtitle" defaultValue={writeListState[id].subTitle} ref={newSubTitle}></input>
             <textarea type="text" placeholder="CONTENT" className="write_textarea" defaultValue={writeListState[id].content} ref={newContent}></textarea>
             <div className='page_btn'>
+                <Link to={`/components/WriteView/${writeListState[id].id}`} onClick={() => { navigate(`/components/WriteView/${writeListState[id].id}`)}} className='icon-reply'></Link>
                 <button className='icon-ok-circled write_btn_save' onClick={() => { popupClick(); }}></button>
             </div>
 
@@ -65,6 +64,7 @@ function WriteCorrect() {
                     }
                 </div>
                 <div className='page_btn'>
+                    <button className="write_btn_back icon-reply" onClick={popupClick}></button>
                     <Link to="/components/WriteList" className='icon-ok-circled write_btn_save' onClick={() => { navigate('/components/WriteList'); WriteCorrectBtn(); }}></Link>
                 </div>
             </div>
@@ -72,8 +72,6 @@ function WriteCorrect() {
     )
 
     function CateListFac({ i, keywordArr, setKeywordArr }) {
-
-        console.log(keywordArr);
 
         const [cateActive, setCateActive] = useState(keywordArr.includes(cateListData[i]));
         const cateClick = () => {
