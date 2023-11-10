@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { useDispatch, useSelector } from "react-redux"
 import { writeListDataUpdate } from "../store.js"
 
@@ -31,6 +31,8 @@ function WriteCorrect() {
     let cateListData = useSelector((state) => state.cateData);
     const [keywordArr, setKeywordArr] = useState(writeListState[id].keyword);
 
+    console.log(keywordArr);
+
     const WriteCorrectBtn = () => {
         const updateTitle = newTitle.current.value;
         const updateSubTitle = newSubTitle.current.value;
@@ -56,7 +58,7 @@ function WriteCorrect() {
                         cateListData.map(function (a, i) {
                             return (
                                 <div key={i}>
-                                    <CateListFac i={i}></CateListFac>
+                                    <CateListFac i={i} keywordArr={keywordArr} setKeywordArr={setKeywordArr}></CateListFac>
                                 </div>
                             )
                         })
@@ -69,18 +71,19 @@ function WriteCorrect() {
         </div>
     )
 
-    function CateListFac({ i }) {
+    function CateListFac({ i, keywordArr, setKeywordArr }) {
 
-        const [cateActive, cateActiveStyle] = useState(false);
+        console.log(keywordArr);
+
+        const [cateActive, setCateActive] = useState(keywordArr.includes(cateListData[i]));
         const cateClick = () => {
-            cateActiveStyle(!cateActive);
-            if (!cateActive) {
-                cateActiveStyle('active');
-                setKeywordArr((prevKeywordArr) => [...prevKeywordArr, cateListData[i]]);
-            } else {
-                cateActiveStyle('');
-            }
+            setKeywordArr((prevKeywordArr) =>
+                keywordArr.includes(cateListData[i])
+                    ? prevKeywordArr.filter((item) => item !== cateListData[i])
+                    : [...prevKeywordArr, cateListData[i]]
+            );
 
+            setCateActive((prevCateActive) => !prevCateActive);
         };
 
         return (

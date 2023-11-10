@@ -157,11 +157,11 @@ main { position: absolute; display: block; top: 50%; left: 50%; transform: trans
 .write_textarea { position: relative; display: block; background: transparent; width: 100%; height: 62vh; border: 0; font-size: 16px; font-weight: 600; line-height: 1.5; color: var(--font-color); resize: none; } 
 
 .write_keyword { display:flex; justify-content: space-between; align-items: center; } 
-.write_keyword_list { display: flex; justify-content: flex-start; align-items: center; } 
+.write_keyword_list { display: flex; justify-content: flex-start; align-items: center; flex-wrap: wrap; } 
 .write_keyword_list li a { font-size: 15px; font-weight: 700; line-height: 1.6; color: var(--font-color); padding: 2px 5px 1px; margin-right: 6px; border-radius: 4px; transition: all 0.3s ease-in-out; } 
 .write_keyword_list li a:hover { color: var(--main-color); } 
 
-.write_keyword_view { display: flex; justify-content: flex-start; align-items: center; padding-bottom: 12px; } 
+.write_keyword_view { display: flex; justify-content: flex-start; align-items: center; flex-wrap: wrap; padding-bottom: 12px; } 
 .write_keyword_view a { font-size: 16px; font-weight: 700; line-height: 1.6; color: var(--font-color); padding: 2px 5px 1px; margin-right: 6px; border-radius: 4px; transition: all 0.3s ease-in-out; } 
 .write_keyword_view a:hover { color: var(--main-color); } 
 

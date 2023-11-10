@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useCallback } from 'react';
 import { useDispatch, useSelector } from "react-redux"
 import { Link } from 'react-router-dom';
 
@@ -25,12 +25,6 @@ function Write() {
 
     let cateListData = useSelector((state) => state.cateData);
     const [keywordArr, setKeywordArr] = useState([]);
-
-    const keywordArrUpd = (newKeywordArr) => {
-        setKeywordArr((prevKeywordArr) => [...prevKeywordArr, newKeywordArr]);
-    }
-
-    console.log(keywordArrUpd);
 
     const dispatch = useDispatch();
     const WriteSaveBtn = () => {
@@ -60,7 +54,9 @@ function Write() {
                     {
                         cateListData.map(function (a, i) {
                             return (
-                                <CateListFac i={i} setKeywordArrUpd={keywordArrUpd}></CateListFac>
+                                <div key={i}>
+                                    <CateListFac i={i} keywordArr={keywordArr} setKeywordArr={setKeywordArr}></CateListFac>
+                                </div>
                             )
                         })
                     }
@@ -72,17 +68,17 @@ function Write() {
         </div>
     )
 
-    function CateListFac({ i, setKeywordArrUpd }) {
+    function CateListFac({ i, keywordArr, setKeywordArr }) {
 
-        const [cateActive, cateActiveStyle] = useState(false);
+        const [cateActive, setCateActive] = useState(keywordArr.includes(cateListData[i]));
         const cateClick = () => {
-            cateActiveStyle(!cateActive);
-            if (!cateActive) {
-                cateActiveStyle(true);
-                setKeywordArrUpd(cateListData[i])
-            } else {
-                cateActiveStyle(false);
-            }
+            setKeywordArr((prevKeywordArr) =>
+                keywordArr.includes(cateListData[i])
+                    ? prevKeywordArr.filter((item) => item !== cateListData[i])
+                    : [...prevKeywordArr, cateListData[i]]
+            );
+
+            setCateActive((prevCateActive) => !prevCateActive);
         };
 
         return (
