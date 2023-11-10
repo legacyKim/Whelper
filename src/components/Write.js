@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { useDispatch, useSelector } from "react-redux"
 import { Link } from 'react-router-dom';
 
@@ -30,8 +30,6 @@ function Write() {
         setKeywordArr((prevKeywordArr) => [...prevKeywordArr, newKeywordArr]);
     }
 
-    console.log(keywordArrUpd);
-
     const dispatch = useDispatch();
     const WriteSaveBtn = () => {
         const id = writeListState.length;
@@ -44,6 +42,8 @@ function Write() {
         dispatch(writeListDataAdd({ id, title, subTitle, content, keyword, date }));
     };
     const recentId = writeListState.length;
+
+    console.log('rendering');
 
     return (
         <div className='Write'>
@@ -74,12 +74,15 @@ function Write() {
 
     function CateListFac({ i, setKeywordArrUpd }) {
 
+        // const [keywordArrPrev, setKeywrodArrPrev] = useState([]);
+        // console.log(keywordArrPrev);
+
         const [cateActive, cateActiveStyle] = useState(false);
         const cateClick = () => {
             cateActiveStyle(!cateActive);
             if (!cateActive) {
                 cateActiveStyle(true);
-                setKeywordArrUpd(cateListData[i])
+                // setKeywrodArrPrev((prevArr)=>[...prevArr, cateListData[i]]);
             } else {
                 cateActiveStyle(false);
             }
