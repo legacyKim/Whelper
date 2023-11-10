@@ -82,7 +82,7 @@ function Write() {
             cateActiveStyle(!cateActive);
             if (!cateActive) {
                 cateActiveStyle(true);
-                // setKeywrodArrPrev((prevArr)=>[...prevArr, cateListData[i]]);
+                // setKeywrodArrPrev((prevArr)=>[...prevAr  r, cateListData[i]]);
             } else {
                 cateActiveStyle(false);
             }
