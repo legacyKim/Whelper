@@ -41,14 +41,6 @@ function App() {
         }
     };
 
-    const searchClose = () => {
-        setTimeout(() => {
-            setIsSearchOn(false);
-        }, 300);
-
-        setSearchActive('');
-    };
-
     useEffect(() => {
         if (searchActive) {
             setSearchActive('active');
@@ -118,10 +110,10 @@ function App() {
 
             <div className={`search ${searchActive ? searchActive : ""}`}>
                 <div className="search_box">
-                    <button className='icon-cancel' onClick={searchClose}></button>
+                    <button className='icon-cancel' onClick={searchOn}></button>
                     <div className="search_input search_toggle">
                         <input type='text' ref={newSearch} value={searchInputValue} onChange={(e) => setSearchInputValue(e.target.value)}></input>
-                        <Link to={`/components/Search/${searchInputValue}`} className='icon-search search_input_btn' onClick={newSearchBtn}></Link>
+                        <Link to={`/components/Search/${searchInputValue}`} className='icon-search search_input_btn' onClick={()=>{newSearchBtn(); searchOn();}}></Link>
                     </div>
                     <ol className='search_list'>
                         {

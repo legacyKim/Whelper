@@ -183,7 +183,7 @@ main { position: absolute; display: block; top: 50%; left: 50%; transform: trans
 .view_content>title { position: relative; display: block; font-size: 32px; font-weight: 600; line-height: 1.5; color: var(--font-color); padding-bottom: 12px; } 
 .view_content>span { position: relative; display: block; font-size: 24px; font-weight: 400; line-height: 1.5; color: var(--font-color); padding-bottom: 12px; } 
 .view_content>p { position: relative; display: block; font-size: 18px; font-weight: 400; line-height: 1.5; color: var(--font-color); white-space:pre-wrap; padding-bottom: 12px; } 
-.view_content>b {position: absolute; top: 0; right: 0; display: block; font-size: 14px; font-weight: 700; line-height: 1.5; color: var(--font-color); opacity: 0.58;}
+.view_content>b { position: absolute; top: 0; right: 0; display: block; font-size: 14px; font-weight: 700; line-height: 1.5; color: var(--font-color); opacity: 0.58; } 
 
 .write_btn { position: relative; display: flex; justify-content: flex-end; align-items: center; } 
 .write_btn>* { position: relative; display: block; border-radius: 50%; font-size:16px; margin-left: 6px; margin-bottom: 10px; } 
@@ -244,5 +244,14 @@ main { position: absolute; display: block; top: 50%; left: 50%; transform: trans
 .cate_list_pos { position:fixed; top: 50%; transform: translateY(-50%); width: 200px; height: 447.8px; overflow:hidden; } 
 .cate_list_pos::-webkit-scrollbar { display: none; } 
 .cate_list { position: absolute; top: 0; left: 32px; width: 100%; } 
-.cate_list li span { position: relative; display: inline; font-size: 14px; font-weight: 700; line-height: 1.6; color: var(--font-color); cursor: pointer; } 
+.cate_list li span { position: relative; display: inline; font-size: 14px; font-weight: 700; line-height: 1.6; color: var(--font-color); cursor: pointer; transition: all 0.3s ease-in-out; } 
 .cate_list li span.active { color: var(--main-color); } 
+
+.cate_box { position: relative; display: block; margin-left: 200px; } 
+
+.cate_request { position: relative; display: flex; justify-content: flex-start; align-items: ceter; flex-wrap: wrap; margin-bottom: 16px; } 
+.cate_request>span { position: relative; /*opacity: 0; */ display: block; margin-right: 8px; font-size: 14px; font-weight: 600; line-height: 1.4; color: var(--font-color); cursor: pointer; transition: all 0.3s ease-in-out; } 
+/* .cate_request>span.active { opacity: 1; } */
+.cate_request>span:hover { color: var(--main-color); } 
+.cate_request button { display: none; } 
+.cate_request button.active { display: block; } 

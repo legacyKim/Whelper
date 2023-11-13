@@ -4,43 +4,83 @@ import { useParams, Link } from 'react-router-dom';
 import { useSelector, useDispatch } from "react-redux"
 
 import '../css/style.css';
+import '../lib/fontello/css/animation.css'
 
 
 function Category() {
 
     let cateListData = useSelector((state) => state.cateData);
 
-    // catelist scroll event
     var cateScrollArea = useRef();
     var cateScrollPos = useRef();
 
     var currentY = 0;
     var previousY = 0;
-    var scrollAmount = 22.4; // 원하는 스크롤 이동량
+    var scrollAmount = 22.4;
 
     // scroll direction
     const cateScrollMove = (e) => {
         currentY = cateScrollArea.current.scrollTop;
 
         if (e.deltaY > 0) {
-            // 휠을 아래로 내렸을 때
             currentY += scrollAmount;
         } else {
-            // 휠을 위로 올렸을 때
             currentY -= scrollAmount;
         }
 
-        // 스크롤 위치를 업데이트
         cateScrollArea.current.scrollTop = currentY;
-
-        // 이전 스크롤 위치 업데이트
         previousY = currentY;
     };
 
     useEffect(() => {
         cateScrollArea.current.addEventListener("wheel", cateScrollMove);
     }, [])
-    // catelist scroll event
+    //// catelist scroll event
+
+    // cate arr setting
+    const [cateArr, setCateArr] = useState([]);
+
+    const clickRemove = (i) => {
+        setCateArr((prevKeywordArr) =>
+            cateArr.includes(cateArr[i])
+                ? prevKeywordArr.filter((item) => item !== cateArr[i])
+                : [...prevKeywordArr, cateArr[i]]
+        );
+    }
+
+    const clickRemoveAll = () => {
+        setCateArr(cateArr.filter((item) => item === cateArr));
+    }
+
+    const [removeBtn, setRemoveBtn] = useState(false);
+
+    useEffect(() => {
+        if (cateArr.length >= 1) {
+            setRemoveBtn(true);
+        } else {
+            setRemoveBtn(false);
+        }
+    }, [cateArr])
+    //// cate arr setting
+
+    // cate result
+    const writeListState = useSelector((state) => state.WriteData);
+    let [cateFilter, setCateFilter] = useState([]);
+
+    useEffect(() => {
+        let newCateFilter = [];
+        cateArr.forEach((cateItem) => {
+            writeListState.forEach((writeItem) => {
+                if (writeItem.keyword.includes(cateItem)) {
+                    newCateFilter = [...newCateFilter, writeItem];
+                    return newCateFilter;
+                }
+            });
+        });
+        setCateFilter(newCateFilter);
+    }, [cateArr])
+    console.log(cateFilter);
+    //// cate result
 
     return (
 
@@ -51,9 +91,30 @@ function Category() {
                         cateListData.map(function (a, i) {
                             return (
                                 <li key={i}>
-                                    <CategoryList cate={a}></CategoryList>
+                                    <CategoryList cate={a} cateArr={cateArr} setCateArr={setCateArr}></CategoryList>
                                 </li>
                             )
+                        })
+                    }
+                </ul>
+            </div>
+            <div className='cate_box'>
+                <div className='cate_request'>
+                    {
+                        cateArr.map(function (a, i) {
+                            return (
+                                <span key={i} onClick={() => { clickRemove(i) }}>{cateArr[i]}</span>
+                            )
+                        })
+                    }
+                    <button className={`icon-spin6 animate-spin ${removeBtn ? "active" : ""}`} onClick={clickRemoveAll}></button>
+                </div>
+                <ul className='cate_result'>
+                    {
+                        cateFilter.map(function (a, i) {
+                            <li key={i}>
+                                <CategoryResult i={i} cateFilter={cateFilter} />
+                            </li>
                         })
                     }
                 </ul>
@@ -62,17 +123,20 @@ function Category() {
 
     )
 
-    function CategoryList({ cate }) {
+    function CategoryList({ cate, cateArr, setCateArr }) {
 
-        const [cateActive, cateActiveStyle] = useState(false);
+        const [cateActive, setCateActive] = useState(cateArr.includes(cate));
         const cateClick = () => {
-            cateActiveStyle(!cateActive);
-            if (!cateActive) {
-                cateActiveStyle('active');
-            } else {
-                cateActiveStyle('');
-            }
 
+            setTimeout(() => {
+                setCateArr((prevKeywordArr) =>
+                    cateArr.includes(cate)
+                        ? prevKeywordArr.filter((item) => item !== cate)
+                        : [...prevKeywordArr, cate]
+                );
+            }, 300)
+
+            setCateActive((prevCateActive) => !prevCateActive);
         };
 
         return (
@@ -80,6 +144,13 @@ function Category() {
         )
     }
 
+    function CategoryResult({ i, cateFilter }) {
+        return (
+            <Link to="">
+                {cateFilter[i].title}
+            </Link>
+        )
+    }
 
 }
 
