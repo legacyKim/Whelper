@@ -250,8 +250,8 @@ main { position: absolute; display: block; top: 50%; left: 50%; transform: trans
 .cate_box { position: relative; display: block; margin-left: 200px; } 
 
 .cate_request { position: relative; display: flex; justify-content: flex-start; align-items: ceter; flex-wrap: wrap; margin-bottom: 16px; } 
-.cate_request>span { position: relative; /*opacity: 0; */ display: block; margin-right: 8px; font-size: 14px; font-weight: 600; line-height: 1.4; color: var(--font-color); cursor: pointer; transition: all 0.3s ease-in-out; } 
+.cate_request>span { position: relative; /*opacity: 0; */ display: block; margin-right: 8px; margin-bottom: 8px; font-size: 14px; font-weight: 600; line-height: 1.4; color: var(--font-color); cursor: pointer; transition: all 0.3s ease-in-out; } 
 /* .cate_request>span.active { opacity: 1; } */
 .cate_request>span:hover { color: var(--main-color); } 
 .cate_request button { display: none; } 
-.cate_request button.active { display: block; } 
+.cate_request button.active { display: block; margin-top: -6px; } 

@@ -69,9 +69,14 @@ function Category() {
 
     useEffect(() => {
         let newCateFilter = [];
+
+        // cateItem 은 cateArr 배열 내부의 키워드
         cateArr.forEach((cateItem) => {
+
+            // writeItem 은 ....?
             writeListState.forEach((writeItem) => {
-                if (writeItem.keyword.includes(cateItem)) {
+                if (writeItem.keyword.includes(cateItem)) { 
+                    newCateFilter.filter((prev) => prev !== writeItem)
                     newCateFilter = [...newCateFilter, writeItem];
                     return newCateFilter;
                 }
