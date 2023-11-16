@@ -1,7 +1,7 @@
 
-import { React, useEffect, useState, useRef, useMemo } from 'react';
-import { useParams, Link } from 'react-router-dom';
-import { useSelector, useDispatch } from "react-redux"
+import { React, useEffect, useState, useRef } from 'react';
+import { Link } from 'react-router-dom';
+import { useSelector } from "react-redux"
 
 import '../css/style.css';
 import '../lib/fontello/css/animation.css'
@@ -39,8 +39,8 @@ function Category() {
 
     // cate arr setting
 
-    const cateArrLocal = JSON.parse(localStorage.getItem('cateHistory'));
-    const [cateArr, setCateArr] = useState(cateArrLocal);
+    const keywordArrLocal = JSON.parse(localStorage.getItem('cateHistory'));
+    const [cateArr, setCateArr] = useState(keywordArrLocal);
 
     useEffect(()=>{
         localStorage.setItem('cateHistory', JSON.stringify(cateArr));

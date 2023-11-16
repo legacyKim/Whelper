@@ -1,4 +1,4 @@
-import { React, useEffect, useState, useRef } from 'react';
+import { React, useEffect, useState, useRef, useContext } from 'react';
 import { Link } from 'react-router-dom';
 
 import { searchListDataCorrect, searchListDataDelete } from "./store.js"
@@ -113,7 +113,7 @@ function App() {
                     <button className='icon-cancel' onClick={searchOn}></button>
                     <div className="search_input search_toggle">
                         <input type='text' ref={newSearch} value={searchInputValue} onChange={(e) => setSearchInputValue(e.target.value)}></input>
-                        <Link to={`/components/Search/${searchInputValue}`} className='icon-search search_input_btn' onClick={()=>{newSearchBtn(); searchOn();}}></Link>
+                        <Link to={`/components/Search/${searchInputValue}`} className='icon-search search_input_btn' onClick={() => { newSearchBtn(); searchOn(); }}></Link>
                     </div>
                     <ol className='search_list'>
                         {
