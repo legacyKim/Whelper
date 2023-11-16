@@ -241,7 +241,7 @@ main { position: absolute; display: block; top: 50%; left: 50%; transform: trans
 .popup_cate span.active { color: var(--main-color); } 
 
 /* cate */
-.cate_list_pos { position:fixed; top: 96px; width: 160px; height: 447.8px; overflow:hidden; } 
+.cate_list_pos { position:fixed; top: 96px; width: 160px; height: calc(100% - 92px); overflow:hidden; } 
 .cate_list_pos::-webkit-scrollbar { display: none; } 
 .cate_list { position: absolute; top: 0; width: 100%; } 
 .cate_list li span { position: relative; display: inline; font-size: 14px; font-weight: 700; line-height: 1.6; color: var(--font-color); cursor: pointer; transition: all 0.3s ease-in-out; } 

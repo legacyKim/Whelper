@@ -6,7 +6,6 @@ import { useSelector } from "react-redux"
 import '../css/style.css';
 import '../lib/fontello/css/animation.css'
 
-
 function Category() {
 
     let cateListData = useSelector((state) => state.cateData);
