@@ -249,9 +249,16 @@ main { position: absolute; display: block; top: 50%; left: 50%; transform: trans
 
 .cate_box { position: relative; display: block; margin-left: 200px; } 
 
-.cate_request { position: relative; display: flex; justify-content: flex-start; align-items: ceter; flex-wrap: wrap; margin-bottom: 16px; } 
+.cate_request { position: relative; display: flex; justify-content: flex-start; align-items: ceter; flex-wrap: wrap; margin-bottom: 8px; } 
 .cate_request>span { position: relative; /*opacity: 0; */ display: block; margin-right: 8px; margin-bottom: 8px; font-size: 14px; font-weight: 600; line-height: 1.4; color: var(--font-color); cursor: pointer; transition: all 0.3s ease-in-out; } 
 /* .cate_request>span.active { opacity: 1; } */
 .cate_request>span:hover { color: var(--main-color); } 
 .cate_request button { display: none; } 
 .cate_request button.active { display: block; margin-top: -6px; } 
+
+.cate_result { position: relative; display: block; } 
+.cate_result>li>a { position: relative; display: block; padding: 8px 0; } 
+.cate_result>li>a>h3 { position: relative; display: block; font-size: 16px; font-weight: 700; line-height: 1.2; color: var(--font-color); margin-bottom: 8px; } 
+.cate_result>li>a>h5 { position: relative; display: block; font-size: 15px; font-weight: 700; line-height: 1.2; color: var(--font-color); margin-bottom: 8px; } 
+.cate_result>li>a>p { position: relative; display: block; font-size: 14px; font-weight: 400; line-height: 1.2; color: var(--font-color); display: -webkit-box; -webkit-line-clamp: 3; /* 라인 수 */
+ -webkit-box-orient: vertical; text-overflow: ellipsis; overflow: hidden; } 

@@ -41,6 +41,7 @@ function Category() {
     const [cateArr, setCateArr] = useState([]);
 
     const clickRemove = (i) => {
+
         setCateArr((prevKeywordArr) =>
             cateArr.includes(cateArr[i])
                 ? prevKeywordArr.filter((item) => item !== cateArr[i])
@@ -65,26 +66,23 @@ function Category() {
 
     // cate result
     const writeListState = useSelector((state) => state.WriteData);
-    let [cateFilter, setCateFilter] = useState([]);
+    let [cateFilterRes, setCateFilterRes] = useState([]);
 
     useEffect(() => {
         let newCateFilter = [];
 
-        // cateItem 은 cateArr 배열 내부의 키워드
         cateArr.forEach((cateItem) => {
-
-            // writeItem 은 ....?
             writeListState.forEach((writeItem) => {
-                if (writeItem.keyword.includes(cateItem)) { 
-                    newCateFilter.filter((prev) => prev !== writeItem)
+                if (writeItem.keyword.includes(cateItem)) {
                     newCateFilter = [...newCateFilter, writeItem];
+                    newCateFilter = [...new Set(newCateFilter)];
                     return newCateFilter;
                 }
             });
+
         });
-        setCateFilter(newCateFilter);
+        setCateFilterRes(newCateFilter);
     }, [cateArr])
-    console.log(cateFilter);
     //// cate result
 
     return (
@@ -116,10 +114,12 @@ function Category() {
                 </div>
                 <ul className='cate_result'>
                     {
-                        cateFilter.map(function (a, i) {
-                            <li key={i}>
-                                <CategoryResult i={i} cateFilter={cateFilter} />
-                            </li>
+                        cateFilterRes.map(function (a, i) {
+                            return (
+                                <li key={i}>
+                                    <CategoryResult i={i} cateFilterRes={cateFilterRes} />
+                                </li>
+                            )
                         })
                     }
                 </ul>
@@ -149,10 +149,13 @@ function Category() {
         )
     }
 
-    function CategoryResult({ i, cateFilter }) {
+    function CategoryResult({ i, cateFilterRes }) {
+
         return (
             <Link to="">
-                {cateFilter[i].title}
+                <h3>{cateFilterRes[i].title}</h3>
+                <h5>{cateFilterRes[i].subTitle}</h5>
+                <p>{cateFilterRes[i].content}</p>
             </Link>
         )
     }
