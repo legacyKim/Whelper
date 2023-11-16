@@ -14,19 +14,10 @@ function Search() {
     const [searchPageInput, setSearchPageInput] = useState(searchFrist);
 
     // about search
-    let searchListState = useSelector((state) => state.SearchData);
-    const dispatch = useDispatch();
     const newSearch = useRef();
 
     let newSearchBtn = () => {
         const searchContent = newSearch.current.value;
-        const searchContentDupli = searchListState.filter(item => item.searchContent === searchContent);
-
-        if (searchContentDupli.length !== 0) {
-            dispatch(searchListDataDelete({ searchContent: searchContentDupli[0].searchContent }));
-        }
-
-        dispatch(searchListDataCorrect({ searchContent }));
         setSearchPageInput(searchFrist);
     }
     //// about search

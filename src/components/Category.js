@@ -1,5 +1,5 @@
 
-import { React, useEffect, useState, useRef } from 'react';
+import { React, useEffect, useState, useRef, useMemo } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useSelector, useDispatch } from "react-redux"
 
@@ -38,7 +38,13 @@ function Category() {
     //// catelist scroll event
 
     // cate arr setting
-    const [cateArr, setCateArr] = useState([]);
+
+    const cateArrLocal = JSON.parse(localStorage.getItem('cateHistory'));
+    const [cateArr, setCateArr] = useState(cateArrLocal);
+
+    useEffect(()=>{
+        localStorage.setItem('cateHistory', JSON.stringify(cateArr));
+    }, [cateArr])
 
     const clickRemove = (i) => {
 
@@ -131,7 +137,8 @@ function Category() {
     function CategoryList({ cate, cateArr, setCateArr }) {
 
         const [cateActive, setCateActive] = useState(cateArr.includes(cate));
-        const cateClick = () => {
+
+        function cateClick() {
 
             setTimeout(() => {
                 setCateArr((prevKeywordArr) =>
@@ -152,11 +159,14 @@ function Category() {
     function CategoryResult({ i, cateFilterRes }) {
 
         return (
-            <Link to="">
-                <h3>{cateFilterRes[i].title}</h3>
-                <h5>{cateFilterRes[i].subTitle}</h5>
-                <p>{cateFilterRes[i].content}</p>
-            </Link>
+            <div className='write_list'>
+                <Link to={`/components/WriteView/${writeListState[i].id}`}>
+                    <span>{cateFilterRes[i].title}</span>
+                    <strong>{cateFilterRes[i].subTitle}</strong>
+                    <p>{cateFilterRes[i].content}</p>
+                </Link>
+            </div>
+
         )
     }
 
