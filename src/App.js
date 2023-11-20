@@ -63,10 +63,8 @@ function App() {
     //// about header scroll
 
     // about search
-    const keywordArrLocal = JSON.parse(localStorage.getItem('cateHistory'));
-    const [searchArr, setSearchArr] = useState(keywordArrLocal);
-
-    console.log(searchArr);
+    // const keywordArrLocal = JSON.parse(localStorage.getItem('searchHistory'));
+    const [searchArr, setSearchArr] = useState([]);
 
     // const dispatch = useDispatch();
     const newSearch = useRef();
@@ -79,14 +77,22 @@ function App() {
         }
 
         // local storage 추가
-        localStorage.setItem('cateHistory', JSON.stringify(searchArr));
+        setSearchArr((prevKeywordArr) =>
+            searchArr.includes(searchContent)
+                ? prevKeywordArr.filter((item) => item !== searchContent)
+                : [...prevKeywordArr, searchContent]
+        );
     }
 
     const [searchInputValue, setSearchInputValue] = useState(searchArr[searchArr.length]);
     const searchLastValue = useRef();
+
     useEffect(() => {
         searchLastValue.current = searchArr[searchArr.length];
         setSearchInputValue(searchLastValue.current);
+
+        // local storage
+        localStorage.setItem('cateHistory', JSON.stringify(searchArr));
     }, [searchArr]);
     //// about search
 
