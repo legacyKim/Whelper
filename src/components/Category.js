@@ -1,6 +1,6 @@
 
 import { React, useEffect, useState, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { useSelector } from "react-redux"
 
 import '../css/style.css';
@@ -36,17 +36,18 @@ function Category() {
     }, [])
     //// catelist scroll event
 
-    // cate arr setting
+    // write => cate keyword click event
+    let { writeListKeyword } = useParams();
+    const [cateProps, setCateProps] = useState(writeListKeyword);
+    //// write => cate keyword click event
 
+    // cate arr setting
     const keywordArrLocal = JSON.parse(localStorage.getItem('cateHistory'));
+
+    /* cate Array */
     const [cateArr, setCateArr] = useState(keywordArrLocal);
 
-    useEffect(()=>{
-        localStorage.setItem('cateHistory', JSON.stringify(cateArr));
-    }, [cateArr])
-
     const clickRemove = (i) => {
-
         setCateArr((prevKeywordArr) =>
             cateArr.includes(cateArr[i])
                 ? prevKeywordArr.filter((item) => item !== cateArr[i])
@@ -59,23 +60,17 @@ function Category() {
     }
 
     const [removeBtn, setRemoveBtn] = useState(false);
-
-    useEffect(() => {
-        if (cateArr.length >= 1) {
-            setRemoveBtn(true);
-        } else {
-            setRemoveBtn(false);
-        }
-    }, [cateArr])
     //// cate arr setting
 
     // cate result
     const writeListState = useSelector((state) => state.WriteData);
     let [cateFilterRes, setCateFilterRes] = useState([]);
+    //// cate result
 
     useEffect(() => {
-        let newCateFilter = [];
 
+        // filter writeList
+        let newCateFilter = [];
         cateArr.forEach((cateItem) => {
             writeListState.forEach((writeItem) => {
                 if (writeItem.keyword.includes(cateItem)) {
@@ -87,8 +82,25 @@ function Category() {
 
         });
         setCateFilterRes(newCateFilter);
+
+        // reset btn show
+        if (cateArr.length >= 1) {
+            setRemoveBtn(true);
+        } else {
+            setRemoveBtn(false);
+        }
+
+        // localstorage
+        localStorage.setItem('cateHistory', JSON.stringify(cateArr));
     }, [cateArr])
-    //// cate result
+
+    useEffect(() => {
+        if (cateProps !== undefined) {
+            setCateArr([cateProps])
+        } else {
+            console.log('not working');
+        }
+    }, [cateProps]);
 
     return (
 

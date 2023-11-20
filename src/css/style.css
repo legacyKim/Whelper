@@ -147,7 +147,7 @@ main { position: absolute; display: block; top: 50%; left: 50%; transform: trans
 .Write { position:relative; display: block; padding: 20px; padding: 16px; padding-top: 110px; } 
 .write_list { background: var(--box-color); border-radius: 8px; padding: 16px; margin-bottom: 16px; } 
 .write_list>a { position: relative; display: block; border: none; } 
-.write_list>a>span { position: relative; display: block; font-size: 16px; font-weight: 700; line-height: 1.2; letter-spacing: -1px; color: var(--font-color); padding-bottom: 8px; } 
+.write_list>a>span { position: relative; display: block; font-size: 17px; font-weight: 700; line-height: 1.2; letter-spacing: -1px; color: var(--font-color); padding-bottom: 8px; } 
 .write_list>a>strong { position: relative; display: block; font-size: 14px; font-weight: 700; line-height: 1.2; letter-spacing: -1px; color: var(--font-color); padding-bottom: 8px; } 
 .write_list>a>p { position: relative; display: block; font-size: 13px; font-weight: 400; line-height: 1.4; letter-spacing: -0.5px; color: var(--font-color); display: -webkit-box; word-wrap: break-word; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; white-space:pre-wrap; height: 56px; text-align: justify; margin-bottom: 8px; } 
 .Write form { position: relative; display: block; height: 100%; } 
@@ -213,7 +213,7 @@ main { position: absolute; display: block; top: 50%; left: 50%; transform: trans
 .search_input .search_input_btn:hover { color: var(--main-color); } 
 .search_result_list { position:relative; display:block; } 
 .search_result_list>li>div { margin-bottom:12px; padding: 16px; background: var(--box-color); border-radius: 8px; } 
-.search_result_list>li>div>a { color: var(--font-color); font-size:16px; font-weight: 500; line-height: 1.4; color: var(--font-color); line-clamp: 3; white-space: normal; display: -webkit-box; overflow: hidden; -webkit-line-clamp: 3; -webkit-box-orient: vertical; } 
+.search_result_list>li>div>a { color: var(--font-color); font-size:13px; font-weight: 500; line-height: 1.4; color: var(--font-color); line-clamp: 3; white-space: normal; display: -webkit-box; overflow: hidden; -webkit-line-clamp: 3; -webkit-box-orient: vertical; } 
 
 
 /* 동적 작업을 위한.... 23.02.10 */

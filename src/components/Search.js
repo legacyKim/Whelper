@@ -17,7 +17,6 @@ function Search() {
     const newSearch = useRef();
 
     let newSearchBtn = () => {
-        const searchContent = newSearch.current.value;
         setSearchPageInput(searchFrist);
     }
     //// about search

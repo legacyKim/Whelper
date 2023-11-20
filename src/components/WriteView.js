@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
-import { searchListDataCorrect, searchListDataDelete } from "../store"
-
-import { useSelector, useDispatch } from "react-redux"
+import { useSelector } from "react-redux"
 import { useParams } from 'react-router-dom';
 
 import '../css/style.css';
@@ -52,24 +50,8 @@ function WriteView() {
 
     function WriteKeyword({ writeListKeyword }) {
 
-        const dispatch = useDispatch();
-        let searchListState = useSelector((state) => state.SearchData);
-
-        var writekeywordClick = (e) => {
-            e.stopPropagation();
-
-            const searchContent = writeListKeyword;
-            const searchContentDupli = searchListState.filter(item => item.searchContent === searchContent);
-
-            if (searchContentDupli.length !== 0) {
-                dispatch(searchListDataDelete({ searchContent: searchContentDupli[0].searchContent }));
-            }
-
-            dispatch(searchListDataCorrect({ searchContent }));
-        }
-
         return (
-            <Link to={`/components/Search/${writeListKeyword}`} onClick={writekeywordClick}>#{writeListKeyword}</Link>
+            <Link to={`/components/Category/${writeListKeyword}`}>#{writeListKeyword}</Link>
         );
 
     }

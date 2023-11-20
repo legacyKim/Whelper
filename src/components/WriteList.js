@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useRef } from 'react';
+// import React, { } from 'react';
 import { useSelector, useDispatch } from "react-redux"
-import { writeListDataDelete, searchListDataCorrect, searchListDataDelete } from "../store"
+// import { writeListDataDelete } from "../store"
 
 import '../css/style.css';
 import { Link } from 'react-router-dom';
@@ -32,10 +32,13 @@ function WriteList() {
     function WriteShowContents({ i }) {
 
         const writeListState = useSelector((state) => state.WriteData);
+
+        /*
         const dispatch = useDispatch();
         const delWriteList = () => {
             dispatch(writeListDataDelete({ id: writeListState[i].id }))
         }
+        */
 
         function writeDateFomatt(date) {
             const options = { day: '2-digit', month: '2-digit', year: '2-digit' };
@@ -77,25 +80,9 @@ function WriteList() {
 
     function WriteKeyword({ writeListKeyword }) {
 
-        const dispatch = useDispatch();
-        let searchListState = useSelector((state) => state.SearchData);
-
-        var writekeywordClick = (e) => {
-            e.stopPropagation();
-
-            const searchContent = writeListKeyword;
-            const searchContentDupli = searchListState.filter(item => item.searchContent === searchContent);
-
-            if (searchContentDupli.length !== 0) {
-                dispatch(searchListDataDelete({ searchContent: searchContentDupli[0].searchContent }));
-            }
-
-            dispatch(searchListDataCorrect({ searchContent }));
-        }
-
         return (
             <li>
-                <Link to={`/components/Search/${writeListKeyword}`} onClick={writekeywordClick}>#{writeListKeyword}</Link>
+                <Link to={`/components/Category/${writeListKeyword}`}>#{writeListKeyword}</Link>
             </li>
         );
 

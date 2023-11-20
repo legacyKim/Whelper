@@ -57,9 +57,12 @@ function Menu() {
                         <Route path="/components/WriteView/:id" element={<WriteView />} />
                         <Route path="/components/WriteCorrect/:id" element={<WriteCorrect />} />
 
-                        <Route path="/components/Search/:searchInputValue" element={<Search />} />
                         <Route path="/components/Date" element={<Date />} />
+
                         <Route path="/components/Category" element={<Category />} />
+                        <Route path="/components/Category/:writeListKeyword" element={<Category />} />
+
+                        <Route path="/components/Search/:searchInputValue" element={<Search />} />
 
                         <Route path="/components/Memo" element={<Memo MainMemoData={MainMemoData} />} />
 
