@@ -97,9 +97,7 @@ function Category() {
     useEffect(() => {
         if (cateProps !== undefined) {
             setCateArr([cateProps])
-        } else {
-            console.log('not working');
-        }
+        } 
     }, [cateProps]);
 
     return (

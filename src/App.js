@@ -63,27 +63,31 @@ function App() {
     //// about header scroll
 
     // about search
-    let searchListState = useSelector((state) => state.SearchData);
+    const keywordArrLocal = JSON.parse(localStorage.getItem('cateHistory'));
+    const [searchArr, setSearchArr] = useState(keywordArrLocal);
 
-    const dispatch = useDispatch();
+    console.log(searchArr);
+
+    // const dispatch = useDispatch();
     const newSearch = useRef();
     let newSearchBtn = () => {
         const searchContent = newSearch.current.value;
-        const searchContentDupli = searchListState.filter(item => item.searchContent === searchContent);
+        const searchContentDupli = searchArr.filter(item => item.searchContent === searchContent);
 
         if (searchContentDupli.length !== 0) {
-            dispatch(searchListDataDelete({ searchContent: searchContentDupli[0].searchContent }));
+            // local storage 삭제
         }
 
-        dispatch(searchListDataCorrect({ searchContent }));
+        // local storage 추가
+        localStorage.setItem('cateHistory', JSON.stringify(searchArr));
     }
 
-    const [searchInputValue, setSearchInputValue] = useState(searchListState[searchListState.length - 1].searchContent);
+    const [searchInputValue, setSearchInputValue] = useState(searchArr[searchArr.length]);
     const searchLastValue = useRef();
     useEffect(() => {
-        searchLastValue.current = searchListState[searchListState.length - 1].searchContent;
+        searchLastValue.current = searchArr[searchArr.length];
         setSearchInputValue(searchLastValue.current);
-    }, [searchListState]);
+    }, [searchArr]);
     //// about search
 
     return (
@@ -117,7 +121,7 @@ function App() {
                     </div>
                     <ol className='search_list'>
                         {
-                            searchListState.map(function (a, i) {
+                            searchArr.map(function (a, i) {
                                 return (
                                     <li key={i}>
                                         <SearchListContents i={i} />
@@ -135,17 +139,17 @@ function App() {
     function SearchListContents({ i }) {
 
         let delSearchBtn = () => {
-            dispatch(searchListDataDelete({ searchContent: searchListState[i].searchContent }));
+            // local storage 삭제
         }
 
-        const searchValueClick = searchListState[i].searchContent;
+        const searchValueClick = searchArr[i];
         const searchVal = () => {
             setSearchInputValue(searchValueClick);
         }
 
         return (
             <div>
-                <span onClick={searchVal}>{searchListState[i].searchContent}</span>
+                <span onClick={searchVal} >{searchArr[i]}</span>
                 <button className='icon-cancel-squared' onClick={delSearchBtn}></button>
             </div>
         )
