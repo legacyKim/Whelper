@@ -14,11 +14,28 @@ function Search() {
     const [searchPageInput, setSearchPageInput] = useState(searchFrist);
 
     // about search
-    const newSearch = useRef();
 
+    ////////// need to change context api lib
+    const keywordArrLocal = JSON.parse(localStorage.getItem('searchHistory'));
+    const [searchArr, setSearchArr] = useState(keywordArrLocal);
+
+    const newSearch = useRef();
     let newSearchBtn = () => {
         setSearchPageInput(searchFrist);
+
+        setSearchArr((prevKeywordArr) =>
+            searchArr.includes(searchFrist)
+                ? [...new Set(prevKeywordArr.filter((item) => item !== searchFrist)), searchFrist]
+                : [...prevKeywordArr, searchFrist]
+        );
     }
+
+    useEffect(() => {
+        // local storage
+        localStorage.setItem('searchHistory', JSON.stringify(searchArr));
+    }, [searchArr]);
+    ////////// need to change context api lib
+
     //// about search
 
     // about search result filter

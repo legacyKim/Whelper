@@ -2,7 +2,6 @@ import { React, useEffect, useState, useRef, useContext } from 'react';
 import { Link } from 'react-router-dom';
 
 import { searchListDataCorrect, searchListDataDelete } from "./store.js"
-import { useSelector, useDispatch } from "react-redux"
 
 // import type { FC } from "react";
 
@@ -32,7 +31,8 @@ function App() {
     const [isSearchOn, setIsSearchOn] = useState(false);
     const [searchActive, setSearchActive] = useState('');
 
-    const searchOn = () => {
+    const searchOn = (e) => {
+        e.stopPropagation();
         setIsSearchOn(!isSearchOn);
         if (!isSearchOn) {
             setSearchActive('active');
@@ -40,6 +40,17 @@ function App() {
             setSearchActive('');
         }
     };
+
+    const searchOff = () => {
+        setSearchActive('');
+        console.log('뚫다!');
+    }
+
+    useEffect(()=>{
+        window.addEventListener('click', searchOff);
+    }, [])
+
+    // setIsSearchOn(!isSearchOn);
 
     useEffect(() => {
         if (searchActive) {
@@ -63,37 +74,31 @@ function App() {
     //// about header scroll
 
     // about search
-    // const keywordArrLocal = JSON.parse(localStorage.getItem('searchHistory'));
-    const [searchArr, setSearchArr] = useState([]);
 
-    // const dispatch = useDispatch();
+    ////////// need to change context api lib
+    const keywordArrLocal = JSON.parse(localStorage.getItem('searchHistory'));
+    const [searchArr, setSearchArr] = useState(keywordArrLocal);
+
     const newSearch = useRef();
     let newSearchBtn = () => {
         const searchContent = newSearch.current.value;
-        const searchContentDupli = searchArr.filter(item => item.searchContent === searchContent);
-
-        if (searchContentDupli.length !== 0) {
-            // local storage 삭제
-        }
 
         // local storage 추가
         setSearchArr((prevKeywordArr) =>
             searchArr.includes(searchContent)
-                ? prevKeywordArr.filter((item) => item !== searchContent)
+                ? [...new Set(prevKeywordArr.filter((item) => item !== searchContent)), searchContent]
                 : [...prevKeywordArr, searchContent]
         );
     }
 
-    const [searchInputValue, setSearchInputValue] = useState(searchArr[searchArr.length]);
-    const searchLastValue = useRef();
-
     useEffect(() => {
-        searchLastValue.current = searchArr[searchArr.length];
-        setSearchInputValue(searchLastValue.current);
-
         // local storage
-        localStorage.setItem('cateHistory', JSON.stringify(searchArr));
+        localStorage.setItem('searchHistory', JSON.stringify(searchArr));
     }, [searchArr]);
+    ////////// need to change context api lib
+
+
+    const [searchInputValue, setSearchInputValue] = useState(searchArr[searchArr.length - 1]);
     //// about search
 
     return (
@@ -122,7 +127,7 @@ function App() {
                 <div className="search_box">
                     <button className='icon-cancel' onClick={searchOn}></button>
                     <div className="search_input search_toggle">
-                        <input type='text' ref={newSearch} value={searchInputValue} onChange={(e) => setSearchInputValue(e.target.value)}></input>
+                        <input type='text' ref={newSearch} value={searchInputValue} onInput={(e) => setSearchInputValue(e.target.value)}></input>
                         <Link to={`/components/Search/${searchInputValue}`} className='icon-search search_input_btn' onClick={() => { newSearchBtn(); searchOn(); }}></Link>
                     </div>
                     <ol className='search_list'>
@@ -145,7 +150,11 @@ function App() {
     function SearchListContents({ i }) {
 
         let delSearchBtn = () => {
-            // local storage 삭제
+            setSearchArr((prevKeywordArr) =>
+                searchArr.includes(searchArr[i])
+                    ? prevKeywordArr.filter((item) => item !== searchArr[i])
+                    : [...prevKeywordArr]
+            );
         }
 
         const searchValueClick = searchArr[i];
