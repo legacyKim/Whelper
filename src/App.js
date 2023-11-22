@@ -33,6 +33,7 @@ function App() {
 
     const searchOn = (e) => {
         e.stopPropagation();
+        e.preventDefault();
         setIsSearchOn(!isSearchOn);
         if (!isSearchOn) {
             setSearchActive('active');
@@ -41,6 +42,7 @@ function App() {
         }
     };
 
+    /*
     const searchOff = () => {
         setSearchActive('');
         console.log('뚫다!');
@@ -49,8 +51,7 @@ function App() {
     useEffect(()=>{
         window.addEventListener('click', searchOff);
     }, [])
-
-    // setIsSearchOn(!isSearchOn);
+    */
 
     useEffect(() => {
         if (searchActive) {
@@ -80,7 +81,8 @@ function App() {
     const [searchArr, setSearchArr] = useState(keywordArrLocal);
 
     const newSearch = useRef();
-    let newSearchBtn = () => {
+    let newSearchBtn = (e) => {
+        e.preventDefault();
         const searchContent = newSearch.current.value;
 
         // local storage 추가
@@ -96,7 +98,6 @@ function App() {
         localStorage.setItem('searchHistory', JSON.stringify(searchArr));
     }, [searchArr]);
     ////////// need to change context api lib
-
 
     const [searchInputValue, setSearchInputValue] = useState(searchArr[searchArr.length - 1]);
     //// about search

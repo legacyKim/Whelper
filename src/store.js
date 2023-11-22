@@ -26,21 +26,6 @@ let WriteData = createSlice({
     }
 })
 
-let SearchData = createSlice({
-    name: 'SearchData',
-    initialState: SearchListData,
-    reducers: {
-        searchListDataCorrect(state, recentSerachList) {
-            const recentSerach = [...state, recentSerachList.payload];
-            return recentSerach;
-        },
-        searchListDataDelete(state, deleteSearchList) {
-            const deleteSearchContent = deleteSearchList.payload.searchContent;
-            return state.filter(item => item.searchContent !== deleteSearchContent);
-        }
-    }
-})
-
 let memoData = createSlice({
     name: 'memoData',
     initialState: memoListData,
@@ -75,14 +60,12 @@ let cateData = createSlice({
 })
 
 export const { writeListDataAdd, writeListDataUpdate, writeListDataDelete } = WriteData.actions;
-export const { searchListDataCorrect, searchListDataDelete } = SearchData.actions;
 export const { memoListDataAdd, memoListDataDelete, memoListDataUpdate } = memoData.actions;
 export const { cateListDataAdd } = cateData.actions;
 
 export default configureStore({
     reducer: {
         WriteData: WriteData.reducer,
-        SearchData: SearchData.reducer,
         memoData: memoData.reducer,
         cateData: cateData.reducer,
     },
