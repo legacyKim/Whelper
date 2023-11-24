@@ -10,6 +10,7 @@ import './css/style.css';
 
 import Memo from './components/Memo.js'
 
+import Slate from './components/Slate.js'
 import Write from './components/Write.js'
 import WriteList from './components/WriteList.js'
 import WriteView from './components/WriteView.js'
@@ -52,6 +53,7 @@ function Menu() {
 
                         <Route exact path="/" />
 
+                        <Route path="/components/Slate" element={<Slate />} />
                         <Route path="/components/Write" element={<Write />} />
                         <Route path="/components/WriteList" element={<WriteList />} />
                         <Route path="/components/WriteView/:id" element={<WriteView />} />
