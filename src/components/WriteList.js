@@ -44,7 +44,7 @@ function WriteList() {
             const options = { day: '2-digit', month: '2-digit', year: '2-digit' };
             return date.toLocaleDateString('en-US', options).replace(/\//g, '.');
         }
-    
+
         const writeDate = writeDateFomatt(writeListState[i].date);
 
         return (
@@ -63,8 +63,10 @@ function WriteList() {
                     <div className='write_keyword'>
                         <ul className='write_keyword_list'>
                             {
-                                writeListState[i].keyword.map((k, index) => (
-                                    <WriteKeyword writeListKeyword={k} />
+                                writeListState[i].keyword.map((k, i) => (
+                                    <li key={i}>
+                                        <WriteKeyword writeListKeyword={k} />
+                                    </li>
                                 ))
                             }
                         </ul>
@@ -81,9 +83,7 @@ function WriteList() {
     function WriteKeyword({ writeListKeyword }) {
 
         return (
-            <li>
-                <Link to={`/components/Category/${writeListKeyword}`}>#{writeListKeyword}</Link>
-            </li>
+            <Link to={`/components/Category/${writeListKeyword}`}>#{writeListKeyword}</Link>
         );
 
     }

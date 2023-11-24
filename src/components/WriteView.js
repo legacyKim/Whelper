@@ -31,8 +31,8 @@ function WriteView() {
                         <p>{writeListState[id].content}</p>
                         <div className='write_keyword_view'>
                             {
-                                writeListState[id].keyword.map((k, index) => (
-                                    <WriteKeyword writeListKeyword={k} />
+                                writeListState[id].keyword.map((k, j) => (
+                                    <WriteKeyword key={j} writeListKeyword={k} />
                                 ))
                             }
                         </div>
