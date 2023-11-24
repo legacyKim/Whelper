@@ -1,14 +1,6 @@
 import { React, useEffect, useState, useRef, useContext } from 'react';
-import { Link } from 'react-router-dom';
-
-import { searchListDataCorrect, searchListDataDelete } from "./store.js"
-
-// import type { FC } from "react";
-
-import {
-    NavLink, useNavigate
-} from "react-router-dom";
-
+import { NavLink, useNavigate } from "react-router-dom";
+import MyContext from './context'
 import './css/style.css';
 import Routes from './Routes'
 
@@ -75,14 +67,11 @@ function App() {
     //// about header scroll
 
     // about search
-
-    ////////// need to change context api lib
-    const keywordArrLocal = JSON.parse(localStorage.getItem('searchHistory'));
+    const keywordArrLocal = JSON.parse(localStorage.getItem('searchHistory') || []);
     const [searchArr, setSearchArr] = useState(keywordArrLocal);
 
     const newSearch = useRef();
-    let newSearchBtn = (e) => {
-        e.preventDefault();
+    let newSearchBtn = () => {
         const searchContent = newSearch.current.value;
 
         // local storage 추가
@@ -96,56 +85,63 @@ function App() {
     useEffect(() => {
         // local storage
         localStorage.setItem('searchHistory', JSON.stringify(searchArr));
+        setSearchInputValue(searchArr[searchArr.length - 1]);
     }, [searchArr]);
-    ////////// need to change context api lib
 
     const [searchInputValue, setSearchInputValue] = useState(searchArr[searchArr.length - 1]);
+
+    const searchClick = () => {
+        navigate(`/components/Search/${searchInputValue}`);
+        newSearchBtn();
+        searchOn();
+    }
     //// about search
 
     return (
 
-        <div id='app' className={`App ${theme}`}>
+        <MyContext.Provider value={{ searchArr, setSearchArr }}>
+            <div id='app' className={`App ${theme}`}>
 
-            <Routes></Routes>
+                <Routes></Routes>
 
-            <div className={`header ${scrollPosition > 0 ? "active" : ""}`}>
-                <div className='logo'>
-                    <NavLink to="/" className='icon-github-circled-alt2' onClick={() => { navigate('/') }}></NavLink>
-                </div>
-                <ul className='header_btn'>
-                    <li className='btn'><NavLink to="/components/Write" className='icon-vector-pencil' onClick={() => { navigate('/components/Write') }}></NavLink></li>
-                    <li className='btn'><NavLink to="/components/WriteList" className='icon-clipboard' onClick={() => { navigate('/components/WriteList') }}></NavLink></li>
-                    <li className='btn'><NavLink to="/components/Memo" className='icon-comment' onClick={() => { navigate('/components/Memo') }}></NavLink></li>
-                    <li className='btn'><NavLink to={`/components/Search/${searchInputValue}`} className='icon-link-1' onClick={() => { navigate('/components/Search') }}></NavLink></li>
-                    <li className='btn'><NavLink to={`/components/Date`} className='icon-calendar' onClick={() => { navigate('/components/Date') }}></NavLink></li>
-                    <li className='btn'><NavLink to={`/components/Category`} className='icon-bookmark' onClick={() => { navigate('/components/Category') }}></NavLink></li>
-                    <li className='btn'><button className='icon-search' onClick={searchOn}></button></li>
-                    <li><div id='theme_screen' className='icon-arrows-ccw' onClick={themeChangeBtn}></div></li>
-                </ul>
-            </div>
-
-            <div className={`search ${searchActive ? searchActive : ""}`}>
-                <div className="search_box">
-                    <button className='icon-cancel' onClick={searchOn}></button>
-                    <div className="search_input search_toggle">
-                        <input type='text' ref={newSearch} value={searchInputValue} onInput={(e) => setSearchInputValue(e.target.value)}></input>
-                        <Link to={`/components/Search/${searchInputValue}`} className='icon-search search_input_btn' onClick={() => { newSearchBtn(); searchOn(); }}></Link>
+                <div className={`header ${scrollPosition > 0 ? "active" : ""}`}>
+                    <div className='logo'>
+                        <NavLink to="/" className='icon-github-circled-alt2' onClick={() => { navigate('/') }}></NavLink>
                     </div>
-                    <ol className='search_list'>
-                        {
-                            searchArr.map(function (a, i) {
-                                return (
-                                    <li key={i}>
-                                        <SearchListContents i={i} />
-                                    </li>
-                                )
-                            })
-                        }
-                    </ol>
+                    <ul className='header_btn'>
+                        <li className='btn'><NavLink to="/components/Write" className='icon-vector-pencil' onClick={() => { navigate('/components/Write') }}></NavLink></li>
+                        <li className='btn'><NavLink to="/components/WriteList" className='icon-clipboard' onClick={() => { navigate('/components/WriteList') }}></NavLink></li>
+                        <li className='btn'><NavLink to="/components/Memo" className='icon-comment' onClick={() => { navigate('/components/Memo') }}></NavLink></li>
+                        <li className='btn'><NavLink to={`/components/Search/${searchInputValue}`} className='icon-link-1' onClick={() => { navigate('/components/Search') }}></NavLink></li>
+                        <li className='btn'><NavLink to={`/components/Date`} className='icon-calendar' onClick={() => { navigate('/components/Date') }}></NavLink></li>
+                        <li className='btn'><NavLink to={`/components/Category`} className='icon-bookmark' onClick={() => { navigate('/components/Category') }}></NavLink></li>
+                        <li className='btn'><button className='icon-search' onClick={searchOn}></button></li>
+                        <li><div id='theme_screen' className='icon-arrows-ccw' onClick={themeChangeBtn}></div></li>
+                    </ul>
+                </div>
+
+                <div className={`search ${searchActive ? searchActive : ""}`}>
+                    <div className="search_box">
+                        <button className='icon-cancel' onClick={searchOn}></button>
+                        <div className="search_input search_toggle">
+                            <input type='text' ref={newSearch} value={searchInputValue} onInput={(e) => setSearchInputValue(e.target.value)}></input>
+                            <button className='icon-search search_input_btn' onClick={searchClick}></button>
+                        </div>
+                        <ol className='search_list'>
+                            {
+                                searchArr.map(function (a, i) {
+                                    return (
+                                        <li key={i}>
+                                            <SearchListContents i={i} />
+                                        </li>
+                                    )
+                                })
+                            }
+                        </ol>
+                    </div>
                 </div>
             </div>
-        </div>
-
+        </MyContext.Provider>
     )
 
     function SearchListContents({ i }) {

@@ -1,9 +1,8 @@
 
-import { React, useEffect, useState, useRef } from 'react';
+import { React, useEffect, useState, useRef, useContext } from 'react';
 import { useSelector, useDispatch } from "react-redux"
 import { useParams, Link } from 'react-router-dom';
-
-import { searchListDataCorrect, searchListDataDelete } from "../store.js"
+import MyContext from '../context'
 
 import '../css/style.css';
 
@@ -16,8 +15,7 @@ function Search() {
     // about search
 
     ////////// need to change context api lib
-    const keywordArrLocal = JSON.parse(localStorage.getItem('searchHistory'));
-    const [searchArr, setSearchArr] = useState(keywordArrLocal);
+    const {searchArr, setSearchArr} = useContext(MyContext);
 
     const newSearch = useRef();
     let newSearchBtn = () => {
@@ -28,6 +26,7 @@ function Search() {
                 ? [...new Set(prevKeywordArr.filter((item) => item !== searchFrist)), searchFrist]
                 : [...prevKeywordArr, searchFrist]
         );
+
     }
 
     useEffect(() => {

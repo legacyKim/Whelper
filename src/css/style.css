@@ -19,7 +19,7 @@ input { background-color: var(--box-color); }
 .page { position: relative !important; display: block !important; width: 100%; height: 100%; } 
 
 .App { position: relative; display: block; width: 100%; min-height: 100%; background: var(--background-color); color: var(--font-color); transition: all 0.3s ease-in-out; } 
-.App.dark { --background-color: #121517; --box-color: #202632; --font-color: #fff; --font-reverse-color:#202632; --grey-color: #dbdbdb; --main-color:#217af4; --shadow-color :rgba(255, 255, 255, 0.3); } 
+.App.dark { --background-color: #121517; --box-color: #202632; --font-color: #fff; --font-sub-color: rgba(255, 255, 255, 0.78); --font-reverse-color:#202632; --grey-color: #dbdbdb; --main-color:#217af4; --shadow-color :rgba(255, 255, 255, 0.3); } 
 .App.light { --background-color: #fff; --box-color: #f9f9f9; --font-color: #4c5961; --grey-color: #5e5e5e; --main-color:#217af4; --shadow-color:rgba(32, 38, 50, 0.3); } 
 
 main { position: absolute; display: block; top: 50%; left: 50%; transform: translate(-50%, -50%); color: var(--font-color); text-align: center; } 
@@ -147,9 +147,9 @@ main { position: absolute; display: block; top: 50%; left: 50%; transform: trans
 .Write { position:relative; display: block; padding: 20px; padding: 16px; padding-top: 110px; } 
 .write_list { background: var(--box-color); border-radius: 8px; padding: 16px; margin-bottom: 16px; } 
 .write_list>a { position: relative; display: block; border: none; } 
-.write_list>a>span { position: relative; display: block; font-size: 17px; font-weight: 700; line-height: 1.2; letter-spacing: -1px; color: var(--font-color); padding-bottom: 8px; } 
-.write_list>a>strong { position: relative; display: block; font-size: 14px; font-weight: 700; line-height: 1.2; letter-spacing: -1px; color: var(--font-color); padding-bottom: 8px; } 
-.write_list>a>p { position: relative; display: block; font-size: 13px; font-weight: 400; line-height: 1.4; letter-spacing: -0.5px; color: var(--font-color); display: -webkit-box; word-wrap: break-word; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; white-space:pre-wrap; height: 56px; text-align: justify; margin-bottom: 8px; } 
+.write_list>a>span { position: relative; display: block; font-size: 20px; font-weight: 700; line-height: 1.2; letter-spacing: -1px; color: var(--font-color); padding-bottom: 8px; } 
+.write_list>a>strong { position: relative; display: block; font-size: 15px; font-weight: 500; line-height: 1.2; letter-spacing: -1px; color: var(--font-color); padding-bottom: 8px; } 
+.write_list>a>p { position: relative; display: block; font-size: 13px; font-weight: 400; line-height: 1.4; letter-spacing: -0.5px; color: var(--font-sub-color); display: -webkit-box; word-wrap: break-word; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; white-space:pre-wrap; height: 56px; text-align: justify; margin-bottom: 8px; } 
 .Write form { position: relative; display: block; height: 100%; } 
 .Write input { position: relative; display: block; background: transparent; width: 100%; margin-bottom: 16px; color: var(--font-color); } 
 .write_title { font-size: 32px; font-weight: 600; line-height: 1.8; } 
@@ -180,9 +180,9 @@ main { position: absolute; display: block; top: 50%; left: 50%; transform: trans
 /* end :: Memo */
 
 .view_page { position: relative; display: block; min-height: 100%; } 
-.view_content>title { position: relative; display: block; font-size: 32px; font-weight: 600; line-height: 1.5; color: var(--font-color); padding-bottom: 12px; } 
-.view_content>span { position: relative; display: block; font-size: 24px; font-weight: 400; line-height: 1.5; color: var(--font-color); padding-bottom: 12px; } 
-.view_content>p { position: relative; display: block; font-size: 18px; font-weight: 400; line-height: 1.5; color: var(--font-color); white-space:pre-wrap; padding-bottom: 12px; } 
+.view_content>title { position: relative; display: block; font-size: 22px; font-weight: 700; line-height: 1.5; color: var(--font-color); padding-bottom: 4px; letter-spacing: -0.5px; } 
+.view_content>span { position: relative; display: block; font-size: 17px; font-weight: 500; line-height: 1.5; color: var(--font-color); padding-bottom: 12px; letter-spacing: -0.5px; } 
+.view_content>p { position: relative; display: block; font-size: 14px; font-weight: 400; line-height: 1.5; color: var(--font-color); white-space:pre-wrap; padding-bottom: 12px; letter-spacing: -0.5px; } 
 .view_content>b { position: absolute; top: 0; right: 0; display: block; font-size: 14px; font-weight: 700; line-height: 1.5; color: var(--font-color); opacity: 0.58; } 
 
 .write_btn { position: relative; display: flex; justify-content: flex-end; align-items: center; } 
