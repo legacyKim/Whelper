@@ -34,16 +34,15 @@ function App() {
         }
     };
 
-    /*
     const searchOff = () => {
         setSearchActive('');
-        console.log('뚫다!');
+        setIsSearchOn(false);
     }
 
     useEffect(()=>{
         window.addEventListener('click', searchOff);
+
     }, [])
-    */
 
     useEffect(() => {
         if (searchActive) {
@@ -86,6 +85,7 @@ function App() {
         // local storage
         localStorage.setItem('searchHistory', JSON.stringify(searchArr));
         setSearchInputValue(searchArr[searchArr.length - 1]);
+        newSearch.current.addEventListener('click', (e)=>e.stopPropagation())
     }, [searchArr]);
 
     const [searchInputValue, setSearchInputValue] = useState(searchArr[searchArr.length - 1]);
@@ -146,17 +146,19 @@ function App() {
 
     function SearchListContents({ i }) {
 
-        let delSearchBtn = () => {
+        let delSearchBtn = (e) => {
             setSearchArr((prevKeywordArr) =>
                 searchArr.includes(searchArr[i])
                     ? prevKeywordArr.filter((item) => item !== searchArr[i])
                     : [...prevKeywordArr]
             );
+            e.stopPropagation();
         }
 
         const searchValueClick = searchArr[i];
-        const searchVal = () => {
+        const searchVal = (e) => {
             setSearchInputValue(searchValueClick);
+            e.stopPropagation();
         }
 
         return (
