@@ -43,16 +43,10 @@ const CustomEditor = {
 }
 //// slate editor
 
-const initialValue = [
-    {
-        type: 'paragraph',
-        children: [{ text: 'A line of text in a paragraph.' }],
-    },
-]
-
 function Write() {
 
     const writeListState = useSelector((state) => state.WriteData);
+    console.log(writeListState);
 
     // category popup
     const [popupActive, popupActiveStyle] = useState(false);
@@ -109,6 +103,7 @@ function Write() {
 
         dispatch(writeListDataAdd({ id, title, subTitle, content, keyword, date }));
     };
+    const recentId = writeListState.length;
 
     return (
         <div className='Write'>
@@ -194,7 +189,7 @@ function Write() {
                 </div>
                 <div className='page_btn'>
                     <button className="write_btn_back icon-reply" onClick={popupClick}></button>
-                    <Link /*to={`/components/WriteView/${recentId}`}*/ className='icon-ok-circled write_btn_save' onClick={() => { WriteSaveBtn(); }}></Link>
+                    <Link to={`/components/WriteView/${recentId}`} className='icon-ok-circled write_btn_save' onClick={() => { WriteSaveBtn(); }}></Link>
                 </div>
             </div>
         </div>

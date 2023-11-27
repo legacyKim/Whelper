@@ -21,6 +21,16 @@ function WriteView() {
     const writeDate = writeDateFomatt(writeListState[id].date);
     */
 
+    const [writeContent, setWriteContent] = useState(writeListState[id]);
+    console.log(writeContent)
+
+    useEffect(() => {
+        const storedValue = writeContent.content;
+        let copy = writeContent;
+        copy[0] = JSON.parse(storedValue);
+        setWriteContent(copy);
+    }, []);
+
     return (
 
         <div className='view_page'>
@@ -28,12 +38,12 @@ function WriteView() {
                 <div className='content_area'>
                     <div className='view_content'>
                         {/* <b>{writeDate}</b> */}
-                        <title>{writeListState[id].title}</title>
-                        <span>{writeListState[id].subTitle}</span>
-                        <p>{writeListState[id].content}</p>
+                        <title>{writeContent.title}</title>
+                        <span>{writeContent.subTitle}</span>
+                        <p>{writeContent.content}</p>
                         <div className='write_keyword_view'>
                             {
-                                writeListState[id].keyword.map((k, j) => (
+                                writeContent.keyword.map((k, j) => (
                                     <WriteKeyword key={j} writeListKeyword={k} />
                                 ))
                             }
