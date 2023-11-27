@@ -54,10 +54,7 @@ function Write() {
 
     const writeListState = useSelector((state) => state.WriteData);
 
-    const newTitle = useRef();
-    const newSubTitle = useRef();
-    const newContent = useRef();
-
+    // category popup
     const [popupActive, popupActiveStyle] = useState(false);
     const popupClick = () => {
         popupActiveStyle(!popupActive);
@@ -67,22 +64,7 @@ function Write() {
             popupActiveStyle('');
         }
     };
-
-    let cateListData = useSelector((state) => state.cateData);
-    const [keywordArr, setKeywordArr] = useState([]);
-
-    const dispatch = useDispatch();
-    const WriteSaveBtn = () => {
-        const id = writeListState.length;
-        const title = newTitle.current.value;
-        const subTitle = newSubTitle.current.value;
-        const content = newContent;
-        const keyword = keywordArr;
-        const date = new Date();
-
-        dispatch(writeListDataAdd({ id, title, subTitle, content, keyword, date }));
-    };
-    const recentId = writeListState.length;
+    //// category popup
 
     // slate text editor
     const [editor] = useState(() => withReact(createEditor()))
@@ -109,6 +91,25 @@ function Write() {
     }, [])
     //// slate text editor
 
+    const newTitle = useRef();
+    const newSubTitle = useRef();
+
+    let cateListData = useSelector((state) => state.cateData);
+    const [keywordArr, setKeywordArr] = useState([]);
+    const [editorValue, setEditorValue] = useState(initialValue);
+
+    const dispatch = useDispatch();
+    const WriteSaveBtn = () => {
+        const id = writeListState.length;
+        const title = newTitle.current.value;
+        const subTitle = newSubTitle.current.value;
+        const content = editorValue;
+        const keyword = keywordArr;
+        const date = new Date();
+
+        dispatch(writeListDataAdd({ id, title, subTitle, content, keyword, date }));
+    };
+
     return (
         <div className='Write'>
             <input type="text" placeholder="TITLE" className="write_title" ref={newTitle}></input>
@@ -127,7 +128,6 @@ function Write() {
                         localStorage.setItem('writeContent', writeContent)
                     }
                 }}>
-
 
                 <div className='editor_btn'>
                     <button

@@ -25,6 +25,7 @@ function App() {
 
     const searchOn = (e) => {
         e.preventDefault();
+        e.stopPropagation();
         setIsSearchOn(!isSearchOn);
         if (!isSearchOn) {
             setSearchActive('active');
@@ -65,7 +66,8 @@ function App() {
     //// about header scroll
 
     // about search
-    const keywordArrLocal = JSON.parse(localStorage.getItem('searchHistory') || []);
+    const keywordArrLocalString = localStorage.getItem('searchHistory');
+    const keywordArrLocal = keywordArrLocalString !== "undefined" ? JSON.parse(keywordArrLocalString) : [];
     const [searchArr, setSearchArr] = useState(keywordArrLocal);
 
     const newSearch = useRef();

@@ -13,8 +13,6 @@ function Search() {
     const [searchPageInput, setSearchPageInput] = useState(searchFrist);
 
     // about search
-
-    ////////// need to change context api lib
     const {searchArr, setSearchArr} = useContext(MyContext);
 
     const newSearch = useRef();
@@ -33,8 +31,6 @@ function Search() {
         // local storage
         localStorage.setItem('searchHistory', JSON.stringify(searchArr));
     }, [searchArr]);
-    ////////// need to change context api lib
-
     //// about search
 
     // about search result filter
