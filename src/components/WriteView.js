@@ -1,73 +1,63 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-
-import { useSelector } from "react-redux"
+import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
+import { Slate, Editable, withReact, useSlate } from 'slate-react';
+import { createEditor, Transforms, Node } from 'slate';
 
 import '../css/style.css';
-import axios from 'axios';
+
+const deserialize = string => {
+    return [
+        {
+            type: 'paragraph',
+            children: [{ text: string }],
+        },
+    ];
+};
 
 function WriteView() {
 
     const writeListState = useSelector((state) => state.WriteData);
     let { id } = useParams();
 
-    /*
-    function writeDateFomatt(date) {
-        const options = { day: '2-digit', month: '2-digit', year: '2-digit' };
-        return date.toLocaleDateString('en-US', options).replace(/\//g, '.');
-    }
-
-    const writeDate = writeDateFomatt(writeListState[id].date);
-    */
-
     const [writeContent, setWriteContent] = useState(writeListState[id]);
-    console.log(writeContent)
 
-    useEffect(() => {
-        const storedValue = writeContent.content;
-        let copy = writeContent;
-        copy[0] = JSON.parse(storedValue);
-        setWriteContent(copy);
-    }, []);
+    const [editor] = useState(() => withReact(createEditor()))
+    const initialValue = useMemo(() => deserialize(JSON.parse(writeContent.content)))
+
+    console.log(initialValue);
 
     return (
-
         <div className='view_page'>
             <div className='common_page'>
                 <div className='content_area'>
                     <div className='view_content'>
-                        {/* <b>{writeDate}</b> */}
                         <title>{writeContent.title}</title>
                         <span>{writeContent.subTitle}</span>
-                        <p>{writeContent.content}</p>
+
+                        {/* writeListState => writeContent.content */}
+                        <Slate className="test" editor={editor} initialValue={initialValue}>
+                            <Editable readOnly />
+                        </Slate>
+
                         <div className='write_keyword_view'>
-                            {
-                                writeContent.keyword.map((k, j) => (
-                                    <WriteKeyword key={j} writeListKeyword={k} />
-                                ))
-                            }
+                            {writeContent.keyword.map((k, j) => (
+                                <WriteKeyword key={j} writeListKeyword={k} />
+                            ))}
                         </div>
-
                     </div>
-
                     <button className='page_btn'>
-                        <Link className='icon-edit-alt' to={`/components/WriteCorrect/${id}`}></Link>
+                        <Link className='icon-edit-alt' to={`/components/WriteCorrect/${id}`} />
                     </button>
                 </div>
             </div>
         </div>
-
-    )
+    );
 
     function WriteKeyword({ writeListKeyword }) {
-
-        return (
-            <Link to={`/components/Category/${writeListKeyword}`}>#{writeListKeyword}</Link>
-        );
-
+        return <Link to={`/components/Category/${writeListKeyword}`}>#{writeListKeyword}</Link>
     }
-
 }
 
 export default WriteView;

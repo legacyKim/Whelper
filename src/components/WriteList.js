@@ -1,9 +1,21 @@
-// import React, { } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useSelector, useDispatch } from "react-redux"
 // import { writeListDataDelete } from "../store"
 
+import { Slate, Editable, withReact, useSlate } from 'slate-react';
+import { createEditor, Transforms, Node } from 'slate';
+
 import '../css/style.css';
 import { Link } from 'react-router-dom';
+
+const deserialize = string => {
+    return [
+        {
+            type: 'paragraph',
+            children: [{ text: string }],
+        },
+    ];
+};
 
 function WriteList() {
 
@@ -40,12 +52,15 @@ function WriteList() {
         }
         */
 
-        function writeDateFomatt(date) {
-            const options = { day: '2-digit', month: '2-digit', year: '2-digit' };
-            return date.toLocaleDateString('en-US', options).replace(/\//g, '.');
-        }
+        // function writeDateFomatt(date) {
+        //     const options = { day: '2-digit', month: '2-digit', year: '2-digit' };
+        //     return date.toLocaleDateString('en-US', options).replace(/\//g, '.');
+        // }
 
-        const writeDate = writeDateFomatt(writeListState[i].date);
+        // const writeDate = writeDateFomatt(writeListState[i].date);
+
+        const [editor] = useState(() => withReact(createEditor()))
+        const initialValue = useMemo(() => deserialize(JSON.parse(writeListState[i].content)))
 
         return (
 
@@ -58,7 +73,11 @@ function WriteList() {
                     <Link to={`/components/WriteView/${writeListState[i].id}`}>
                         <span>{writeListState[i].title}</span>
                         <strong>{writeListState[i].subTitle}</strong>
-                        <p>{writeListState[i].content}</p>
+                        <p>
+                            <Slate className="test" editor={editor} initialValue={initialValue}>
+                                <Editable readOnly />
+                            </Slate>
+                        </p>
                     </Link>
                     <div className='write_keyword'>
                         <ul className='write_keyword_list'>
@@ -71,7 +90,7 @@ function WriteList() {
                             }
                         </ul>
 
-                        <b className='write_date'>{writeDate}</b>
+                        {/* <b className='write_date'>{writeDate}</b> */}
 
                     </div>
                 </div>

@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { writeListDataAdd } from "../store.js"
 import '../css/style.css';
 
-import { createEditor, Editor, Transforms, Element } from 'slate';
+import { createEditor, Editor, Transforms, Element, Node } from 'slate';
 import { Slate, Editable, withReact } from 'slate-react'
 
 // slate editor
@@ -43,10 +43,24 @@ const CustomEditor = {
 }
 //// slate editor
 
+// serial, deserial
+const serialize = value => {
+    return (
+        value
+            // Return the string content of each paragraph in the value's children.
+            .map(n => Node.string(n))
+            // Join them all with line breaks denoting paragraphs.
+            .join('\n')
+    )
+}
+
+// Define a deserializing function that takes a string and returns a value.
+
+//// serial, deserial
+
 function Write() {
 
     const writeListState = useSelector((state) => state.WriteData);
-    console.log(writeListState);
 
     // category popup
     const [popupActive, popupActiveStyle] = useState(false);
@@ -78,11 +92,11 @@ function Write() {
             default:
                 return <DefaultElement {...props} />
         }
-    }, [])
+    }, []);
 
     const renderLeaf = useCallback(props => {
         return <Leaf {...props} />
-    }, [])
+    }, []);
     //// slate text editor
 
     const newTitle = useRef();
@@ -97,11 +111,15 @@ function Write() {
         const id = writeListState.length;
         const title = newTitle.current.value;
         const subTitle = newSubTitle.current.value;
-        const content = editorValue;
-        const keyword = keywordArr;
-        const date = new Date();
 
-        dispatch(writeListDataAdd({ id, title, subTitle, content, keyword, date }));
+        // slate data store
+        const contentString = JSON.stringify(serialize(editorValue));
+        const content = contentString;
+
+        const keyword = keywordArr;
+        // const date = new Date();
+
+        dispatch(writeListDataAdd({ id, title, subTitle, content, keyword }));
     };
     const recentId = writeListState.length;
 
@@ -143,15 +161,14 @@ function Write() {
                     </button>
                 </div>
 
-
                 <Editable
                     editor={editor}
                     renderElement={renderElement}
                     renderLeaf={renderLeaf}
                     onKeyDown={event => {
-                        if (!event.ctrlKey) {
-                            return
-                        }
+                        // if (!event.ctrlKey) {
+                        //     return
+                        // }
 
                         switch (event.key) {
                             case '`': {
@@ -164,6 +181,12 @@ function Write() {
                                 event.preventDefault()
                                 CustomEditor.toggleBoldMark(editor)
                                 break
+                            }
+
+                            case 'enter': {
+                                console.log('enter');
+                                event.preventDefault();
+                                Transforms.insertNodes(editor, { type: 'paragraph', children: [{ text: '' }] });
                             }
                         }
                     }}
