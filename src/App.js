@@ -67,7 +67,7 @@ function App() {
 
     // about search
     const keywordArrLocalString = localStorage.getItem('searchHistory');
-    const keywordArrLocal = keywordArrLocalString !== "undefined" ? JSON.parse(keywordArrLocalString) : [];
+    const keywordArrLocal = keywordArrLocalString !== null ? JSON.parse(keywordArrLocalString) : [];
     const [searchArr, setSearchArr] = useState(keywordArrLocal);
 
     const newSearch = useRef();
@@ -110,7 +110,7 @@ function App() {
                         <NavLink to="/" className='icon-github-circled-alt2' onClick={() => { navigate('/') }}></NavLink>
                     </div>
                     <ul className='header_btn'>
-                        <li className='btn'><NavLink to="/components/Slate" className='icon-vector-pencil' onClick={() => { navigate('/components/Slate') }}></NavLink></li>
+                        {/* <li className='btn'><NavLink to="/components/Slate" className='icon-vector-pencil' onClick={() => { navigate('/components/Slate') }}></NavLink></li> */}
                         <li className='btn'><NavLink to="/components/Write" className='icon-vector-pencil' onClick={() => { navigate('/components/Write') }}></NavLink></li>
                         <li className='btn'><NavLink to="/components/WriteList" className='icon-clipboard' onClick={() => { navigate('/components/WriteList') }}></NavLink></li>
                         <li className='btn'><NavLink to="/components/Memo" className='icon-comment' onClick={() => { navigate('/components/Memo') }}></NavLink></li>

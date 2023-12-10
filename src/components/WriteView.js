@@ -26,8 +26,6 @@ function WriteView() {
     const [editor] = useState(() => withReact(createEditor()))
     const initialValue = useMemo(() => deserialize(JSON.parse(writeContent.content)))
 
-    console.log(initialValue);
-
     return (
         <div className='view_page'>
             <div className='common_page'>

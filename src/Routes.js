@@ -53,7 +53,7 @@ function Menu() {
 
                         <Route exact path="/" />
 
-                        <Route path="/components/Slate" element={<Slate />} />
+                        {/* <Route path="/components/Slate" element={<Slate />} /> */}
                         <Route path="/components/Write" element={<Write />} />
                         <Route path="/components/WriteList" element={<WriteList />} />
                         <Route path="/components/WriteView/:id" element={<WriteView />} />

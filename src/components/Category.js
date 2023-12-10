@@ -42,7 +42,8 @@ function Category() {
     //// write => cate keyword click event
 
     // cate arr setting
-    const keywordArrLocal = JSON.parse(localStorage.getItem('cateHistory'));
+    const keywordArrLocalString = localStorage.getItem('cateHistory');
+    const keywordArrLocal = keywordArrLocalString !== null ? JSON.parse(keywordArrLocalString) : [];
 
     /* cate Array */
     const [cateArr, setCateArr] = useState(keywordArrLocal);

@@ -53,9 +53,7 @@ const serialize = value => {
             .join('\n')
     )
 }
-
 // Define a deserializing function that takes a string and returns a value.
-
 //// serial, deserial
 
 function Write() {
@@ -77,13 +75,23 @@ function Write() {
     // slate text editor
     const [editor] = useState(() => withReact(createEditor()))
 
-    const initialValue = useMemo(() =>
-        JSON.parse(localStorage.getItem('writeContent')) || [
+    const contentArrLocalString = localStorage.getItem('writeContent');
+
+    // initial value...
+    const initialValue = useMemo(() => {
+
+        const contentPlaceholder = [
             {
                 type: 'paragraph',
-                children: [{ text: 'A line of text in a paragraph.' }],
+                children: [{ text: '' }],
             },
-        ], [])
+        ];
+
+        const parsedContent = contentArrLocalString !== null ? JSON.parse(contentArrLocalString) : contentPlaceholder;
+        return parsedContent;
+
+    }, []);
+    //// initial value....
 
     const renderElement = useCallback(props => {
         switch (props.element.type) {
@@ -104,24 +112,34 @@ function Write() {
 
     let cateListData = useSelector((state) => state.cateData);
     const [keywordArr, setKeywordArr] = useState([]);
-    const [editorValue, setEditorValue] = useState(initialValue);
 
+    // content and local storage change
+    const [editorValue, setEditorValue] = useState(initialValue);
+    localStorage.setItem('writeContent', editorValue);
+    //// content and local storage change
+
+    // save content
     const dispatch = useDispatch();
     const WriteSaveBtn = () => {
+
         const id = writeListState.length;
         const title = newTitle.current.value;
         const subTitle = newSubTitle.current.value;
 
         // slate data store
-        const contentString = JSON.stringify(serialize(editorValue));
+        localStorage.removeItem('writeContent', editorValue);
+        const contentParse = JSON.parse(editorValue);
+        const contentString = JSON.stringify(serialize(contentParse));
         const content = contentString;
 
         const keyword = keywordArr;
-        // const date = new Date();
 
         dispatch(writeListDataAdd({ id, title, subTitle, content, keyword }));
     };
+
+    // save and keep the last num of id
     const recentId = writeListState.length;
+    //// save content
 
     return (
         <div className='Write'>
@@ -138,7 +156,7 @@ function Write() {
                     if (isAstChange) {
                         // Save the value to Local Storage.
                         const writeContent = JSON.stringify(value)
-                        localStorage.setItem('writeContent', writeContent)
+                        setEditorValue(writeContent)
                     }
                 }}>
 
@@ -162,6 +180,7 @@ function Write() {
                 </div>
 
                 <Editable
+                    placeholder="작은 것들도 허투로 생각하지 말지어다. 큰 것들도 최초에는 작았다."
                     editor={editor}
                     renderElement={renderElement}
                     renderLeaf={renderLeaf}
@@ -255,12 +274,10 @@ const Leaf = props => {
     return (
         <span
             {...props.attributes}
-            style={{ fontWeight: props.leaf.bold ? 'bold' : 'normal' }}
-        >
+            style={{ fontWeight: props.leaf.bold ? 'bold' : 'normal' }}>
             {props.children}
         </span>
     )
 }
-
 
 export default Write;
