@@ -73,17 +73,33 @@ function Write() {
     //// category popup
 
     // slate text editor
+    const [titleEditor] = useState(() => withReact(createEditor()))
+    const [subTitleEditor] = useState(() => withReact(createEditor()))
     const [editor] = useState(() => withReact(createEditor()))
-    const contentArrLocalString = localStorage.getItem('writeContent');
+
+    const writeTitleLocal = localStorage.getItem('writeTitle');
+    const writeSubTitleLocal = localStorage.getItem('writeSubTitle');
+    const writeContentLocal = localStorage.getItem('writeContent');
     const contentPlaceholder = [
         {
             type: 'paragraph',
             children: [{ text: '' }],
         },
     ];
+
     // initial value...
+    const titleValue = useMemo(() => {
+        const parsedContent = writeTitleLocal !== null ? JSON.parse(writeTitleLocal) : contentPlaceholder;
+        return parsedContent;
+    }, []);
+
+    const subTitleValue = useMemo(() => {
+        const parsedContent = writeSubTitleLocal !== null ? JSON.parse(writeSubTitleLocal) : contentPlaceholder;
+        return parsedContent;
+    }, []);
+
     const initialValue = useMemo(() => {
-        const parsedContent = contentArrLocalString !== null ? JSON.parse(contentArrLocalString) : contentPlaceholder;
+        const parsedContent = writeContentLocal !== null ? JSON.parse(writeContentLocal) : contentPlaceholder;
         return parsedContent;
     }, []);
     //// initial value....
@@ -102,13 +118,20 @@ function Write() {
     }, []);
     //// slate text editor
 
-    const newTitle = useRef();
-    const newSubTitle = useRef();
+    // const newTitle = useRef();
+    // const newSubTitle = useRef();
 
     let cateListData = useSelector((state) => state.cateData);
     const [keywordArr, setKeywordArr] = useState([]);
 
     // content and local storage change
+
+    const [edTitle, setEdTitle] = useState(titleValue);
+    localStorage.setItem('writeTitle', JSON.stringify(edTitle));
+
+    const [edSubTitle, setEdSubTitle] = useState(subTitleValue);
+    localStorage.setItem('writeSubTitle', JSON.stringify(edSubTitle));
+
     const [editorValue, setEditorValue] = useState(initialValue);
     localStorage.setItem('writeContent', JSON.stringify(editorValue));
     //// content and local storage change
@@ -129,6 +152,9 @@ function Write() {
         const keyword = keywordArr;
 
         dispatch(writeListDataAdd({ id, title, subTitle, content, keyword }));
+
+        setEdTitle(contentPlaceholder);
+        setEdSubTitle(contentPlaceholder);
         setEditorValue(contentPlaceholder);
     };
 
@@ -138,8 +164,46 @@ function Write() {
 
     return (
         <div className='Write'>
-            <input type="text" placeholder="TITLE" className="write_title" ref={newTitle}></input>
-            <input type="text" placeholder="SUBTITLE" className="write_subtitle" ref={newSubTitle}></input>
+            {/* <input type="text" placeholder="TITLE" className="write_title" ref={newTitle}></input> */}
+            {/* <input type="text" placeholder="SUBTITLE" className="write_subtitle" ref={newSubTitle}></input> */}
+
+            <Slate
+                editor={titleEditor}
+                initialValue={initialValue}
+                onChange={value => {
+                    const isAstChange = editor.operations.some(
+                        op => 'set_selection' !== op.type
+                    )
+                    if (isAstChange) {
+                        // Save the value to Local Storage.
+                        setEdTitle(value)
+                    }
+                }}>
+                <Editable
+                    placeholder="title"
+                    editor={titleEditor}
+                    renderElement={renderElement}
+                    renderLeaf={renderLeaf}/>
+            </Slate>
+
+            <Slate
+                editor={subTitleEditor}
+                initialValue={initialValue}
+                onChange={value => {
+                    const isAstChange = editor.operations.some(
+                        op => 'set_selection' !== op.type
+                    )
+                    if (isAstChange) {
+                        // Save the value to Local Storage.
+                        setEdSubTitle(value)
+                    }
+                }}>
+                <Editable
+                    placeholder="title"
+                    editor={subTitleEditor}
+                    renderElement={renderElement}
+                    renderLeaf={renderLeaf}/>
+            </Slate>
 
             <Slate
                 editor={editor}
