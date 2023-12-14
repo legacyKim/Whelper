@@ -74,22 +74,17 @@ function Write() {
 
     // slate text editor
     const [editor] = useState(() => withReact(createEditor()))
-
     const contentArrLocalString = localStorage.getItem('writeContent');
-
+    const contentPlaceholder = [
+        {
+            type: 'paragraph',
+            children: [{ text: '' }],
+        },
+    ];
     // initial value...
     const initialValue = useMemo(() => {
-
-        const contentPlaceholder = [
-            {
-                type: 'paragraph',
-                children: [{ text: '' }],
-            },
-        ];
-
         const parsedContent = contentArrLocalString !== null ? JSON.parse(contentArrLocalString) : contentPlaceholder;
         return parsedContent;
-
     }, []);
     //// initial value....
 
@@ -115,7 +110,7 @@ function Write() {
 
     // content and local storage change
     const [editorValue, setEditorValue] = useState(initialValue);
-    localStorage.setItem('writeContent', editorValue);
+    localStorage.setItem('writeContent', JSON.stringify(editorValue));
     //// content and local storage change
 
     // save content
@@ -127,14 +122,14 @@ function Write() {
         const subTitle = newSubTitle.current.value;
 
         // slate data store
-        localStorage.removeItem('writeContent', editorValue);
-        const contentParse = JSON.parse(editorValue);
-        const contentString = JSON.stringify(serialize(contentParse));
+        localStorage.removeItem('writeContent');
+        const contentString = JSON.stringify(serialize(editorValue));
         const content = contentString;
 
         const keyword = keywordArr;
 
         dispatch(writeListDataAdd({ id, title, subTitle, content, keyword }));
+        setEditorValue(contentPlaceholder);
     };
 
     // save and keep the last num of id
@@ -155,8 +150,7 @@ function Write() {
                     )
                     if (isAstChange) {
                         // Save the value to Local Storage.
-                        const writeContent = JSON.stringify(value)
-                        setEditorValue(writeContent)
+                        setEditorValue(value)
                     }
                 }}>
 
