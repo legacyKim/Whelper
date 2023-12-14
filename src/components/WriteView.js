@@ -23,19 +23,29 @@ function WriteView() {
 
     const [writeContent, setWriteContent] = useState(writeListState[id]);
 
+    const [titleEditor] = useState(() => withReact(createEditor()))
+    const [subTitleEditor] = useState(() => withReact(createEditor()))
     const [editor] = useState(() => withReact(createEditor()))
-    const initialValue = useMemo(() => deserialize(JSON.parse(writeContent.content)))
+    
+    const titleValue = useMemo(() => deserialize(JSON.parse(writeContent.title)))
+    const subTitleValue = useMemo(() => deserialize(JSON.parse(writeContent.subTitle)))
+    const contentValue = useMemo(() => deserialize(JSON.parse(writeContent.content)))
 
     return (
         <div className='view_page'>
             <div className='common_page'>
                 <div className='content_area'>
                     <div className='view_content'>
-                        <title>{writeContent.title}</title>
-                        <span>{writeContent.subTitle}</span>
 
-                        {/* writeListState => writeContent.content */}
-                        <Slate className="test" editor={editor} initialValue={initialValue}>
+                        <Slate className="test" editor={titleEditor} initialValue={titleValue}>
+                            <Editable readOnly />
+                        </Slate>
+
+                        <Slate className="test" editor={subTitleEditor} initialValue={subTitleValue}>
+                            <Editable readOnly />
+                        </Slate>
+
+                        <Slate className="test" editor={editor} initialValue={contentValue}>
                             <Editable readOnly />
                         </Slate>
 

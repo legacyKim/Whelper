@@ -98,7 +98,7 @@ function Write() {
         return parsedContent;
     }, []);
 
-    const initialValue = useMemo(() => {
+    const contentValue = useMemo(() => {
         const parsedContent = writeContentLocal !== null ? JSON.parse(writeContentLocal) : contentPlaceholder;
         return parsedContent;
     }, []);
@@ -132,7 +132,7 @@ function Write() {
     const [edSubTitle, setEdSubTitle] = useState(subTitleValue);
     localStorage.setItem('writeSubTitle', JSON.stringify(edSubTitle));
 
-    const [editorValue, setEditorValue] = useState(initialValue);
+    const [editorValue, setEditorValue] = useState(contentValue);
     localStorage.setItem('writeContent', JSON.stringify(editorValue));
     //// content and local storage change
 
@@ -141,8 +141,14 @@ function Write() {
     const WriteSaveBtn = () => {
 
         const id = writeListState.length;
-        const title = newTitle.current.value;
-        const subTitle = newSubTitle.current.value;
+
+        localStorage.removeItem('writeTitle');
+        const titleString = JSON.stringify(serialize(edTitle));
+        const title = titleString;
+
+        localStorage.removeItem('writeSubTitle');
+        const subTitleString = JSON.stringify(serialize(edSubTitle));
+        const subTitle = subTitleString;
 
         // slate data store
         localStorage.removeItem('writeContent');
@@ -169,9 +175,9 @@ function Write() {
 
             <Slate
                 editor={titleEditor}
-                initialValue={initialValue}
+                initialValue={titleValue}
                 onChange={value => {
-                    const isAstChange = editor.operations.some(
+                    const isAstChange = titleEditor.operations.some(
                         op => 'set_selection' !== op.type
                     )
                     if (isAstChange) {
@@ -188,9 +194,9 @@ function Write() {
 
             <Slate
                 editor={subTitleEditor}
-                initialValue={initialValue}
+                initialValue={subTitleValue}
                 onChange={value => {
-                    const isAstChange = editor.operations.some(
+                    const isAstChange = subTitleEditor.operations.some(
                         op => 'set_selection' !== op.type
                     )
                     if (isAstChange) {
@@ -207,7 +213,7 @@ function Write() {
 
             <Slate
                 editor={editor}
-                initialValue={initialValue}
+                initialValue={contentValue}
                 onChange={value => {
                     const isAstChange = editor.operations.some(
                         op => 'set_selection' !== op.type
