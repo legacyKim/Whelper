@@ -214,7 +214,7 @@ function Write() {
                     placeholder="Title"
                     editor={titleEditor}
                     renderElement={renderElement}
-                    renderLeaf={renderLeaf} />
+                    renderLeaf={renderLeaf}/>
             </Slate>
 
             <Slate
