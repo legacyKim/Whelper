@@ -116,6 +116,11 @@ function Write() {
         const parsedContent = writeContentLocal !== null ? JSON.parse(writeContentLocal) : contentPlaceholder;
         return parsedContent;
     }, []);
+
+    const annoValue = useMemo(() => {
+        const parsedContent = writeContentLocal !== null ? JSON.parse(writeContentLocal) : contentPlaceholder;
+        return parsedContent;
+    }, []);
     //// initial value....
 
     const renderElement = useCallback(props => {
@@ -146,6 +151,9 @@ function Write() {
     const [edSubTitle, setEdSubTitle] = useState(subTitleValue);
     localStorage.setItem('writeSubTitle', JSON.stringify(edSubTitle));
 
+    const [edAnno, setEdAnno] = useState(annoValue);
+    localStorage.setItem('writeAnno', JSON.stringify(edAnno));
+
     const [editorValue, setEditorValue] = useState(contentValue);
     localStorage.setItem('writeContent', JSON.stringify(editorValue));
     //// content and local storage change
@@ -164,14 +172,17 @@ function Write() {
         const subTitleString = JSON.stringify(serialize(edSubTitle));
         const subTitle = subTitleString;
 
-        // slate data store
         localStorage.removeItem('writeContent');
         const contentString = JSON.stringify(serialize(editorValue));
         const content = contentString;
 
+        localStorage.removeItem('writeAnno');
+        const annoString = JSON.stringify(serialize(editorValue));
+        const anno = annoString;
+
         const keyword = keywordArr;
 
-        dispatch(writeListDataAdd({ id, title, subTitle, content, keyword }));
+        dispatch(writeListDataAdd({ id, title, subTitle, content, anno, keyword }));
 
         setEdTitle(contentPlaceholder);
         setEdSubTitle(contentPlaceholder);
