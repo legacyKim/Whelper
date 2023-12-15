@@ -44,7 +44,7 @@ function WriteCorrect() {
         <div className='Write'>
             <input type="text" placeholder="TITLE" className="write_title" defaultValue={writeListState[id].title} ref={newTitle}></input>
             <input type="text" placeholder="SUBTITLE" className="write_subtitle" defaultValue={writeListState[id].subTitle} ref={newSubTitle}></input>
-            <textarea type="text" placeholder="CONTENT" className="write_textarea" defaultValue={writeListState[id].content} ref={newContent}></textarea>
+            <textarea type="text" placeholder="CONTENT" className="write_content" defaultValue={writeListState[id].content} ref={newContent}></textarea>
             <div className='page_btn'>
                 <Link to={`/components/WriteView/${writeListState[id].id}`} onClick={() => { navigate(`/components/WriteView/${writeListState[id].id}`)}} className='icon-reply'></Link>
                 <button className='icon-ok-circled write_btn_save' onClick={() => { popupClick(); }}></button>

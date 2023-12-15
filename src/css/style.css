@@ -152,10 +152,13 @@ main { position: absolute; display: block; top: 50%; left: 50%; transform: trans
 .write_list>a>p { position: relative; display: block; font-size: 13px; font-weight: 400; line-height: 1.4; letter-spacing: -0.5px; color: var(--font-sub-color); display: -webkit-box; word-wrap: break-word; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; white-space:pre-wrap; height: 56px; text-align: justify; margin-bottom: 8px; } 
 .Write form { position: relative; display: block; height: 100%; } 
 .Write input { position: relative; display: block; background: transparent; width: 100%; margin-bottom: 16px; color: var(--font-color); } 
-.write_title span { font-size: 32px; font-weight: 600; line-height: 1.8; } 
-.write_subtitle span { font-size: 24px; font-weight: 600; line-height: 1.8; } 
-.write_textarea { position: relative; display: block; background: transparent; width: 100%; height: 62vh; border: 0; font-size: 14px; line-height: 1.5; color: var(--font-color); resize: none; } 
-.write_textarea span { font-size: 16px; line-height: 1.5; color: var(--font-color); } 
+
+.write_title { margin-bottom:6px; } 
+.write_title span { font-size: 22px; font-weight: 700; line-height: 1.8; } 
+.write_subtitle { margin-bottom:6px; } 
+.write_subtitle span { font-size: 18px; font-weight: 500; line-height: 1.8; } 
+.write_content { position: relative; display: block; background: transparent; width: 100%; height: 62vh; border: 0;} 
+.write_content span { font-size: 14px; line-height: 1.5; color: var(--font-color); } 
 
 .write_keyword { display:flex; justify-content: space-between; align-items: center; } 
 .write_keyword_list { display: flex; justify-content: flex-start; align-items: center; flex-wrap: wrap; } 

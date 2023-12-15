@@ -45,7 +45,6 @@ const CustomEditor = {
     },
 
     toggleAnnotation(editor) {
-        console.log('주석달기')
         const isActive = CustomEditor.isAnnotation(editor);
         if (isActive) {
             Editor.removeMark(editor, 'annotation');
@@ -90,6 +89,7 @@ function Write() {
     const [titleEditor] = useState(() => withReact(createEditor()))
     const [subTitleEditor] = useState(() => withReact(createEditor()))
     const [editor] = useState(() => withReact(createEditor()))
+    const [annoEditor] = useState(() => withReact(createEditor()))
 
     const writeTitleLocal = localStorage.getItem('writeTitle');
     const writeSubTitleLocal = localStorage.getItem('writeSubTitle');
@@ -259,7 +259,7 @@ function Write() {
                     </button>
                 </div>
 
-                <Editable className='write_textarea'
+                <Editable className='write_content'
                     placeholder="작은 것들도 허투로 생각하지 말지어다. 큰 것들도 최초에는 작았다."
                     editor={editor}
                     renderElement={renderElement}
@@ -334,6 +334,33 @@ function Write() {
 
         return (
             <span className={`${cateActive ? "active" : ""}`} onClick={cateClick}>{cateListData[i]}</span>
+        )
+
+    }
+
+    function Annotation() {
+
+        return (
+            <div className='annotation'>
+                <Slate
+                    editor={titleEditor}
+                    initialValue={titleValue}
+                    onChange={value => {
+                        const isAstChange = titleEditor.operations.some(
+                            op => 'set_selection' !== op.type
+                        )
+                        if (isAstChange) {
+                            // Save the value to Local Storage.
+                            setEdTitle(value)
+                        }
+                    }}>
+                    <Editable className='write_title'
+                        placeholder="Title"
+                        editor={titleEditor}
+                        renderElement={renderElement}
+                        renderLeaf={renderLeaf} />
+                </Slate>
+            </div>
         )
 
     }
