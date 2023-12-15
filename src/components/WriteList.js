@@ -44,7 +44,7 @@ function WriteList() {
     function WriteShowContents({ i }) {
 
         const writeListState = useSelector((state) => state.WriteData);
-
+        const [writeContent, setWriteContent] = useState(writeListState[i]);
         /*
         const dispatch = useDispatch();
         const delWriteList = () => {
@@ -59,8 +59,9 @@ function WriteList() {
 
         // const writeDate = writeDateFomatt(writeListState[i].date);
 
-        const [editor] = useState(() => withReact(createEditor()))
-        const initialValue = useMemo(() => deserialize(JSON.parse(writeListState[i].content)))
+        const titleValue = JSON.parse(writeContent.title)
+        const subTitleValue = JSON.parse(writeContent.subTitle)
+        const contentValue = JSON.parse(writeContent.content)
 
         return (
 
@@ -71,13 +72,9 @@ function WriteList() {
                 </div>
                 <div className='write_list' >
                     <Link to={`/components/WriteView/${writeListState[i].id}`}>
-                        <span>{writeListState[i].title}</span>
-                        <strong>{writeListState[i].subTitle}</strong>
-                        <p>
-                            <Slate className="test" editor={editor} initialValue={initialValue}>
-                                <Editable readOnly />
-                            </Slate>
-                        </p>
+                        <span>{titleValue}</span>
+                        <strong>{subTitleValue}</strong>
+                        <p>{contentValue}</p>
                     </Link>
                     <div className='write_keyword'>
                         <ul className='write_keyword_list'>

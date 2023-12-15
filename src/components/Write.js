@@ -5,22 +5,25 @@ import { Link } from 'react-router-dom';
 import { writeListDataAdd } from "../store.js"
 import '../css/style.css';
 
-import { createEditor, Editor, Transforms, Element, Node } from 'slate';
+import { createEditor, Editor, Transforms, Element as SlateElement, Node, Text } from 'slate';
 import { Slate, Editable, withReact } from 'slate-react'
 
 // slate editor
 const CustomEditor = {
+
     isBoldMarkActive(editor) {
         const marks = Editor.marks(editor)
         return marks ? marks.bold === true : false
     },
 
-    isCodeBlockActive(editor) {
-        const [match] = Editor.nodes(editor, {
-            match: n => n.type === 'code',
-        })
+    isHighlightActive(editor) {
+        const marks = Editor.marks(editor)
+        return marks ? marks.highlight === true : false
+    },
 
-        return !!match
+    isAnnotation(editor) {
+        const marks = Editor.marks(editor)
+        return marks ? marks.isAnnotation === true : false
     },
 
     toggleBoldMark(editor) {
@@ -32,14 +35,25 @@ const CustomEditor = {
         }
     },
 
-    toggleCodeBlock(editor) {
-        const isActive = CustomEditor.isCodeBlockActive(editor)
-        Transforms.setNodes(
-            editor,
-            { type: isActive ? null : 'code' },
-            { match: n => Editor.isBlock(editor, n) }
-        )
+    toggleHighlight(editor) {
+        const isActive = CustomEditor.isHighlightActive(editor);
+        if (isActive) {
+            Editor.removeMark(editor, 'highlight');
+        } else {
+            Editor.addMark(editor, 'highlight', true);
+        }
     },
+
+    toggleAnnotation(editor) {
+        console.log('주석달기')
+        const isActive = CustomEditor.isAnnotation(editor);
+        if (isActive) {
+            Editor.removeMark(editor, 'annotation');
+        } else {
+            Editor.addMark(editor, 'annotation', true);
+        }
+    },
+
 }
 //// slate editor
 
@@ -185,11 +199,11 @@ function Write() {
                         setEdTitle(value)
                     }
                 }}>
-                <Editable
-                    placeholder="title"
+                <Editable className='write_title'
+                    placeholder="Title"
                     editor={titleEditor}
                     renderElement={renderElement}
-                    renderLeaf={renderLeaf}/>
+                    renderLeaf={renderLeaf} />
             </Slate>
 
             <Slate
@@ -204,11 +218,11 @@ function Write() {
                         setEdSubTitle(value)
                     }
                 }}>
-                <Editable
-                    placeholder="title"
+                <Editable className='write_subtitle'
+                    placeholder="Sub Title"
                     editor={subTitleEditor}
                     renderElement={renderElement}
-                    renderLeaf={renderLeaf}/>
+                    renderLeaf={renderLeaf} />
             </Slate>
 
             <Slate
@@ -225,40 +239,37 @@ function Write() {
                 }}>
 
                 <div className='editor_btn'>
-                    <button
+                    <button className='icon-gwallet'
+                        onMouseDown={event => {
+                            event.preventDefault();
+                            CustomEditor.toggleHighlight(editor);
+                        }}>
+                    </button>
+                    <button className='icon-bold'
                         onMouseDown={event => {
                             event.preventDefault()
                             CustomEditor.toggleBoldMark(editor)
-                        }}
-                    >
-                        Bold
+                        }}>
                     </button>
-                    <button
+                    <button className='icon-flow-cascade'
                         onMouseDown={event => {
                             event.preventDefault()
-                            CustomEditor.toggleCodeBlock(editor)
-                        }}
-                    >
-                        Code Block
+                            CustomEditor.toggleAnnotation(editor)
+                        }}>
                     </button>
                 </div>
 
-                <Editable
+                <Editable className='write_textarea'
                     placeholder="작은 것들도 허투로 생각하지 말지어다. 큰 것들도 최초에는 작았다."
                     editor={editor}
                     renderElement={renderElement}
                     renderLeaf={renderLeaf}
                     onKeyDown={event => {
-                        // if (!event.ctrlKey) {
-                        //     return
-                        // }
+                        if (!event.ctrlKey) {
+                            return
+                        }
 
                         switch (event.key) {
-                            case '`': {
-                                event.preventDefault()
-                                CustomEditor.toggleCodeBlock(editor)
-                                break
-                            }
 
                             case 'b': {
                                 event.preventDefault()
@@ -266,11 +277,18 @@ function Write() {
                                 break
                             }
 
-                            case 'enter': {
-                                console.log('enter');
+                            case 'h': {
                                 event.preventDefault();
-                                Transforms.insertNodes(editor, { type: 'paragraph', children: [{ text: '' }] });
+                                CustomEditor.toggleHighlight(editor);
+                                break
                             }
+
+                            case 'a': {
+                                event.preventDefault();
+                                CustomEditor.toggleAnnotation(editor);
+                                break
+                            }
+
                         }
                     }}
                 />
@@ -335,13 +353,18 @@ const DefaultElement = props => {
 }
 
 const Leaf = props => {
+    const style = {
+        fontWeight: props.leaf.bold ? 'bold' : 'normal',
+        backgroundColor: props.leaf.highlight ? true : false,
+    };
+
     return (
-        <span
+        <span className={style.backgroundColor == true ? 'editor_highlight' : ''}
             {...props.attributes}
-            style={{ fontWeight: props.leaf.bold ? 'bold' : 'normal' }}>
+            style={style}>
             {props.children}
         </span>
-    )
+    );
 }
 
 export default Write;

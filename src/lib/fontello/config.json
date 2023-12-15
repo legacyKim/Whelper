@@ -257,6 +257,54 @@
       "css": "reply",
       "code": 59426,
       "src": "entypo"
+    },
+    {
+      "uid": "02cca871bb69da75e8ee286b7055832c",
+      "css": "bold",
+      "code": 59427,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "50fbbd926b2a64fcaf384788056c0e43",
+      "css": "gwallet",
+      "code": 61934,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "a2a74f5e7b7d9ba054897d8c795a326a",
+      "css": "list-bullet",
+      "code": 61642,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "91426c82d94428a33353e495418435e3",
+      "css": "share",
+      "code": 59428,
+      "src": "entypo"
+    },
+    {
+      "uid": "898ddc67cb7d9ae53dbd4cce78043e9e",
+      "css": "flow-cascade",
+      "code": 59429,
+      "src": "entypo"
+    },
+    {
+      "uid": "2a3cd95de2621bd87479396f236fd2a4",
+      "css": "heart-1",
+      "code": 59430,
+      "src": "websymbols"
+    },
+    {
+      "uid": "1526e1ee08023c1542cbf65d3a9afa93",
+      "css": "star",
+      "code": 59431,
+      "src": "websymbols"
+    },
+    {
+      "uid": "21115bb09fa242341cb91ed34710aa13",
+      "css": "attach",
+      "code": 59432,
+      "src": "websymbols"
     }
   ]
 }

@@ -152,9 +152,10 @@ main { position: absolute; display: block; top: 50%; left: 50%; transform: trans
 .write_list>a>p { position: relative; display: block; font-size: 13px; font-weight: 400; line-height: 1.4; letter-spacing: -0.5px; color: var(--font-sub-color); display: -webkit-box; word-wrap: break-word; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; white-space:pre-wrap; height: 56px; text-align: justify; margin-bottom: 8px; } 
 .Write form { position: relative; display: block; height: 100%; } 
 .Write input { position: relative; display: block; background: transparent; width: 100%; margin-bottom: 16px; color: var(--font-color); } 
-.write_title { font-size: 32px; font-weight: 600; line-height: 1.8; } 
-.write_subtitle { font-size: 24px; font-weight: 600; line-height: 1.8; } 
-.write_textarea { position: relative; display: block; background: transparent; width: 100%; height: 62vh; border: 0; font-size: 16px; font-weight: 600; line-height: 1.5; color: var(--font-color); resize: none; } 
+.write_title span { font-size: 32px; font-weight: 600; line-height: 1.8; } 
+.write_subtitle span { font-size: 24px; font-weight: 600; line-height: 1.8; } 
+.write_textarea { position: relative; display: block; background: transparent; width: 100%; height: 62vh; border: 0; font-size: 14px; line-height: 1.5; color: var(--font-color); resize: none; } 
+.write_textarea span { font-size: 16px; line-height: 1.5; color: var(--font-color); } 
 
 .write_keyword { display:flex; justify-content: space-between; align-items: center; } 
 .write_keyword_list { display: flex; justify-content: flex-start; align-items: center; flex-wrap: wrap; } 
@@ -166,6 +167,12 @@ main { position: absolute; display: block; top: 50%; left: 50%; transform: trans
 .write_keyword_view a:hover { color: var(--main-color); } 
 
 .write_date { font-size: 14px; font-weight: 400; line-height: 1.4; color: var(--font-color); opacity: 0.7; } 
+
+/* editor btn */
+.editor_btn { position: fixed; bottom: 58px; right: 24px; display: flex; justify-content: flex-start; flex-direction: column; align-items: center; z-index: 9; } 
+.editor_btn button { margin-top: 8px; font-size: 22px; border-radius: 50%; color: var(--font-color); transition: all 0.3s ease-in-out; } 
+.editor_btn button:hover { color:var(--main-color); } 
+.editor_highlight span { background: linear-gradient(to top, rgba(255, 243, 150, 0.6) 95%, transparent 100%) } 
 
 /* main memo textarea */
 
