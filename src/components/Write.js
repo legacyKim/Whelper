@@ -5,8 +5,9 @@ import { Link } from 'react-router-dom';
 import { writeListDataAdd } from "../store.js"
 import '../css/style.css';
 
-import { createEditor, Editor, Transforms, Element as SlateElement, Node, Text } from 'slate';
+import { createEditor, Editor, Transforms, Text, Element as SlateElement, Node,  } from 'slate';
 import { Slate, Editable, withReact } from 'slate-react'
+import escapeHtml from 'escape-html'
 
 // slate editor
 const CustomEditor = {
@@ -125,16 +126,45 @@ function Write() {
 
     const renderElement = useCallback(props => {
         switch (props.element.type) {
-            case 'code':
-                return <CodeElement {...props} />
+            case 'bold':
+                return <BoldElement {...props} />
+            case 'highlight':
+                return <HighlightElement {...props} />
             default:
                 return <DefaultElement {...props} />
         }
     }, []);
 
+    const BoldElement = ({ attributes, children }) => {
+        return <span {...attributes} style={{ fontWeight: 'bold' }}>{children}</span>;
+    };
+
+    const HighlightElement = ({ attributes, children }) => {
+        return <span className='editor_highlight' {...attributes}>{children}</span>;
+    };
+
+    const DefaultElement = ({ attributes, children }) => {
+        return <p {...attributes}>{children}</p>;
+    };
+
     const renderLeaf = useCallback(props => {
         return <Leaf {...props} />
     }, []);
+
+    const Leaf = props => {
+        const style = {
+            fontWeight: props.leaf.bold ? 'bold' : 'normal',
+            backgroundColor: props.leaf.highlight ? true : false,
+        };
+
+        return (
+            <span className={style.backgroundColor == true ? 'editor_highlight' : ''}
+                {...props.attributes}
+                style={style}>
+                {props.children}
+            </span>
+        );
+    }
     //// slate text editor
 
     // const newTitle = useRef();
@@ -214,7 +244,7 @@ function Write() {
                     placeholder="Title"
                     editor={titleEditor}
                     renderElement={renderElement}
-                    renderLeaf={renderLeaf}/>
+                    renderLeaf={renderLeaf} />
             </Slate>
 
             <Slate
@@ -376,33 +406,6 @@ function Write() {
 
     }
 
-}
-
-const CodeElement = props => {
-    return (
-        <pre {...props.attributes}>
-            <code>{props.children}</code>
-        </pre>
-    )
-}
-
-const DefaultElement = props => {
-    return <p {...props.attributes}>{props.children}</p>
-}
-
-const Leaf = props => {
-    const style = {
-        fontWeight: props.leaf.bold ? 'bold' : 'normal',
-        backgroundColor: props.leaf.highlight ? true : false,
-    };
-
-    return (
-        <span className={style.backgroundColor == true ? 'editor_highlight' : ''}
-            {...props.attributes}
-            style={style}>
-            {props.children}
-        </span>
-    );
 }
 
 export default Write;

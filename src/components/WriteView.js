@@ -37,16 +37,16 @@ function WriteView() {
                 <div className='content_area'>
                     <div className='view_content'>
 
-                        <Slate className="test" editor={titleEditor} initialValue={titleValue}>
-                            <Editable readOnly />
+                        <Slate editor={titleEditor} initialValue={titleValue}>
+                            <Editable className="title" readOnly />
                         </Slate>
 
-                        <Slate className="test" editor={subTitleEditor} initialValue={subTitleValue}>
-                            <Editable readOnly />
+                        <Slate editor={subTitleEditor} initialValue={subTitleValue}>
+                            <Editable className="subtitle" readOnly />
                         </Slate>
 
-                        <Slate className="test" editor={editor} initialValue={contentValue}>
-                            <Editable readOnly />
+                        <Slate editor={editor} initialValue={contentValue}>
+                            <Editable className="content" readOnly />
                         </Slate>
 
                         <div className='write_keyword_view'>
