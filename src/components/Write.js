@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { writeListDataAdd } from "../store.js"
 import '../css/style.css';
 
-import { createEditor, Editor, Transforms, Text, Element as SlateElement, Node,  } from 'slate';
+import { createEditor, Editor, Transforms, Text, Element as SlateElement, Node, } from 'slate';
 import { Slate, Editable, withReact } from 'slate-react'
 import escapeHtml from 'escape-html'
 
@@ -124,47 +124,32 @@ function Write() {
     }, []);
     //// initial value....
 
-    const renderElement = useCallback(props => {
-        switch (props.element.type) {
+    const renderElement = useCallback(({ attributes, children, element }) => {
+        switch (element.type) {
             case 'bold':
-                return <BoldElement {...props} />
+                return <span {...attributes} style={{ fontWeight: 'bold' }}>{children}</span>
             case 'highlight':
-                return <HighlightElement {...props} />
+                return <span className='editor_highlight' {...attributes}>{children}</span>
             default:
-                return <DefaultElement {...props} />
+                return <p {...attributes}>{children}</p>;
         }
-    }, []);
+    }, [])
 
-    const BoldElement = ({ attributes, children }) => {
-        return <span {...attributes} style={{ fontWeight: 'bold' }}>{children}</span>;
-    };
+    const renderLeaf = useCallback(({ attributes, children, leaf }) => {
 
-    const HighlightElement = ({ attributes, children }) => {
-        return <span className='editor_highlight' {...attributes}>{children}</span>;
-    };
-
-    const DefaultElement = ({ attributes, children }) => {
-        return <p {...attributes}>{children}</p>;
-    };
-
-    const renderLeaf = useCallback(props => {
-        return <Leaf {...props} />
-    }, []);
-
-    const Leaf = props => {
         const style = {
-            fontWeight: props.leaf.bold ? 'bold' : 'normal',
-            backgroundColor: props.leaf.highlight ? true : false,
+            fontWeight: leaf.bold ? 'bold' : 'normal',
+            backgroundColor: leaf.highlight ? true : false,
         };
 
         return (
             <span className={style.backgroundColor == true ? 'editor_highlight' : ''}
-                {...props.attributes}
+                {...attributes}
                 style={style}>
-                {props.children}
+                {children}
             </span>
         );
-    }
+    }, []);
     //// slate text editor
 
     // const newTitle = useRef();
@@ -223,6 +208,29 @@ function Write() {
     const recentId = writeListState.length;
     //// save content
 
+    // toolbar
+    const [toolbarActive, setToolbarActive] = useState(false);
+    const toolbarOpen = (e) => {
+        e.preventDefault();
+        setToolbarActive('active');
+
+        const mouseX = e.clientX;
+        const mouseY = e.clientY;
+
+        const editorBtnPos = document.querySelector('.editor_btn');
+
+        if (editorBtnPos) {
+            editorBtnPos.style.top = mouseY + 'px';
+            editorBtnPos.style.left = mouseX + 'px';
+        }
+    };
+
+    const toolbarClose = (e) => {
+        setToolbarActive('');
+    }
+
+    //// toolbar
+
     return (
         <div className='Write'>
             {/* <input type="text" placeholder="TITLE" className="write_title" ref={newTitle}></input> */}
@@ -279,33 +287,37 @@ function Write() {
                     }
                 }}>
 
-                <div className='editor_btn'>
+                <div className={`editor_btn ${toolbarActive ? toolbarActive : ""}`}>
                     <button className='icon-gwallet'
                         onMouseDown={event => {
                             event.preventDefault();
                             CustomEditor.toggleHighlight(editor);
+                            toolbarClose();
                         }}>
                     </button>
                     <button className='icon-bold'
                         onMouseDown={event => {
                             event.preventDefault()
                             CustomEditor.toggleBoldMark(editor)
+                            toolbarClose();
                         }}>
                     </button>
                     <button className='icon-flow-cascade'
                         onMouseDown={event => {
                             event.preventDefault()
                             CustomEditor.toggleAnnotation(editor)
+                            toolbarClose();
                         }}>
                     </button>
                 </div>
 
-                <Editable className='write_content'
+                <Editable className='write_content' onContextMenu={toolbarOpen} onClick={toolbarClose}
                     placeholder="작은 것들도 허투로 생각하지 말지어다. 큰 것들도 최초에는 작았다."
                     editor={editor}
                     renderElement={renderElement}
                     renderLeaf={renderLeaf}
                     onKeyDown={event => {
+                        toolbarClose()
                         if (!event.ctrlKey) {
                             return
                         }
