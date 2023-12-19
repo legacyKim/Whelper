@@ -4,16 +4,45 @@ import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { Slate, Editable, withReact, useSlate } from 'slate-react';
 import { createEditor, Transforms, Node } from 'slate';
+import { jsx } from 'slate-hyperscript'
 
 import '../css/style.css';
 
-const deserialize = string => {
-    return [
-        {
-            type: 'paragraph',
-            children: [{ text: string }],
-        },
-    ];
+const deserialize = (el, markAttributes = {}) => {
+
+    if (el.nodeType === Node.TEXT_NODE) {
+        return jsx('text', markAttributes, el.textContent)
+    } else if (el.nodeType !== Node.ELEMENT_NODE) {
+        return null
+    }
+
+    const nodeAttributes = { ...markAttributes }
+
+    switch (el.nodeName) {
+        case 'bold':
+            nodeAttributes.bold = true;
+            break;
+        case 'highlight':
+            nodeAttributes.highlight = true;
+            break;
+    }
+
+    const children = Array.from(el.childNodes)
+        .map(node => deserialize(node, nodeAttributes))
+        .flat()
+
+    if (children.length === 0) {
+        children.push(jsx('text', nodeAttributes, ''))
+    }
+
+    switch (el.nodeName) {
+        case 'bold':
+            return jsx('element', { type: 'bold' }, children)
+        case 'highlight':
+            return jsx('element', { type: 'highlight' }, children)
+        default:
+            return children
+    }
 };
 
 function WriteView() {
@@ -23,13 +52,15 @@ function WriteView() {
 
     const [writeContent, setWriteContent] = useState(writeListState[id]);
 
+    console.log(writeContent);
+
     const [titleEditor] = useState(() => withReact(createEditor()))
     const [subTitleEditor] = useState(() => withReact(createEditor()))
     const [editor] = useState(() => withReact(createEditor()))
-    
-    const titleValue = useMemo(() => deserialize(JSON.parse(writeContent.title)))
-    const subTitleValue = useMemo(() => deserialize(JSON.parse(writeContent.subTitle)))
-    const contentValue = useMemo(() => deserialize(JSON.parse(writeContent.content)))
+
+    const titleValue = useMemo(() => deserialize(writeContent.title), [writeContent.title])
+    const subTitleValue = useMemo(() => deserialize(writeContent.subTitle), [writeContent.subTitle])
+    const contentValue = useMemo(() => deserialize(writeContent.content), [writeContent.content])
 
     return (
         <div className='view_page'>

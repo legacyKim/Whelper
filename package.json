@@ -17,6 +17,7 @@
     "react-scripts": "5.0.1",
     "react-transition-group": "^4.4.5",
     "slate": "^0.101.1",
+    "slate-hyperscript": "^0.100.0",
     "slate-react": "^0.101.3",
     "web-vitals": "^2.1.4"
   },

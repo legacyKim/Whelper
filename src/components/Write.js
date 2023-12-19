@@ -58,16 +58,30 @@ const CustomEditor = {
 //// slate editor
 
 // serial, deserial
-const serialize = value => {
-    return (
-        value
-            // Return the string content of each paragraph in the value's children.
-            .map(n => Node.string(n))
-            // Join them all with line breaks denoting paragraphs.
-            .join('\n')
-    )
-}
-// Define a deserializing function that takes a string and returns a value.
+const serialize = node => {
+
+    if (Text.isText(node)) {
+        let string = escapeHtml(node.text)
+        if (node.bold) {
+            string = `<strong>${string}</strong>`
+        }
+        return string
+    }
+    
+    const children = node.children.map(n => serialize(n)).join('');
+
+    switch (node.type) {
+        case 'bold':
+            return `<strong>${children}</strong>`;
+        case 'highlight':
+            return `<span class="editor_highlight">${children}</span>`;
+        case 'paragraph':
+            return `<p>${children}</p>`;
+        default:
+            return children;
+    }
+
+};
 //// serial, deserial
 
 function Write() {
@@ -321,7 +335,6 @@ function Write() {
                         if (!event.ctrlKey) {
                             return
                         }
-
                         switch (event.key) {
 
                             case 'b': {
@@ -366,7 +379,8 @@ function Write() {
                 </div>
                 <div className='page_btn'>
                     <button className="write_btn_back icon-reply" onClick={popupClick}></button>
-                    <Link to={`/components/WriteView/${recentId}`} className='icon-ok-circled write_btn_save' onClick={() => { WriteSaveBtn(); }}></Link>
+                    {/* <Link to={`/components/WriteView/${recentId}`} className='icon-ok-circled write_btn_save' onClick={() => { WriteSaveBtn(); }}></Link> */}
+                    <button className='icon-ok-circled write_btn_save' onClick={() => { WriteSaveBtn(); }}></button>
                 </div>
             </div>
         </div>
