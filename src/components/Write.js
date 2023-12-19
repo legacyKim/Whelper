@@ -64,10 +64,12 @@ const serialize = node => {
         let string = escapeHtml(node.text)
         if (node.bold) {
             string = `<strong>${string}</strong>`
+        } else if (node.highlight) {
+            string = `<span class="editor_highlight">${string}</span>`
         }
         return string
     }
-    
+
     const children = node.children.map(n => serialize(n)).join('');
 
     switch (node.type) {
