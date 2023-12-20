@@ -70,6 +70,7 @@ const serialize = node => {
         return string
     }
 
+    console.log(node);
     const children = node.children.map(n => serialize(n)).join('');
 
     switch (node.type) {
@@ -189,6 +190,10 @@ function Write() {
     localStorage.setItem('writeContent', JSON.stringify(editorValue));
     //// content and local storage change
 
+    console.log(edTitle)
+    console.log(JSON.stringify(edTitle))
+    // console.log(serialize(JSON.stringify(edTitle)))
+
     // save content
     const dispatch = useDispatch();
     const WriteSaveBtn = () => {
@@ -196,19 +201,19 @@ function Write() {
         const id = writeListState.length;
 
         localStorage.removeItem('writeTitle');
-        const titleString = JSON.stringify(serialize(edTitle));
+        const titleString = serialize(JSON.stringify(edTitle));
         const title = titleString;
 
         localStorage.removeItem('writeSubTitle');
-        const subTitleString = JSON.stringify(serialize(edSubTitle));
+        const subTitleString = serialize(JSON.stringify(edSubTitle));
         const subTitle = subTitleString;
 
         localStorage.removeItem('writeContent');
-        const contentString = JSON.stringify(serialize(editorValue));
+        const contentString = serialize(JSON.stringify(editorValue));
         const content = contentString;
 
         localStorage.removeItem('writeAnno');
-        const annoString = JSON.stringify(serialize(editorValue));
+        const annoString = serialize(JSON.stringify(editorValue));
         const anno = annoString;
 
         const keyword = keywordArr;

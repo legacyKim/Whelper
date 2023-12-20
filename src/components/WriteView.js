@@ -11,37 +11,39 @@ import '../css/style.css';
 const deserialize = (el, markAttributes = {}) => {
 
     if (el.nodeType === Node.TEXT_NODE) {
-        return jsx('text', markAttributes, el.textContent)
+        return { text: el.textContent, ...markAttributes };
     } else if (el.nodeType !== Node.ELEMENT_NODE) {
-        return null
+        return null;
     }
 
-    const nodeAttributes = { ...markAttributes }
+    const nodeAttributes = { ...markAttributes };
 
-    switch (el.nodeName) {
-        case 'bold':
+    switch (el) {
+        case 'STRONG':
             nodeAttributes.bold = true;
             break;
-        case 'highlight':
-            nodeAttributes.highlight = true;
+        case 'SPAN':
+            if (el.classList.contains('editor_highlight')) {
+                nodeAttributes.highlight = true;
+            }
             break;
     }
 
     const children = Array.from(el.childNodes)
         .map(node => deserialize(node, nodeAttributes))
-        .flat()
+        .filter(Boolean);
 
     if (children.length === 0) {
-        children.push(jsx('text', nodeAttributes, ''))
+        children.push({ text: '' });
     }
 
     switch (el.nodeName) {
-        case 'bold':
-            return jsx('element', { type: 'bold' }, children)
-        case 'highlight':
-            return jsx('element', { type: 'highlight' }, children)
+        case 'STRONG':
+            return { type: 'bold', children };
+        case 'P':
+            return { type: 'paragraph', children };
         default:
-            return children
+            return children;
     }
 };
 
@@ -52,17 +54,16 @@ function WriteView() {
 
     const [writeContent, setWriteContent] = useState(writeListState[id]);
 
-    console.log(writeContent);
-
     const [titleEditor] = useState(() => withReact(createEditor()))
     const [subTitleEditor] = useState(() => withReact(createEditor()))
     const [editor] = useState(() => withReact(createEditor()))
 
-    const titleValue = useMemo(() => deserialize(writeContent.title), [writeContent.title])
-    const subTitleValue = useMemo(() => deserialize(writeContent.subTitle), [writeContent.subTitle])
-    const contentValue = useMemo(() => deserialize(writeContent.content), [writeContent.content])
+    const titleValue = deserialize(writeContent.title);
+    const subTitleValue = deserialize(writeContent.subTitle);
+    const contentValue = deserialize(writeContent.content);
 
     return (
+
         <div className='view_page'>
             <div className='common_page'>
                 <div className='content_area'>
@@ -97,6 +98,7 @@ function WriteView() {
     function WriteKeyword({ writeListKeyword }) {
         return <Link to={`/components/Category/${writeListKeyword}`}>#{writeListKeyword}</Link>
     }
+
 }
 
 export default WriteView;
