@@ -58,32 +58,32 @@ const CustomEditor = {
 //// slate editor
 
 // serial, deserial
-const serialize = node => {
+const serialize = nodes => {
 
-    if (Text.isText(node)) {
-        let string = escapeHtml(node.text)
-        if (node.bold) {
-            string = `<strong>${string}</strong>`
-        } else if (node.highlight) {
-            string = `<span class="editor_highlight">${string}</span>`
+    return nodes.map(node => {
+        if (Text.isText(node)) {
+            let string = escapeHtml(node.text);
+            if (node.bold) {
+                string = `<strong>${string}</strong>`;
+            } else if (node.highlight) {
+                string = `<span class="editor_highlight">${string}</span>`;
+            }
+            return string;
         }
-        return string
-    }
 
-    console.log(node);
-    const children = node.children.map(n => serialize(n)).join('');
+        const children = serialize(node.children);
 
-    switch (node.type) {
-        case 'bold':
-            return `<strong>${children}</strong>`;
-        case 'highlight':
-            return `<span class="editor_highlight">${children}</span>`;
-        case 'paragraph':
-            return `<p>${children}</p>`;
-        default:
-            return children;
-    }
-
+        switch (node.type) {
+            case 'bold':
+                return `<strong>${children}</strong>`;
+            case 'highlight':
+                return `<span class="editor_highlight">${children}</span>`;
+            case 'paragraph':
+                return `<p>${children}</p>`;
+            default:
+                return children;
+        }
+    }).join('');
 };
 //// serial, deserial
 
@@ -144,7 +144,7 @@ function Write() {
     const renderElement = useCallback(({ attributes, children, element }) => {
         switch (element.type) {
             case 'bold':
-                return <span {...attributes} style={{ fontWeight: 'bold' }}>{children}</span>
+                return <strong {...attributes} style={{ fontWeight: 'bold' }}>{children}</strong>
             case 'highlight':
                 return <span className='editor_highlight' {...attributes}>{children}</span>
             default:
@@ -166,6 +166,7 @@ function Write() {
                 {children}
             </span>
         );
+
     }, []);
     //// slate text editor
 
@@ -190,10 +191,6 @@ function Write() {
     localStorage.setItem('writeContent', JSON.stringify(editorValue));
     //// content and local storage change
 
-    console.log(edTitle)
-    console.log(JSON.stringify(edTitle))
-    // console.log(serialize(JSON.stringify(edTitle)))
-
     // save content
     const dispatch = useDispatch();
     const WriteSaveBtn = () => {
@@ -201,19 +198,19 @@ function Write() {
         const id = writeListState.length;
 
         localStorage.removeItem('writeTitle');
-        const titleString = serialize(JSON.stringify(edTitle));
+        const titleString = serialize(edTitle);
         const title = titleString;
 
         localStorage.removeItem('writeSubTitle');
-        const subTitleString = serialize(JSON.stringify(edSubTitle));
+        const subTitleString = serialize(edSubTitle);
         const subTitle = subTitleString;
 
         localStorage.removeItem('writeContent');
-        const contentString = serialize(JSON.stringify(editorValue));
+        const contentString = serialize(editorValue);
         const content = contentString;
 
         localStorage.removeItem('writeAnno');
-        const annoString = serialize(JSON.stringify(editorValue));
+        const annoString = serialize(editorValue);
         const anno = annoString;
 
         const keyword = keywordArr;
@@ -386,8 +383,8 @@ function Write() {
                 </div>
                 <div className='page_btn'>
                     <button className="write_btn_back icon-reply" onClick={popupClick}></button>
-                    {/* <Link to={`/components/WriteView/${recentId}`} className='icon-ok-circled write_btn_save' onClick={() => { WriteSaveBtn(); }}></Link> */}
-                    <button className='icon-ok-circled write_btn_save' onClick={() => { WriteSaveBtn(); }}></button>
+                    <Link to={`/components/WriteView/${recentId}`} className='icon-ok-circled write_btn_save' onClick={() => { WriteSaveBtn(); }}></Link>
+                    {/* <button className='icon-ok-circled write_btn_save' onClick={() => { WriteSaveBtn(); }}></button> */}
                 </div>
             </div>
         </div>

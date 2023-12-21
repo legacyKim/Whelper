@@ -10,42 +10,45 @@ import '../css/style.css';
 
 const deserialize = (el, markAttributes = {}) => {
 
-    if (el.nodeType === Node.TEXT_NODE) {
-        return { text: el.textContent, ...markAttributes };
-    } else if (el.nodeType !== Node.ELEMENT_NODE) {
-        return null;
+    console.log(el);
+
+    if (el.nodeType === 3) {
+        return jsx('text', markAttributes, el.textContent)
+    } else if (el.nodeType !== 1) {
+        return null
     }
 
-    const nodeAttributes = { ...markAttributes };
+    const nodeAttributes = { ...markAttributes } 
 
-    switch (el) {
+    switch (el.nodeName) {
         case 'STRONG':
-            nodeAttributes.bold = true;
-            break;
+            nodeAttributes.bold = true
         case 'SPAN':
             if (el.classList.contains('editor_highlight')) {
                 nodeAttributes.highlight = true;
             }
-            break;
     }
 
     const children = Array.from(el.childNodes)
-        .map(node => deserialize(node, nodeAttributes))
-        .filter(Boolean);
+        .map(node => deserialize(node, {...nodeAttributes} ))
+        .flat() 
 
     if (children.length === 0) {
-        children.push({ text: '' });
-    }
+        children.push(jsx('text', nodeAttributes, ''))
+    } 
+
+    console.log(el);
 
     switch (el.nodeName) {
-        case 'STRONG':
-            return { type: 'bold', children };
+        case 'BODY':
+            return jsx('fragment', {}, children)
         case 'P':
-            return { type: 'paragraph', children };
+            return jsx('element', { type: 'paragraph' }, children)
         default:
-            return children;
+            return children
     }
-};
+
+}
 
 function WriteView() {
 
@@ -58,9 +61,13 @@ function WriteView() {
     const [subTitleEditor] = useState(() => withReact(createEditor()))
     const [editor] = useState(() => withReact(createEditor()))
 
-    const titleValue = deserialize(writeContent.title);
-    const subTitleValue = deserialize(writeContent.subTitle);
-    const contentValue = deserialize(writeContent.content);
+    const titleDoc = new DOMParser().parseFromString(writeContent.title, 'text/html');
+    const subTitleDoc = new DOMParser().parseFromString(writeContent.subTitle, 'text/html');
+    const contentDoc = new DOMParser().parseFromString(writeContent.content, 'text/html');
+
+    const titleValue = deserialize(titleDoc.body);
+    const subTitleValue = deserialize(subTitleDoc.body);
+    const contentValue = deserialize(contentDoc.body);
 
     return (
 
