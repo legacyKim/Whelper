@@ -4,14 +4,13 @@ import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { Slate, Editable, withReact, useSlate } from 'slate-react';
 import { createEditor, Transforms, Node } from 'slate';
-import { jsx } from 'slate-hyperscript'
 
 import '../css/style.css';
 
 const deserialize = (el, markAttributes = {}) => {
 
     if (el.nodeType === 3) {
-        return jsx('text', markAttributes, el.textContent)
+        return { text: el.textContent, ...markAttributes };
     } else if (el.nodeType !== 1) {
         return null
     }
@@ -34,16 +33,16 @@ const deserialize = (el, markAttributes = {}) => {
         .flat()
 
     if (children.length === 0) {
-        children.push(jsx('text', nodeAttributes, ''))
+        children.push({ text: '', ...nodeAttributes });
     }
 
     switch (el.nodeName) {
         case 'BODY':
-            return jsx('fragment', {}, children)
+            return children;
         case 'P':
-            return jsx('element', { type: 'paragraph' }, children)
+            return { type: 'paragraph', children };
         default:
-            return children
+            return children;
     }
 
 }
@@ -67,7 +66,31 @@ function WriteView() {
     const subTitleValue = deserialize(subTitleDoc.body);
     const contentValue = deserialize(contentDoc.body);
 
-    console.log(contentValue);
+    const renderElement = useCallback(({ attributes, children, element }) => {
+        switch (element.type) {
+            case 'bold':
+                return <strong {...attributes} style={{ fontWeight: 'bold' }}>{children}</strong>
+            case 'highlight':
+                return <span className='editor_highlight' {...attributes}>{children}</span>
+            default:
+                return <p {...attributes}>{children}</p>;
+        }
+    }, [])
+
+    const renderLeaf = useCallback(({ attributes, children, leaf }) => {
+        const style = {
+            fontWeight: leaf.bold ? 'bold' : 'normal',
+            backgroundColor: leaf.highlight ? true : false,
+        };
+
+        return (
+            <span className={style.backgroundColor == true ? 'editor_highlight' : ''}
+                {...attributes}
+                style={style}>
+                {children}
+            </span>
+        );
+    }, []);
 
     return (
 
@@ -85,7 +108,7 @@ function WriteView() {
                         </Slate>
 
                         <Slate editor={editor} initialValue={contentValue}>
-                            <Editable className="content" readOnly />
+                            <Editable className="content" renderElement={renderElement} renderLeaf={renderLeaf} readOnly />
                         </Slate>
 
                         <div className='write_keyword_view'>
