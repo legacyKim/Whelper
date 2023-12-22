@@ -20,7 +20,7 @@ const deserialize = string => {
 function WriteList() {
 
     let writeListState = useSelector((state) => state.WriteData);
-
+    
     return (
 
         <div className='common_page'>
@@ -59,9 +59,9 @@ function WriteList() {
 
         // const writeDate = writeDateFomatt(writeListState[i].date);
 
-        const titleValue = JSON.parse(writeContent.title)
-        const subTitleValue = JSON.parse(writeContent.subTitle)
-        const contentValue = JSON.parse(writeContent.content)
+        const titleValue = deserialize(JSON.parse(writeContent.title))
+        const subTitleValue = deserialize(JSON.parse(writeContent.subTitle))
+        const contentValue = deserialize(JSON.parse(writeContent.content))
 
         return (
 
