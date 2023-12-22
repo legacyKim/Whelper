@@ -5,6 +5,7 @@ import { useSelector } from "react-redux"
 
 import '../css/style.css';
 import '../lib/fontello/css/animation.css'
+import ViewEdit from './SlateView.js'
 
 function Category() {
 
@@ -98,7 +99,7 @@ function Category() {
     useEffect(() => {
         if (cateProps !== undefined) {
             setCateArr([cateProps])
-        } 
+        }
     }, [cateProps]);
 
     return (
@@ -168,12 +169,14 @@ function Category() {
 
     function CategoryResult({ i, cateFilterRes }) {
 
+        const titleDoc = new DOMParser().parseFromString(cateFilterRes[i].title, 'text/html');
+        const subTitleDoc = new DOMParser().parseFromString(cateFilterRes[i].subTitle, 'text/html');
+        const contentDoc = new DOMParser().parseFromString(cateFilterRes[i].content, 'text/html');
+
         return (
             <div className='write_list'>
                 <Link to={`/components/WriteView/${writeListState[i].id}`}>
-                    <span>{cateFilterRes[i].title}</span>
-                    <strong>{cateFilterRes[i].subTitle}</strong>
-                    <p>{cateFilterRes[i].content}</p>
+                    <ViewEdit titleDoc={titleDoc} subTitleDoc={subTitleDoc} contentDoc={contentDoc}></ViewEdit>
                 </Link>
             </div>
 

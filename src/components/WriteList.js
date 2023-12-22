@@ -1,26 +1,15 @@
 import React, { useState, useMemo } from 'react';
 import { useSelector, useDispatch } from "react-redux"
+import { Link } from 'react-router-dom';
 // import { writeListDataDelete } from "../store"
 
-import { Slate, Editable, withReact, useSlate } from 'slate-react';
-import { createEditor, Transforms, Node } from 'slate';
-
 import '../css/style.css';
-import { Link } from 'react-router-dom';
-
-const deserialize = string => {
-    return [
-        {
-            type: 'paragraph',
-            children: [{ text: string }],
-        },
-    ];
-};
+import ViewEdit from './SlateView.js'
 
 function WriteList() {
 
     let writeListState = useSelector((state) => state.WriteData);
-    
+
     return (
 
         <div className='common_page'>
@@ -45,6 +34,11 @@ function WriteList() {
 
         const writeListState = useSelector((state) => state.WriteData);
         const [writeContent, setWriteContent] = useState(writeListState[i]);
+
+        const titleDoc = new DOMParser().parseFromString(writeContent.title, 'text/html');
+        const subTitleDoc = new DOMParser().parseFromString(writeContent.subTitle, 'text/html');
+        const contentDoc = new DOMParser().parseFromString(writeContent.content, 'text/html');
+
         /*
         const dispatch = useDispatch();
         const delWriteList = () => {
@@ -59,10 +53,6 @@ function WriteList() {
 
         // const writeDate = writeDateFomatt(writeListState[i].date);
 
-        const titleValue = deserialize(JSON.parse(writeContent.title))
-        const subTitleValue = deserialize(JSON.parse(writeContent.subTitle))
-        const contentValue = deserialize(JSON.parse(writeContent.content))
-
         return (
 
             <div>
@@ -72,9 +62,7 @@ function WriteList() {
                 </div>
                 <div className='write_list' >
                     <Link to={`/components/WriteView/${writeListState[i].id}`}>
-                        <span>{titleValue}</span>
-                        <strong>{subTitleValue}</strong>
-                        <p>{contentValue}</p>
+                        <ViewEdit titleDoc={titleDoc} subTitleDoc={subTitleDoc} contentDoc={contentDoc}></ViewEdit>
                     </Link>
                     <div className='write_keyword'>
                         <ul className='write_keyword_list'>

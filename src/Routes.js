@@ -10,7 +10,6 @@ import './css/style.css';
 
 import Memo from './components/Memo.js'
 
-import Slate from './components/Slate.js'
 import Write from './components/Write.js'
 import WriteList from './components/WriteList.js'
 import WriteView from './components/WriteView.js'

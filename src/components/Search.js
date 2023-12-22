@@ -5,6 +5,7 @@ import { useParams, Link } from 'react-router-dom';
 import MyContext from '../context'
 
 import '../css/style.css';
+import ViewEdit from './SlateView.js'
 
 function Search() {
 
@@ -55,7 +56,7 @@ function Search() {
                         searchFilter.map((a, i) => {
                             return (
                                 <li key={i}>
-                                    <SearchResult i={i} />
+                                    <SearchResult i={i} searchFilter={searchFilter} />
                                 </li>
                             )
                         })
@@ -66,12 +67,18 @@ function Search() {
 
     )
 
-    function SearchResult({ i }) {
+    function SearchResult({ i, searchFilter }) {
+
+        const titleDoc = new DOMParser().parseFromString(searchFilter[i].title, 'text/html');
+        const subTitleDoc = new DOMParser().parseFromString(searchFilter[i].subTitle, 'text/html');
+        const contentDoc = new DOMParser().parseFromString(searchFilter[i].content, 'text/html');
 
         return(
 
             <div>
-                <Link to={`/components/WriteView/${searchFilter[i].id}`}>{searchFilter[i].content}</Link>
+                <Link to={`/components/WriteView/${searchFilter[i].id}`}>
+                    <ViewEdit titleDoc={titleDoc} subTitleDoc={subTitleDoc} contentDoc={contentDoc}></ViewEdit>
+                </Link>
             </div>
 
         )
