@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
@@ -10,34 +10,32 @@ import '../css/style.css';
 
 const deserialize = (el, markAttributes = {}) => {
 
-    console.log(el);
-
     if (el.nodeType === 3) {
         return jsx('text', markAttributes, el.textContent)
     } else if (el.nodeType !== 1) {
         return null
     }
 
-    const nodeAttributes = { ...markAttributes } 
+    const nodeAttributes = { ...markAttributes }
 
     switch (el.nodeName) {
         case 'STRONG':
             nodeAttributes.bold = true
+            break;
         case 'SPAN':
             if (el.classList.contains('editor_highlight')) {
                 nodeAttributes.highlight = true;
             }
+            break;
     }
 
     const children = Array.from(el.childNodes)
-        .map(node => deserialize(node, {...nodeAttributes} ))
-        .flat() 
+        .map(node => deserialize(node, { ...nodeAttributes }))
+        .flat()
 
     if (children.length === 0) {
         children.push(jsx('text', nodeAttributes, ''))
-    } 
-
-    console.log(el);
+    }
 
     switch (el.nodeName) {
         case 'BODY':
@@ -68,6 +66,8 @@ function WriteView() {
     const titleValue = deserialize(titleDoc.body);
     const subTitleValue = deserialize(subTitleDoc.body);
     const contentValue = deserialize(contentDoc.body);
+
+    console.log(contentValue);
 
     return (
 

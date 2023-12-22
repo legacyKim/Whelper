@@ -251,8 +251,6 @@ function Write() {
 
     return (
         <div className='Write'>
-            {/* <input type="text" placeholder="TITLE" className="write_title" ref={newTitle}></input> */}
-            {/* <input type="text" placeholder="SUBTITLE" className="write_subtitle" ref={newSubTitle}></input> */}
 
             <Slate
                 editor={titleEditor}
@@ -262,15 +260,12 @@ function Write() {
                         op => 'set_selection' !== op.type
                     )
                     if (isAstChange) {
-                        // Save the value to Local Storage.
                         setEdTitle(value)
                     }
                 }}>
                 <Editable className='write_title'
                     placeholder="Title"
-                    editor={titleEditor}
-                    renderElement={renderElement}
-                    renderLeaf={renderLeaf} />
+                    editor={titleEditor}/>
             </Slate>
 
             <Slate
@@ -281,15 +276,12 @@ function Write() {
                         op => 'set_selection' !== op.type
                     )
                     if (isAstChange) {
-                        // Save the value to Local Storage.
                         setEdSubTitle(value)
                     }
                 }}>
                 <Editable className='write_subtitle'
                     placeholder="Sub Title"
-                    editor={subTitleEditor}
-                    renderElement={renderElement}
-                    renderLeaf={renderLeaf} />
+                    editor={subTitleEditor}/>
             </Slate>
 
             <Slate
@@ -300,7 +292,6 @@ function Write() {
                         op => 'set_selection' !== op.type
                     )
                     if (isAstChange) {
-                        // Save the value to Local Storage.
                         setEditorValue(value)
                     }
                 }}>
