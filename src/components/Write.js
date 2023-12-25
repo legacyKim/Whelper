@@ -126,6 +126,8 @@ function Write() {
         return parsedContent;
     }, []);
 
+    console.log(titleValue)
+
     const subTitleValue = useMemo(() => {
         const parsedContent = writeSubTitleLocal !== null ? JSON.parse(writeSubTitleLocal) : contentPlaceholder;
         return parsedContent;
@@ -178,7 +180,6 @@ function Write() {
     const [keywordArr, setKeywordArr] = useState([]);
 
     // content and local storage change
-
     const [edTitle, setEdTitle] = useState(titleValue);
     localStorage.setItem('writeTitle', JSON.stringify(edTitle));
 
@@ -221,6 +222,7 @@ function Write() {
         setEdTitle(contentPlaceholder);
         setEdSubTitle(contentPlaceholder);
         setEditorValue(contentPlaceholder);
+
     };
 
     // save and keep the last num of id
@@ -247,7 +249,6 @@ function Write() {
     const toolbarClose = (e) => {
         setToolbarActive('');
     }
-
     //// toolbar
 
     return (

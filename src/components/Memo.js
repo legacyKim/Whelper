@@ -126,7 +126,7 @@ function Memo() {
     return (
 
         <div className='common_page'>
-            <div className='content_area'>
+            <div className='content_area reverse'>
 
                 <div className='memo_btn'>
                     <button onClick={MemoSaveBtn} className='icon-ok-circled'></button>

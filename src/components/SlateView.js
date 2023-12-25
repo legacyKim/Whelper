@@ -79,7 +79,7 @@ const ViewEdit = ({ titleDoc, subTitleDoc, contentDoc }) => {
     }, []);
 
     return (
-        <div>
+        <div className='view_common'>
             <Slate editor={titleEditor} initialValue={titleValue}>
                 <Editable className="title" readOnly />
             </Slate>

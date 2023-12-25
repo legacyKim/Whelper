@@ -15,6 +15,7 @@ import WriteList from './components/WriteList.js'
 import WriteView from './components/WriteView.js'
 import WriteCorrect from './components/WriteCorrect.js'
 
+import Book from './components/Book.js'
 import Date from './components/Date.js'
 import Category from './components/Category.js'
 import Search from './components/Search.js'
@@ -66,6 +67,7 @@ function Menu() {
                         <Route path="/components/Search/:searchInputValue" element={<Search />} />
 
                         <Route path="/components/Memo" element={<Memo MainMemoData={MainMemoData} />} />
+                        <Route path="/components/Book" element={<Book />} />
 
                     </Routes>
                 </CSSTransition>
