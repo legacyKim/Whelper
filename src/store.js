@@ -3,6 +3,7 @@ import WriteListData from './data/data'
 import SearchListData from './data/searchData'
 import memoListData from './data/dataMemo'
 import CateListData from './data/cateData'
+import bookListData from './data/bookData'
 
 let WriteData = createSlice({
     name: 'WriteData',
@@ -59,14 +60,27 @@ let cateData = createSlice({
     }
 })
 
+let bookData = createSlice({
+    name: 'bookData',
+    initialState: bookListData,
+    reducers: {
+        bookListDataAdd(state, newBookList) {
+            const newBook = [...state, newBook.payload];
+            return newBook;
+        },
+    }
+})
+
 export const { writeListDataAdd, writeListDataUpdate, writeListDataDelete } = WriteData.actions;
 export const { memoListDataAdd, memoListDataDelete, memoListDataUpdate } = memoData.actions;
 export const { cateListDataAdd } = cateData.actions;
+export const { bookListDataAdd } = bookData.actions;
 
 export default configureStore({
     reducer: {
         WriteData: WriteData.reducer,
         memoData: memoData.reducer,
         cateData: cateData.reducer,
+        bookData: bookData.reducer,
     },
 });

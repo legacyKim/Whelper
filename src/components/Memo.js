@@ -2,11 +2,75 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from "react-redux"
 
 import '../css/style.css';
-import { memoListDataAdd, memoListDataDelete, memoListDataUpdate } from "../store.js"
+import { memoListDataAdd, memoListDataDelete, memoListDataUpdate, bookListDataAdd } from "../store.js"
 
 function Memo() {
 
     let memoListState = useSelector((state) => state.memoData);
+    let bookListState = useSelector((state) => state.bookData);
+
+    // book Add
+    const [isBookAdd, setIsBookAdd] = useState(false);
+    const [bookAddActive, setBookAddActive] = useState('');
+    const [bookAdd, setBookAdd] = useState(null);
+
+    const bookAddOn = (i) => {
+        setIsBookAdd(!isBookAdd);
+        if (!isBookAdd) {
+            setBookAddActive('active');
+        } else {
+            setBookAddActive('');
+        }
+    };
+
+    const bookAddClose = () => {
+        setTimeout(() => {
+            setIsBookAdd(false);
+        }, 300);
+
+        setBookAddActive('');
+    };
+
+    useEffect(() => {
+        if (bookAddActive) {
+            setBookAddActive('active');
+            setMemoAddActive('');
+        } else {
+            setBookAddActive('');
+        }
+    }, [bookAddActive]);
+
+    // about memoAdd showHide
+    const [isMemoAdd, setIsMemoAdd] = useState(false);
+    const [memoAddActive, setMemoAddActive] = useState('');
+    const [memoAdd, setMemoAdd] = useState(null);
+
+    const memoAddOn = (i) => {
+        setMemoAdd(!isMemoAdd);
+        if (!isMemoAdd) {
+            setMemoAddActive('active');
+            setBookAddActive('');
+        } else {
+            setMemoAddActive('');
+        }
+    };
+
+    const memoAddClose = () => {
+        setTimeout(() => {
+            setIsMemoAdd(false);
+        }, 300);
+
+        setMemoAddActive('');
+    };
+
+    useEffect(() => {
+        if (memoAddActive) {
+            setMemoAddActive('active');
+        } else {
+            setMemoAddActive('');
+        }
+    }, [memoAddActive]);
+    //// about memoAdd Showhide
 
     // about memoDetail ShowHide
     const [isMemoDetail, setIsMemoDetail] = useState(false);
@@ -72,53 +136,82 @@ function Memo() {
     }, [memoCorrectActive]);
     //// about memoCorrect ShowHide
 
+    // book list
+    const [isBookList, setIsBookList] = useState(false);
+    const [bookListActive, setBookListActive] = useState('');
+    const [bookListChange, setBookListChange] = useState(null);
+
+    const bookListOn = (i) => {
+        setIsBookList(!isBookList);
+        if (!isBookList) {
+            setBookListActive('active');
+        } else {
+            setBookListActive('');
+        }
+    };
+
+    const bookListClose = () => {
+        setTimeout(() => {
+            setIsBookList(false);
+        }, 300);
+
+        setBookListActive('');
+    };
+
+    useEffect(() => {
+        if (bookListActive) {
+            setBookListActive('active');
+        } else {
+            setBookListActive('');
+        }
+    }, [bookListActive]);
+    //// book list
+
     const [memo, setMemo] = useState(memoListState);
 
     const dispatch = useDispatch();
-    var newMemoKeyword = useRef(null);
-    var newMemoOwner = useRef(null);
     var newMemoSource = useRef(null);
     var newMemoComment = useRef(null);
 
     const MemoSaveBtn = () => {
         const id = memoListState.length;
         const memoComment = newMemoComment.current.value;
-        const memoKeyword = newMemoKeyword.current.value;
-        const memoOwner = newMemoOwner.current.value;
-        const memoSource = newMemoSource.current.value;
+        var memoSource = newMemoSource.current.value;
 
-        dispatch(memoListDataAdd({ id, memoComment, memoKeyword, memoOwner, memoSource }));
-        setMemo((prevMemo) => [...prevMemo, { id, memoComment, memoKeyword, memoOwner, memoSource }]);
+        dispatch(memoListDataAdd({ id, memoComment, memoSource }));
+        setMemo((prevMemo) => [...prevMemo, { id, memoComment, memoSource }]);
 
     };
+
+    var newBook = useRef(null);
+
+    const bookSaveBtn = () => {
+        const bookName = newBook.current.value;
+
+        dispatch(memoListDataAdd)
+    }
 
     // const delMemoList = (i) => {
     //     dispatch(memoListDataDelete({ id: memo[i].id }))
     // }
 
     // memo correct btn
-    var correctMemoKeyword = useRef();
-    var correctMemoOwner = useRef();
     var correctMemoSource = useRef();
     var correctMemoComment = useRef();
 
     const memoCorrectBtn = (memoCorrectIndex) => {
         const memoId = memoCorrectIndex;
-        const updateMemoKeyword = correctMemoKeyword.current.value;
-        const updateMemoOwner = correctMemoOwner.current.value;
         const updateMemoSource = correctMemoSource.current.value;
         const updateMemoComment = correctMemoComment.current.value;
 
-        dispatch(memoListDataUpdate({ memoId, updateMemoKeyword, updateMemoOwner, updateMemoSource, updateMemoComment }));
+        dispatch(memoListDataUpdate({ memoId, updateMemoSource, updateMemoComment }));
         setMemoCorrectActive('');
     };
     // memo correct btn
 
     useEffect(() => {
         newMemoComment.current.value = null;
-        newMemoKeyword.current.value = null;
-        newMemoOwner.current.value = null;
-        newMemoSource.current.value = null;
+        // newMemoKeyword.current.value = null;
 
         setMemo(memoListState);
     }, [memoListState])
@@ -127,18 +220,30 @@ function Memo() {
 
         <div className='common_page'>
             <div className='content_area reverse'>
-
-                <div className='memo_btn'>
-                    <button onClick={MemoSaveBtn} className='icon-ok-circled'></button>
-                </div>
-
-                <div className='memo_add'>
-                    <div className='memo_input'>
-                        <input type='text' placeholder='newMemoSource' ref={newMemoSource}></input>
-                        <input type='text' placeholder='newMemoOwner' ref={newMemoOwner}></input>
-                        <input type='text' placeholder='newMemoKeyword' ref={newMemoKeyword}></input>
+                <div className='book_list_pos'>
+                    <div className='book_list'>
+                        <div className='book_list_current'>
+                            <i className='icon-pin'></i><strong onClick={bookListOn}>선택된 책</strong>
+                        </div>
+                        <ul className={`book_list_box ${bookListActive ? bookListActive : ''}`}>
+                            <li>
+                                <span className='all' onClick={bookListClose}>전체</span>
+                            </li>
+                            {
+                                bookListState.map(function (k, i) {
+                                    return (
+                                        <li>
+                                            <span className='all' onClick={bookListClose}>{bookListState[i]}</span>
+                                        </li>
+                                    )
+                                })
+                            }
+                        </ul>
                     </div>
-                    <textarea className='scroll' placeholder='newMemoComment' ref={newMemoComment}></textarea>
+                    <div className='memo_btn'>
+                        <button onClick={memoAddOn} className='icon-pencil-alt'></button>
+                        <button onClick={bookAddOn} className='icon-book'></button>
+                    </div>
                 </div>
 
                 <div className='memo_wrap'>
@@ -190,6 +295,31 @@ function Memo() {
                     </div>
                     {/* memoCorrect */}
 
+                    {/* book add */}
+                    <div className={`book_add memo_add ${bookAddActive ? bookAddActive : ""}`}>
+                        <div className='memo_btn flex-end'>
+                            <button className='icon-ok' onClick={bookSaveBtn}></button>
+                            <button className='icon-cancel' onClick={bookAddClose}></button>
+                        </div>
+                        <div className='memo_input'>
+                            <input type='text' placeholder='newBook' ref={newBook}></input>
+                        </div>
+                    </div>
+                    {/* bookadd */}
+
+                    {/* memoAdd */}
+                    <div className={`memo_add ${memoAddActive ? memoAddActive : ""}`}>
+                        <div className='memo_btn flex-end'>
+                            <button className='icon-ok' onClick={MemoSaveBtn}></button>
+                            <button className='icon-cancel' onClick={memoAddClose}></button>
+                        </div>
+                        <textarea className='scroll' placeholder='newMemoComment' ref={newMemoComment}></textarea>
+                        <div className='memo_input'>
+                            <input type='text' placeholder='newMemoSource' ref={newMemoSource}></input>
+                        </div>
+                    </div>
+                    {/* memoAdd */}
+
                 </div>
             </div>
         </div >
@@ -204,14 +334,6 @@ function Memo() {
                     <li>
                         <strong>출처</strong>
                         <span className='font_text color_w'>{memo.memoSource}</span>
-                    </li>
-                    <li>
-                        <strong>저자</strong>
-                        <span className='font_text color_w'>{memo.memoOwner}</span>
-                    </li>
-                    <li>
-                        <strong>키워드</strong>
-                        <span className='font_text color_w'>{memo.memoKeyword}</span>
                     </li>
                 </ul>
                 <div className='scroll'>
@@ -230,14 +352,6 @@ function Memo() {
                     <li>
                         <strong>출처</strong>
                         <input type="text" placeholder="correctMemoSource" className="memo_source" defaultValue={memo.memoSource} ref={correctMemoSource}></input>
-                    </li>
-                    <li>
-                        <strong>저자</strong>
-                        <input type="text" placeholder="correctMemoOwner" className="memo_owner" defaultValue={memo.memoOwner} ref={correctMemoOwner}></input>
-                    </li>
-                    <li>
-                        <strong>키워드</strong>
-                        <input type="text" placeholder="correctMemoKeyword" className="memo_keyword" defaultValue={memo.memoKeyword} ref={correctMemoKeyword}></input>
                     </li>
                 </ul>
                 <textarea type="text" plsaceholder="correctMemoComment" className="memo_comment scroll" defaultValue={memo.memoComment} ref={correctMemoComment}></textarea>
