@@ -46,7 +46,7 @@ function Category() {
     const keywordArrLocalString = localStorage.getItem('cateHistory');
     const keywordArrLocal = keywordArrLocalString !== null ? JSON.parse(keywordArrLocalString) : [];
 
-    /* cate Array */
+    // cate Array
     const [cateArr, setCateArr] = useState(keywordArrLocal);
 
     const clickRemove = (i) => {

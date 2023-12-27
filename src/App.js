@@ -39,9 +39,8 @@ function App() {
         setIsSearchOn(false);
     }
 
-    useEffect(()=>{
+    useEffect(() => {
         window.addEventListener('click', searchOff);
-
     }, [])
 
     useEffect(() => {
@@ -56,12 +55,15 @@ function App() {
     // about header scroll
     const [scrollPosition, setScrollPosition] = useState(0);
 
-    const updateScroll = () => {
-        setScrollPosition(window.scrollY || document.documentElement.scrollTop);
-    };
-
     useEffect(() => {
+        const updateScroll = () => {
+            setScrollPosition(window.scrollY || document.documentElement.scrollTop);
+        };
         window.addEventListener('scroll', updateScroll);
+        return () => {
+            window.removeEventListener('scroll', updateScroll);
+        };
+
     }, []);
     //// about header scroll
 
@@ -86,7 +88,7 @@ function App() {
         // local storage
         localStorage.setItem('searchHistory', JSON.stringify(searchArr));
         setSearchInputValue(searchArr[searchArr.length - 1]);
-        newSearch.current.addEventListener('click', (e)=>e.stopPropagation())
+        newSearch.current.addEventListener('click', (e) => e.stopPropagation())
     }, [searchArr]);
 
     const [searchInputValue, setSearchInputValue] = useState(searchArr[searchArr.length - 1]);

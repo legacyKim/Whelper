@@ -9,15 +9,16 @@ function Memo() {
     let memoListState = useSelector((state) => state.memoData);
     let bookListState = useSelector((state) => state.bookData);
 
+    console.log(memoListState);
+
     // book Add
     const [isBookAdd, setIsBookAdd] = useState(false);
     const [bookAddActive, setBookAddActive] = useState('');
-    const [bookAdd, setBookAdd] = useState(null);
 
-    const bookAddOn = (i) => {
-        setIsBookAdd(!isBookAdd);
+    const bookAddOn = () => {
         if (!isBookAdd) {
             setBookAddActive('active');
+            setMemoAddActive('');
         } else {
             setBookAddActive('');
         }
@@ -43,10 +44,8 @@ function Memo() {
     // about memoAdd showHide
     const [isMemoAdd, setIsMemoAdd] = useState(false);
     const [memoAddActive, setMemoAddActive] = useState('');
-    const [memoAdd, setMemoAdd] = useState(null);
 
-    const memoAddOn = (i) => {
-        setMemoAdd(!isMemoAdd);
+    const memoAddOn = () => {
         if (!isMemoAdd) {
             setMemoAddActive('active');
             setBookAddActive('');
@@ -77,14 +76,15 @@ function Memo() {
     const [memoActive, setMemoActive] = useState('');
     const [selectedMemoIndex, setSelectedMemoIndex] = useState(null);
 
-    const memoDetailOn = (i) => {
+    const memoDetailOn = (id) => {
         setSelectedMemoIndex(!isMemoDetail);
         if (!isMemoDetail) {
             setMemoActive('active');
         } else {
             setMemoActive('');
         }
-        setSelectedMemoIndex(i);
+        setSelectedMemoIndex(id);
+        console.log(id);
     };
 
     const memoDetailClose = () => {
@@ -116,6 +116,8 @@ function Memo() {
         } else {
             setMemoCorrectActive('');
         }
+
+        console.log(i);
         setMemoCorrectIndex(i);
     };
 
@@ -167,6 +169,7 @@ function Memo() {
     }, [bookListActive]);
     //// book list
 
+    // memo save
     const [memo, setMemo] = useState(memoListState);
 
     const dispatch = useDispatch();
@@ -183,11 +186,11 @@ function Memo() {
 
     };
 
+    // book save
     var newBook = useRef(null);
 
     const bookSaveBtn = () => {
         const bookName = newBook.current.value;
-
         dispatch(memoListDataAdd)
     }
 
@@ -207,14 +210,47 @@ function Memo() {
         dispatch(memoListDataUpdate({ memoId, updateMemoSource, updateMemoComment }));
         setMemoCorrectActive('');
     };
-    // memo correct btn
+    //// memo correct btn
 
+    // memo reset
     useEffect(() => {
         newMemoComment.current.value = null;
-        // newMemoKeyword.current.value = null;
+        newMemoSource.current.value = null;
 
-        setMemo(memoListState);
+        if (bookLocalStorage === null) {
+            setBookTitle("전체")
+            setMemoArr(memoListState)
+        } else {
+            setMemoArr(memoListState.filter((item) => item.memoSource === bookTitle));
+        }
     }, [memoListState])
+    //// memo reset
+
+    // book name check
+    const bookLocalStorage = localStorage.getItem('bookTitle');
+    const [bookTitle, setBookTitle] = useState(bookLocalStorage);
+
+    const bookChange = (i) => {
+        if (i === undefined) {
+            setBookTitle("전체")
+            localStorage.removeItem('bookTitle');
+        } else {
+            setBookTitle(bookListState[i])
+            localStorage.setItem('bookTitle', bookListState[i]);
+        }
+    }
+
+    const [memoArr, setMemoArr] = useState(memoListState);
+
+    useEffect(() => {
+        if (bookLocalStorage === null) {
+            setBookTitle("전체")
+            setMemoArr(memoListState)
+        } else {
+            setMemoArr(memoListState.filter((item) => item.memoSource === bookTitle));
+        }
+    }, [bookTitle])
+    //// book name check
 
     return (
 
@@ -223,22 +259,30 @@ function Memo() {
                 <div className='book_list_pos'>
                     <div className='book_list'>
                         <div className='book_list_current'>
-                            <i className='icon-pin'></i><strong onClick={bookListOn}>선택된 책</strong>
+                            <i className='icon-pin'></i><strong onClick={bookListOn}>{bookTitle}</strong>
                         </div>
-                        <ul className={`book_list_box ${bookListActive ? bookListActive : ''}`}>
-                            <li>
-                                <span className='all' onClick={bookListClose}>전체</span>
-                            </li>
-                            {
-                                bookListState.map(function (k, i) {
-                                    return (
-                                        <li>
-                                            <span className='all' onClick={bookListClose}>{bookListState[i]}</span>
-                                        </li>
-                                    )
-                                })
-                            }
-                        </ul>
+                        <div className={`book_list_box ${bookListActive ? bookListActive : ''}`}>
+                            <ul className='scroll'>
+                                <li>
+                                    <span className='all' onClick={() => {
+                                        bookListClose();
+                                        bookChange();
+                                    }}>전체</span>
+                                </li>
+                                {
+                                    bookListState.map(function (k, i) {
+                                        return (
+                                            <li>
+                                                <span className='' onClick={() => {
+                                                    bookListClose();
+                                                    bookChange(i);
+                                                }}>{bookListState[i]}</span>
+                                            </li>
+                                        )
+                                    })
+                                }
+                            </ul>
+                        </div>
                     </div>
                     <div className='memo_btn'>
                         <button onClick={memoAddOn} className='icon-pencil-alt'></button>
@@ -249,7 +293,7 @@ function Memo() {
                 <div className='memo_wrap'>
 
                     {
-                        memo.map(function (a, i) {
+                        memoArr.map(function (a, i) {
                             return (
                                 <div className='memo_content' key={i}>
                                     <div className='memoList_btn'>
@@ -257,70 +301,71 @@ function Memo() {
                                         {/* <button className='icon-trash' onClick={() => delMemoList(i)}></button> */}
                                     </div>
                                     <div className='memo_content_box'>
-                                        <p className='font_text' onClick={() => memoDetailOn(i)}>{memo[i].memoComment}</p>
+                                        <p className='font_text' onClick={() => memoDetailOn(i)}>{memoArr[i].memoComment}</p>
                                     </div>
                                 </div>
                             )
                         })
                     }
 
-                    {/* memoDetail */}
-                    <div className={`memoDetail_content ${memoActive ? memoActive : ""}`}>
-                        {selectedMemoIndex !== null && <MemoView memo={memoListState[selectedMemoIndex]} />}
-                        <div className='memoDetail_btn'>
-                            <button className='icon-edit-alt'
-                                onClick={() => {
-                                    memoCorrectOn(selectedMemoIndex);
-                                    memoDetailClose();
-                                }}></button>
-                            <button className='icon-cancel' onClick={memoDetailClose}></button>
-                        </div>
-                    </div>
-                    {/* memoDetail */}
-
-                    {/* memoCorrect */}
-                    <div className={`memoDetail_content ${memoCorrectActive ? memoCorrectActive : ""}`}>
-                        {memoCorrectIndex !== null && <MemoCorrect memo={memoListState[memoCorrectIndex]} />}
-                        <div className='memoDetail_btn'>
-                            <button className='icon-clipboard'
-                                onClick={() => {
-                                    memoDetailOn(memoCorrectIndex);
-                                    memoCorrectClose();
-                                }}></button>
-                            <button className='icon-cancel' onClick={memoCorrectClose}></button>
-                        </div>
-                        <div className='page_btn'>
-                            <button className='icon-ok-circled' onClick={() => memoCorrectBtn(memoCorrectIndex)}></button>
-                        </div>
-                    </div>
-                    {/* memoCorrect */}
-
-                    {/* book add */}
-                    <div className={`book_add memo_add ${bookAddActive ? bookAddActive : ""}`}>
-                        <div className='memo_btn flex-end'>
-                            <button className='icon-ok' onClick={bookSaveBtn}></button>
-                            <button className='icon-cancel' onClick={bookAddClose}></button>
-                        </div>
-                        <div className='memo_input'>
-                            <input type='text' placeholder='newBook' ref={newBook}></input>
-                        </div>
-                    </div>
-                    {/* bookadd */}
-
-                    {/* memoAdd */}
-                    <div className={`memo_add ${memoAddActive ? memoAddActive : ""}`}>
-                        <div className='memo_btn flex-end'>
-                            <button className='icon-ok' onClick={MemoSaveBtn}></button>
-                            <button className='icon-cancel' onClick={memoAddClose}></button>
-                        </div>
-                        <textarea className='scroll' placeholder='newMemoComment' ref={newMemoComment}></textarea>
-                        <div className='memo_input'>
-                            <input type='text' placeholder='newMemoSource' ref={newMemoSource}></input>
-                        </div>
-                    </div>
-                    {/* memoAdd */}
-
                 </div>
+
+                {/* memoDetail */}
+                <div className={`memoDetail_content ${memoActive ? memoActive : ""}`}>
+                    {selectedMemoIndex !== null && <MemoView memo={memoArr[selectedMemoIndex]} />}
+                    <div className='memoDetail_btn'>
+                        <button className='icon-edit-alt'
+                            onClick={() => {
+                                memoCorrectOn(selectedMemoIndex);
+                                memoDetailClose();
+                            }}></button>
+                        <button className='icon-cancel' onClick={memoDetailClose}></button>
+                    </div>
+                </div>
+                {/* memoDetail */}
+
+                {/* memoCorrect */}
+                <div className={`memoDetail_content ${memoCorrectActive ? memoCorrectActive : ""}`}>
+                    {memoCorrectIndex !== null && <MemoCorrect memo={memoArr[memoCorrectIndex]} />}
+                    <div className='memoDetail_btn'>
+                        <button className='icon-clipboard'
+                            onClick={() => {
+                                memoDetailOn(memoCorrectIndex);
+                                memoCorrectClose();
+                            }}></button>
+                        <button className='icon-cancel' onClick={memoCorrectClose}></button>
+                    </div>
+                    <div className='page_btn'>
+                        <button className='icon-ok-circled' onClick={() => memoCorrectBtn(memoCorrectIndex)}></button>
+                    </div>
+                </div>
+                {/* memoCorrect */}
+
+                {/* book add */}
+                <div className={`book_add memo_add ${bookAddActive ? bookAddActive : ""}`}>
+                    <div className='memo_input'>
+                        <input type='text' placeholder='newBook' ref={newBook}></input>
+                    </div>
+                    <div className='memo_btn flex-end'>
+                        <button className='icon-ok' onClick={bookSaveBtn}></button>
+                        <button className='icon-cancel' onClick={bookAddClose}></button>
+                    </div>
+                </div>
+                {/* bookadd */}
+
+                {/* memoAdd */}
+                <div className={`memo_add ${memoAddActive ? memoAddActive : ""}`}>
+                    <textarea className='scroll' placeholder='newMemoComment' ref={newMemoComment}></textarea>
+                    <div className='memo_input'>
+                        <input type='text' placeholder='newMemoSource' ref={newMemoSource}></input>
+                    </div>
+                    <div className='memo_btn flex-end'>
+                        <button className='icon-ok' onClick={MemoSaveBtn}></button>
+                        <button className='icon-cancel' onClick={memoAddClose}></button>
+                    </div>
+                </div>
+                {/* memoAdd */}
+
             </div>
         </div >
 
@@ -345,6 +390,7 @@ function Memo() {
     }
 
     function MemoCorrect({ memo }) {
+        console.log(memo);
 
         return (
             <div className="memoCorrect_content_pos">
