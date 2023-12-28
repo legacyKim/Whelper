@@ -9,8 +9,6 @@ function Memo() {
     let memoListState = useSelector((state) => state.memoData);
     let bookListState = useSelector((state) => state.bookData);
 
-    console.log(memoListState);
-
     // book Add
     const [isBookAdd, setIsBookAdd] = useState(false);
     const [bookAddActive, setBookAddActive] = useState('');
@@ -76,15 +74,13 @@ function Memo() {
     const [memoActive, setMemoActive] = useState('');
     const [selectedMemoIndex, setSelectedMemoIndex] = useState(null);
 
-    const memoDetailOn = (id) => {
-        setSelectedMemoIndex(!isMemoDetail);
+    const memoDetailOn = (a) => {
+        setSelectedMemoIndex(a.id);
         if (!isMemoDetail) {
             setMemoActive('active');
         } else {
             setMemoActive('');
         }
-        setSelectedMemoIndex(id);
-        console.log(id);
     };
 
     const memoDetailClose = () => {
@@ -109,16 +105,13 @@ function Memo() {
     const [memoCorrectActive, setMemoCorrectActive] = useState('');
     const [memoCorrectIndex, setMemoCorrectIndex] = useState(null);
 
-    const memoCorrectOn = (i) => {
-        setMemoCorrectIndex(!isMemoDetail);
+    const memoCorrectOn = (a) => {
+        setMemoCorrectIndex(a.id);
         if (!isMemoCorrect) {
             setMemoCorrectActive('active');
         } else {
             setMemoCorrectActive('');
         }
-
-        console.log(i);
-        setMemoCorrectIndex(i);
     };
 
     const memoCorrectClose = () => {
@@ -156,7 +149,6 @@ function Memo() {
         setTimeout(() => {
             setIsBookList(false);
         }, 300);
-
         setBookListActive('');
     };
 
@@ -202,8 +194,9 @@ function Memo() {
     var correctMemoSource = useRef();
     var correctMemoComment = useRef();
 
-    const memoCorrectBtn = (memoCorrectIndex) => {
-        const memoId = memoCorrectIndex;
+    const memoCorrectBtn = (a) => {
+
+        const memoId = a.id;
         const updateMemoSource = correctMemoSource.current.value;
         const updateMemoComment = correctMemoComment.current.value;
 
@@ -231,6 +224,10 @@ function Memo() {
     const [bookTitle, setBookTitle] = useState(bookLocalStorage);
 
     const bookChange = (i) => {
+
+        setSelectedMemoIndex(null)
+        setMemoCorrectIndex(null)
+
         if (i === undefined) {
             setBookTitle("전체")
             localStorage.removeItem('bookTitle');
@@ -252,6 +249,17 @@ function Memo() {
     }, [bookTitle])
     //// book name check
 
+    // memoArr effect
+
+    const [memoArrActive, setMemoArrActive] = useState('active');
+
+    useEffect(()=>{
+        setMemoArrActive('');
+        setTimeout(()=>{
+            setMemoArrActive('active');
+        }, 300)
+    }, [bookTitle])
+
     return (
 
         <div className='common_page'>
@@ -266,13 +274,13 @@ function Memo() {
                                 <li>
                                     <span className='all' onClick={() => {
                                         bookListClose();
-                                        bookChange();
+                                        bookChange();   
                                     }}>전체</span>
                                 </li>
                                 {
                                     bookListState.map(function (k, i) {
                                         return (
-                                            <li>
+                                            <li key={i}>
                                                 <span className='' onClick={() => {
                                                     bookListClose();
                                                     bookChange(i);
@@ -290,18 +298,18 @@ function Memo() {
                     </div>
                 </div>
 
-                <div className='memo_wrap'>
+                <div className='memo_wrap reverse'>
 
                     {
                         memoArr.map(function (a, i) {
                             return (
-                                <div className='memo_content' key={i}>
+                                <div className={`memo_content ${memoArr !== null ? memoArrActive : "" }`} key={i}>
                                     <div className='memoList_btn'>
-                                        <button className='icon-edit-alt' onClick={() => memoCorrectOn(i)}></button>
+                                        <button className='icon-edit-alt' onClick={() => memoCorrectOn(a)}></button>
                                         {/* <button className='icon-trash' onClick={() => delMemoList(i)}></button> */}
                                     </div>
                                     <div className='memo_content_box'>
-                                        <p className='font_text' onClick={() => memoDetailOn(i)}>{memoArr[i].memoComment}</p>
+                                        <p className='font_text' onClick={() => memoDetailOn(a)}>{memoArr[i].memoComment}</p>
                                     </div>
                                 </div>
                             )
@@ -316,7 +324,7 @@ function Memo() {
                     <div className='memoDetail_btn'>
                         <button className='icon-edit-alt'
                             onClick={() => {
-                                memoCorrectOn(selectedMemoIndex);
+                                memoCorrectOn(memoArr[selectedMemoIndex]);
                                 memoDetailClose();
                             }}></button>
                         <button className='icon-cancel' onClick={memoDetailClose}></button>
@@ -330,13 +338,13 @@ function Memo() {
                     <div className='memoDetail_btn'>
                         <button className='icon-clipboard'
                             onClick={() => {
-                                memoDetailOn(memoCorrectIndex);
+                                memoDetailOn(memoArr[memoCorrectIndex]);
                                 memoCorrectClose();
                             }}></button>
                         <button className='icon-cancel' onClick={memoCorrectClose}></button>
                     </div>
                     <div className='page_btn'>
-                        <button className='icon-ok-circled' onClick={() => memoCorrectBtn(memoCorrectIndex)}></button>
+                        <button className='icon-ok-circled' onClick={() => memoCorrectBtn(memoArr[memoCorrectIndex])}></button>
                     </div>
                 </div>
                 {/* memoCorrect */}
@@ -390,7 +398,6 @@ function Memo() {
     }
 
     function MemoCorrect({ memo }) {
-        console.log(memo);
 
         return (
             <div className="memoCorrect_content_pos">

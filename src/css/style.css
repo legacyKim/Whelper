@@ -28,9 +28,9 @@ main { position: absolute; display: block; top: 50%; left: 50%; transform: trans
 /* animation */
 
 .fade-enter { opacity: 0; } 
-.fade-enter-active { opacity: 1; transition: all 0.3s ease-in-out; } 
+.fade-enter-active { opacity: 1; transition: opacity 0.3s; } 
 .fade-exit { opacity: 1; } 
-.fade-exit-active { opacity: 0; transition: all 0.3s ease-in-out; } 
+.fade-exit-active { opacity: 0; transition: opacity 0.3s; } 
 
 /* header */
 
@@ -90,7 +90,9 @@ main { position: absolute; display: block; top: 50%; left: 50%; transform: trans
 .book_list_box li>span:hover { color: var(--main-color); } 
 
 .memo_wrap { display: flex; justify-content: flex-start; align-items: center; flex-wrap: wrap; } 
-.memo_content { width: 100%; margin-bottom:0.666%; } 
+.memo_wrap.reverse { display: flex; justify-content: flex-start; align-items: center; flex-direction: column-reverse; flex-wrap: wrap; } 
+.memo_content { width: 100%; margin-bottom:0.666%; opacity: 0; transition: all 0.3s ease-in-out; } 
+.memo_content.active {opacity: 1;}
 .memo_content:nth-child(4n) { margin-right: 0; } 
 .memo_content_box { background: var(--box-color); border-radius: 4px; padding: 12px; } 
 .memo_content_box>p { display: -webkit-box; -webkit-line-clamp: 3; min-height: 68px; /* 라인 수 */
