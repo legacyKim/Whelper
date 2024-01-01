@@ -151,14 +151,6 @@ function Memo() {
         }, 300);
         setBookListActive('');
     };
-
-    useEffect(() => {
-        if (bookListActive) {
-            setBookListActive('active');
-        } else {
-            setBookListActive('');
-        }
-    }, [bookListActive]);
     //// book list
 
     // memo save
