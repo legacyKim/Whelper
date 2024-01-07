@@ -85,7 +85,6 @@ function App() {
     }
 
     useEffect(() => {
-        // local storage
         localStorage.setItem('searchHistory', JSON.stringify(searchArr));
         setSearchInputValue(searchArr[searchArr.length - 1]);
         newSearch.current.addEventListener('click', (e) => e.stopPropagation())
@@ -102,7 +101,7 @@ function App() {
 
     return (
 
-        <MyContext.Provider value={{ searchArr, setSearchArr }}>
+        <MyContext.Provider value={{ searchArr, setSearchArr, scrollPosition, setScrollPosition }}>
             <div id='app' className={`App ${theme}`}>
 
                 <Routes></Routes>

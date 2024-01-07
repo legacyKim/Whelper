@@ -126,8 +126,6 @@ function Write() {
         return parsedContent;
     }, []);
 
-    console.log(titleValue)
-
     const subTitleValue = useMemo(() => {
         const parsedContent = writeSubTitleLocal !== null ? JSON.parse(writeSubTitleLocal) : contentPlaceholder;
         return parsedContent;

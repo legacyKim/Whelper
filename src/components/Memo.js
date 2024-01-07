@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import { useSelector, useDispatch } from "react-redux"
+import MyContext from '../context'
 
 import '../css/style.css';
 import { memoListDataAdd, memoListDataDelete, memoListDataUpdate, bookListDataAdd } from "../store.js"
@@ -87,7 +88,6 @@ function Memo() {
         setTimeout(() => {
             setIsMemoDetail(false);
         }, 300);
-
         setMemoActive('');
     };
 
@@ -140,6 +140,8 @@ function Memo() {
         setIsBookList(!isBookList);
         if (!isBookList) {
             setBookListActive('active');
+        } else if (bookListActive === 'none') {
+            setBookListActive('active');
         } else {
             setBookListActive('');
         }
@@ -151,6 +153,16 @@ function Memo() {
         }, 300);
         setBookListActive('');
     };
+
+    // booklist box click default
+    useEffect(() => {
+        if (bookListActive !== 'active') {
+            setTimeout(() => {
+                setBookListActive('none');
+            }, 100);
+        }
+
+    }, [bookListActive])
     //// book list
 
     // memo save
@@ -161,6 +173,7 @@ function Memo() {
     var newMemoComment = useRef(null);
 
     const MemoSaveBtn = () => {
+
         const id = memoListState.length;
         const memoComment = newMemoComment.current.value;
         var memoSource = newMemoSource.current.value;
@@ -230,6 +243,7 @@ function Memo() {
     }
 
     const [memoArr, setMemoArr] = useState(memoListState);
+    const [memoArrActive, setMemoArrActive] = useState('active');
 
     useEffect(() => {
         if (bookLocalStorage === null) {
@@ -238,19 +252,14 @@ function Memo() {
         } else {
             setMemoArr(memoListState.filter((item) => item.memoSource === bookTitle));
         }
+
     }, [bookTitle])
     //// book name check
 
-    // memoArr effect
+    // context api scroll pos
+    const { scrollPosition, setScrollPosition } = useContext(MyContext);
 
-    const [memoArrActive, setMemoArrActive] = useState('active');
-
-    useEffect(()=>{
-        setMemoArrActive('');
-        setTimeout(()=>{
-            setMemoArrActive('active');
-        }, 300)
-    }, [bookTitle])
+    console.log(scrollPosition);
 
     return (
 
@@ -258,15 +267,15 @@ function Memo() {
             <div className='content_area reverse'>
                 <div className='book_list_pos'>
                     <div className='book_list'>
-                        <div className='book_list_current'>
-                            <i className='icon-pin'></i><strong onClick={bookListOn}>{bookTitle}</strong>
+                        <div className={`book_list_current ${scrollPosition > 0 ? "scroll_event" : ""}`} onClick={bookListOn}>
+                            <i className='icon-pin'></i><strong>{bookTitle}</strong>
                         </div>
                         <div className={`book_list_box ${bookListActive ? bookListActive : ''}`}>
                             <ul className='scroll'>
                                 <li>
                                     <span className='all' onClick={() => {
                                         bookListClose();
-                                        bookChange();   
+                                        bookChange();
                                     }}>전체</span>
                                 </li>
                                 {
@@ -284,24 +293,25 @@ function Memo() {
                             </ul>
                         </div>
                     </div>
-                    <div className='memo_btn'>
+                    <div className={`memo_btn ${scrollPosition > 0 ? "scroll_event" : ""}`}>
                         <button onClick={memoAddOn} className='icon-pencil-alt'></button>
                         <button onClick={bookAddOn} className='icon-book'></button>
                     </div>
                 </div>
 
-                <div className='memo_wrap reverse'>
+                <div className={`memo_wrap reverse ${memoArr !== null ? memoArrActive : ""}`}>
 
                     {
                         memoArr.map(function (a, i) {
                             return (
-                                <div className={`memo_content ${memoArr !== null ? memoArrActive : "" }`} key={i}>
+                                <div className='memo_content' key={i}>
                                     <div className='memoList_btn'>
                                         <button className='icon-edit-alt' onClick={() => memoCorrectOn(a)}></button>
                                         {/* <button className='icon-trash' onClick={() => delMemoList(i)}></button> */}
                                     </div>
                                     <div className='memo_content_box'>
                                         <p className='font_text' onClick={() => memoDetailOn(a)}>{memoArr[i].memoComment}</p>
+                                        <button>{memoArr[i].memoSource}</button>
                                     </div>
                                 </div>
                             )
