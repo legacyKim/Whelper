@@ -103,7 +103,6 @@ main { position: absolute; display: block; top: 50%; left: 50%; transform: trans
 .memo_wrap { display: flex; justify-content: flex-start; align-items: center; flex-wrap: wrap; padding-top: 32px; } 
 .memo_wrap.reverse { } 
 .memo_wrap.active { opacity: 1 !important; } 
-.memo_wrap>div { display: flex; justify-content: flex-start; align-items: center; flex-direction: column-reverse; flex-wrap: wrap; width: 100%; } 
 .memo_content { width: 100%; margin-bottom:0.666%; transition: all 0.3s ease-in-out; } 
 .memo_content:nth-child(4n) { margin-right: 0; } 
 .memo_content_box { background: var(--box-color); border-radius: 4px; padding: 12px; } 

@@ -299,27 +299,22 @@ function Memo() {
                 </div>
 
                 <div className={`memo_wrap reverse`}>
-                    <TransitionGroup>
-                        {
-                            memoArr.map(function (a, i) {
-                                return (
-                                    <CSSTransition timeout={300} classNames="memo" key={i}>
-                                        <div className='memo_content'>
-                                            <div className='memoList_btn'>
-                                                <button className='icon-edit-alt' onClick={() => memoCorrectOn(a)}></button>
-                                                {/* <button className='icon-trash' onClick={() => delMemoList(i)}></button> */}
-                                            </div>
-                                            <div className='memo_content_box'>
-                                                <p className='font_text' onClick={() => memoDetailOn(a)}>{memoArr[i].memoComment}</p>
-                                                <button>{memoArr[i].memoSource}</button>
-                                            </div>
-                                        </div>
-                                    </CSSTransition>
-                                )
-                            })
-                        }
-                    </TransitionGroup>
-
+                    {
+                        memoArr.map(function (a, i) {
+                            return (
+                                <div className='memo_content' key={i}>
+                                    <div className='memoList_btn'>
+                                        <button className='icon-edit-alt' onClick={() => memoCorrectOn(a)}></button>
+                                        {/* <button className='icon-trash' onClick={() => delMemoList(i)}></button> */}
+                                    </div>
+                                    <div className='memo_content_box'>
+                                        <p className='font_text' onClick={() => memoDetailOn(a)}>{memoArr[i].memoComment}</p>
+                                        <button>{memoArr[i].memoSource}</button>
+                                    </div>
+                                </div>
+                            )
+                        })
+                    }
                 </div>
 
                 {/* memoDetail */}
