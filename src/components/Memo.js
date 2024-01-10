@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
 import { useSelector, useDispatch } from "react-redux"
 import MyContext from '../context'
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
 
 import '../css/style.css';
 import { memoListDataAdd, memoListDataDelete, memoListDataUpdate, bookListDataAdd } from "../store.js"
@@ -73,10 +74,13 @@ function Memo() {
     // about memoDetail ShowHide
     const [isMemoDetail, setIsMemoDetail] = useState(false);
     const [memoActive, setMemoActive] = useState('');
-    const [selectedMemoIndex, setSelectedMemoIndex] = useState(null);
+
+    // memo correct, detail common state
+    const [memoCurrent, setMemoCurrent] = useState(null);
 
     const memoDetailOn = (a) => {
-        setSelectedMemoIndex(a.id);
+
+        setMemoCurrent(a);
         if (!isMemoDetail) {
             setMemoActive('active');
         } else {
@@ -103,10 +107,10 @@ function Memo() {
     // about memoCorrect ShowHide
     const [isMemoCorrect, setIsMemoCorrect] = useState(false);
     const [memoCorrectActive, setMemoCorrectActive] = useState('');
-    const [memoCorrectIndex, setMemoCorrectIndex] = useState(null);
 
     const memoCorrectOn = (a) => {
-        setMemoCorrectIndex(a.id);
+
+        setMemoCurrent(a);
         if (!isMemoCorrect) {
             setMemoCorrectActive('active');
         } else {
@@ -230,9 +234,6 @@ function Memo() {
 
     const bookChange = (i) => {
 
-        setSelectedMemoIndex(null)
-        setMemoCorrectIndex(null)
-
         if (i === undefined) {
             setBookTitle("전체")
             localStorage.removeItem('bookTitle');
@@ -258,8 +259,6 @@ function Memo() {
 
     // context api scroll pos
     const { scrollPosition, setScrollPosition } = useContext(MyContext);
-
-    console.log(scrollPosition);
 
     return (
 
@@ -299,34 +298,37 @@ function Memo() {
                     </div>
                 </div>
 
-                <div className={`memo_wrap reverse ${memoArr !== null ? memoArrActive : ""}`}>
-
-                    {
-                        memoArr.map(function (a, i) {
-                            return (
-                                <div className='memo_content' key={i}>
-                                    <div className='memoList_btn'>
-                                        <button className='icon-edit-alt' onClick={() => memoCorrectOn(a)}></button>
-                                        {/* <button className='icon-trash' onClick={() => delMemoList(i)}></button> */}
-                                    </div>
-                                    <div className='memo_content_box'>
-                                        <p className='font_text' onClick={() => memoDetailOn(a)}>{memoArr[i].memoComment}</p>
-                                        <button>{memoArr[i].memoSource}</button>
-                                    </div>
-                                </div>
-                            )
-                        })
-                    }
+                <div className={`memo_wrap reverse`}>
+                    <TransitionGroup>
+                        {
+                            memoArr.map(function (a, i) {
+                                return (
+                                    <CSSTransition timeout={300} classNames="memo" key={i}>
+                                        <div className='memo_content'>
+                                            <div className='memoList_btn'>
+                                                <button className='icon-edit-alt' onClick={() => memoCorrectOn(a)}></button>
+                                                {/* <button className='icon-trash' onClick={() => delMemoList(i)}></button> */}
+                                            </div>
+                                            <div className='memo_content_box'>
+                                                <p className='font_text' onClick={() => memoDetailOn(a)}>{memoArr[i].memoComment}</p>
+                                                <button>{memoArr[i].memoSource}</button>
+                                            </div>
+                                        </div>
+                                    </CSSTransition>
+                                )
+                            })
+                        }
+                    </TransitionGroup>
 
                 </div>
 
                 {/* memoDetail */}
                 <div className={`memoDetail_content ${memoActive ? memoActive : ""}`}>
-                    {selectedMemoIndex !== null && <MemoView memo={memoArr[selectedMemoIndex]} />}
+                    {memoCurrent !== null && <MemoView memo={memoCurrent} />}
                     <div className='memoDetail_btn'>
                         <button className='icon-edit-alt'
                             onClick={() => {
-                                memoCorrectOn(memoArr[selectedMemoIndex]);
+                                memoCorrectOn(memoCurrent);
                                 memoDetailClose();
                             }}></button>
                         <button className='icon-cancel' onClick={memoDetailClose}></button>
@@ -336,17 +338,17 @@ function Memo() {
 
                 {/* memoCorrect */}
                 <div className={`memoDetail_content ${memoCorrectActive ? memoCorrectActive : ""}`}>
-                    {memoCorrectIndex !== null && <MemoCorrect memo={memoArr[memoCorrectIndex]} />}
+                    {memoCurrent !== null && <MemoCorrect memo={memoCurrent} />}
                     <div className='memoDetail_btn'>
                         <button className='icon-clipboard'
                             onClick={() => {
-                                memoDetailOn(memoArr[memoCorrectIndex]);
+                                memoDetailOn(memoCurrent);
                                 memoCorrectClose();
                             }}></button>
                         <button className='icon-cancel' onClick={memoCorrectClose}></button>
                     </div>
                     <div className='page_btn'>
-                        <button className='icon-ok-circled' onClick={() => memoCorrectBtn(memoArr[memoCorrectIndex])}></button>
+                        <button className='icon-ok-circled' onClick={() => memoCorrectBtn(memoCurrent)}></button>
                     </div>
                 </div>
                 {/* memoCorrect */}

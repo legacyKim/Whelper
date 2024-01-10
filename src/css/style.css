@@ -25,15 +25,20 @@ input { background-color: var(--box-color); }
 
 main { position: absolute; display: block; top: 50%; left: 50%; transform: translate(-50%, -50%); color: var(--font-color); text-align: center; } 
 
-/* animation */
 
+/* animation common */
 .fade-enter { opacity: 0; } 
 .fade-enter-active { opacity: 1; transition: opacity 0.3s; } 
 .fade-exit { opacity: 1; } 
-.fade-exit-active { opacity: 0; transition: opacity 0.3s; } 
+.fade-exit-active { opacity: 0; } 
+
+.memo-enter { opacity: 0; } 
+.memo-enter-active { opacity: 1; transition: top 0.3s; } 
+.memo-exit { opacity: 1; } 
+.memo-exit-active { opacity: 0; } 
+
 
 /* header */
-
 .menuWrap { position: relative; display: block; width: 100%; height: 100%; } 
 
 .header { position: fixed; top: 0; display: flex; justify-content: space-between; align-items: center; margin: 0 auto; z-index: 9; padding: 16px; width: 100%; transition: all 0.3s ease-in-out; } 
@@ -95,10 +100,11 @@ main { position: absolute; display: block; top: 50%; left: 50%; transform: trans
 .book_list_box li>span { position: relative; display: block; font-size: 14px; font-weight: 700; line-height: 1.6; color: var(--grey-color); white-space: nowrap; cursor: pointer; transition: all 0.3s ease-in-out; max-width: 160px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; } 
 .book_list_box li>span:hover { color: var(--main-color); } 
 
-.memo_wrap { display: flex; justify-content: flex-start; align-items: center; flex-wrap: wrap; opacity: 0; transition: all 0.3s ease-in-out; padding-top: 32px; } 
-.memo_wrap.reverse { display: flex; justify-content: flex-start; align-items: center; flex-direction: column-reverse; flex-wrap: wrap; } 
+.memo_wrap { display: flex; justify-content: flex-start; align-items: center; flex-wrap: wrap; padding-top: 32px; } 
+.memo_wrap.reverse { } 
 .memo_wrap.active { opacity: 1 !important; } 
-.memo_content { width: 100%; margin-bottom:0.666%; } 
+.memo_wrap>div { display: flex; justify-content: flex-start; align-items: center; flex-direction: column-reverse; flex-wrap: wrap; width: 100%; } 
+.memo_content { width: 100%; margin-bottom:0.666%; transition: all 0.3s ease-in-out; } 
 .memo_content:nth-child(4n) { margin-right: 0; } 
 .memo_content_box { background: var(--box-color); border-radius: 4px; padding: 12px; } 
 .memo_content_box>p { display: -webkit-box; -webkit-line-clamp: 3; min-height: 50px; /* 라인 수 */
