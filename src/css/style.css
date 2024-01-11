@@ -101,13 +101,15 @@ main { position: absolute; display: block; top: 50%; left: 50%; transform: trans
 .book_list_box li>span:hover { color: var(--main-color); } 
 
 .memo_wrap { display: flex; justify-content: flex-start; align-items: center; flex-wrap: wrap; padding-top: 32px; } 
-.memo_wrap.reverse { } 
+.memo_wrap.reverse { flex-direction: column-reverse; } 
 .memo_wrap.active { opacity: 1 !important; } 
 .memo_content { width: 100%; margin-bottom:0.666%; transition: all 0.3s ease-in-out; } 
 .memo_content:nth-child(4n) { margin-right: 0; } 
 .memo_content_box { background: var(--box-color); border-radius: 4px; padding: 12px; } 
 .memo_content_box>p { display: -webkit-box; -webkit-line-clamp: 3; min-height: 50px; /* 라인 수 */
  -webkit-box-orient: vertical; text-overflow: ellipsis; overflow: hidden; font-size:14px; font-weight: 500; line-height: 1.6; color: var(--font-color); white-space:pre-wrap; border: none; cursor: pointer; min-height: 50px; margin-bottom: 4px; } 
+.memo_content_box button { font-size: 13px; font-weight: 700; line-height: 1.4; color: var(--font-color); transition: all 0.3s ease-in-out; } 
+.memo_content_box button:hover { color: var(--main-color); } 
 
 .memoList_btn { position: relative; display: flex; justify-content: flex-end; align-items: center; margin-bottom: 8px; margin-right: -3px; } 
 .memo_add { position: fixed; display: flex; justify-content: flex-start; align-items: center; flex-wrap: wrap; bottom: -300px; left: 0; width: 100%; background-color: #222; padding: 16px; border-radius: 8px 8px 0 0; transition: all 0.3s ease-in-out; box-shadow: 0px 0px 22px 14px var(--shadow-color); } 
@@ -184,6 +186,8 @@ main { position: absolute; display: block; top: 50%; left: 50%; transform: trans
 .editor_btn button { font-size: 15px; border-radius: 50%; color: var(--font-color); transition: all 0.3s ease-in-out; padding: 2px; margin-right: 2px; } 
 .editor_btn button:last-child { margin-right: 0; } 
 .editor_btn button:hover { color:var(--main-color); } 
+
+.write_list .editor_highlight span { background: transparent; } 
 .editor_highlight span { background: linear-gradient(to top, rgba(255, 243, 150, 0.6) 95%, transparent 100%) } 
 
 /* main memo textarea */
@@ -200,10 +204,10 @@ main { position: absolute; display: block; top: 50%; left: 50%; transform: trans
 
 .view_page { position: relative; display: block; min-height: 100%; } 
 .view_common>* { margin-bottom:8px; } 
-.view_common .title span { font-size: 22px; font-weight: 700; line-height: 1.5; color: var(--font-color); letter-spacing: -0.5px; } 
-.view_common .subtitle span { font-size: 17px; font-weight: 500; line-height: 1.5; color: var(--font-color); letter-spacing: -0.5px; } 
+.view_common .title span { font-size: 19px; font-weight: 700; line-height: 1.5; color: var(--font-color); letter-spacing: -0.5px; } 
+.view_common .subtitle span { font-size: 16px; font-weight: 500; line-height: 1.5; color: var(--font-color); letter-spacing: -0.5px; } 
 .view_common .content { max-height: 66px; overflow: hidden; } 
-.view_common .content span { font-size: 14px; font-weight: inherit; line-height: 1.5; color: var(--font-color); white-space:pre-wrap; letter-spacing: -0.5px; } 
+.view_common .content span { font-size: 13px; font-weight: inherit; line-height: 1.5; color: var(--font-color); white-space:pre-wrap; letter-spacing: -0.5px; } 
 .view_content>b { position: absolute; top: 0; right: 0; display: block; font-size: 14px; font-weight: 700; line-height: 1.5; color: var(--font-color); opacity: 0.58; } 
 
 .write_btn { position: relative; display: flex; justify-content: flex-end; align-items: center; } 
@@ -243,6 +247,7 @@ main { position: absolute; display: block; top: 50%; left: 50%; transform: trans
 .page_btn { position: fixed; bottom: 24px; right: 24px; display: flex; justify-content: flex-start; flex-direction: column; align-items: center; } 
 .page_btn>* { margin-top: 8px; font-size: 22px; border-radius: 50%; color: var(--font-color); transition: all 0.3s ease-in-out; } 
 .page_btn>*:hover { color: var(--main-color); } 
+.page_btn>*.icon-edit-alt { font-size: 18px; } 
 
 .write_btn_cancel,
 .memo_view_close { background-color: salmon; border-radius: 50%; width: 16px; height: 16px; } 

@@ -260,6 +260,10 @@ function Memo() {
     // context api scroll pos
     const { scrollPosition, setScrollPosition } = useContext(MyContext);
 
+    const beReady = () => {
+        alert('go Book');
+    }
+
     return (
 
         <div className='common_page'>
@@ -309,7 +313,7 @@ function Memo() {
                                     </div>
                                     <div className='memo_content_box'>
                                         <p className='font_text' onClick={() => memoDetailOn(a)}>{memoArr[i].memoComment}</p>
-                                        <button>{memoArr[i].memoSource}</button>
+                                        <button onClick={beReady}>{memoArr[i].memoSource}</button>
                                     </div>
                                 </div>
                             )

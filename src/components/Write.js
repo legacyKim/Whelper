@@ -209,10 +209,6 @@ function Write() {
         const contentString = serialize(editorValue);
         const content = contentString;
 
-        // localStorage.removeItem('writeAnno');
-        // const annoString = serialize(editorValue);
-        // const anno = annoString;
-
         const keyword = keywordArr;
 
         dispatch(writeListDataAdd({ id, title, subTitle, content, keyword }));
