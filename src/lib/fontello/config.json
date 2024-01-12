@@ -283,28 +283,76 @@
       "src": "entypo"
     },
     {
-      "uid": "898ddc67cb7d9ae53dbd4cce78043e9e",
-      "css": "flow-cascade",
+      "uid": "a8cb1c217f02b073db3670c061cc54d2",
+      "css": "italic",
       "code": 59429,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "0c708edd8fae2376b3370aa56d40cf9e",
+      "css": "header",
+      "code": 61916,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "d4a4a38a40b728f46dad1de4ac950231",
+      "css": "underline",
+      "code": 61645,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "61c242c9e2134d5864d7fdd57b3c9289",
+      "css": "strike",
+      "code": 61644,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "3a230e539a4f3b904debd04c6c155034",
+      "css": "help",
+      "code": 59430,
       "src": "entypo"
     },
     {
-      "uid": "2a3cd95de2621bd87479396f236fd2a4",
-      "css": "heart-1",
-      "code": 59430,
-      "src": "websymbols"
-    },
-    {
-      "uid": "1526e1ee08023c1542cbf65d3a9afa93",
-      "css": "star",
+      "uid": "2c0b53280f82068f6bab4e2200025d9f",
+      "css": "chat",
       "code": 59431,
-      "src": "websymbols"
+      "src": "entypo"
     },
     {
-      "uid": "21115bb09fa242341cb91ed34710aa13",
-      "css": "attach",
+      "uid": "bcb868184ff9c35f8aef564f50c0d649",
+      "css": "feather",
       "code": 59432,
-      "src": "websymbols"
+      "src": "entypo"
+    },
+    {
+      "uid": "c3e5dafba1739ef33cc574c7484febf7",
+      "css": "quote",
+      "code": 59433,
+      "src": "entypo"
+    },
+    {
+      "uid": "ec347024a3640deebeeab53fd0d5ad03",
+      "css": "forward",
+      "code": 59434,
+      "src": "entypo"
+    },
+    {
+      "uid": "7d90b6cb3f3783170a96b09e5f0de6d5",
+      "css": "chart-bar",
+      "code": 59435,
+      "src": "entypo"
+    },
+    {
+      "uid": "40c9502d45c736a0a6ec45e6fbc28656",
+      "css": "ok-outline",
+      "code": 59436,
+      "src": "typicons"
+    },
+    {
+      "uid": "da6c4728f6175a4b99b122274b8f921c",
+      "css": "flow-split",
+      "code": 59437,
+      "src": "typicons"
     }
   ]
 }

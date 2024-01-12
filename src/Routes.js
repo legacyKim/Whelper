@@ -67,7 +67,7 @@ function Menu() {
                         <Route path="/components/Search/:searchInputValue" element={<Search />} />
 
                         <Route path="/components/Memo" element={<Memo MainMemoData={MainMemoData} />} />
-                        <Route path="/components/Book" element={<Book />} />
+                        {/* <Route path="/components/Book" element={<Book />} /> */}
 
                     </Routes>
                 </CSSTransition>

@@ -4,7 +4,7 @@ import MyContext from '../context'
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 
 import '../css/style.css';
-import { memoListDataAdd, memoListDataDelete, memoListDataUpdate, bookListDataAdd } from "../store.js"
+import { memoListDataAdd, memoListDataDelete, memoListDataUpdate, memoListAnno, bookListDataAdd } from "../store.js"
 
 function Memo() {
 
@@ -77,6 +77,8 @@ function Memo() {
 
     // memo correct, detail common state
     const [memoCurrent, setMemoCurrent] = useState(null);
+
+    console.log(memoCurrent);
 
     const memoDetailOn = (a) => {
 
@@ -165,7 +167,6 @@ function Memo() {
                 setBookListActive('none');
             }, 100);
         }
-
     }, [bookListActive])
     //// book list
 
@@ -174,16 +175,18 @@ function Memo() {
 
     const dispatch = useDispatch();
     var newMemoSource = useRef(null);
+    var newMemoAuthor = useRef(null);
     var newMemoComment = useRef(null);
 
     const MemoSaveBtn = () => {
 
         const id = memoListState.length;
         const memoComment = newMemoComment.current.value;
+        var memoAuthor = newMemoAuthor.current.value;
         var memoSource = newMemoSource.current.value;
 
-        dispatch(memoListDataAdd({ id, memoComment, memoSource }));
-        setMemo((prevMemo) => [...prevMemo, { id, memoComment, memoSource }]);
+        dispatch(memoListDataAdd({ id, memoComment, memoAuthor, memoSource }));
+        setMemo((prevMemo) => [...prevMemo, { id, memoComment, memoAuthor, memoSource }]);
 
     };
 
@@ -201,16 +204,18 @@ function Memo() {
 
     // memo correct btn
     var correctMemoSource = useRef();
+    var correctMemoAuthor = useRef();
     var correctMemoComment = useRef();
 
     const memoCorrectBtn = (a) => {
-
         const memoId = a.id;
         const updateMemoSource = correctMemoSource.current.value;
+        const updateMemoAuthor = correctMemoAuthor.current.value;
         const updateMemoComment = correctMemoComment.current.value;
 
-        dispatch(memoListDataUpdate({ memoId, updateMemoSource, updateMemoComment }));
+        dispatch(memoListDataUpdate({ memoId, updateMemoSource, updateMemoAuthor, updateMemoComment }));
         setMemoCorrectActive('');
+        setMemoActive('active')
     };
     //// memo correct btn
 
@@ -233,7 +238,6 @@ function Memo() {
     const [bookTitle, setBookTitle] = useState(bookLocalStorage);
 
     const bookChange = (i) => {
-
         if (i === undefined) {
             setBookTitle("전체")
             localStorage.removeItem('bookTitle');
@@ -249,7 +253,7 @@ function Memo() {
     useEffect(() => {
         if (bookLocalStorage === null) {
             setBookTitle("전체")
-            setMemoArr(memoListState)
+            setMemoArr(memoListState);
         } else {
             setMemoArr(memoListState.filter((item) => item.memoSource === bookTitle));
         }
@@ -259,10 +263,49 @@ function Memo() {
 
     // context api scroll pos
     const { scrollPosition, setScrollPosition } = useContext(MyContext);
+    //// context api scroll pos
 
-    const beReady = () => {
-        alert('go Book');
+    const bookFilter = (i) => {
+        localStorage.setItem('bookTitle', memoArr[i].memoSource);
+        setBookTitle(memoArr[i].memoSource);
     }
+
+    const refreshTitle = (e) => {
+        e.stopPropagation();
+        localStorage.removeItem('bookTitle')
+        setBookTitle("전체")
+    }
+
+    // memo Annotation add
+    const [memoAnnoActive, setMemoAnnoActive] = useState();
+
+    useEffect(() => {
+        if (memoAnnoActive === 'active') {
+            setMemoAnnoActive('active')
+        } else {
+            setMemoAnnoActive('')
+        }
+    }, [memoAnnoActive])
+
+    var newMemoAnno = useRef();
+
+    const memoAnnoBtn = (memo) => {
+
+        const memoId = memo.id;
+        const memoAnno = newMemoAnno.current.value;
+
+        const largestKey = Math.max(...Object.keys(memo.memoAnnotation).map(key => parseInt(key)));
+        const newKey = (largestKey + 1).toString();
+        const memoAnnoIndex = newKey;
+
+        dispatch(memoListAnno({ memoId, memoAnno, memoAnnoIndex }));
+        setMemoAnnoActive('')
+    }
+
+    // const memoAnnoCorrectBtn = (memo) => {
+    //     const memoId = memo.id;
+    //     const memoAnno = newMemoAnno.current.value;
+    // }
 
     return (
 
@@ -271,7 +314,9 @@ function Memo() {
                 <div className='book_list_pos'>
                     <div className='book_list'>
                         <div className={`book_list_current ${scrollPosition > 0 ? "scroll_event" : ""}`} onClick={bookListOn}>
-                            <i className='icon-pin'></i><strong>{bookTitle}</strong>
+                            <i className='icon-pin'></i>
+                            <strong>{bookTitle}</strong>
+                            <b onClick={(e) => refreshTitle(e)} className={`icon-cancel ${bookTitle !== '전체' ? 'active' : ''}`}></b>
                         </div>
                         <div className={`book_list_box ${bookListActive ? bookListActive : ''}`}>
                             <ul className='scroll'>
@@ -313,7 +358,10 @@ function Memo() {
                                     </div>
                                     <div className='memo_content_box'>
                                         <p className='font_text' onClick={() => memoDetailOn(a)}>{memoArr[i].memoComment}</p>
-                                        <button onClick={beReady}>{memoArr[i].memoSource}</button>
+                                        <div className='memo_content_btn_box'>
+                                            <button onClick={() => bookFilter(i)}>{memoArr[i].memoSource}</button>
+                                            <span>{memoArr[i].memoAuthor}</span>
+                                        </div>
                                     </div>
                                 </div>
                             )
@@ -325,6 +373,9 @@ function Memo() {
                 <div className={`memoDetail_content ${memoActive ? memoActive : ""}`}>
                     {memoCurrent !== null && <MemoView memo={memoCurrent} />}
                     <div className='memoDetail_btn'>
+                        <button className='icon-flow-split' onClick={() => {
+                            setMemoAnnoActive('active');
+                        }}></button>
                         <button className='icon-edit-alt'
                             onClick={() => {
                                 memoCorrectOn(memoCurrent);
@@ -366,9 +417,10 @@ function Memo() {
 
                 {/* memoAdd */}
                 <div className={`memo_add ${memoAddActive ? memoAddActive : ""}`}>
-                    <textarea className='scroll' placeholder='newMemoComment' ref={newMemoComment}></textarea>
+                    <textarea className='scroll' placeholder='  Comment' ref={newMemoComment}></textarea>
                     <div className='memo_input'>
                         <input type='text' placeholder='newMemoSource' ref={newMemoSource}></input>
+                        <input type='text' placeholder='newMemoAuthor' ref={newMemoAuthor}></input>
                     </div>
                     <div className='memo_btn flex-end'>
                         <button className='icon-ok' onClick={MemoSaveBtn}></button>
@@ -385,19 +437,52 @@ function Memo() {
     function MemoView({ memo }) {
 
         return (
-            <div className='memoDetail_content_pos'>
+            <div className='memoDetail_content_pos scroll'>
                 <ul className='memoDetail_content_info'>
                     <li>
                         <strong>출처</strong>
-                        <span className='font_text color_w'>{memo.memoSource}</span>
+                        <span className=''>{memo.memoSource}</span>
+                    </li>
+                    <li>
+                        <strong>저자</strong>
+                        <span className=''>{memo.memoAuthor}</span>
                     </li>
                 </ul>
-                <div className='scroll'>
-                    <p className='font_text color_w'>{memo.memoComment}</p>
+                <div className='memo_comment_box scroll'>
+                    <p className=''>{memo.memoComment}</p>
                 </div>
+
+                <div className={`memo_anno_add ${memoAnnoActive ? 'active' : ''}`}>
+                    <input type="text" placeholder="memo_annotation_add" className="memo_anno_input" ref={newMemoAnno}></input>
+                    <button className='icon-ok' onClick={() => memoAnnoBtn(memo)}></button>
+                    <button className='icon-cancel' onClick={() => setMemoAnnoActive('')}></button>
+                </div>
+                {memo.memoAnnotation !== null && <MemoAnno memo={memo} />}
             </div>
         )
+    }
 
+    function MemoAnno({ memo }) {
+        return (
+            <ul className='memo_annotation'>
+                {
+                    Object.values(memo.memoAnnotation).map(function (m, i) {
+                        return (
+                            <li key={i}>
+                                <div className='memo_annotation_fac'>
+                                    <i className='icon-level-down'></i>
+                                    <div className='memo_annotation_fac_box'>
+                                        <p>{memo.memoAnnotation[i]}</p>
+                                        {/* <input type='text' /> */}
+                                        <button className='icon-feather'></button>
+                                    </div>
+                                </div>
+                            </li>
+                        )
+                    })
+                }
+            </ul>
+        )
     }
 
     function MemoCorrect({ memo }) {
@@ -409,12 +494,15 @@ function Memo() {
                         <strong>출처</strong>
                         <input type="text" placeholder="correctMemoSource" className="memo_source" defaultValue={memo.memoSource} ref={correctMemoSource}></input>
                     </li>
+                    <li>
+                        <strong>저자</strong>
+                        <input type="text" placeholder="correctMemoSource" className="memo_source" defaultValue={memo.memoAuthor} ref={correctMemoAuthor}></input>
+                    </li>
                 </ul>
                 <textarea type="text" plsaceholder="correctMemoComment" className="memo_comment scroll" defaultValue={memo.memoComment} ref={correctMemoComment}></textarea>
             </div>
         )
     }
-
 }
 
 export default Memo;

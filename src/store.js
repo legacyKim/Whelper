@@ -38,7 +38,19 @@ let memoData = createSlice({
         memoListDataUpdate(state, updateMemoList) {
             const updateMemoId = updateMemoList.payload.memoId;
             state[updateMemoId].memoSource = updateMemoList.payload.updateMemoSource;
+            state[updateMemoId].memoAuthor = updateMemoList.payload.updateMemoAuthor;
             state[updateMemoId].memoComment = updateMemoList.payload.updateMemoComment;
+        },
+        memoListAnno(state, updateMemoList) {
+            const updateMemoId = updateMemoList.payload.memoId;
+            const newAnnotation = updateMemoList.payload.memoAnno;
+            const memoAnnoIndex = updateMemoList.payload.memoAnnoIndex;
+
+            // 이미 memoAnnotation이 객체인 경우, 배열에 새로운 주석을 추가
+            state[updateMemoId].memoAnnotation = {
+                ...state[updateMemoId].memoAnnotation,
+                [memoAnnoIndex]: newAnnotation,
+            };
         },
         memoListDataDelete(state, deleteMemoList) {
             const deleteMemoId = deleteMemoList.payload.id;
@@ -70,7 +82,7 @@ let bookData = createSlice({
 })
 
 export const { writeListDataAdd, writeListDataUpdate, writeListDataDelete } = WriteData.actions;
-export const { memoListDataAdd, memoListDataDelete, memoListDataUpdate } = memoData.actions;
+export const { memoListDataAdd, memoListDataDelete, memoListDataUpdate, memoListAnno } = memoData.actions;
 export const { cateListDataAdd } = cateData.actions;
 export const { bookListDataAdd } = bookData.actions;
 

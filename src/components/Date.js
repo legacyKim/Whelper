@@ -24,8 +24,8 @@ function Date() {
         return (
             <li>
                 <Link to={`/components/`}>
-                    <strong>제목</strong>
-                    <span>23.10.22</span>
+                    {/* <strong>제목</strong>
+                    <span>23.10.22</span> */}
                 </Link>
             </li>
         )

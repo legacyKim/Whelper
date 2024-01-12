@@ -62,7 +62,7 @@
 .write_list>p { position: relative; display: block; font-size: 16px; font-weight: 400; line-height: 1.5; color: var(--font-color); display: -webkit-box; word-wrap: break-word; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; height: 74px; text-align: justify; }
 
 /* 글쓰기 */
- .write_page { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 100%; height: 100%; transition: opacity 1s ease-in-out; opacity: 0; backdrop-filter: blur(10px); }
+.write_page { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 100%; height: 100%; transition: opacity 1s ease-in-out; opacity: 0; backdrop-filter: blur(10px); }
 .write_page_pos { position: absolute; top: 50%; left: 50%; display: block; transform: translate(-50%, -50%); width: 80%; height: 80%; background: rgba(5, 7, 26, 1); border: 1px solid var(--font-color); border-radius: 10px; padding: 20px; }
 .write_page_pos form { position: relative; display: block; height: 100%; }
 .write_page input { position: relative; display: block; background: transparent; width: 100%; border-bottom: 1px solid var(--grey-color); padding: 8px 0px; margin-bottom: 20px; }

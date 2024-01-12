@@ -152,7 +152,7 @@ function WriteCorrect() {
 
     const [writeContent, setWriteContent] = useState(writeListState[id]);
 
-    const titleDoc = new DOMParser().parseFromString(writeContent.title, 'text/html');
+    const titleDoc = new DOMParser().parseFromString(writeContent.title,'text/html');
     const subTitleDoc = new DOMParser().parseFromString(writeContent.subTitle, 'text/html');
     const contentDoc = new DOMParser().parseFromString(writeContent.content, 'text/html');
 
