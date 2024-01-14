@@ -78,8 +78,6 @@ function Memo() {
     // memo correct, detail common state
     const [memoCurrent, setMemoCurrent] = useState(null);
 
-    console.log(memoCurrent);
-
     const memoDetailOn = (a) => {
 
         setMemoCurrent(a);
@@ -111,7 +109,6 @@ function Memo() {
     const [memoCorrectActive, setMemoCorrectActive] = useState('');
 
     const memoCorrectOn = (a) => {
-
         setMemoCurrent(a);
         if (!isMemoCorrect) {
             setMemoCorrectActive('active');
@@ -126,6 +123,9 @@ function Memo() {
         }, 300);
 
         setMemoCorrectActive('');
+
+        var textArea = document.getElementById('memo_anno_textarea');
+        textArea.style.height = '22px';
     };
 
     useEffect(() => {
@@ -184,9 +184,10 @@ function Memo() {
         const memoComment = newMemoComment.current.value;
         var memoAuthor = newMemoAuthor.current.value;
         var memoSource = newMemoSource.current.value;
+        var memoAnnotation = {};
 
-        dispatch(memoListDataAdd({ id, memoComment, memoAuthor, memoSource }));
-        setMemo((prevMemo) => [...prevMemo, { id, memoComment, memoAuthor, memoSource }]);
+        dispatch(memoListDataAdd({ id, memoComment, memoAuthor, memoSource, memoAnnotation }));
+        setMemo((prevMemo) => [...prevMemo, { id, memoComment, memoAuthor, memoSource, memoAnnotation }]);
 
     };
 
@@ -214,6 +215,7 @@ function Memo() {
         const updateMemoComment = correctMemoComment.current.value;
 
         dispatch(memoListDataUpdate({ memoId, updateMemoSource, updateMemoAuthor, updateMemoComment }));
+
         setMemoCorrectActive('');
         setMemoActive('active')
     };
@@ -276,7 +278,7 @@ function Memo() {
         setBookTitle("전체")
     }
 
-    // memo Annotation add
+    // memo Annotation
     const [memoAnnoActive, setMemoAnnoActive] = useState();
 
     useEffect(() => {
@@ -294,18 +296,50 @@ function Memo() {
         const memoId = memo.id;
         const memoAnno = newMemoAnno.current.value;
 
-        const largestKey = Math.max(...Object.keys(memo.memoAnnotation).map(key => parseInt(key)));
-        const newKey = (largestKey + 1).toString();
+        const annotationKeys = Object.keys(memo.memoAnnotation);
+        if (annotationKeys.length > 0) {
+            var annoKey = Math.max(...annotationKeys.map(key => parseInt(key))) + 1;
+        } else {
+            var annoKey = 0;
+        }
+
+        const newKey = annoKey.toString();
         const memoAnnoIndex = newKey;
 
         dispatch(memoListAnno({ memoId, memoAnno, memoAnnoIndex }));
         setMemoAnnoActive('')
+
+        var textArea = document.getElementById('memo_anno_textarea');
+        textArea.style.height = '22px';
     }
 
-    // const memoAnnoCorrectBtn = (memo) => {
-    //     const memoId = memo.id;
-    //     const memoAnno = newMemoAnno.current.value;
-    // }
+    const memoAnnoCorrectBtn = (memo) => {
+        const memoId = memo.id;
+        const memoAnno = newMemoAnno.current.value;
+    }
+    //// memo Annotation
+
+    // when add new one
+    useEffect(() => {
+        if (memoCurrent !== null) {
+            setMemoCurrent(memoArr[memoCurrent.id]);
+        }
+    }, [memoArr]);
+    //// when add new one
+
+    // anno textarea height
+    const annoTextareaChange = (e) => {
+
+        var textArea = document.getElementById('memo_anno_textarea');
+        var lineHeight = parseInt(window.getComputedStyle(textArea).lineHeight, 10);
+        var numberOfLines = Math.ceil(textArea.scrollHeight / lineHeight);
+
+        if (e.keyCode === 13) {
+            textArea.style.height = `${lineHeight * (numberOfLines + 1)}px`;
+        } 
+
+    }
+    //// anno textarea height
 
     return (
 
@@ -417,7 +451,7 @@ function Memo() {
 
                 {/* memoAdd */}
                 <div className={`memo_add ${memoAddActive ? memoAddActive : ""}`}>
-                    <textarea className='scroll' placeholder='  Comment' ref={newMemoComment}></textarea>
+                    <textarea className='scroll' placeholder='Anno-Comment' ref={newMemoComment}></textarea>
                     <div className='memo_input'>
                         <input type='text' placeholder='newMemoSource' ref={newMemoSource}></input>
                         <input type='text' placeholder='newMemoAuthor' ref={newMemoAuthor}></input>
@@ -453,7 +487,7 @@ function Memo() {
                 </div>
 
                 <div className={`memo_anno_add ${memoAnnoActive ? 'active' : ''}`}>
-                    <input type="text" placeholder="memo_annotation_add" className="memo_anno_input" ref={newMemoAnno}></input>
+                    <textarea id='memo_anno_textarea' placeholder="memo_annotation" ref={newMemoAnno} onKeyDown={annoTextareaChange}></textarea>
                     <button className='icon-ok' onClick={() => memoAnnoBtn(memo)}></button>
                     <button className='icon-cancel' onClick={() => setMemoAnnoActive('')}></button>
                 </div>
@@ -463,6 +497,7 @@ function Memo() {
     }
 
     function MemoAnno({ memo }) {
+
         return (
             <ul className='memo_annotation'>
                 {
@@ -474,7 +509,7 @@ function Memo() {
                                     <div className='memo_annotation_fac_box'>
                                         <p>{memo.memoAnnotation[i]}</p>
                                         {/* <input type='text' /> */}
-                                        <button className='icon-feather'></button>
+                                        <button className='icon-feather' onClick={() => { memoAnnoCorrectBtn(memo.memoAnnotation[i]) }}></button>
                                     </div>
                                 </div>
                             </li>
