@@ -221,10 +221,25 @@ function Memo() {
     };
     //// memo correct btn
 
+    const [fixedPin, setFixedPin] = useState('');
+
+    const fixedPinActive = () => {
+        setFixedPin(!fixedPin);
+        if (fixedPin === '') {
+            setFixedPin('active');
+        } else {
+            setFixedPin('');
+        }
+    }
+
     // memo reset
     useEffect(() => {
         newMemoComment.current.value = null;
-        newMemoSource.current.value = null;
+
+        if (fixedPin === '') {
+            newMemoSource.current.value = null;
+            newMemoAuthor.current.value = null;
+        }
 
         if (bookLocalStorage === null) {
             setBookTitle("전체")
@@ -245,6 +260,7 @@ function Memo() {
             localStorage.removeItem('bookTitle');
         } else {
             setBookTitle(bookListState[i])
+            setMemoCurrent(null);
             localStorage.setItem('bookTitle', bookListState[i]);
         }
     }
@@ -255,12 +271,13 @@ function Memo() {
     useEffect(() => {
         if (bookLocalStorage === null) {
             setBookTitle("전체")
+            setMemoCurrent(null);
             setMemoArr(memoListState);
         } else {
+            setMemoCurrent(null);
             setMemoArr(memoListState.filter((item) => item.memoSource === bookTitle));
         }
-
-    }, [bookTitle])
+    }, [bookTitle]);
     //// book name check
 
     // context api scroll pos
@@ -287,7 +304,7 @@ function Memo() {
         } else {
             setMemoAnnoActive('')
         }
-    }, [memoAnnoActive])
+    }, [memoAnnoActive]);
 
     var newMemoAnno = useRef();
 
@@ -336,7 +353,7 @@ function Memo() {
 
         if (e.keyCode === 13) {
             textArea.style.height = `${lineHeight * (numberOfLines + 1)}px`;
-        } 
+        }
 
     }
     //// anno textarea height
@@ -348,7 +365,7 @@ function Memo() {
                 <div className='book_list_pos'>
                     <div className='book_list'>
                         <div className={`book_list_current ${scrollPosition > 0 ? "scroll_event" : ""}`} onClick={bookListOn}>
-                            <i className='icon-pin'></i>
+                            <i className='icon-book'></i>
                             <strong>{bookTitle}</strong>
                             <b onClick={(e) => refreshTitle(e)} className={`icon-cancel ${bookTitle !== '전체' ? 'active' : ''}`}></b>
                         </div>
@@ -451,8 +468,9 @@ function Memo() {
 
                 {/* memoAdd */}
                 <div className={`memo_add ${memoAddActive ? memoAddActive : ""}`}>
-                    <textarea className='scroll' placeholder='Anno-Comment' ref={newMemoComment}></textarea>
+                    <textarea className='scroll' placeholder='newMemoComment' ref={newMemoComment}></textarea>
                     <div className='memo_input'>
+                        <button className={`icon-pin ${fixedPin ? fixedPin : ""}`} onClick={fixedPinActive}></button>
                         <input type='text' placeholder='newMemoSource' ref={newMemoSource}></input>
                         <input type='text' placeholder='newMemoAuthor' ref={newMemoAuthor}></input>
                     </div>
@@ -471,6 +489,7 @@ function Memo() {
     function MemoView({ memo }) {
 
         return (
+
             <div className='memoDetail_content_pos scroll'>
                 <ul className='memoDetail_content_info'>
                     <li>
