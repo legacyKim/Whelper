@@ -11,6 +11,8 @@ function Memo() {
     let memoListState = useSelector((state) => state.memoData);
     let bookListState = useSelector((state) => state.bookData);
 
+    console.log(memoListState);
+
     // book Add
     const [isBookAdd, setIsBookAdd] = useState(false);
     const [bookAddActive, setBookAddActive] = useState('');
@@ -79,7 +81,6 @@ function Memo() {
     const [memoCurrent, setMemoCurrent] = useState(null);
 
     const memoDetailOn = (a) => {
-
         setMemoCurrent(a);
         if (!isMemoDetail) {
             setMemoActive('active');
@@ -209,6 +210,7 @@ function Memo() {
     var correctMemoComment = useRef();
 
     const memoCorrectBtn = (a) => {
+
         const memoId = a.id;
         const updateMemoSource = correctMemoSource.current.value;
         const updateMemoAuthor = correctMemoAuthor.current.value;
@@ -222,9 +224,27 @@ function Memo() {
     //// memo correct btn
 
     // memo reset
+
+    const [memoRecord, setMemoRecord] = useState('active');
+
+    const MemoRecordMode = () => {
+        setMemoRecord(!memoRecord);
+        if (!memoRecord) {
+            setMemoRecord('active');
+        } else {
+            setMemoRecord('');
+        }
+    };
+
+    console.log(memoRecord);
+
     useEffect(() => {
         newMemoComment.current.value = null;
-        newMemoSource.current.value = null;
+
+        if (memoRecord !== 'active') {
+            newMemoSource.current.value = null;
+            newMemoAuthor.current.value = null;
+        }
 
         if (bookLocalStorage === null) {
             setBookTitle("전체")
@@ -259,7 +279,7 @@ function Memo() {
         } else {
             setMemoArr(memoListState.filter((item) => item.memoSource === bookTitle));
         }
-
+        setMemoCurrent(null);
     }, [bookTitle])
     //// book name check
 
@@ -336,7 +356,7 @@ function Memo() {
 
         if (e.keyCode === 13) {
             textArea.style.height = `${lineHeight * (numberOfLines + 1)}px`;
-        } 
+        }
 
     }
     //// anno textarea height
@@ -348,7 +368,7 @@ function Memo() {
                 <div className='book_list_pos'>
                     <div className='book_list'>
                         <div className={`book_list_current ${scrollPosition > 0 ? "scroll_event" : ""}`} onClick={bookListOn}>
-                            <i className='icon-pin'></i>
+                            <i className='icon-book'></i>
                             <strong>{bookTitle}</strong>
                             <b onClick={(e) => refreshTitle(e)} className={`icon-cancel ${bookTitle !== '전체' ? 'active' : ''}`}></b>
                         </div>
@@ -453,6 +473,7 @@ function Memo() {
                 <div className={`memo_add ${memoAddActive ? memoAddActive : ""}`}>
                     <textarea className='scroll' placeholder='Anno-Comment' ref={newMemoComment}></textarea>
                     <div className='memo_input'>
+                        <button className={`icon-pin ${memoRecord ? memoRecord : ""}`} onClick={MemoRecordMode}></button>
                         <input type='text' placeholder='newMemoSource' ref={newMemoSource}></input>
                         <input type='text' placeholder='newMemoAuthor' ref={newMemoAuthor}></input>
                     </div>
@@ -469,6 +490,8 @@ function Memo() {
     )
 
     function MemoView({ memo }) {
+
+        console.log(memo);
 
         return (
             <div className='memoDetail_content_pos scroll'>

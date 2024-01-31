@@ -178,9 +178,29 @@ function Category() {
                 <Link to={`/components/WriteView/${writeListState[i].id}`}>
                     <ViewEdit titleDoc={titleDoc} subTitleDoc={subTitleDoc} contentDoc={contentDoc}></ViewEdit>
                 </Link>
+                <div className='write_keyword'>
+                    <ul className='write_keyword_list'>
+                        {
+                            writeListState[i].keyword.map((k, i) => (
+                                <li key={i}>
+                                    <WriteKeyword writeListKeyword={k} />
+                                </li>
+                            ))
+                        }
+                    </ul>
+
+                    {/* <b className='write_date'>{writeDate}</b> */}
+
+                </div>
             </div>
 
         )
+    }
+
+    function WriteKeyword({ writeListKeyword }) {
+        return (
+            <Link to={`/components/Category/${writeListKeyword}`}>#{writeListKeyword}</Link>
+        );
     }
 
 }

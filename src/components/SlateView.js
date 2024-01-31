@@ -91,6 +91,7 @@ const ViewEdit = ({ titleDoc, subTitleDoc, contentDoc }) => {
             <Slate editor={editor} initialValue={contentValue}>
                 <Editable className="content" renderElement={renderElement} renderLeaf={renderLeaf} readOnly />
             </Slate>
+            
         </div>
     )
 
