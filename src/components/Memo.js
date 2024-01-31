@@ -223,6 +223,17 @@ function Memo() {
     };
     //// memo correct btn
 
+    const [fixedPin, setFixedPin] = useState('');
+
+    const fixedPinActive = () => {
+        setFixedPin(!fixedPin);
+        if (fixedPin === '') {
+            setFixedPin('active');
+        } else {
+            setFixedPin('');
+        }
+    }
+
     // memo reset
 
     const [memoRecord, setMemoRecord] = useState('active');
@@ -265,6 +276,7 @@ function Memo() {
             localStorage.removeItem('bookTitle');
         } else {
             setBookTitle(bookListState[i])
+            setMemoCurrent(null);
             localStorage.setItem('bookTitle', bookListState[i]);
         }
     }
@@ -275,8 +287,10 @@ function Memo() {
     useEffect(() => {
         if (bookLocalStorage === null) {
             setBookTitle("전체")
+            setMemoCurrent(null);
             setMemoArr(memoListState);
         } else {
+            setMemoCurrent(null);
             setMemoArr(memoListState.filter((item) => item.memoSource === bookTitle));
         }
         setMemoCurrent(null);
@@ -307,7 +321,7 @@ function Memo() {
         } else {
             setMemoAnnoActive('')
         }
-    }, [memoAnnoActive])
+    }, [memoAnnoActive]);
 
     var newMemoAnno = useRef();
 
@@ -471,7 +485,7 @@ function Memo() {
 
                 {/* memoAdd */}
                 <div className={`memo_add ${memoAddActive ? memoAddActive : ""}`}>
-                    <textarea className='scroll' placeholder='Anno-Comment' ref={newMemoComment}></textarea>
+                    <textarea className='scroll' placeholder='newMemoComment' ref={newMemoComment}></textarea>
                     <div className='memo_input'>
                         <button className={`icon-pin ${memoRecord ? memoRecord : ""}`} onClick={MemoRecordMode}></button>
                         <input type='text' placeholder='newMemoSource' ref={newMemoSource}></input>
@@ -494,6 +508,7 @@ function Memo() {
         console.log(memo);
 
         return (
+
             <div className='memoDetail_content_pos scroll'>
                 <ul className='memoDetail_content_info'>
                     <li>

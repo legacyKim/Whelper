@@ -89,7 +89,7 @@ main { position: absolute; display: block; top: 50%; left: 50%; transform: trans
 .book_list_current>i { margin-right: 3px; font-size: 14px; transition: all 0.3s ease-in-out; } 
 .book_list_current>b { font-size: 14px; display: none; } 
 .book_list_current>b.active { display: block; } 
-.book_list_current>strong { font-size: 16px; font-weight: 700; line-height: 1.6; color: var(--font-color); transition: all 0.3s ease-in-out; margin-right: 4px; } 
+.book_list_current>strong { font-size: 16px; font-weight: 700; line-height: 1.6; color: var(--font-color); transition: all 0.3s ease-in-out; margin: 0 4px; } 
 .book_list_current.scroll_event { padding: 8px; width: 27px; height: 26px; display: flex; justify-content: center; align-items: center; border-radius: 50%; } 
 .book_list_current.scroll_event>i { position: absolute; top: 5px; left: 2px; margin-right: 0; } 
 .book_list_current.scroll_event>strong { opacity: 0; left: 24px; position: absolute; min-width: 200px; } 
