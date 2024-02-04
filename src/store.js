@@ -54,9 +54,8 @@ let memoData = createSlice({
         memoListAnnoUpdate(state, updateAnnoList) {
 
         },
-        memoListDataDelete(state, deleteMemoList) {
-            const deleteMemoId = deleteMemoList.payload.id;
-            return state.filter(item => item.id !== deleteMemoId);
+        memoListAnnoDelete(state, deleteAnnoList) {
+
         }
     }
 })
@@ -88,7 +87,7 @@ let bookData = createSlice({
 })
 
 export const { writeListDataAdd, writeListDataUpdate, writeListDataDelete } = WriteData.actions;
-export const { memoListDataAdd, memoListDataDelete, memoListDataUpdate, memoListAnno } = memoData.actions;
+export const { memoListDataAdd, memoListDataDelete, memoListDataUpdate, memoListAnno, memoListAnnoUpdate, memoListAnnoDelete } = memoData.actions;
 export const { cateListDataAdd } = cateData.actions;
 export const { bookListDataAdd, bookListDelete } = bookData.actions;
 

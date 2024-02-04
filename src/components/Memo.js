@@ -4,14 +4,12 @@ import MyContext from '../context'
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 
 import '../css/style.css';
-import { memoListDataAdd, memoListDataDelete, memoListDataUpdate, memoListAnno, bookListDataAdd, bookListDelete } from "../store.js"
+import { memoListDataAdd, memoListDataDelete, memoListDataUpdate, memoListAnno, memoListAnnoUpdate, memoListAnnoDelete, bookListDataAdd, bookListDelete } from "../store.js"
 
 function Memo() {
 
     let memoListState = useSelector((state) => state.memoData);
     let bookListState = useSelector((state) => state.bookData);
-
-    console.log(bookListState);
 
     // book Add
     const [isBookAdd, setIsBookAdd] = useState(false);
@@ -204,6 +202,8 @@ function Memo() {
 
     const deleteBook = (e) => {
         e.stopPropagation();
+        localStorage.removeItem('bookTitle');
+        setBookTitle('전체');
         dispatch(bookListDelete({ book: bookTitle }))
     }
 
@@ -302,7 +302,7 @@ function Memo() {
 
     const refreshTitle = (e) => {
         e.stopPropagation();
-        localStorage.removeItem('bookTitle')
+        localStorage.removeItem('bookTitle');
         setBookTitle("전체")
     }
 
@@ -342,8 +342,19 @@ function Memo() {
     }
 
     const memoAnnoCorrectBtn = (memo) => {
+
+        console.log(memo);
+
+        setMemoAnnoActive('active');
+        newMemoAnno.current.value = memo;
+
         const memoId = memo.id;
         const memoAnno = newMemoAnno.current.value;
+
+    }
+
+    const memoAnnoDeleteBtn = (memo) => {
+        console.log(memo);
     }
     //// memo Annotation
 
@@ -379,7 +390,7 @@ function Memo() {
                             <i className='icon-book'></i>
                             <strong>{bookTitle}</strong>
                             <b onClick={(e) => refreshTitle(e)} className={`icon-cancel ${bookTitle !== '전체' ? 'active' : ''}`}></b>
-                            <b onClick={(e) => deleteBook(e)} className={`icon-trash ${bookTitle !== '전체' ? 'active' : ''}`}></b>
+                            <b onClick={(e) => deleteBook(e)} className={`icon-trash hover_opacity ${bookTitle !== '전체' ? 'active' : ''}`}></b>
                         </div>
                         <div className={`book_list_box ${bookListActive ? bookListActive : ''}`}>
                             <ul className='scroll'>
@@ -406,7 +417,7 @@ function Memo() {
                     </div>
                     <div className={`memo_btn ${scrollPosition > 0 ? "scroll_event" : ""}`}>
                         <button onClick={memoAddOn} className='icon-pencil-alt'></button>
-                        <button onClick={bookAddOn} className='icon-book'></button>
+                        <button onClick={bookAddOn} className='icon-book-2'></button>
                     </div>
                 </div>
 
@@ -501,8 +512,6 @@ function Memo() {
 
     function MemoView({ memo }) {
 
-        console.log(memo);
-
         return (
 
             <div className='memoDetail_content_pos scroll'>
@@ -542,8 +551,8 @@ function Memo() {
                                     <i className='icon-level-down'></i>
                                     <div className='memo_annotation_fac_box'>
                                         <p>{memo.memoAnnotation[i]}</p>
-                                        {/* <input type='text' /> */}
-                                        <button className='icon-feather' onClick={() => { memoAnnoCorrectBtn(memo.memoAnnotation[i]) }}></button>
+                                        <button className='icon-feather' onClick={() => { memoAnnoCorrectBtn(memo) }}></button>
+                                        <button className='icon-trash' onClick={() => { memoAnnoDeleteBtn(memo) }}></button>
                                     </div>
                                 </div>
                             </li>

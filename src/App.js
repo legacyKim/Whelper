@@ -24,7 +24,11 @@ function App() {
     const [searchActive, setSearchActive] = useState('');
 
     const searchOn = (e) => {
-        e.stopPropagation();
+
+        if (searchActive !== 'active') {
+            e.stopPropagation();
+        }
+
         setIsSearchOn(!isSearchOn);
         if (!isSearchOn) {
             setSearchActive('active');

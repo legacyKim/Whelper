@@ -353,6 +353,90 @@
       "css": "flow-split",
       "code": 59437,
       "src": "typicons"
+    },
+    {
+      "uid": "815503841e980c848f55e0271deacead",
+      "css": "link-2",
+      "code": 59438,
+      "src": "entypo"
+    },
+    {
+      "uid": "44b9e75612c5fad5505edd70d071651f",
+      "css": "attach",
+      "code": 59439,
+      "src": "entypo"
+    },
+    {
+      "uid": "3ba4275937db277075fc47d6b5a69a2e",
+      "css": "back",
+      "code": 59440,
+      "src": "entypo"
+    },
+    {
+      "uid": "63b86fedd4ee9ad2105f54f4888e7088",
+      "css": "info",
+      "code": 59441,
+      "src": "entypo"
+    },
+    {
+      "uid": "db112402805d9dadc01ce009fbfdb914",
+      "css": "paper-plane",
+      "code": 59442,
+      "src": "entypo"
+    },
+    {
+      "uid": "41d534223ef447a01af3e2f629ec70eb",
+      "css": "leaf",
+      "code": 59443,
+      "src": "entypo"
+    },
+    {
+      "uid": "dplw5xo88mzzr7b45nvjcamyyhni6drs",
+      "css": "book-2",
+      "code": 59445,
+      "src": "modernpics"
+    },
+    {
+      "uid": "8fc56819afcd07e2786e34f18d39b71b",
+      "css": "book-open",
+      "code": 59446,
+      "src": "iconic"
+    },
+    {
+      "uid": "9597c5a31b6bdd94f4936fcc71d30613",
+      "css": "book-3",
+      "code": 59447,
+      "src": "iconic"
+    },
+    {
+      "uid": "d7059fc5329e1a7fcab80ba87831c957",
+      "css": "book-alt",
+      "code": 59450,
+      "src": "iconic"
+    },
+    {
+      "uid": "gr2i0fsmy50yfjhz6defsqkexnmctv8z",
+      "css": "bookmark-1",
+      "code": 59451,
+      "src": "typicons"
+    },
+    {
+      "uid": "51727ca007aa35ceabcaffc28934faee",
+      "css": "book-open-1",
+      "code": 59452,
+      "src": "entypo"
+    },
+    {
+      "uid": "8538a2249db7f07ae75411886732fb87",
+      "css": "bookmarks",
+      "code": 59453,
+      "src": "entypo"
+    },
+    {
+      "uid": "23912d5623126e14b7b137c3ba557168",
+      "css": "bookmark-2",
+      "code": 59454,
+      "src": "entypo"
     }
   ]
 }
