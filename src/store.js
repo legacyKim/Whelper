@@ -77,16 +77,20 @@ let bookData = createSlice({
     initialState: bookListData,
     reducers: {
         bookListDataAdd(state, newBookList) {
-            const newBook = [...state, newBook.payload];
-            return newBook;
+            const book = [...state, newBookList.payload];
+            return book;
         },
-    }
+        bookListDelete(state, deleteBookList) {
+            const deleteBook = deleteBookList.payload.book;
+            return state.filter(item => item.book !== deleteBook);
+        }
+    },
 })
 
 export const { writeListDataAdd, writeListDataUpdate, writeListDataDelete } = WriteData.actions;
 export const { memoListDataAdd, memoListDataDelete, memoListDataUpdate, memoListAnno } = memoData.actions;
 export const { cateListDataAdd } = cateData.actions;
-export const { bookListDataAdd } = bookData.actions;
+export const { bookListDataAdd, bookListDelete } = bookData.actions;
 
 export default configureStore({
     reducer: {

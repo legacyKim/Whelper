@@ -227,9 +227,14 @@ main { position: absolute; display: block; top: 50%; left: 50%; transform: trans
 
 .view_page { position: relative; display: block; min-height: 100%; } 
 .view_common>* { margin-bottom:8px; } 
+.view_common .title { max-height: 30px; overflow: hidden; } 
+.view_content.all .view_common .title { max-height: initial; } 
 .view_common .title span { font-size: 19px; font-weight: 700; line-height: 1.5; color: var(--font-color); letter-spacing: -0.5px; } 
+.view_common .subtitle { max-height: 24px; overflow: hidden; } 
+.view_content.all .view_common .subtitle { max-height: initial; } 
 .view_common .subtitle span { font-size: 16px; font-weight: 500; line-height: 1.5; color: var(--font-color); letter-spacing: -0.5px; } 
-.view_common .content { max-height: 66px; overflow: hidden; } 
+.view_common .content { max-height: 60px; overflow: hidden; } 
+.view_content.all .view_common .content { max-height: initial; } 
 .view_common .content span { font-size: 13px; font-weight: inherit; line-height: 1.5; color: var(--font-color); white-space:pre-wrap; letter-spacing: -0.5px; } 
 .view_content>b { position: absolute; top: 0; right: 0; display: block; font-size: 14px; font-weight: 700; line-height: 1.5; color: var(--font-color); opacity: 0.58; } 
 

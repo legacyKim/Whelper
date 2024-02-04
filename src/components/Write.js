@@ -316,7 +316,7 @@ function Write() {
                     </button>
                 </div>
 
-                <Editable className='write_content' onContextMenu={toolbarOpen} onClick={toolbarClose}
+                <Editable className='write_content scroll' onContextMenu={toolbarOpen} onClick={toolbarClose}
                     placeholder="작은 것들도 허투로 생각하지 말지어다. 큰 것들도 최초에는 작았다."
                     editor={editor}
                     renderElement={renderElement}

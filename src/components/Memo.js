@@ -4,14 +4,14 @@ import MyContext from '../context'
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 
 import '../css/style.css';
-import { memoListDataAdd, memoListDataDelete, memoListDataUpdate, memoListAnno, bookListDataAdd } from "../store.js"
+import { memoListDataAdd, memoListDataDelete, memoListDataUpdate, memoListAnno, bookListDataAdd, bookListDelete } from "../store.js"
 
 function Memo() {
 
     let memoListState = useSelector((state) => state.memoData);
     let bookListState = useSelector((state) => state.bookData);
 
-    console.log(memoListState);
+    console.log(bookListState);
 
     // book Add
     const [isBookAdd, setIsBookAdd] = useState(false);
@@ -194,15 +194,18 @@ function Memo() {
 
     // book save
     var newBook = useRef(null);
+    var newAuthor = useRef(null);
 
     const bookSaveBtn = () => {
-        const bookName = newBook.current.value;
-        dispatch(memoListDataAdd)
+        const book = newBook.current.value;
+        const author = newAuthor.current.value;
+        dispatch(bookListDataAdd({ book, author }))
     }
 
-    // const delMemoList = (i) => {
-    //     dispatch(memoListDataDelete({ id: memo[i].id }))
-    // }
+    const deleteBook = (e) => {
+        e.stopPropagation();
+        dispatch(bookListDelete({ book: bookTitle }))
+    }
 
     // memo correct btn
     var correctMemoSource = useRef();
@@ -223,19 +226,7 @@ function Memo() {
     };
     //// memo correct btn
 
-    const [fixedPin, setFixedPin] = useState('');
-
-    const fixedPinActive = () => {
-        setFixedPin(!fixedPin);
-        if (fixedPin === '') {
-            setFixedPin('active');
-        } else {
-            setFixedPin('');
-        }
-    }
-
     // memo reset
-
     const [memoRecord, setMemoRecord] = useState('active');
 
     const MemoRecordMode = () => {
@@ -246,8 +237,6 @@ function Memo() {
             setMemoRecord('');
         }
     };
-
-    console.log(memoRecord);
 
     useEffect(() => {
         newMemoComment.current.value = null;
@@ -263,7 +252,12 @@ function Memo() {
         } else {
             setMemoArr(memoListState.filter((item) => item.memoSource === bookTitle));
         }
-    }, [memoListState])
+    }, [memoListState]);
+
+    useEffect(() => {
+        newBook.current.value = null;
+        newAuthor.current.value = null;
+    }, [bookListState])
     //// memo reset
 
     // book name check
@@ -275,9 +269,9 @@ function Memo() {
             setBookTitle("전체")
             localStorage.removeItem('bookTitle');
         } else {
-            setBookTitle(bookListState[i])
+            setBookTitle(bookListState[i].book)
             setMemoCurrent(null);
-            localStorage.setItem('bookTitle', bookListState[i]);
+            localStorage.setItem('bookTitle', bookListState[i].book);
         }
     }
 
@@ -385,6 +379,7 @@ function Memo() {
                             <i className='icon-book'></i>
                             <strong>{bookTitle}</strong>
                             <b onClick={(e) => refreshTitle(e)} className={`icon-cancel ${bookTitle !== '전체' ? 'active' : ''}`}></b>
+                            <b onClick={(e) => deleteBook(e)} className={`icon-trash ${bookTitle !== '전체' ? 'active' : ''}`}></b>
                         </div>
                         <div className={`book_list_box ${bookListActive ? bookListActive : ''}`}>
                             <ul className='scroll'>
@@ -401,7 +396,7 @@ function Memo() {
                                                 <span className='' onClick={() => {
                                                     bookListClose();
                                                     bookChange(i);
-                                                }}>{bookListState[i]}</span>
+                                                }}>{bookListState[i].book}</span>
                                             </li>
                                         )
                                     })
@@ -475,6 +470,7 @@ function Memo() {
                 <div className={`book_add memo_add ${bookAddActive ? bookAddActive : ""}`}>
                     <div className='memo_input'>
                         <input type='text' placeholder='newBook' ref={newBook}></input>
+                        <input type='text' placeholder='newAuthor' ref={newAuthor}></input>
                     </div>
                     <div className='memo_btn flex-end'>
                         <button className='icon-ok' onClick={bookSaveBtn}></button>

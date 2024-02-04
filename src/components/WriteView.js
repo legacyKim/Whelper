@@ -23,7 +23,7 @@ function WriteView() {
         <div className='view_page'>
             <div className='common_page'>
                 <div className='content_area'>
-                    <div className='view_content'>
+                    <div className='view_content all'>
 
                         <ViewEdit titleDoc={titleDoc} subTitleDoc={subTitleDoc} contentDoc={contentDoc}></ViewEdit>
 
