@@ -341,15 +341,20 @@ function Memo() {
         textArea.style.height = '22px';
     }
 
-    const memoAnnoCorrectBtn = (memo) => {
+    const memoAnnoValueChange = (e) => {
+        newMemoAnno.current = e.target.value;
+    }
 
-        console.log(memo);
+    const memoAnnoCorrectBtn = (memo, i) => {
 
         setMemoAnnoActive('active');
-        newMemoAnno.current.value = memo;
+        newMemoAnno.current.value = memo.memoAnnotation[i];
 
-        const memoId = memo.id;
-        const memoAnno = newMemoAnno.current.value;
+        // const memoId = memo.id;
+        // const memoAnno = newMemoAnno.current.value;
+        // const annotationKeys = Object.keys(memo.memoAnnotation);
+
+        // dispatch(memoListAnno({ memoId, memoAnno, annotationKeys }));   
 
     }
 
@@ -530,7 +535,7 @@ function Memo() {
                 </div>
 
                 <div className={`memo_anno_add ${memoAnnoActive ? 'active' : ''}`}>
-                    <textarea id='memo_anno_textarea' placeholder="memo_annotation" ref={newMemoAnno} onKeyDown={annoTextareaChange}></textarea>
+                    <textarea id='memo_anno_textarea' placeholder="memo_annotation" ref={newMemoAnno} onChange={(e) => { memoAnnoValueChange(e) }} onKeyDown={annoTextareaChange}></textarea>
                     <button className='icon-ok' onClick={() => memoAnnoBtn(memo)}></button>
                     <button className='icon-cancel' onClick={() => setMemoAnnoActive('')}></button>
                 </div>
@@ -551,8 +556,8 @@ function Memo() {
                                     <i className='icon-level-down'></i>
                                     <div className='memo_annotation_fac_box'>
                                         <p>{memo.memoAnnotation[i]}</p>
-                                        <button className='icon-feather' onClick={() => { memoAnnoCorrectBtn(memo) }}></button>
-                                        <button className='icon-trash' onClick={() => { memoAnnoDeleteBtn(memo) }}></button>
+                                        <button className='icon-feather' onClick={() => { memoAnnoCorrectBtn(memo, i) }}></button>
+                                        <button className='icon-trash' onClick={() => { memoAnnoDeleteBtn(memo, i) }}></button>
                                     </div>
                                 </div>
                             </li>
