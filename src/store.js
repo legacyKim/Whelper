@@ -52,7 +52,9 @@ let memoData = createSlice({
             };
         },
         memoListAnnoUpdate(state, updateAnnoList) {
-
+            const updateWriteId = updateAnnoList.payload.corrMemoId;
+            state[updateWriteId].title = updateAnnoList.payload.corrMemoAnno;
+            state[updateWriteId].keyword = updateAnnoList.payload.corrAnnotationKeys;
         },
         memoListAnnoDelete(state, deleteAnnoList) {
 

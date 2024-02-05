@@ -175,11 +175,11 @@ main { position: absolute; display: block; top: 50%; left: 50%; transform: trans
 .memo_annotation_fac_box:hover button { opacity: 1; font-size: 13px; } 
 .memo_annotation_fac_box button:hover { color: var(--main-color); } 
 
-.memo_anno_add { position: relative; display: none; justify-content: flex-start; align-items: baseline; background-color: transparent; } 
-.memo_anno_add.active { display: flex; } 
-.memo_anno_add textarea { min-height: 22px; flex-grow: 1; background-color: transparent; border: none; resize: none; font-size: 14px; font-weight: 600; line-height: 22px; } 
-.memo_anno_add textarea::-webkit-scrollbar { display: none; } 
-.memo_anno_add button { } 
+.memo_anno_common { position: relative; display: none; justify-content: flex-start; align-items: baseline; background-color: transparent; } 
+.memo_anno_common.active { display: flex; } 
+.memo_anno_common textarea { min-height: 22px; flex-grow: 1; background-color: transparent; border: none; resize: none; font-size: 14px; font-weight: 600; line-height: 22px; } 
+.memo_anno_common textarea::-webkit-scrollbar { display: none; } 
+.memo_anno_common button { } 
 
 /* Write */
 
