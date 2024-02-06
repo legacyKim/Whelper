@@ -42,21 +42,36 @@ let memoData = createSlice({
             state[updateMemoId].memoComment = updateMemoList.payload.updateMemoComment;
         },
         memoListAnno(state, newAnnoList) {
+
             const updateMemoId = newAnnoList.payload.memoId;
             const newAnnotation = newAnnoList.payload.memoAnno;
             const memoAnnoIndex = newAnnoList.payload.memoAnnoIndex;
 
+            console.log(state[updateMemoId].memoAnnotation)
+
             state[updateMemoId].memoAnnotation = {
                 ...state[updateMemoId].memoAnnotation,
-                [memoAnnoIndex] : newAnnotation,
+                [memoAnnoIndex]: newAnnotation,
             };
         },
         memoListAnnoUpdate(state, updateAnnoList) {
             const updateWriteId = updateAnnoList.payload.corrMemoId;
-            state[updateWriteId].title = updateAnnoList.payload.corrMemoAnno;
-            state[updateWriteId].keyword = updateAnnoList.payload.corrAnnotationKeys;
+            const AnnoKey = updateAnnoList.payload.corrAnnotationKeys;
+            state[updateWriteId].memoAnnotation[AnnoKey] = updateAnnoList.payload.corrMemoAnno;
         },
         memoListAnnoDelete(state, deleteAnnoList) {
+
+            const updateWriteId = deleteAnnoList.payload.corrMemoId;
+            const AnnoKey = deleteAnnoList.payload.corrAnnotationKeys;
+
+            return state.map(item => {
+                if (item.id === updateWriteId) {
+                    const updatedAnnotations = { ...item.memoAnnotation };
+                    delete updatedAnnotations[AnnoKey];
+                    return { ...item, memoAnnotation : updatedAnnotations, };
+                }
+                return item;
+            });
 
         }
     }

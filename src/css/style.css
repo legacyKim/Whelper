@@ -15,7 +15,7 @@ input { background-color: var(--box-color); }
 .scroll::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.3); border-radius: 100px; } 
 /* common */
 
-.hover_opacity:hover {opacity: 1 !important;}
+.hover_opacity:hover { opacity: 1 !important; } 
 
 .content_area { position: relative; display: flex; flex-direction: column-reverse; width:100%; min-height: 100%; margin: 0 auto; padding: 0 16px; padding-top: 98px; padding-bottom: 32px; } 
 .content_area.reverse { flex-direction: column; } 
@@ -91,13 +91,13 @@ main { position: absolute; display: block; top: 50%; left: 50%; transform: trans
 .book_list_current>i { margin-right: 3px; font-size: 14px; transition: all 0.3s ease-in-out; } 
 .book_list_current>b { font-size: 14px; display: none; } 
 .book_list_current>b.active { display: block; transition: all 0.3s ease-in-out; } 
-.book_list_current>b.active:hover {color: var(--main-color);}
+.book_list_current>b.active:hover { color: var(--main-color); } 
 .book_list_current>strong { font-size: 16px; font-weight: 700; line-height: 1.6; color: var(--font-color); transition: all 0.3s ease-in-out; margin: 0 4px; } 
 .book_list_current.scroll_event { padding: 8px; width: 27px; height: 26px; display: flex; justify-content: center; align-items: center; border-radius: 50%; } 
 .book_list_current.scroll_event>i { position: absolute; top: 5px; left: 2px; margin-right: 0; } 
 .book_list_current.scroll_event>strong { opacity: 0; left: 24px; position: absolute; min-width: 200px; } 
 .book_list_current.scroll_event>b { display: none; } 
-.book_list_current b.icon-trash {opacity: 0.4; transition: all 0.3s ease-in-out;}
+.book_list_current b.icon-trash { opacity: 0.4; transition: all 0.3s ease-in-out; } 
 
 .book_list_box { position: absolute; opacity: 0; z-index: 0; background: #222; padding: 8px 0; padding-bottom: 12px; padding-right: 2px; top: 32px; left: 9px; border-radius: 4px; transition: all 0.3s ease-in-out; box-shadow: 0px 0px 8px 3px var(--shadow-color); min-width: 180px; } 
 .book_list_box.active { opacity: 1; z-index: 9; } 
@@ -151,7 +151,7 @@ main { position: absolute; display: block; top: 50%; left: 50%; transform: trans
 .memoDetail_content_info>li>span { font-size : 15px; font-weight: 700; line-height: 1.6; color: var(--font-color); margin-right:24px; } 
 .memoDetail_content_info>li>strong { position: relative; font-size: 15px; font-weight: 500; line-height: 1.6; color: var(--font-color); padding-right: 12px; opacity: 0.78; min-width: 100px; } 
 
-.memo_comment_box { overflow-y: auto; max-height: 30vw; } 
+.memo_comment_box { overflow-y: auto; max-height: 50vw; } 
 
 .memoDetail_btn { position:absolute; top: 11%; right: 10%; display:flex; justify-content: flex-end; align-items: center; } 
 .memoDetail_btn>button { position: relative; display: block; font-size: 16px; color: var(--font-color); margin-left: 2px; transition: all 0.3s ease-in-out; } 
@@ -162,7 +162,7 @@ main { position: absolute; display: block; top: 50%; left: 50%; transform: trans
 .memoCorrect_info>li { position:relative; display:flex; justify-content:flex-start; align-items: center; } 
 .memoCorrect_info>li>input { position: relative; display: block; font-size: 15px; font-weight: 700; line-height: 1.6; color: var(--font-color); background-color: transparent; letter-spacing: -1px; } 
 .memoCorrect_info>li>strong { position: relative; display: inline-block; font-size: 15px; font-weight: 700; line-height: 1.6; color: var(--font-color); padding-right: 8px; min-width: 100px; opacity: 0.58; } 
-.memoCorrect_content_pos>textarea { border: none; resize: none; width:100%; font-size: 15px; font-weight: 600; line-height: 1.6; color: var(--font-color); background-color: transparent; height: 30vw; letter-spacing: -1px; } 
+.memoCorrect_content_pos>textarea { border: none; resize: none; width:100%; font-size: 15px; font-weight: 600; line-height: 1.6; color: var(--font-color); background-color: transparent; height: 60vw; letter-spacing: -1px; } 
 
 .memo_annotation { position: relative; display: flex; flex-direction: column-reverse; } 
 .memo_annotation>li { position: relative; display: block; padding-bottom: 8px; } 
@@ -170,16 +170,18 @@ main { position: absolute; display: block; top: 50%; left: 50%; transform: trans
 .memo_annotation>li i { font-size: 16px; opacity: 0.38; margin-right: 4px; } 
 
 .memo_annotation_fac_box { display: flex; justify-content: flex-start; align-items: baseline; width: 100%; } 
-.memo_annotation_fac_box p { position: relative; display: block; white-space: pre-line; flex-grow: 1; max-width: calc(100% - 44px); font-size: 14px; font-weight: 400; letter-spacing: -1px; line-height: 1.4; color: var(--font-color); opacity: 0.78; margin-right: 4px; background-color: transparent; width: auto; } 
+.memo_annotation_fac_box p { position: relative; display: block; white-space: pre-line; flex-grow: 1; max-width: calc(100% - 44px); font-size: 14px; font-weight: 400; letter-spacing: -1px; line-height: 1.4; color: var(--font-color); opacity: 0.78; margin-right: 4px; background-color: transparent; width: auto; transition: all 0.3s ease-in-out; } 
+.memo_annotation_fac_box p:hover { opacity: 1; } 
 .memo_annotation_fac_box button { opacity: 0; transition: all 0.3s ease-in-out; margin-left: -2px; width: 22px; } 
 .memo_annotation_fac_box:hover button { opacity: 1; font-size: 13px; } 
 .memo_annotation_fac_box button:hover { color: var(--main-color); } 
 
 .memo_anno_common { position: relative; display: none; justify-content: flex-start; align-items: baseline; background-color: transparent; } 
 .memo_anno_common.active { display: flex; } 
-.memo_anno_common textarea { min-height: 22px; flex-grow: 1; background-color: transparent; border: none; resize: none; font-size: 14px; font-weight: 600; line-height: 22px; } 
+.memo_anno_common textarea { min-height: 22px; flex-grow: 1; background-color: transparent; border: none; resize: none; font-size: 14px; font-weight: 600; line-height: 22px; margin-right: 8px; } 
 .memo_anno_common textarea::-webkit-scrollbar { display: none; } 
 .memo_anno_common button { } 
+.memo_anno_common.corr textarea { background-color: rgba(255, 255, 255, 0.1); border-radius: 4px; padding: 8px; margin-right: 8px; } 
 
 /* Write */
 

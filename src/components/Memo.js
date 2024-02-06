@@ -308,7 +308,6 @@ function Memo() {
 
     // memo Annotation
     const [memoAnnoActive, setMemoAnnoActive] = useState();
-
     useEffect(() => {
         if (memoAnnoActive === 'active') {
             setMemoAnnoActive('active')
@@ -319,6 +318,7 @@ function Memo() {
 
     var newMemoAnno = useRef();
 
+    // memo anno add
     const memoAnnoBtn = (memo) => {
 
         const memoId = memo.id;
@@ -341,32 +341,38 @@ function Memo() {
         textArea.style.height = '22px';
     }
 
+    // memo anno correct box open
     const [memoAnnoCorrText, setMemoAnnoCorrText] = useState();
     const [annoCorrectActive, setAnnoCorrectActive] = useState('');
+    const [memoAnnoIndex, setMemoAnnoIndex] = useState();
     const memoAnnoCorrectBtn = (memo, i) => {
         if (annoCorrectActive !== 'active') {
             setAnnoCorrectActive('active');
         } else {
             setAnnoCorrectActive('');
         }
-
-        setMemoAnnoCorrText(memo.memoAnnotation[i]);
-
+        setMemoAnnoCorrText(memo.memoAnnotation[i]); 
+        setMemoAnnoIndex(i);
     }
 
-    const memoAnnoCorrComBtn = (memo) => {
+    // memo anno correct complete
+    const memoAnnoCorrComBtn = (memo, memoAnnoCorrProps) => {
 
         const corrMemoId = memo.id;
-        const corrMemoAnno = newMemoAnno.current.value;
-        const corrAnnotationKeys = Object.keys(memo.memoAnnotation);
+        const corrMemoAnno = memoAnnoCorrProps;
+        const corrAnnotationKeys = memoAnnoIndex;
 
         dispatch(memoListAnnoUpdate({ corrMemoId, corrMemoAnno, corrAnnotationKeys }));
         setAnnoCorrectActive('');
 
     }
 
-    const memoAnnoDeleteBtn = (memo) => {
-        console.log(memo);
+    // memo anno delete
+    const memoAnnoDeleteBtn = (memo, i) => {
+        const corrMemoId = memo.id;
+        const corrAnnotationKeys = i;
+
+        dispatch(memoListAnnoDelete({ corrMemoId, corrAnnotationKeys }));
     }
     //// memo Annotation
 
@@ -457,7 +463,7 @@ function Memo() {
 
                 {/* memoDetail */}
                 <div className={`memoDetail_content ${memoActive ? memoActive : ""}`}>
-                    {memoCurrent !== null && <MemoView memo={memoCurrent} memoAnnoCorrText={memoAnnoCorrText} />}
+                    {memoCurrent !== null && <MemoView memo={memoCurrent} />}
                     <div className='memoDetail_btn'>
                         <button className='icon-flow-split' onClick={() => {
                             setMemoAnnoActive('active');
@@ -522,11 +528,11 @@ function Memo() {
 
     )
 
-    function MemoView({ memo, memoAnnoCorrText }) {
+    function MemoView({ memo }) {
 
         const [memoAnnoCorrProps, setMemoAnnoCorrProps] = useState(memoAnnoCorrText);
         const memoCorrTextChange = (e) => {
-            setMemoAnnoCorrProps(e.value)
+            setMemoAnnoCorrProps(e.target.value)
         }
 
         return (
@@ -552,9 +558,9 @@ function Memo() {
                     <button className='icon-cancel' onClick={() => setMemoAnnoActive('')}></button>
                 </div>
 
-                <div className={`memo_anno_common ${annoCorrectActive ? 'active' : ''}`}>
+                <div className={`memo_anno_common corr ${annoCorrectActive ? 'active' : ''}`}>
                     <textarea value={memoAnnoCorrProps} onChange={(e) => memoCorrTextChange(e)} placeholder="memo_anno_correct"></textarea>
-                    <button className='icon-ok' onClick={() => memoAnnoCorrComBtn(memo)}></button>
+                    <button className='icon-ok' onClick={() => memoAnnoCorrComBtn(memo, memoAnnoCorrProps)}></button>
                     <button className='icon-cancel' onClick={() => setAnnoCorrectActive('')}></button>
                 </div>
 
@@ -575,7 +581,7 @@ function Memo() {
                                 <div className='memo_annotation_fac'>
                                     <i className='icon-level-down'></i>
                                     <div className='memo_annotation_fac_box'>
-                                        <p>{memo.memoAnnotation[i]}</p>
+                                        <p className='text'>{memo.memoAnnotation[i]}</p>
                                         <button className='icon-feather' onClick={() => { memoAnnoCorrectBtn(memo, i) }}></button>
                                         <button className='icon-trash' onClick={() => { memoAnnoDeleteBtn(memo, i) }}></button>
                                     </div>

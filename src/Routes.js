@@ -23,7 +23,6 @@ import Search from './components/Search.js'
 function Menu() {
 
     const location = useLocation();
-    const [MainMemoData, MainMemoCorrect] = useState([]);
 
     // useEffect(async () => {
     //     try {
@@ -66,7 +65,7 @@ function Menu() {
 
                         <Route path="/components/Search/:searchInputValue" element={<Search />} />
 
-                        <Route path="/components/Memo" element={<Memo MainMemoData={MainMemoData} />} />
+                        <Route path="/components/Memo" element={<Memo />} />
                         {/* <Route path="/components/Book" element={<Book />} /> */}
 
                     </Routes>
