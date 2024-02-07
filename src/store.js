@@ -47,8 +47,6 @@ let memoData = createSlice({
             const newAnnotation = newAnnoList.payload.memoAnno;
             const memoAnnoIndex = newAnnoList.payload.memoAnnoIndex;
 
-            console.log(state[updateMemoId].memoAnnotation)
-
             state[updateMemoId].memoAnnotation = {
                 ...state[updateMemoId].memoAnnotation,
                 [memoAnnoIndex]: newAnnotation,

@@ -178,7 +178,7 @@ main { position: absolute; display: block; top: 50%; left: 50%; transform: trans
 
 .memo_anno_common { position: relative; display: none; justify-content: flex-start; align-items: baseline; background-color: transparent; } 
 .memo_anno_common.active { display: flex; } 
-.memo_anno_common textarea { min-height: 22px; flex-grow: 1; background-color: transparent; border: none; resize: none; font-size: 14px; font-weight: 600; line-height: 22px; margin-right: 8px; } 
+.memo_anno_common textarea { flex-grow: 1; background-color: transparent; border: none; resize: none; font-size: 14px; font-weight: 600; line-height: 22px; margin-right: 8px; } 
 .memo_anno_common textarea::-webkit-scrollbar { display: none; } 
 .memo_anno_common button { } 
 .memo_anno_common.corr textarea { background-color: rgba(255, 255, 255, 0.1); border-radius: 4px; padding: 8px; margin-right: 8px; } 

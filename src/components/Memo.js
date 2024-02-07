@@ -123,8 +123,6 @@ function Memo() {
 
         setMemoCorrectActive('');
 
-        var textArea = document.querySelectorAll('memo_anno_textarea');
-        textArea.style.height = '22px';
     };
 
     useEffect(() => {
@@ -337,8 +335,6 @@ function Memo() {
         dispatch(memoListAnno({ memoId, memoAnno, memoAnnoIndex }));
         setMemoAnnoActive('')
 
-        var textArea = document.querySelectorAll('memo_anno_textarea');
-        textArea.style.height = '22px';
     }
 
     // memo anno correct box open
@@ -386,15 +382,14 @@ function Memo() {
 
     // anno textarea height
     const annoTextareaChange = (e) => {
-
-        var textArea = document.querySelectorAll('memo_anno_textarea');
-        var lineHeight = parseInt(window.getComputedStyle(textArea).lineHeight, 10);
-        var numberOfLines = Math.ceil(textArea.scrollHeight / lineHeight);
-
-        if (e.keyCode === 13) {
-            textArea.style.height = `${lineHeight * (numberOfLines + 1)}px`;
-        }
-
+        newMemoAnno.current.style.height = 'auto'; //height 초기화
+        newMemoAnno.current.style.height = newMemoAnno.current.scrollHeight + 'px';
+    }
+    
+    const textArea = useRef();
+    const annoTextareaChangeCorr = (e) => {
+        textArea.current.style.height = 'auto'; //height 초기화
+        textArea.current.style.height = textArea.current.scrollHeight + 'px';
     }
     //// anno textarea height
 
@@ -553,13 +548,16 @@ function Memo() {
                 </div>
 
                 <div className={`memo_anno_common ${memoAnnoActive ? 'active' : ''}`}>
-                    <textarea className='memo_anno_textarea' placeholder="memo_annotation" ref={newMemoAnno} onKeyDown={annoTextareaChange}></textarea>
+                    <textarea className='memo_anno_textarea' rows={1} placeholder="memo_annotation" ref={newMemoAnno} onChange={annoTextareaChange}></textarea>
                     <button className='icon-ok' onClick={() => memoAnnoBtn(memo)}></button>
                     <button className='icon-cancel' onClick={() => setMemoAnnoActive('')}></button>
                 </div>
 
                 <div className={`memo_anno_common corr ${annoCorrectActive ? 'active' : ''}`}>
-                    <textarea className='memo_anno_textarea' value={memoAnnoCorrProps} placeholder="memo_anno_correct" onChange={(e) => memoCorrTextChange(e)} onKeyDown={annoTextareaChange}></textarea>
+                    <textarea className='memo_anno_textarea' rows={1} placeholder="memo_anno_correct" ref={textArea} value={memoAnnoCorrProps} onChange={(e) => {
+                        memoCorrTextChange(e); 
+                        annoTextareaChangeCorr();
+                    }}></textarea>
                     <button className='icon-ok' onClick={() => memoAnnoCorrComBtn(memo, memoAnnoCorrProps)}></button>
                     <button className='icon-cancel' onClick={() => setAnnoCorrectActive('')}></button>
                 </div>
