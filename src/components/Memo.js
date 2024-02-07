@@ -341,15 +341,28 @@ function Memo() {
     const [memoAnnoCorrText, setMemoAnnoCorrText] = useState();
     const [annoCorrectActive, setAnnoCorrectActive] = useState('');
     const [memoAnnoIndex, setMemoAnnoIndex] = useState();
+
+    const textArea = useRef();
+    const [textAreaHeight, setTextAreaHeight] = useState();
+
     const memoAnnoCorrectBtn = (memo, i) => {
+
+        const memoAnnoText = document.querySelectorAll('.text');
+        setTextAreaHeight(memoAnnoText[i].clientHeight);
+
         if (annoCorrectActive !== 'active') {
             setAnnoCorrectActive('active');
         } else {
             setAnnoCorrectActive('');
         }
-        setMemoAnnoCorrText(memo.memoAnnotation[i]); 
+        setMemoAnnoCorrText(memo.memoAnnotation[i]);
         setMemoAnnoIndex(i);
     }
+
+    useEffect(() => {
+        console.log(textAreaHeight);
+        // textArea.current.style.height = textAreaHeight + 'px';
+    }, [textAreaHeight])
 
     // memo anno correct complete
     const memoAnnoCorrComBtn = (memo, memoAnnoCorrProps) => {
@@ -385,8 +398,7 @@ function Memo() {
         newMemoAnno.current.style.height = 'auto'; //height 초기화
         newMemoAnno.current.style.height = newMemoAnno.current.scrollHeight + 'px';
     }
-    
-    const textArea = useRef();
+
     const annoTextareaChangeCorr = (e) => {
         textArea.current.style.height = 'auto'; //height 초기화
         textArea.current.style.height = textArea.current.scrollHeight + 'px';
@@ -554,8 +566,8 @@ function Memo() {
                 </div>
 
                 <div className={`memo_anno_common corr ${annoCorrectActive ? 'active' : ''}`}>
-                    <textarea className='memo_anno_textarea' rows={1} placeholder="memo_anno_correct" ref={textArea} value={memoAnnoCorrProps} onChange={(e) => {
-                        memoCorrTextChange(e); 
+                    <textarea className='memo_anno_textarea' placeholder="memo_anno_correct" ref={textArea} value={memoAnnoCorrProps} onChange={(e) => {
+                        memoCorrTextChange(e);
                         annoTextareaChangeCorr();
                     }}></textarea>
                     <button className='icon-ok' onClick={() => memoAnnoCorrComBtn(memo, memoAnnoCorrProps)}></button>
