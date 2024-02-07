@@ -347,8 +347,7 @@ function Memo() {
 
     const memoAnnoCorrectBtn = (memo, i) => {
 
-        const memoAnnoText = document.querySelectorAll('.text');
-        setTextAreaHeight(memoAnnoText[i].clientHeight);
+        // const memoAnnoText = document.querySelectorAll('.text');
 
         if (annoCorrectActive !== 'active') {
             setAnnoCorrectActive('active');
@@ -360,8 +359,9 @@ function Memo() {
     }
 
     useEffect(() => {
-        console.log(textAreaHeight);
-        // textArea.current.style.height = textAreaHeight + 'px';
+        if (textAreaHeight !== undefined) {
+            textArea.current.style.height = textAreaHeight + 28 + 'px';
+        }
     }, [textAreaHeight])
 
     // memo anno correct complete
@@ -402,6 +402,7 @@ function Memo() {
     const annoTextareaChangeCorr = (e) => {
         textArea.current.style.height = 'auto'; //height 초기화
         textArea.current.style.height = textArea.current.scrollHeight + 'px';
+        setTextAreaHeight(textArea.current.scrollHeight);
     }
     //// anno textarea height
 
