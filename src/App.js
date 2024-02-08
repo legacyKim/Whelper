@@ -1,6 +1,10 @@
 import { React, useEffect, useState, useRef, useContext } from 'react';
 import { NavLink, useNavigate } from "react-router-dom";
 import MyContext from './context'
+
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 import './css/style.css';
 import Routes from './Routes'
 
@@ -108,6 +112,7 @@ function App() {
             <div id='app' className={`App ${theme}`}>
 
                 <Routes></Routes>
+                <ToastContainer />
 
                 <div className={`header ${scrollPosition > 0 ? "active" : ""}`}>
                     <div className='logo'>

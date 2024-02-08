@@ -169,19 +169,19 @@ main { position: absolute; display: block; top: 50%; left: 50%; transform: trans
 .memo_annotation>li>div.memo_annotation_fac { display: flex; justify-content: flex-start; } 
 .memo_annotation>li i { font-size: 16px; opacity: 0.38; margin-right: 4px; } 
 
-.memo_annotation_fac_box { display: flex; justify-content: flex-start; align-items: baseline; width: 100%; } 
-.memo_annotation_fac_box p { position: relative; display: block; white-space: pre-line; flex-grow: 1; max-width: calc(100% - 44px); font-size: 14px; font-weight: 400; letter-spacing: -1px; line-height: 1.4; color: var(--font-color); opacity: 0.78; margin-right: 4px; background-color: transparent; width: auto; transition: all 0.3s ease-in-out; } 
-.memo_annotation_fac_box p:hover { opacity: 1; } 
+.memo_annotation_fac_box { display: flex; justify-content: flex-start; align-items: flex-start; width: 100%; } 
+.memo_annotation_fac_box p { position: relative; display: block; white-space: pre-line; flex-grow: 1; max-width: calc(100% - 44px); font-size: 14px; line-height: 20px; font-weight: 400; letter-spacing: -1px; color: var(--font-color); opacity: 0.78; margin-right: 4px; background-color: transparent; width: auto; transition: all 0.3s ease-in-out; } 
+.memo_annotation_fac_box:hover p { background-color: rgba(255, 255, 255, 0.1); padding: 8px; opacity: 1; border-radius: 4px; } 
 .memo_annotation_fac_box button { opacity: 0; transition: all 0.3s ease-in-out; margin-left: -2px; width: 22px; } 
 .memo_annotation_fac_box:hover button { opacity: 1; font-size: 13px; } 
 .memo_annotation_fac_box button:hover { color: var(--main-color); } 
 
-.memo_anno_common { position: relative; display: none; justify-content: flex-start; align-items: baseline; background-color: transparent; } 
+.memo_anno_common { position: relative; display: none; justify-content: flex-start; align-items: flex-start; background-color: transparent; } 
 .memo_anno_common.active { display: flex; } 
-.memo_anno_common textarea { flex-grow: 1; background-color: transparent; border: none; resize: none; font-size: 14px; font-weight: 600; line-height: 22px; margin-right: 8px; } 
+.memo_anno_common textarea { flex-grow: 1; background-color: transparent; resize: none; font-size: 14px; font-weight: 600; line-height: 20px; margin-right: 8px; border: 1px solid rgba(255, 255,255, 0.3); padding: 8px; border-radius: 8px; } 
 .memo_anno_common textarea::-webkit-scrollbar { display: none; } 
 .memo_anno_common button { } 
-.memo_anno_common.corr textarea { background-color: rgba(255, 255, 255, 0.1); border-radius: 4px; padding: 8px; margin-right: 8px; } 
+.memo_anno_common.corr textarea { background-color: rgba(255, 255, 255, 0.1); border-radius: 4px; padding: 8px; margin-right: 8px; border: 0; } 
 
 /* Write */
 

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
 import { useSelector, useDispatch } from "react-redux"
 import MyContext from '../context'
-import { CSSTransition, TransitionGroup } from 'react-transition-group';
+import { toast } from 'react-toastify';
 
 import '../css/style.css';
 import { memoListDataAdd, memoListDataDelete, memoListDataUpdate, memoListAnno, memoListAnnoUpdate, memoListAnnoDelete, bookListDataAdd, bookListDelete } from "../store.js"
@@ -10,6 +10,11 @@ function Memo() {
 
     let memoListState = useSelector((state) => state.memoData);
     let bookListState = useSelector((state) => state.bookData);
+
+    // alert
+    const showToast = () => {
+        toast.success('하위 컴포넌트에서의 알림!');
+    };
 
     // book Add
     const [isBookAdd, setIsBookAdd] = useState(false);
@@ -347,12 +352,11 @@ function Memo() {
 
     const memoAnnoCorrectBtn = (memo, i) => {
 
-        // const memoAnnoText = document.querySelectorAll('.text');
+        const memoAnnoText = document.querySelectorAll('.text');
+        setTextAreaHeight(memoAnnoText[i].clientHeight);
 
         if (annoCorrectActive !== 'active') {
             setAnnoCorrectActive('active');
-        } else {
-            setAnnoCorrectActive('');
         }
         setMemoAnnoCorrText(memo.memoAnnotation[i]);
         setMemoAnnoIndex(i);
@@ -360,7 +364,7 @@ function Memo() {
 
     useEffect(() => {
         if (textAreaHeight !== undefined) {
-            textArea.current.style.height = textAreaHeight + 28 + 'px';
+            textArea.current.style.height = textAreaHeight + 'px';
         }
     }, [textAreaHeight])
 
@@ -373,6 +377,7 @@ function Memo() {
 
         dispatch(memoListAnnoUpdate({ corrMemoId, corrMemoAnno, corrAnnotationKeys }));
         setAnnoCorrectActive('');
+        setTextAreaHeight('');
 
     }
 
@@ -402,7 +407,6 @@ function Memo() {
     const annoTextareaChangeCorr = (e) => {
         textArea.current.style.height = 'auto'; //height 초기화
         textArea.current.style.height = textArea.current.scrollHeight + 'px';
-        setTextAreaHeight(textArea.current.scrollHeight);
     }
     //// anno textarea height
 
@@ -594,7 +598,10 @@ function Memo() {
                                     <div className='memo_annotation_fac_box'>
                                         <p className='text'>{memo.memoAnnotation[i]}</p>
                                         <button className='icon-feather' onClick={() => { memoAnnoCorrectBtn(memo, i) }}></button>
-                                        <button className='icon-trash' onClick={() => { memoAnnoDeleteBtn(memo, i) }}></button>
+                                        <button className='icon-trash' onClick={() => {
+                                            // memoAnnoDeleteBtn(memo, i);
+                                            showToast();
+                                        }}></button>
                                     </div>
                                 </div>
 
