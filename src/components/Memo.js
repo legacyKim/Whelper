@@ -342,25 +342,26 @@ function Memo() {
     const [annoCorrectActive, setAnnoCorrectActive] = useState('');
     const [memoAnnoIndex, setMemoAnnoIndex] = useState();
 
-    const textArea = useRef();
+    const textareaCorr = useRef();
     const [textAreaHeight, setTextAreaHeight] = useState();
 
     const memoAnnoCorrectBtn = (memo, i) => {
 
-        // const memoAnnoText = document.querySelectorAll('.text');
+        const memoAnnoText = document.querySelectorAll('.text');
 
         if (annoCorrectActive !== 'active') {
             setAnnoCorrectActive('active');
         } else {
             setAnnoCorrectActive('');
         }
+        setTextAreaHeight(memoAnnoText[i].clientHeight);
         setMemoAnnoCorrText(memo.memoAnnotation[i]);
         setMemoAnnoIndex(i);
     }
 
     useEffect(() => {
-        if (textAreaHeight !== undefined) {
-            textArea.current.style.height = textAreaHeight + 28 + 'px';
+        if (textAreaHeight !== undefined) {            
+            textareaCorr.current.style.height = textAreaHeight + 28 + 'px';
         }
     }, [textAreaHeight])
 
@@ -400,9 +401,8 @@ function Memo() {
     }
 
     const annoTextareaChangeCorr = (e) => {
-        textArea.current.style.height = 'auto'; //height 초기화
-        textArea.current.style.height = textArea.current.scrollHeight + 'px';
-        setTextAreaHeight(textArea.current.scrollHeight);
+        textareaCorr.current.style.height = 'auto'; //height 초기화
+        textareaCorr.current.style.height = textareaCorr.current.scrollHeight + 'px';
     }
     //// anno textarea height
 
@@ -567,7 +567,7 @@ function Memo() {
                 </div>
 
                 <div className={`memo_anno_common corr ${annoCorrectActive ? 'active' : ''}`}>
-                    <textarea className='memo_anno_textarea' placeholder="memo_anno_correct" ref={textArea} value={memoAnnoCorrProps} onChange={(e) => {
+                    <textarea className='memo_anno_textarea' placeholder="memo_anno_correct" ref={textareaCorr} value={memoAnnoCorrProps} onChange={(e) => {
                         memoCorrTextChange(e);
                         annoTextareaChangeCorr();
                     }}></textarea>
