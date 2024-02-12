@@ -286,7 +286,7 @@ function Memo() {
             setMemoArr(memoListState.filter((item) => item.memoSource === bookTitle));
         }
         setMemoCurrent(null);
-    }, [bookTitle])
+    }, [bookTitle]);
     //// book name check
 
     // context api scroll pos
@@ -354,14 +354,15 @@ function Memo() {
         } else {
             setAnnoCorrectActive('');
         }
-        setTextAreaHeight(memoAnnoText[i].clientHeight);
+
         setMemoAnnoCorrText(memo.memoAnnotation[i]);
+        setTextAreaHeight(memoAnnoText[i].clientHeight);
         setMemoAnnoIndex(i);
     }
 
     useEffect(() => {
         if (textAreaHeight !== undefined) {            
-            textareaCorr.current.style.height = textAreaHeight + 28 + 'px';
+            textareaCorr.current.style.height = textAreaHeight + 16 + 'px';
         }
     }, [textAreaHeight])
 
