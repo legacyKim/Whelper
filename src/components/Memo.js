@@ -291,7 +291,7 @@ function Memo() {
             setMemoArr(memoListState.filter((item) => item.memoSource === bookTitle));
         }
         setMemoCurrent(null);
-    }, [bookTitle])
+    }, [bookTitle]);
     //// book name check
 
     // context api scroll pos
@@ -347,24 +347,25 @@ function Memo() {
     const [annoCorrectActive, setAnnoCorrectActive] = useState('');
     const [memoAnnoIndex, setMemoAnnoIndex] = useState();
 
-    const textArea = useRef();
+    const textareaCorr = useRef();
     const [textAreaHeight, setTextAreaHeight] = useState();
 
     const memoAnnoCorrectBtn = (memo, i) => {
 
         const memoAnnoText = document.querySelectorAll('.text');
-        setTextAreaHeight(memoAnnoText[i].clientHeight);
 
         if (annoCorrectActive !== 'active') {
             setAnnoCorrectActive('active');
         }
+
         setMemoAnnoCorrText(memo.memoAnnotation[i]);
+        setTextAreaHeight(memoAnnoText[i].clientHeight);
         setMemoAnnoIndex(i);
     }
 
     useEffect(() => {
-        if (textAreaHeight !== undefined) {
-            textArea.current.style.height = textAreaHeight + 'px';
+        if (textAreaHeight !== undefined) {            
+            textareaCorr.current.style.height = textAreaHeight + 16 + 'px';
         }
     }, [textAreaHeight])
 
@@ -405,8 +406,8 @@ function Memo() {
     }
 
     const annoTextareaChangeCorr = (e) => {
-        textArea.current.style.height = 'auto'; //height 초기화
-        textArea.current.style.height = textArea.current.scrollHeight + 'px';
+        textareaCorr.current.style.height = 'auto'; //height 초기화
+        textareaCorr.current.style.height = textareaCorr.current.scrollHeight + 'px';
     }
     //// anno textarea height
 
@@ -571,7 +572,7 @@ function Memo() {
                 </div>
 
                 <div className={`memo_anno_common corr ${annoCorrectActive ? 'active' : ''}`}>
-                    <textarea className='memo_anno_textarea' placeholder="memo_anno_correct" ref={textArea} value={memoAnnoCorrProps} onChange={(e) => {
+                    <textarea className='memo_anno_textarea' placeholder="memo_anno_correct" ref={textareaCorr} value={memoAnnoCorrProps} onChange={(e) => {
                         memoCorrTextChange(e);
                         annoTextareaChangeCorr();
                     }}></textarea>
