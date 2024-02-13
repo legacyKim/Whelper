@@ -364,8 +364,11 @@ function Memo() {
     }
 
     useEffect(() => {
-        if (textAreaHeight !== undefined) {            
-            textareaCorr.current.style.height = textAreaHeight + 16 + 'px';
+        if (textAreaHeight !== undefined) {
+            textareaCorr.current.style.height = textAreaHeight + 'px';
+        } else {
+            textareaCorr.current.style.height = '36px';
+            // checking
         }
     }, [textAreaHeight])
 
@@ -486,7 +489,11 @@ function Memo() {
                                 memoCorrectOn(memoCurrent);
                                 memoDetailClose();
                             }}></button>
-                        <button className='icon-cancel' onClick={memoDetailClose}></button>
+                        <button className='icon-cancel' onClick={() => {
+                            memoDetailClose();
+                            setAnnoCorrectActive('');
+                            setMemoAnnoActive('');
+                        }}></button>
                     </div>
                 </div>
                 {/* memoDetail */}
