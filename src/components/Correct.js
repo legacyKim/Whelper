@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
 
-import '../css/style.css';
-
 class Correct extends Component {
 
     render() {

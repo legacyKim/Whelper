@@ -4,7 +4,6 @@ import { useSelector, useDispatch } from "react-redux"
 import { useParams, Link } from 'react-router-dom';
 import MyContext from '../context'
 
-import '../css/style.css';
 import ViewEdit from './SlateView.js'
 
 function Search() {

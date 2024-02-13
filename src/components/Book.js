@@ -1,7 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
 
-import '../css/style.css';
-
 function Book () {
 
     return (

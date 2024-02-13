@@ -4,7 +4,6 @@ import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { Slate, Editable } from 'slate-react';
 
-import '../css/style.css';
 import ViewEdit from './SlateView.js'
 
 function WriteView() {

@@ -3,8 +3,6 @@ import { React, useEffect, useState, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useSelector, useDispatch } from "react-redux"
 
-import '../css/style.css';
-
 function Date() {
 
     let writeListState = useSelector((state) => state.WriteData);

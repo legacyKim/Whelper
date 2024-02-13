@@ -6,8 +6,6 @@ import axios from 'axios';
 import { Route, Routes, useLocation } from "react-router-dom";
 import history from './history.ts'
 
-import './css/style.css';
-
 import Memo from './components/Memo.js'
 
 import Write from './components/Write.js'

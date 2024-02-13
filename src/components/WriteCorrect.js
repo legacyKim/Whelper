@@ -8,8 +8,6 @@ import escapeHtml from 'escape-html'
 
 import { useParams, Link, useNavigate } from 'react-router-dom';
 
-import '../css/style.css';
-
 // slate editor
 const CustomEditor = {
 

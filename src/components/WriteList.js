@@ -3,7 +3,6 @@ import { useSelector, useDispatch } from "react-redux"
 import { Link } from 'react-router-dom';
 // import { writeListDataDelete } from "../store"
 
-import '../css/style.css';
 import ViewEdit from './SlateView.js'
 
 function WriteList() {

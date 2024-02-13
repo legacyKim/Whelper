@@ -3,7 +3,6 @@ import { useSelector, useDispatch } from "react-redux"
 import MyContext from '../context'
 import { toast } from 'react-toastify';
 
-import '../css/style.css';
 import { memoListDataAdd, memoListDataDelete, memoListDataUpdate, memoListAnno, memoListAnnoUpdate, memoListAnnoDelete, bookListDataAdd, bookListDelete } from "../store.js"
 
 function Memo() {
@@ -13,7 +12,12 @@ function Memo() {
 
     // alert
     const showToast = () => {
-        toast.success('하위 컴포넌트에서의 알림!');
+        toast('안녕하세요!', {
+            style: {
+                color: '#333',
+                zIndex: '99999',
+            },
+        });
     };
 
     // book Add
@@ -315,7 +319,7 @@ function Memo() {
         if (memoAnnoActive === 'active') {
             setMemoAnnoActive('active')
         } else {
-            setMemoAnnoActive('')
+            setMemoAnnoActive('');
         }
     }, [memoAnnoActive]);
 
@@ -338,7 +342,8 @@ function Memo() {
         const memoAnnoIndex = newKey;
 
         dispatch(memoListAnno({ memoId, memoAnno, memoAnnoIndex }));
-        setMemoAnnoActive('')
+        setMemoAnnoActive('');
+        setTextAreaHeight(null);
 
     }
 
@@ -366,9 +371,6 @@ function Memo() {
     useEffect(() => {
         if (textAreaHeight !== undefined) {
             textareaCorr.current.style.height = textAreaHeight + 'px';
-        } else {
-            textareaCorr.current.style.height = '36px';
-            // checking
         }
     }, [textAreaHeight])
 
@@ -381,7 +383,7 @@ function Memo() {
 
         dispatch(memoListAnnoUpdate({ corrMemoId, corrMemoAnno, corrAnnotationKeys }));
         setAnnoCorrectActive('');
-        setTextAreaHeight('');
+        setTextAreaHeight(null);
 
     }
 
@@ -483,6 +485,8 @@ function Memo() {
                     <div className='memoDetail_btn'>
                         <button className='icon-flow-split' onClick={() => {
                             setMemoAnnoActive('active');
+                            setAnnoCorrectActive('');
+                            setTextAreaHeight(null);
                         }}></button>
                         <button className='icon-edit-alt'
                             onClick={() => {
@@ -493,6 +497,7 @@ function Memo() {
                             memoDetailClose();
                             setAnnoCorrectActive('');
                             setMemoAnnoActive('');
+                            setTextAreaHeight(null);
                         }}></button>
                     </div>
                 </div>
@@ -575,7 +580,10 @@ function Memo() {
                 <div className={`memo_anno_common ${memoAnnoActive ? 'active' : ''}`}>
                     <textarea className='memo_anno_textarea' rows={1} placeholder="memo_annotation" ref={newMemoAnno} onChange={annoTextareaChange}></textarea>
                     <button className='icon-ok' onClick={() => memoAnnoBtn(memo)}></button>
-                    <button className='icon-cancel' onClick={() => setMemoAnnoActive('')}></button>
+                    <button className='icon-cancel' onClick={() => {
+                        setMemoAnnoActive('')
+                        setTextAreaHeight(null);
+                    }}></button>
                 </div>
 
                 <div className={`memo_anno_common corr ${annoCorrectActive ? 'active' : ''}`}>
@@ -584,7 +592,10 @@ function Memo() {
                         annoTextareaChangeCorr();
                     }}></textarea>
                     <button className='icon-ok' onClick={() => memoAnnoCorrComBtn(memo, memoAnnoCorrProps)}></button>
-                    <button className='icon-cancel' onClick={() => setAnnoCorrectActive('')}></button>
+                    <button className='icon-cancel' onClick={() => {
+                        setAnnoCorrectActive('')
+                        setTextAreaHeight(null);
+                    }}></button>
                 </div>
 
                 {memo.memoAnnotation !== null && <MemoAnno memo={memo} />}
@@ -605,7 +616,10 @@ function Memo() {
                                     <i className='icon-level-down'></i>
                                     <div className='memo_annotation_fac_box'>
                                         <p className='text'>{memo.memoAnnotation[i]}</p>
-                                        <button className='icon-feather' onClick={() => { memoAnnoCorrectBtn(memo, i) }}></button>
+                                        <button className='icon-feather' onClick={() => {
+                                            memoAnnoCorrectBtn(memo, i);
+                                            setMemoAnnoActive('')
+                                        }}></button>
                                         <button className='icon-trash' onClick={() => {
                                             // memoAnnoDeleteBtn(memo, i);
                                             showToast();

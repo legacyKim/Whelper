@@ -3,8 +3,6 @@ import { React, useEffect, useState, useRef } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useSelector } from "react-redux"
 
-import '../css/style.css';
-import '../lib/fontello/css/animation.css'
 import ViewEdit from './SlateView.js'
 
 function Category() {

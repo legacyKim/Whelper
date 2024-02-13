@@ -6,8 +6,8 @@ import store from './store.js'
 
 import './css/index.css';
 import './css/base.css';
-
-import './lib/fontello/css/fontello.css'
+import './css/style.css';
+import './css/fontello/css/fontello.css'
 
 import App from './App';
 import reportWebVitals from './reportWebVitals';
