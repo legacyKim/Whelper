@@ -1,7 +1,7 @@
 import mysql.connector
 from dotenv import load_dotenv
 
-load_dotenv()
+load_dotenv(dotenv_path='/process.env')
 
 db_config = {
     "host": os.environ.get("MYSQL_HOST", "default_host"),
@@ -11,7 +11,6 @@ db_config = {
 }
 
 conn = mysql.connector.connect(**db_config)
-
 cursor = conn.cursor()
 
 try:

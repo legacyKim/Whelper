@@ -1,7 +1,6 @@
 {
-    "svn.ignoreMissingSvnWarning": true,
     "[python]": {
-        "editor.defaultFormatter": "ms-python.python",
+        "editor.defaultFormatter": "esbenp.prettier",
         "editor.formatOnSave": true
-    }
+    },
 }
