@@ -1,16 +1,27 @@
+import os
 import mysql.connector
+
 from dotenv import load_dotenv
 
-load_dotenv(dotenv_path='/process.env')
+load_dotenv()
 
 db_config = {
-    "host": os.environ.get("MYSQL_HOST", "default_host"),
-    "user": os.environ.get("MYSQL_USER", "default_user"),
-    "password": os.environ.get("MYSQL_PASSWORD", "default_password"),
-    "database": os.environ.get("MYSQL_DATABASE", "default_database")
+    "host": os.environ.get("MYSQL_HOST"),
+    "user": os.environ.get("MYSQL_USER"),
+    "password": os.environ.get("MYSQL_PASSWORD"),
+    "database": os.environ.get("MYSQL_DATABASE"),
 }
 
+print(db_config)
+
 conn = mysql.connector.connect(**db_config)
+
+if conn.is_connected():
+    print("Connected to MySQL")
+    conn.close()
+else:
+    print("Failed to connect to MySQL")
+
 cursor = conn.cursor()
 
 try:
