@@ -1,45 +1,47 @@
 import os
 import mysql.connector
-
 from dotenv import load_dotenv
 
 load_dotenv()
 
-db_config = {
-    "host": os.environ.get("MYSQL_HOST"),
-    "user": os.environ.get("MYSQL_USER"),
-    "password": os.environ.get("MYSQL_PASSWORD"),
-    "database": os.environ.get("MYSQL_DATABASE"),
-}
 
-print(db_config)
+def get_db_connection():
 
-conn = mysql.connector.connect(**db_config)
+    db_config = {
+        "host": os.environ.get("MYSQL_HOST"),
+        "user": os.environ.get("MYSQL_USER"),
+        "password": os.environ.get("MYSQL_PASSWORD"),
+        "database": os.environ.get("MYSQL_DATABASE"),
+    }
 
-if conn.is_connected():
-    print("Connected to MySQL")
-    conn.close()
-else:
-    print("Failed to connect to MySQL")
+    return mysql.connector.connect(**db_config)
 
-cursor = conn.cursor()
 
 try:
-    # 쿼리 실행
-    query = "SELECT * FROM your_table_name"
-    cursor.execute(query)
+    conn = get_db_connection()
 
-    # 결과 가져오기
-    result = cursor.fetchall()
+    if conn.is_connected():
+        print("Connected to MySQL")
+        cursor = conn.cursor()
 
-    # 결과 출력
-    for row in result:
-        print(row)
+        # 필요 작업 수행
+        # 쿼리 실행
+        query = "SELECT * FROM write_index"
+        cursor.execute(query)
 
-except Exception as e:
-    print("Error:", e)
+        # 결과 가져오기
+        result = cursor.fetchall()
 
-finally:
-    # 연결 및 커서 닫기
-    cursor.close()
+        # 결과 출력
+        for row in result:
+            print(row)
+
+        # 커서 닫기
+        cursor.close()
+
+    # 연결 닫기
     conn.close()
+    print("MySQL connection closed")
+
+except mysql.connector.Error as err:
+    print(f"Failed to connect to MySQL: {err}")

@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux"
 import MyContext from '../context'
 import { toast } from 'react-toastify';
 
-import { memoListDataAdd, memoListDataDelete, memoListDataUpdate, memoListAnno, memoListAnnoUpdate, memoListAnnoDelete, bookListDataAdd, bookListDelete } from "../store.js"
+import { memoListDataAdd, memoListDataDelete, memoListDataUpdate, memoListAnno, memoListAnnoUpdate, memoListAnnoDelete, bookListDataAdd, bookListDelete } from "../data/store.js"
 
 function Memo() {
 

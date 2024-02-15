@@ -8,6 +8,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import './css/style.css';
 import Routes from './Routes'
 
+import axios from 'axios';
+
 function App() {
 
     const navigate = useNavigate();

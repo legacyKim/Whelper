@@ -2,7 +2,7 @@ import React, { useRef, useState, useMemo, useCallback } from 'react';
 import { useDispatch, useSelector } from "react-redux"
 import { Link } from 'react-router-dom';
 
-import { writeListDataAdd } from "../store.js"
+import { writeListDataAdd } from "../data/store.js"
 
 import { createEditor, Editor, Transforms, Text, Element as SlateElement, Node, } from 'slate';
 import { Slate, Editable, withReact } from 'slate-react'

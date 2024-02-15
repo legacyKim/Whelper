@@ -1,9 +1,13 @@
 import { configureStore, createSlice } from '@reduxjs/toolkit'
-import WriteListData from './data/data'
-import SearchListData from './data/searchData'
-import memoListData from './data/dataMemo'
-import CateListData from './data/cateData'
-import bookListData from './data/bookData'
+import { createStore, applyMiddleware } from 'redux';
+import thunk from 'redux-thunk';
+import rootReducer from './reducers';
+
+import WriteListData from './data'
+import SearchListData from './searchData'
+import memoListData from './dataMemo'
+import CateListData from './cateData'
+import bookListData from './bookData'
 
 let WriteData = createSlice({
     name: 'WriteData',
@@ -105,6 +109,7 @@ export const { writeListDataAdd, writeListDataUpdate, writeListDataDelete } = Wr
 export const { memoListDataAdd, memoListDataDelete, memoListDataUpdate, memoListAnno, memoListAnnoUpdate, memoListAnnoDelete } = memoData.actions;
 export const { cateListDataAdd } = cateData.actions;
 export const { bookListDataAdd, bookListDelete } = bookData.actions;
+export const store = createStore(rootReducer, applyMiddleware(thunk));
 
 export default configureStore({
     reducer: {
