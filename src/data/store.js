@@ -70,7 +70,7 @@ let memoData = createSlice({
                 if (item.id === updateWriteId) {
                     const updatedAnnotations = { ...item.memoAnnotation };
                     delete updatedAnnotations[AnnoKey];
-                    return { ...item, memoAnnotation : updatedAnnotations, };
+                    return { ...item, memoAnnotation: updatedAnnotations, };
                 }
                 return item;
             });
@@ -105,11 +105,11 @@ let bookData = createSlice({
     },
 })
 
+export const store = createStore(rootReducer, applyMiddleware(thunk));
 export const { writeListDataAdd, writeListDataUpdate, writeListDataDelete } = WriteData.actions;
 export const { memoListDataAdd, memoListDataDelete, memoListDataUpdate, memoListAnno, memoListAnnoUpdate, memoListAnnoDelete } = memoData.actions;
 export const { cateListDataAdd } = cateData.actions;
 export const { bookListDataAdd, bookListDelete } = bookData.actions;
-export const store = createStore(rootReducer, applyMiddleware(thunk));
 
 export default configureStore({
     reducer: {
@@ -119,3 +119,5 @@ export default configureStore({
         bookData: bookData.reducer,
     },
 });
+
+export { store }
