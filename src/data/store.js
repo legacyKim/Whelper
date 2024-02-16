@@ -9,6 +9,8 @@ import memoListData from './dataMemo'
 import CateListData from './cateData'
 import bookListData from './bookData'
 
+export const store = createStore(rootReducer, applyMiddleware(thunk));
+
 let WriteData = createSlice({
     name: 'WriteData',
     initialState: WriteListData,
@@ -105,7 +107,6 @@ let bookData = createSlice({
     },
 })
 
-export const store = createStore(rootReducer, applyMiddleware(thunk));
 export const { writeListDataAdd, writeListDataUpdate, writeListDataDelete } = WriteData.actions;
 export const { memoListDataAdd, memoListDataDelete, memoListDataUpdate, memoListAnno, memoListAnnoUpdate, memoListAnnoDelete } = memoData.actions;
 export const { cateListDataAdd } = cateData.actions;
@@ -119,5 +120,3 @@ export default configureStore({
         bookData: bookData.reducer,
     },
 });
-
-export { store }

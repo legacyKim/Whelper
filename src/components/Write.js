@@ -1,9 +1,9 @@
-import React, { useRef, useState, useMemo, useCallback } from 'react';
+import React, { useRef, useState, useMemo, useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from "react-redux"
-import { fetchData } from '../data/actions'; 
 import { Link } from 'react-router-dom';
 
-import { writeListDataAdd } from "../data/store.js"
+import { fetchData } from '/data/actions';
+import { writeListDataAdd } from "/data/store.js"
 
 import { createEditor, Editor, Transforms, Text, Element as SlateElement, Node, } from 'slate';
 import { Slate, Editable, withReact } from 'slate-react'
@@ -84,13 +84,19 @@ const serialize = nodes => {
                 return children;
         }
     }).join('');
-    
+
 };
 //// serial, deserial
 
 function Write() {
 
-    const writeListState = useSelector((state) => state.WriteData);
+    const dispatch = useDispatch();
+    const { writeListState, error } = useSelector((state) => state.WriteData);
+
+    useEffect(() => {
+        // 액션 디스패치하여 데이터 요청
+        dispatch(fetchData());
+    }, [dispatch]);
 
     // category popup
     const [popupActive, popupActiveStyle] = useState(false);
@@ -192,7 +198,6 @@ function Write() {
     //// content and local storage change
 
     // save content
-    const dispatch = useDispatch();
     const WriteSaveBtn = () => {
 
         const id = writeListState.length;
@@ -261,7 +266,7 @@ function Write() {
                 }}>
                 <Editable className='write_title'
                     placeholder="Title"
-                    editor={titleEditor}/>
+                    editor={titleEditor} />
             </Slate>
 
             <Slate
@@ -277,7 +282,7 @@ function Write() {
                 }}>
                 <Editable className='write_subtitle'
                     placeholder="Sub Title"
-                    editor={subTitleEditor}/>
+                    editor={subTitleEditor} />
             </Slate>
 
             <Slate

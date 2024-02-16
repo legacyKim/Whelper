@@ -6,7 +6,7 @@ export const fetchData = () => {
 
         try {
 
-            const response = await axios.get('/src/components/Write');
+            const response = await axios.get('http://localhost:5000/src/components/Write');
             dispatch({
                 type: 'FETCH_SUCCESS',
                 payload: response.data,
