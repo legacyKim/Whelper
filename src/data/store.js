@@ -1,15 +1,14 @@
-import { configureStore, createSlice } from '@reduxjs/toolkit'
+import { configureStore, createSlice, getDefaultMiddleware } from '@reduxjs/toolkit'
 import { createStore, applyMiddleware } from 'redux';
-import thunk from 'redux-thunk';
+import { thunk } from 'redux-thunk';
+
 import rootReducer from './reducers';
 
-import WriteListData from './data'
-import SearchListData from './searchData'
-import memoListData from './dataMemo'
-import CateListData from './cateData'
-import bookListData from './bookData'
-
-export const store = createStore(rootReducer, applyMiddleware(thunk));
+import WriteListData from './data_random/data'
+import SearchListData from './data_random/searchData'
+import memoListData from './data_random/dataMemo'
+import CateListData from './data_random/cateData'
+import bookListData from './data_random/bookData'
 
 let WriteData = createSlice({
     name: 'WriteData',
@@ -31,7 +30,7 @@ let WriteData = createSlice({
             return state.filter(item => item.id !== deleteWriteId);
         },
     }
-})
+});
 
 let memoData = createSlice({
     name: 'memoData',
@@ -107,6 +106,10 @@ let bookData = createSlice({
     },
 })
 
+export const store = createStore(
+    rootReducer,
+    applyMiddleware(thunk, ...getDefaultMiddleware()), // 여기에서 수정
+);
 export const { writeListDataAdd, writeListDataUpdate, writeListDataDelete } = WriteData.actions;
 export const { memoListDataAdd, memoListDataDelete, memoListDataUpdate, memoListAnno, memoListAnnoUpdate, memoListAnnoDelete } = memoData.actions;
 export const { cateListDataAdd } = cateData.actions;

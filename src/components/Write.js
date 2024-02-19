@@ -2,8 +2,8 @@ import React, { useRef, useState, useMemo, useCallback, useEffect } from 'react'
 import { useDispatch, useSelector } from "react-redux"
 import { Link } from 'react-router-dom';
 
-import { fetchData } from '/data/actions';
-import { writeListDataAdd } from "/data/store.js"
+import { fetchData } from '../data/actions';
+import { writeListDataAdd } from "../data/store"
 
 import { createEditor, Editor, Transforms, Text, Element as SlateElement, Node, } from 'slate';
 import { Slate, Editable, withReact } from 'slate-react'
