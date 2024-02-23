@@ -45,3 +45,8 @@ try:
 
 except mysql.connector.Error as err:
     print(f"Failed to connect to MySQL: {err}")
+finally:
+    # 연결 닫기
+    if conn.is_connected():
+        conn.close()
+        print("MySQL connection closed")

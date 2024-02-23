@@ -2,7 +2,7 @@ import React, { useRef, useState, useMemo, useCallback, useEffect } from 'react'
 import { useDispatch, useSelector } from "react-redux"
 import { Link } from 'react-router-dom';
 
-import { fetchData } from '../data/actions';
+import { writeListData } from "../data/api"
 import { writeListDataAdd } from "../data/store"
 
 import { createEditor, Editor, Transforms, Text, Element as SlateElement, Node, } from 'slate';
@@ -91,12 +91,13 @@ const serialize = nodes => {
 function Write() {
 
     const dispatch = useDispatch();
+    useEffect(() => {
+        dispatch(writeListData());
+    }, [dispatch]);
+
     const { writeListState, error } = useSelector((state) => state.WriteData);
 
-    useEffect(() => {
-        // 액션 디스패치하여 데이터 요청
-        dispatch(fetchData());
-    }, [dispatch]);
+    console.log(writeListState);
 
     // category popup
     const [popupActive, popupActiveStyle] = useState(false);

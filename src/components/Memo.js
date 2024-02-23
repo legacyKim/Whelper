@@ -1,11 +1,20 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
-import { useSelector, useDispatch } from "react-redux"
+import { useDispatch, useSelector  } from "react-redux"
 import MyContext from '../context'
 import { toast } from 'react-toastify';
 
+import { memoListData } from "../data/api"
+import { bookListData } from "../data/api"
 import { memoListDataAdd, memoListDataDelete, memoListDataUpdate, memoListAnno, memoListAnnoUpdate, memoListAnnoDelete, bookListDataAdd, bookListDelete } from "../data/store.js"
 
+
 function Memo() {
+
+    const dispatch = useDispatch();
+    useEffect(() => {
+        dispatch(memoListData());
+        dispatch(bookListData());
+    }, [dispatch]);
 
     let memoListState = useSelector((state) => state.memoData);
     let bookListState = useSelector((state) => state.bookData);
@@ -179,7 +188,6 @@ function Memo() {
     // memo save
     const [memo, setMemo] = useState(memoListState);
 
-    const dispatch = useDispatch();
     var newMemoSource = useRef(null);
     var newMemoAuthor = useRef(null);
     var newMemoComment = useRef(null);

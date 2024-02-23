@@ -2,124 +2,13 @@ import { configureStore, createSlice, getDefaultMiddleware } from '@reduxjs/tool
 import { createStore, applyMiddleware } from 'redux';
 import { thunk } from 'redux-thunk';
 
-import rootReducer from './reducers';
+import { WriteData, memoData, cateData, bookData, rootReducer } from './reducers.js';
 
-import WriteListData from './data_random/data'
-import SearchListData from './data_random/searchData'
-import memoListData from './data_random/dataMemo'
-import CateListData from './data_random/cateData'
-import bookListData from './data_random/bookData'
-
-let WriteData = createSlice({
-    name: 'WriteData',
-    initialState: WriteListData,
-    reducers: {
-        writeListDataAdd(state, newWriteList) {
-            const newWrite = [...state, newWriteList.payload];
-            return newWrite;
-        },
-        writeListDataUpdate(state, updateWriteList) {
-            const updateWriteId = updateWriteList.payload.id;
-            state[updateWriteId].title = updateWriteList.payload.updateTitle;
-            state[updateWriteId].subTitle = updateWriteList.payload.updateSubTitle;
-            state[updateWriteId].content = updateWriteList.payload.updateContent;
-            state[updateWriteId].keyword = updateWriteList.payload.updateKeyword;
-        },
-        writeListDataDelete(state, deleteWriteList) {
-            const deleteWriteId = deleteWriteList.payload.id;
-            return state.filter(item => item.id !== deleteWriteId);
-        },
-    }
-});
-
-let memoData = createSlice({
-    name: 'memoData',
-    initialState: memoListData,
-    reducers: {
-        memoListDataAdd(state, newMemoList) {
-            const newMemo = [...state, newMemoList.payload];
-            return newMemo;
-        },
-        memoListDataUpdate(state, updateMemoList) {
-            const updateMemoId = updateMemoList.payload.memoId;
-            state[updateMemoId].memoSource = updateMemoList.payload.updateMemoSource;
-            state[updateMemoId].memoAuthor = updateMemoList.payload.updateMemoAuthor;
-            state[updateMemoId].memoComment = updateMemoList.payload.updateMemoComment;
-        },
-        memoListAnno(state, newAnnoList) {
-
-            const updateMemoId = newAnnoList.payload.memoId;
-            const newAnnotation = newAnnoList.payload.memoAnno;
-            const memoAnnoIndex = newAnnoList.payload.memoAnnoIndex;
-
-            state[updateMemoId].memoAnnotation = {
-                ...state[updateMemoId].memoAnnotation,
-                [memoAnnoIndex]: newAnnotation,
-            };
-        },
-        memoListAnnoUpdate(state, updateAnnoList) {
-            const updateWriteId = updateAnnoList.payload.corrMemoId;
-            const AnnoKey = updateAnnoList.payload.corrAnnotationKeys;
-            state[updateWriteId].memoAnnotation[AnnoKey] = updateAnnoList.payload.corrMemoAnno;
-        },
-        memoListAnnoDelete(state, deleteAnnoList) {
-
-            const updateWriteId = deleteAnnoList.payload.corrMemoId;
-            const AnnoKey = deleteAnnoList.payload.corrAnnotationKeys;
-
-            return state.map(item => {
-                if (item.id === updateWriteId) {
-                    const updatedAnnotations = { ...item.memoAnnotation };
-                    delete updatedAnnotations[AnnoKey];
-                    return { ...item, memoAnnotation: updatedAnnotations, };
-                }
-                return item;
-            });
-
-        }
-    }
-})
-
-let cateData = createSlice({
-    name: 'cateData',
-    initialState: CateListData,
-    reducers: {
-        cateListDataAdd(state, newCateList) {
-            const newCate = [...state, newCate.payload];
-            return newCate;
-        },
-    }
-})
-
-let bookData = createSlice({
-    name: 'bookData',
-    initialState: bookListData,
-    reducers: {
-        bookListDataAdd(state, newBookList) {
-            const book = [...state, newBookList.payload];
-            return book;
-        },
-        bookListDelete(state, deleteBookList) {
-            const deleteBook = deleteBookList.payload.book;
-            return state.filter(item => item.book !== deleteBook);
-        }
-    },
-})
-
-export const store = createStore(
-    rootReducer,
-    applyMiddleware(thunk, ...getDefaultMiddleware()), // 여기에서 수정
-);
 export const { writeListDataAdd, writeListDataUpdate, writeListDataDelete } = WriteData.actions;
 export const { memoListDataAdd, memoListDataDelete, memoListDataUpdate, memoListAnno, memoListAnnoUpdate, memoListAnnoDelete } = memoData.actions;
 export const { cateListDataAdd } = cateData.actions;
 export const { bookListDataAdd, bookListDelete } = bookData.actions;
 
 export default configureStore({
-    reducer: {
-        WriteData: WriteData.reducer,
-        memoData: memoData.reducer,
-        cateData: cateData.reducer,
-        bookData: bookData.reducer,
-    },
+    reducer: rootReducer,
 });

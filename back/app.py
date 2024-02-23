@@ -7,10 +7,12 @@ app = Flask(__name__)
 CORS(app)
 
 
-@app.route('/src/components/Write')
+@app.route('/components/Write')
 def get_data():
+
     # 데이터를 가져와서 JSON 형식으로 반환
-    data = {'key': 'value', 'number': 42}
+    data_from_db = get_data_from_db()
+    data = {'data_from_db': data_from_db}
     return jsonify(data)
 
 
