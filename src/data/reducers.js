@@ -1,10 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit';
-
 import { writeListData, memoListData, cateListData, bookListData } from './api.js'
 
 const WriteData = createSlice({
     name: 'WriteData',
-    initialState: writeListData,
+    initialState: [],
     reducers: {
         writeListDataAdd(state, newWriteList) {
             const newWrite = [...state, newWriteList.payload];
@@ -21,7 +20,16 @@ const WriteData = createSlice({
             const deleteWriteId = deleteWriteList.payload.id;
             return state.filter(item => item.id !== deleteWriteId);
         },
-    }
+    },
+    extraReducers: (builder) => {
+        builder.addCase(writeListData.fulfilled, (state, action) => {
+            console.log('success');
+            return action.payload;
+        });
+        builder.addCase(writeListData.rejected, (state, action) => {
+            console.log('error');
+        });
+    },
 });
 
 const memoData = createSlice({
@@ -97,11 +105,4 @@ const bookData = createSlice({
     },
 });
 
-const rootReducer = {
-    WriteData: WriteData.reducer,
-    memoData: memoData.reducer,
-    cateData: cateData.reducer,
-    bookData: bookData.reducer,
-};
-
-export { WriteData, memoData, cateData, bookData, rootReducer };
+export { WriteData, writeListData, memoData, cateData, bookData };

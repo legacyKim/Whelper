@@ -1,13 +1,21 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { useSelector, useDispatch } from "react-redux"
 import { Link } from 'react-router-dom';
-// import { writeListDataDelete } from "../store"
+
+import store from "../data/store";
+import { writeListData } from '../data/api';
 
 import ViewEdit from './SlateView.js'
 
 function WriteList() {
 
-    let writeListState = useSelector((state) => state.WriteData);
+    const dispatch = useDispatch();
+    const writeListState = useSelector((state) => state.WriteData);
+
+    useEffect(() => {
+        // Dispatch the action when the component mounts
+        dispatch(writeListData());
+    }, [dispatch]);
 
     return (
 
@@ -18,7 +26,7 @@ function WriteList() {
                     writeListState.map(function (a, i) {
                         return (
                             <div className='WriteDiv' key={i}>
-                                <WriteShowContents i={i} />
+                                <WriteShowContents i={i} writeListState={writeListState} />
                             </div>
                         )
                     })
@@ -29,14 +37,17 @@ function WriteList() {
 
     )
 
-    function WriteShowContents({ i }) {
+    function WriteShowContents({ i, writeListState }) {
 
-        const writeListState = useSelector((state) => state.WriteData);
         const [writeContent, setWriteContent] = useState(writeListState[i]);
 
-        const titleDoc = new DOMParser().parseFromString(writeContent.title, 'text/html');
-        const subTitleDoc = new DOMParser().parseFromString(writeContent.subTitle, 'text/html');
-        const contentDoc = new DOMParser().parseFromString(writeContent.content, 'text/html');
+        // const titleDoc = new DOMParser().parseFromString(writeContent.title, 'text/html');
+        // const subTitleDoc = new DOMParser().parseFromString(writeContent.subTitle, 'text/html');
+        // const contentDoc = new DOMParser().parseFromString(writeContent.content, 'text/html');
+
+        const titleDoc = writeContent.title;
+        const subTitleDoc = writeContent.subTitle;
+        const contentDoc = writeContent.content;
 
         /*
         const dispatch = useDispatch();
@@ -66,7 +77,7 @@ function WriteList() {
                     <div className='write_keyword'>
                         <ul className='write_keyword_list'>
                             {
-                                writeListState[i].keyword.map((k, i) => (
+                                writeListState[i].keywords.map((k, i) => (
                                     <li key={i}>
                                         <WriteKeyword writeListKeyword={k} />
                                     </li>

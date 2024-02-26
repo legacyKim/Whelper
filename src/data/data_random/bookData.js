@@ -3,7 +3,7 @@ let bookData = [
         book: '농담과 무의식의 관계',
         author: '지그문트 프로이트'
     },
-    
+
     {
         book: '에크리',
         author: '자크 라캉'

@@ -1,8 +1,6 @@
 import os
+import json
 from sqlalchemy import create_engine, Column, Integer, String, MetaData, Table
-from dotenv import load_dotenv
-
-load_dotenv()
 
 db_config = {
     "host": os.environ.get("MYSQL_HOST"),
@@ -11,28 +9,39 @@ db_config = {
     "database": os.environ.get("MYSQL_DATABASE"),
 }
 
-engine = create_engine(f"mysql://{db_config['user']}:{db_config['password']}@{db_config['host']}/{db_config['database']}", echo=True)
+engine = create_engine(
+    f"mysql://{db_config['user']}:{db_config['password']}@{db_config['host']}/{db_config['database']}", echo=True)
 
 metadata = MetaData()
 
-# 여기에 tb_write 는 이미 생성된 테이블에 column 구조를 설정하는건지, 아니면 tb_write 라는 테이블을 형성하면서 컬럼 구조를 설정하는건지
-my_table = Table('tb_write', metadata,
-                Column('id', Integer, primary_key=True),
-                Column('title', String),
-                Column('subTitle', String),
-                Column('content', String),
-                Column('keywords', String),
-            )
+tb_write = Table('tb_write', metadata,
+                 Column('id', Integer, primary_key=True),
+                 Column('title', String(255)),
+                 Column('subTitle', String(255)),
+                 Column('content', String(255)),
+                 Column('keywords', String(255)),
+                 )
 
-# 테이블 생성
-metadata.create_all(engine)
 
-# 데이터 삽입
-with engine.connect() as connection:
-    connection.execute(my_table.insert().values(title='John', subTitle='Doe', content='Example Content', keywords='example'))
+def create_table():
 
-# 데이터 조회
-with engine.connect() as connection:
-    result = connection.execute(my_table.select())
-    for row in result:
-        print('test', row)
+    # 테이블 생성
+    metadata.create_all(engine)
+
+
+def insert_data():
+    # 데이터 삽입
+    with engine.connect() as connection:
+        connection.execute(tb_write.insert().values(
+            title='John', subTitle='Doe', content='Example Content', keywords='example'))
+    print("Data inserted successfully.")
+
+
+def look_data():
+    # 데이터 조회
+    with engine.connect() as connection:
+        result = connection.execute(select([tb_write]))
+        for row in result:
+            keywords_from_db = json.loads(row['keywords'])
+            print(
+                f"ID: {row['id']}, Title: {row['title']}, Subtitle: {row['subTitle']}, Content: {row['content']}, Keywords: {keywords_from_db}")
