@@ -1,34 +1,44 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, configureStore } from '@reduxjs/toolkit';
 import { writeListData, memoListData, cateListData, bookListData } from './api.js'
 
 const WriteData = createSlice({
     name: 'WriteData',
-    initialState: [],
+    initialState: {
+        data: [],
+        loading: false,
+        error: null,
+    },
     reducers: {
-        writeListDataAdd(state, newWriteList) {
-            const newWrite = [...state, newWriteList.payload];
-            return newWrite;
+        writeListDataAdd: (state, action) => {
+            state.data.push(action.payload);
         },
-        writeListDataUpdate(state, updateWriteList) {
-            const updateWriteId = updateWriteList.payload.id;
-            state[updateWriteId].title = updateWriteList.payload.updateTitle;
-            state[updateWriteId].subTitle = updateWriteList.payload.updateSubTitle;
-            state[updateWriteId].content = updateWriteList.payload.updateContent;
-            state[updateWriteId].keyword = updateWriteList.payload.updateKeyword;
+        writeListDataUpdate: (state, action) => {
+            const updateWriteId = action.payload.id;
+            const updatedWrite = action.payload;
+
+            // state[updateWriteId].title = action.payload.updateTitle;
+            // state[updateWriteId].subTitle = action.payload.updateSubTitle;
+            // state[updateWriteId].content = action.payload.updateContent;
+            // state[updateWriteId].keyword = action.payload.updateKeyword;
+
+            state[updateWriteId] = updatedWrite;
         },
-        writeListDataDelete(state, deleteWriteList) {
-            const deleteWriteId = deleteWriteList.payload.id;
+        writeListDataDelete: (state, action) => {
+            const deleteWriteId = action.payload.id;
             return state.filter(item => item.id !== deleteWriteId);
         },
     },
+
     extraReducers: (builder) => {
-        builder.addCase(writeListData.fulfilled, (state, action) => {
-            console.log('success');
-            return action.payload;
-        });
-        builder.addCase(writeListData.rejected, (state, action) => {
-            console.log('error');
-        });
+        builder.addCase(writeListData.pending, (state) => {
+            state.loading = true;
+        }).addCase(writeListData.fulfilled, (state, action) => {
+            state.loading = false;
+            state.data = action.payload;
+        }).addCase(writeListData.rejected, (state, action) => {
+            state.loading = false;
+            state.error = action.error.message;
+        })
     },
 });
 
@@ -105,4 +115,18 @@ const bookData = createSlice({
     },
 });
 
-export { WriteData, writeListData, memoData, cateData, bookData };
+export const { writeListDataAdd, writeListDataUpdate, writeListDataDelete } = WriteData.actions;
+export const { memoListDataAdd, memoListDataDelete, memoListDataUpdate, memoListAnno, memoListAnnoUpdate, memoListAnnoDelete } = memoData.actions;
+export const { cateListDataAdd } = cateData.actions;
+export const { bookListDataAdd, bookListDelete } = bookData.actions;
+
+const store = configureStore({
+    reducer: {
+        WriteData: WriteData.reducer,
+        memoData: memoData.reducer,
+        cateData: cateData.reducer,
+        bookData: bookData.reducer,
+    }
+});
+
+export default store;

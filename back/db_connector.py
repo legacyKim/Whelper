@@ -2,6 +2,7 @@ import os
 import mysql.connector
 import json
 from db_operator import create_table, insert_data, look_data
+from db_config import db_config
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -9,14 +10,9 @@ load_dotenv()
 
 def get_db_connection():
 
-    db_config = {
-        "host": os.environ.get("MYSQL_HOST"),
-        "user": os.environ.get("MYSQL_USER"),
-        "password": os.environ.get("MYSQL_PASSWORD"),
-        "database": os.environ.get("MYSQL_DATABASE"),
-    }
+    config = db_config()
 
-    return mysql.connector.connect(**db_config)
+    return mysql.connector.connect(**config)
 
 
 create_table()
@@ -31,28 +27,34 @@ def get_data_from_db():
 
             cursor = conn.cursor()
 
-            query = "SELECT * FROM tb_write"
-            cursor.execute(query)
+            tb_write = "SELECT * FROM tb_write"
+            cursor.execute(tb_write)
+            columns1 = [column[0] for column in cursor.description]
+            tb_write_row = cursor.fetchall()
 
-            # 컬럼 이름 가져오기
-            columns = [column[0] for column in cursor.description]
-
-            # 모든 행 가져오기
-            rows = cursor.fetchall()
+            tb_cate = "SELECT * FROM tb_cate"
+            cursor.execute(tb_cate)
+            columns2 = [column[0] for column in cursor.description]
+            tb_cate_row = cursor.fetchall()
 
             # JSON 형식으로 데이터 만들기
-            data = []
-            for row in rows:
-                row_data = dict(zip(columns, row))
-                data.append(row_data)
+            tb_write_data = []
+            for row in tb_write_row:
+                row_data = dict(zip(columns1, row))
+                tb_write_data.append(row_data)
+
+            tb_cate_data = []
+            for row in tb_cate_row:
+                row_data = dict(zip(columns2, row))
+                tb_cate_data.append(row_data)
 
             # JSON 출력 또는 파일 저장
-            result = json.dumps(data, indent=2)
-            print(result)
+            tb_write_res = json.dumps(tb_write_data, indent=2)
+            tb_cate_res = json.dumps(tb_cate_data, indent=2)
 
             cursor.close()
 
-            return result
+            return tb_write_res, tb_cate_res
 
         # 연결 닫기
         conn.close()

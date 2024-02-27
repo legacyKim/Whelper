@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect, useMemo, useCallback } from 'react';
 import { useDispatch, useSelector } from "react-redux"
-import { writeListDataUpdate } from "../data/store.js"
+import { writeListDataUpdate } from "../data/reducers.js"
 
 import { createEditor, Editor, Transforms, Text, Element as SlateElement, Node, } from 'slate';
 import { Slate, Editable, withReact } from 'slate-react'

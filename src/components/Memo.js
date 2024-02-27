@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 
 import { memoListData } from "../data/api"
 import { bookListData } from "../data/api"
-import { memoListDataAdd, memoListDataDelete, memoListDataUpdate, memoListAnno, memoListAnnoUpdate, memoListAnnoDelete, bookListDataAdd, bookListDelete } from "../data/store.js"
+import { memoListDataAdd, memoListDataDelete, memoListDataUpdate, memoListAnno, memoListAnnoUpdate, memoListAnnoDelete, bookListDataAdd, bookListDelete } from "../data/reducers.js"
 
 
 function Memo() {

@@ -1,16 +1,12 @@
-import os
 import json
+from db_config import db_config
+
 from sqlalchemy import create_engine, Column, Integer, String, MetaData, Table
 
-db_config = {
-    "host": os.environ.get("MYSQL_HOST"),
-    "user": os.environ.get("MYSQL_USER"),
-    "password": os.environ.get("MYSQL_PASSWORD"),
-    "database": os.environ.get("MYSQL_DATABASE"),
-}
+config = db_config()
 
 engine = create_engine(
-    f"mysql://{db_config['user']}:{db_config['password']}@{db_config['host']}/{db_config['database']}", echo=True)
+    f"mysql://{config['user']}:{config['password']}@{config['host']}/{config['database']}", echo=True)
 
 metadata = MetaData()
 
@@ -21,6 +17,11 @@ tb_write = Table('tb_write', metadata,
                  Column('content', String(255)),
                  Column('keywords', String(255)),
                  )
+
+tb_cate = Table('tb_cate', metadata,
+                Column('id', Integer, primary_key=True),
+                Column('category', String(255)),
+                )
 
 
 def create_table():

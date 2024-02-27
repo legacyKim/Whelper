@@ -2,9 +2,7 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { useSelector, useDispatch } from "react-redux"
 import { Link } from 'react-router-dom';
 
-import store from "../data/store";
-import { writeListData } from '../data/api';
-
+import { writeListData } from '../data/api.js';
 import ViewEdit from './SlateView.js'
 
 function WriteList() {
@@ -13,7 +11,6 @@ function WriteList() {
     const writeListState = useSelector((state) => state.WriteData);
 
     useEffect(() => {
-        // Dispatch the action when the component mounts
         dispatch(writeListData());
     }, [dispatch]);
 
@@ -41,13 +38,9 @@ function WriteList() {
 
         const [writeContent, setWriteContent] = useState(writeListState[i]);
 
-        // const titleDoc = new DOMParser().parseFromString(writeContent.title, 'text/html');
-        // const subTitleDoc = new DOMParser().parseFromString(writeContent.subTitle, 'text/html');
-        // const contentDoc = new DOMParser().parseFromString(writeContent.content, 'text/html');
-
-        const titleDoc = writeContent.title;
-        const subTitleDoc = writeContent.subTitle;
-        const contentDoc = writeContent.content;
+        const titleDoc = new DOMParser().parseFromString(writeContent.title, 'text/html');
+        const subTitleDoc = new DOMParser().parseFromString(writeContent.subTitle, 'text/html');
+        const contentDoc = new DOMParser().parseFromString(writeContent.content, 'text/html');
 
         /*
         const dispatch = useDispatch();
@@ -63,6 +56,8 @@ function WriteList() {
 
         // const writeDate = writeDateFomatt(writeListState[i].date);
 
+        const keywordsParse = JSON.parse(writeListState[i].keywords)
+
         return (
 
             <div>
@@ -77,7 +72,7 @@ function WriteList() {
                     <div className='write_keyword'>
                         <ul className='write_keyword_list'>
                             {
-                                writeListState[i].keywords.map((k, i) => (
+                                keywordsParse.map((k, i) => (
                                     <li key={i}>
                                         <WriteKeyword writeListKeyword={k} />
                                     </li>

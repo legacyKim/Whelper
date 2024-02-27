@@ -2,8 +2,7 @@ import React, { useRef, useState, useMemo, useCallback, useEffect } from 'react'
 import { useDispatch, useSelector } from "react-redux"
 import { Link } from 'react-router-dom';
 
-import { writeListData } from "../data/api"
-import { writeListDataAdd } from "../data/store"
+import { writeListDataAdd } from "../data/reducers"
 
 import { createEditor, Editor, Transforms, Text, Element as SlateElement, Node, } from 'slate';
 import { Slate, Editable, withReact } from 'slate-react'
@@ -91,13 +90,7 @@ const serialize = nodes => {
 function Write() {
 
     const dispatch = useDispatch();
-    useEffect(() => {
-        dispatch(writeListData());
-    }, [dispatch]);
-
-    const { writeListState, error } = useSelector((state) => state.WriteData);
-
-    console.log(writeListState);
+    const writeListState = useSelector((state) => state.WriteData);
 
     // category popup
     const [popupActive, popupActiveStyle] = useState(false);
@@ -224,6 +217,8 @@ function Write() {
         setEditorValue(contentPlaceholder);
 
     };
+
+    console.log(writeListState)
 
     // save and keep the last num of id
     const recentId = writeListState.length;

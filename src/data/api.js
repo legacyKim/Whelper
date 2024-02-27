@@ -3,14 +3,12 @@ import axios from 'axios';
 
 const API_URL = 'http://localhost:5000/api';
 
-export const writeListData = createAsyncThunk('writeData/WriteListData', async () => {
-    try {
+export const writeListData = createAsyncThunk('writeData/FetchData',
+    async () => {
         const response = await axios.get(`${API_URL}/components/WriteList`);
-        return response.data.writeList;
-    } catch (error) {
-        throw error.message;
-    }
-});
+        return response.data
+    },
+)
 
 export const memoListData = () => {
     return async (dispatch) => {
