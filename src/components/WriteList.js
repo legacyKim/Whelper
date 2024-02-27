@@ -1,18 +1,20 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { useSelector, useDispatch } from "react-redux"
 import { Link } from 'react-router-dom';
 
+import { useSelector, useDispatch } from "react-redux"
 import { writeListData } from '../data/api.js';
 import ViewEdit from './SlateView.js'
 
 function WriteList() {
 
     const dispatch = useDispatch();
-    const writeListState = useSelector((state) => state.WriteData);
-
     useEffect(() => {
         dispatch(writeListData());
     }, [dispatch]);
+
+    const writeListState = useSelector((state) => state.WriteData);
+
+    console.log(dispatch(writeListData()));
 
     return (
 

@@ -36,8 +36,7 @@ const WriteData = createSlice({
             state.loading = false;
             state.data = action.payload;
         }).addCase(writeListData.rejected, (state, action) => {
-            state.loading = false;
-            state.error = action.error.message;
+            state.error = action.payload ?? action.error
         })
     },
 });
