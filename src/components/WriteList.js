@@ -11,9 +11,13 @@ function WriteList() {
 
     useEffect(() => {
         dispatch(writeListData());
-    }, [dispatch]);
+    }, []);
 
     const writeListState = useSelector((state) => state.WriteData);
+    
+    console.log(dispatch(writeListData()))
+    console.log(writeListState)
+    const writeListArr = writeListState.data.write
 
     return (
 
@@ -21,10 +25,10 @@ function WriteList() {
             <div className='content_area'>
 
                 {
-                    writeListState.map(function (a, i) {
+                    writeListArr.map(function (a, i) {
                         return (
                             <div className='WriteDiv' key={i}>
-                                <WriteShowContents i={i} writeListState={writeListState} />
+                                <WriteShowContents i={i} writeListArr={writeListArr} />
                             </div>
                         )
                     })
@@ -35,9 +39,9 @@ function WriteList() {
 
     )
 
-    function WriteShowContents({ i, writeListState }) {
+    function WriteShowContents({ i, writeListArr }) {
 
-        const [writeContent, setWriteContent] = useState(writeListState[i]);
+        const [writeContent, setWriteContent] = useState(writeListArr[i]);
 
         const titleDoc = new DOMParser().parseFromString(writeContent.title, 'text/html');
         const subTitleDoc = new DOMParser().parseFromString(writeContent.subTitle, 'text/html');
@@ -46,7 +50,7 @@ function WriteList() {
         /*
         const dispatch = useDispatch();
         const delWriteList = () => {
-            dispatch(writeListDataDelete({ id: writeListState[i].id }))
+            dispatch(writeListDataDelete({ id: writeListArr[i].id }))
         }
         */
 
@@ -55,19 +59,19 @@ function WriteList() {
         //     return date.toLocaleDateString('en-US', options).replace(/\//g, '.');
         // }
 
-        // const writeDate = writeDateFomatt(writeListState[i].date);
+        // const writeDate = writeDateFomatt(writeListArr[i].date);
 
-        const keywordsParse = JSON.parse(writeListState[i].keywords)
+        const keywordsParse = JSON.parse(writeListArr[i].keywords)
 
         return (
 
             <div>
                 <div className='write_btn'>
-                    <Link className='icon-edit-alt' to={`/components/WriteCorrect/${writeListState[i].id}`}></Link>
+                    <Link className='icon-edit-alt' to={`/components/WriteCorrect/${writeListArr[i].id}`}></Link>
                     {/* <button className='icon-trash' onClick={delWriteList}></button> */}
                 </div>
                 <div className='write_list' >
-                    <Link to={`/components/WriteView/${writeListState[i].id}`}>
+                    <Link to={`/components/WriteView/${writeListArr[i].id}`}>
                         <ViewEdit titleDoc={titleDoc} subTitleDoc={subTitleDoc} contentDoc={contentDoc}></ViewEdit>
                     </Link>
                     <div className='write_keyword'>
