@@ -8,13 +8,12 @@ import ViewEdit from './SlateView.js'
 function WriteList() {
 
     const dispatch = useDispatch();
+
     useEffect(() => {
         dispatch(writeListData());
     }, [dispatch]);
 
     const writeListState = useSelector((state) => state.WriteData);
-
-    console.log(dispatch(writeListData()));
 
     return (
 

@@ -8,35 +8,40 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-def get_db_connection():
+def get_db_connection(db_index):
     config = db_config()
-    return mysql.connector.connect(**config)
+    conn = mysql.connector.connect(**config[db_index])
+    return conn
 
 
-def execute_query_and_get_data(query):
+create_table()
 
+
+def excute_query_get_data(queries, conn):
     try:
-        conn = get_db_connection()
-
         if conn.is_connected():
             print("Connected to MySQL")
 
             cursor = conn.cursor()
-            cursor.execute(query)
-            columns = [column[0] for column in cursor.description]
-            rows = cursor.fetchall()
 
-            data = []
-            for row in rows:
-                row_data = dict(zip(columns, row))
-                data.append(row_data)
+            results = []
+            for query in queries:
+                cursor.execute(query)
+                columns = [column[0] for column in cursor.description]
+                rows = cursor.fetchall()
 
-            # JSON 형식으로 데이터 만들기
-            result = json.dumps(data, indent=2)
+                data = []
+                for row in rows:
+                    row_data = dict(zip(columns, row))
+                    data.append(row_data)
+
+                # JSON 형식으로 데이터 만들기
+                result = json.dumps(data, indent=2)
+                results.append(result)
 
             cursor.close()
 
-            return result
+            return results
 
         # 연결 닫기
         conn.close()
@@ -44,6 +49,7 @@ def execute_query_and_get_data(query):
 
     except mysql.connector.Error as err:
         print(f"Failed to connect to MySQL: {err}")
+        raise
 
     finally:
         # 연결 닫기
@@ -53,13 +59,21 @@ def execute_query_and_get_data(query):
 
 
 def get_data_from_write():
-    query = "SELECT * FROM tb_write; SELECT * FROM tb_cate;"
-    return execute_query_and_get_data(query)
+    conn = get_db_connection(0)
+
+    queries = ["SELECT * FROM tb_write;", "SELECT * FROM tb_cate;"]
+    results = excute_query_get_data(queries, conn)
+
+    return results[0], results[1]
 
 
 def get_data_from_memo():
-    query = "SELECT * FROM tb_memo; SELECT * FROM tb_book;"
-    return execute_query_and_get_data(query)
+    conn = get_db_connection(1)
+
+    queries = ["SELECT * FROM tb_memo;", "SELECT * FROM tb_book;"]
+    results = excute_query_get_data(queries, conn)
+
+    return results[0], results[1]
 
 
 if __name__ == '__main__':

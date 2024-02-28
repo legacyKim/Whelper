@@ -3,13 +3,13 @@ from db_config import db_config
 
 from sqlalchemy import create_engine, Column, Integer, String, MetaData, Table
 
-config = db_config()
+config_write, config_memo = db_config()
 
-engine_01 = create_engine(
-    f"mysql://{config['user']}:{config['password']}@{config['host']}/{config['database1']}", echo=True)
+engine_write = create_engine(
+    f"mysql://{config_write['user']}:{config_write['password']}@{config_write['host']}/{config_write['database']}", echo=True)
 
-engine_02 = create_engine(
-    f"mysql://{config['user']}:{config['password']}@{config['host']}/{config['database2']}", echo=True)
+engine_memo = create_engine(
+    f"mysql://{config_memo['user']}:{config_memo['password']}@{config_memo['host']}/{config_memo['database']}", echo=True)
 
 md_write = MetaData()
 md_memo = MetaData()
@@ -44,8 +44,8 @@ tb_book = Table('tb_book', md_memo,
 
 def create_table():
 
-    md_write.create_all(engine_01)
-    md_memo.create_all(engine_02)
+    md_write.create_all(engine_write)
+    md_memo.create_all(engine_memo)
 
 
 if __name__ == '__main__':
