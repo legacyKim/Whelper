@@ -8,18 +8,19 @@ app = Flask(__name__)
 CORS(app)
 
 
-# @app.route('/')
-@app.route('/api/components/WriteList')
+@app.route('/')
+# @app.route('/api/components/WriteList')
 def get_data_WriteList():
     writeList, cateList = get_data_from_write()
     data = {'write': json.loads(writeList), 'cate': json.loads(cateList)}
     return jsonify(data)
 
 
+# @app.route('/')
 @app.route('/api/components/Memo')
 def get_data_memo():
-    memoList = get_data_from_memo()
-    data = {'memo': json.loads(memoList)}
+    memoList, bookList = get_data_from_memo()
+    data = {'memo': json.loads(memoList), 'book': json.loads(bookList)}
     return jsonify(data)
 
 

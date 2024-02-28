@@ -7,7 +7,6 @@ export const writeListData = createAsyncThunk('writeData/FetchData',
     async () => {
         try {
             const response = await axios.get(`${API_URL}/components/WriteList`);
-            console.log(response.data); 
             return response.data;
         } catch (error) {
             console.error('Error fetching writeListData:', error);
@@ -16,35 +15,38 @@ export const writeListData = createAsyncThunk('writeData/FetchData',
     },
 )
 
-export const memoListData = () => {
-    return async (dispatch) => {
+export const cateListData = createAsyncThunk('cataData/FetchData',
+    async () => {
+        try {
+            const response = await axios.get(`${API_URL}/components/Category`);
+            return response.data;
+        } catch (error) {
+            console.error('Error fetching cataListData:', error);
+            throw error;
+        }
+    },
+)
+
+export const memoListData = createAsyncThunk('memoData/FetchData',
+    async () => {
         try {
             const response = await axios.get(`${API_URL}/components/Memo`);
-            dispatch({ type: 'FETCH_DATA_SUCCESS', payload: response.data });
+            return response.data;
         } catch (error) {
-            dispatch({ type: 'FETCH_DATA_FAILURE', payload: error.message });
+            console.error('Error fetching memoListData:', error);
+            throw error;
         }
-    };
-};
+    },
+)
 
-export const cateListData = () => {
-    return async (dispatch) => {
+export const bookListData = createAsyncThunk('bookData/FetchData',
+    async () => {
         try {
-            const response = await axios.get(`${API_URL}/components/Category`);
-            dispatch({ type: 'FETCH_DATA_SUCCESS', payload: response.data });
+            const response = await axios.get(`${API_URL}/components/Memo`);
+            return response.data;
         } catch (error) {
-            dispatch({ type: 'FETCH_DATA_FAILURE', payload: error.message });
+            console.error('Error fetching bookListData:', error);
+            throw error;
         }
-    };
-};
-
-export const bookListData = () => {
-    return async (dispatch) => {
-        try {
-            const response = await axios.get(`${API_URL}/components/Category`);
-            dispatch({ type: 'FETCH_DATA_SUCCESS', payload: response.data });
-        } catch (error) {
-            dispatch({ type: 'FETCH_DATA_FAILURE', payload: error.message });
-        }
-    };
-};
+    },
+)

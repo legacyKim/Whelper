@@ -43,7 +43,7 @@ const WriteData = createSlice({
 
 const memoData = createSlice({
     name: 'memoData',
-    initialState: memoListData,
+    initialState: [],
     reducers: {
         memoListDataAdd(state, newMemoList) {
             const newMemo = [...state, newMemoList.payload];
@@ -51,9 +51,9 @@ const memoData = createSlice({
         },
         memoListDataUpdate(state, updateMemoList) {
             const updateMemoId = updateMemoList.payload.memoId;
-            state[updateMemoId].memoSource = updateMemoList.payload.updateMemoSource;
-            state[updateMemoId].memoAuthor = updateMemoList.payload.updateMemoAuthor;
-            state[updateMemoId].memoComment = updateMemoList.payload.updateMemoComment;
+            // state[updateMemoId].memoSource = updateMemoList.payload.updateMemoSource;
+            // state[updateMemoId].memoAuthor = updateMemoList.payload.updateMemoAuthor;
+            // state[updateMemoId].memoComment = updateMemoList.payload.updateMemoComment;
         },
         memoListAnno(state, newAnnoList) {
 
@@ -85,23 +85,45 @@ const memoData = createSlice({
                 return item;
             });
         }
-    }
+    },
+
+    extraReducers: (builder) => {
+        builder.addCase(memoListData.pending, (state) => {
+            state.loading = true;
+        }).addCase(memoListData.fulfilled, (state, action) => {
+            state.loading = false;
+            state.data = action.payload;
+        }).addCase(memoListData.rejected, (state, action) => {
+            state.error = action.payload ?? action.error
+        })
+    },
 })
 
 const cateData = createSlice({
     name: 'cateData',
-    initialState: cateListData,
+    initialState: [],
     reducers: {
         cateListDataAdd(state, newCateList) {
             const newCate = [...state, newCate.payload];
             return newCate;
         },
-    }
+    },
+
+    extraReducers: (builder) => {
+        builder.addCase(cateListData.pending, (state) => {
+            state.loading = true;
+        }).addCase(cateListData.fulfilled, (state, action) => {
+            state.loading = false;
+            state.data = action.payload;
+        }).addCase(cateListData.rejected, (state, action) => {
+            state.error = action.payload ?? action.error
+        })
+    },
 })
 
 const bookData = createSlice({
     name: 'bookData',
-    initialState: bookListData,
+    initialState: [],
     reducers: {
         bookListDataAdd(state, newBookList) {
             const book = [...state, newBookList.payload];
@@ -111,6 +133,17 @@ const bookData = createSlice({
             const deleteBook = deleteBookList.payload.book;
             return state.filter(item => item.book !== deleteBook);
         }
+    },
+
+    extraReducers: (builder) => {
+        builder.addCase(bookListData.pending, (state) => {
+            state.loading = true;
+        }).addCase(bookListData.fulfilled, (state, action) => {
+            state.loading = false;
+            state.data = action.payload;
+        }).addCase(bookListData.rejected, (state, action) => {
+            state.error = action.payload ?? action.error
+        })
     },
 });
 

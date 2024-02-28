@@ -35,6 +35,12 @@ tb_memo = Table('tb_memo', md_memo,
                 Column('memoAnnotation', String(255)),
                 )
 
+tb_book = Table('tb_book', md_memo,
+                Column('id', Integer, primary_key=True),
+                Column('book', String(255)),
+                Column('author', String(255)),
+                )
+
 
 def create_table():
 
