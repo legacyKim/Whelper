@@ -10,22 +10,16 @@ const WriteData = createSlice({
     },
     reducers: {
         writeListDataAdd: (state, action) => {
-            state.data.push(action.payload);
+            state.data = [...state.data, action.payload];
         },
         writeListDataUpdate: (state, action) => {
             const updateWriteId = action.payload.id;
             const updatedWrite = action.payload;
-
-            // state[updateWriteId].title = action.payload.updateTitle;
-            // state[updateWriteId].subTitle = action.payload.updateSubTitle;
-            // state[updateWriteId].content = action.payload.updateContent;
-            // state[updateWriteId].keyword = action.payload.updateKeyword;
-
-            state[updateWriteId] = updatedWrite;
+            state.data = state.data.map(item => (item.id === updateWriteId ? updatedWrite : item));
         },
         writeListDataDelete: (state, action) => {
             const deleteWriteId = action.payload.id;
-            return state.filter(item => item.id !== deleteWriteId);
+            state.data = state.data.filter(item => item.id !== deleteWriteId);
         },
     },
 
@@ -34,7 +28,7 @@ const WriteData = createSlice({
             state.loading = true;
         }).addCase(writeListData.fulfilled, (state, action) => {
             state.loading = false;
-            state.data = action.payload;
+            state.data = action.payload
         }).addCase(writeListData.rejected, (state, action) => {
             state.error = action.payload ?? action.error
         })
@@ -43,47 +37,25 @@ const WriteData = createSlice({
 
 const memoData = createSlice({
     name: 'memoData',
-    initialState: [],
+    initialState: {
+        data: [],
+        loading: false,
+        error: null,
+    },
     reducers: {
-        memoListDataAdd(state, newMemoList) {
-            const newMemo = [...state, newMemoList.payload];
-            return newMemo;
+        memoListDataAdd(state, action) {
+            state.data = [...state.data, action.payload];
         },
-        memoListDataUpdate(state, updateMemoList) {
-            const updateMemoId = updateMemoList.payload.memoId;
-            // state[updateMemoId].memoSource = updateMemoList.payload.updateMemoSource;
-            // state[updateMemoId].memoAuthor = updateMemoList.payload.updateMemoAuthor;
-            // state[updateMemoId].memoComment = updateMemoList.payload.updateMemoComment;
+        memoListDataUpdate(state, action) {
+            const updateMemoId = action.payload.id;
+            const updateMemo = action.payload;
+            state.data = state.data.map(item => (item.id === updateMemoId ? updateMemo : item));
         },
-        memoListAnno(state, newAnnoList) {
-
-            const updateMemoId = newAnnoList.payload.memoId;
-            const newAnnotation = newAnnoList.payload.memoAnno;
-            const memoAnnoIndex = newAnnoList.payload.memoAnnoIndex;
-
-            state[updateMemoId].memoAnnotation = {
-                ...state[updateMemoId].memoAnnotation,
-                [memoAnnoIndex]: newAnnotation,
-            };
+        memoListAnno(state, action) {
         },
         memoListAnnoUpdate(state, updateAnnoList) {
-            const updateWriteId = updateAnnoList.payload.corrMemoId;
-            const AnnoKey = updateAnnoList.payload.corrAnnotationKeys;
-            state[updateWriteId].memoAnnotation[AnnoKey] = updateAnnoList.payload.corrMemoAnno;
         },
-        memoListAnnoDelete(state, deleteAnnoList) {
-
-            const updateWriteId = deleteAnnoList.payload.corrMemoId;
-            const AnnoKey = deleteAnnoList.payload.corrAnnotationKeys;
-
-            return state.map(item => {
-                if (item.id === updateWriteId) {
-                    const updatedAnnotations = { ...item.memoAnnotation };
-                    delete updatedAnnotations[AnnoKey];
-                    return { ...item, memoAnnotation: updatedAnnotations, };
-                }
-                return item;
-            });
+        memoListAnnoDelete(state, action) {
         }
     },
 
@@ -92,7 +64,7 @@ const memoData = createSlice({
             state.loading = true;
         }).addCase(memoListData.fulfilled, (state, action) => {
             state.loading = false;
-            state.data = action.payload;
+            state.data = action.payload
         }).addCase(memoListData.rejected, (state, action) => {
             state.error = action.payload ?? action.error
         })
@@ -101,11 +73,14 @@ const memoData = createSlice({
 
 const cateData = createSlice({
     name: 'cateData',
-    initialState: [],
+    initialState: {
+        data: [],
+        loading: false,
+        error: null,
+    },
     reducers: {
-        cateListDataAdd(state, newCateList) {
-            const newCate = [...state, newCate.payload];
-            return newCate;
+        cateListDataAdd(state, action) {
+            state.data = [...state.data, action.payload];
         },
     },
 
@@ -123,15 +98,16 @@ const cateData = createSlice({
 
 const bookData = createSlice({
     name: 'bookData',
-    initialState: [],
+    initialState: {
+        data: [],
+        loading: false,
+        error: null,
+    },
     reducers: {
-        bookListDataAdd(state, newBookList) {
-            const book = [...state, newBookList.payload];
-            return book;
+        bookListDataAdd(state, action) {
+            state.data = [...state.data, action.payload];
         },
-        bookListDelete(state, deleteBookList) {
-            const deleteBook = deleteBookList.payload.book;
-            return state.filter(item => item.book !== deleteBook);
+        bookListDelete(state, action) {
         }
     },
 
@@ -142,7 +118,7 @@ const bookData = createSlice({
             state.loading = false;
             state.data = action.payload;
         }).addCase(bookListData.rejected, (state, action) => {
-            state.error = action.payload ?? action.error
+            state.error = action.payload ?? action.errors
         })
     },
 });

@@ -1,7 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
-const API_URL = 'http://localhost:5000/api';
+const API_URL = 'http://localhost:5000';
 
 export const writeListData = createAsyncThunk('writeData/FetchData',
     async () => {
@@ -19,6 +19,7 @@ export const cateListData = createAsyncThunk('cataData/FetchData',
     async () => {
         try {
             const response = await axios.get(`${API_URL}/components/WriteList`);
+            console.log(response)
             return response.data;
         } catch (error) {
             console.error('Error fetching cataListData:', error);

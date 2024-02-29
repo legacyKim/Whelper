@@ -3,8 +3,7 @@ import { useDispatch, useSelector  } from "react-redux"
 import MyContext from '../context'
 import { toast } from 'react-toastify';
 
-import { memoListData } from "../data/api"
-import { bookListData } from "../data/api"
+import { memoListData, bookListData } from "../data/api"
 import { memoListDataAdd, memoListDataDelete, memoListDataUpdate, memoListAnno, memoListAnnoUpdate, memoListAnnoDelete, bookListDataAdd, bookListDelete } from "../data/reducers.js"
 
 
@@ -16,8 +15,11 @@ function Memo() {
         dispatch(bookListData());
     }, [dispatch]);
 
-    let memoListState = useSelector((state) => state.memoData);
-    let bookListState = useSelector((state) => state.bookData);
+    const memoListState = useSelector((state) => state.memoData);
+    const bookListState = useSelector((state) => state.bookData);
+
+    const memoListArr = memoListState.data.memo || [];
+    const bookListArr = bookListState.data.book || [];
 
     // alert
     const showToast = () => {
@@ -186,7 +188,7 @@ function Memo() {
     //// book list
 
     // memo save
-    const [memo, setMemo] = useState(memoListState);
+    const [memo, setMemo] = useState(memoListArr);
 
     var newMemoSource = useRef(null);
     var newMemoAuthor = useRef(null);
@@ -194,7 +196,7 @@ function Memo() {
 
     const MemoSaveBtn = () => {
 
-        const id = memoListState.length;
+        const id = memoListArr.length;
         const memoComment = newMemoComment.current.value;
         var memoAuthor = newMemoAuthor.current.value;
         var memoSource = newMemoSource.current.value;
@@ -263,16 +265,16 @@ function Memo() {
 
         if (bookLocalStorage === null) {
             setBookTitle("전체")
-            setMemoArr(memoListState)
+            setMemoArr(memoListArr)
         } else {
-            setMemoArr(memoListState.filter((item) => item.memoSource === bookTitle));
+            setMemoArr(memoListArr.filter((item) => item.memoSource === bookTitle));
         }
-    }, [memoListState]);
+    }, [memoListArr]);
 
     useEffect(() => {
         newBook.current.value = null;
         newAuthor.current.value = null;
-    }, [bookListState])
+    }, [bookListArr])
     //// memo reset
 
     // book name check
@@ -284,23 +286,23 @@ function Memo() {
             setBookTitle("전체")
             localStorage.removeItem('bookTitle');
         } else {
-            setBookTitle(bookListState[i].book)
+            setBookTitle(bookListArr[i].book)
             setMemoCurrent(null);
-            localStorage.setItem('bookTitle', bookListState[i].book);
+            localStorage.setItem('bookTitle', bookListArr[i].book);
         }
     }
 
-    const [memoArr, setMemoArr] = useState(memoListState);
+    const [memoArr, setMemoArr] = useState(memoListArr);
     const [memoArrActive, setMemoArrActive] = useState('active');
 
     useEffect(() => {
         if (bookLocalStorage === null) {
             setBookTitle("전체")
             setMemoCurrent(null);
-            setMemoArr(memoListState);
+            setMemoArr(memoListArr);
         } else {
             setMemoCurrent(null);
-            setMemoArr(memoListState.filter((item) => item.memoSource === bookTitle));
+            setMemoArr(memoListArr.filter((item) => item.memoSource === bookTitle));
         }
         setMemoCurrent(null);
     }, [bookTitle]);
@@ -445,13 +447,13 @@ function Memo() {
                                     }}>전체</span>
                                 </li>
                                 {
-                                    bookListState.map(function (k, i) {
+                                    bookListArr.map(function (k, i) {
                                         return (
                                             <li key={i}>
                                                 <span className='' onClick={() => {
                                                     bookListClose();
                                                     bookChange(i);
-                                                }}>{bookListState[i].book}</span>
+                                                }}>{bookListArr[i].book}</span>
                                             </li>
                                         )
                                     })

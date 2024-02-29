@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
 
 import { useSelector, useDispatch } from "react-redux"
 import { writeListData } from '../data/api.js';
@@ -7,35 +8,34 @@ import ViewEdit from './SlateView.js'
 
 function WriteList() {
 
-    const dispatch = useDispatch();
+    const [someCondition, setSomeCondition] = useState(true);
 
+    const dispatch = useDispatch();
     useEffect(() => {
-        dispatch(writeListData());
-    }, []);
+        dispatch(writeListData())
+    }, [dispatch]);
 
     const writeListState = useSelector((state) => state.WriteData);
-    
-    console.log(dispatch(writeListData()))
-    console.log(writeListState)
-    const writeListArr = writeListState.data.write
+    const writeListArr = writeListState.data.write || [];
 
     return (
+        <TransitionGroup>
+            <div className='common_page'>
+                <div className='content_area'>
 
-        <div className='common_page'>
-            <div className='content_area'>
+                    {
+                        writeListArr.map(function (a, i) {
+                            return (
+                                <CSSTransition in={someCondition} key={i} timeout={500} classNames="WriteDiv fade">
+                                    <WriteShowContents i={i} writeListArr={writeListArr} />
+                                </CSSTransition>
+                            )
+                        })
+                    }
 
-                {
-                    writeListArr.map(function (a, i) {
-                        return (
-                            <div className='WriteDiv' key={i}>
-                                <WriteShowContents i={i} writeListArr={writeListArr} />
-                            </div>
-                        )
-                    })
-                }
-
+                </div>
             </div>
-        </div>
+        </TransitionGroup>
 
     )
 

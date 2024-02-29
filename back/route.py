@@ -5,17 +5,19 @@ from db_connector import get_data_from_write, get_data_from_memo
 import json
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, resources={
+     r'*': {'origins': 'http://localhost:3000'}}, supports_credentials=True)
 
 
 # @app.route('/')
-@app.route('/api/components/WriteList')
+@app.route('/components/WriteList')
 def get_data_WriteList():
     results = get_data_from_write()
     writeList, cateList = results[0], results[1]
 
     try:
         data = {'write': json.loads(writeList), 'cate': json.loads(cateList)}
+        print(data)
         return jsonify(data)
     except json.decoder.JSONDecodeError as e:
         print(f"JSON Decode Error: {e}")
@@ -23,7 +25,7 @@ def get_data_WriteList():
 
 
 # @app.route('/')
-@app.route('/api/components/Memo')
+@app.route('/components/Memo')
 def get_data_memo():
     results = get_data_from_memo()
     memoList, bookList = results[0], results[1]
