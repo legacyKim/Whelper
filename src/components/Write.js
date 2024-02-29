@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { Link } from 'react-router-dom';
 
 import { writeListDataAdd } from "../data/reducers"
+import { writeListData, cateListData } from '../data/api.js';
 
 import { createEditor, Editor, Transforms, Text, Element as SlateElement, Node, } from 'slate';
 import { Slate, Editable, withReact } from 'slate-react'
@@ -59,6 +60,10 @@ const CustomEditor = {
 // serial, deserial
 const serialize = nodes => {
 
+    if (Array.isArray(nodes)) {
+
+    }
+
     return nodes.map(node => {
         if (Text.isText(node)) {
             let string = escapeHtml(node.text);
@@ -90,7 +95,17 @@ const serialize = nodes => {
 function Write() {
 
     const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(writeListData())
+        dispatch(cateListData())
+    }, [dispatch]);
+
     const writeListState = useSelector((state) => state.WriteData);
+    const cateListState = useSelector((state) => state.cateData);
+
+    const writeListArr = writeListState.data.write || [];
+    const cateListArr = cateListState.data.cate || [];
 
     // category popup
     const [popupActive, popupActiveStyle] = useState(false);
@@ -174,7 +189,6 @@ function Write() {
     // const newTitle = useRef();
     // const newSubTitle = useRef();
 
-    let cateListData = useSelector((state) => state.cateData);
     const [keywordArr, setKeywordArr] = useState([]);
 
     // content and local storage change
@@ -194,7 +208,7 @@ function Write() {
     // save content
     const WriteSaveBtn = () => {
 
-        const id = writeListState.length;
+        const id = writeListArr.length;
 
         localStorage.removeItem('writeTitle');
         const titleString = serialize(edTitle);
@@ -208,9 +222,9 @@ function Write() {
         const contentString = serialize(editorValue);
         const content = contentString;
 
-        const keyword = keywordArr;
+        const keywords = keywordArr;
 
-        dispatch(writeListDataAdd({ id, title, subTitle, content, keyword }));
+        dispatch(writeListDataAdd({ id, title, subTitle, content, keywords }));
 
         setEdTitle(contentPlaceholder);
         setEdSubTitle(contentPlaceholder);
@@ -218,10 +232,8 @@ function Write() {
 
     };
 
-    console.log(writeListState)
-
     // save and keep the last num of id
-    const recentId = writeListState.length;
+    const recentId = writeListArr.length;
     //// save content
 
     // toolbar
@@ -360,7 +372,7 @@ function Write() {
             <div className={`popup ${popupActive ? popupActive : ""}`}>
                 <div className='popup_cate'>
                     {
-                        cateListData.map(function (a, i) {
+                        cateListArr.map(function (a, i) {
                             return (
                                 <div key={i}>
                                     <CateListFac i={i} keywordArr={keywordArr} setKeywordArr={setKeywordArr}></CateListFac>
@@ -371,8 +383,8 @@ function Write() {
                 </div>
                 <div className='page_btn'>
                     <button className="write_btn_back icon-reply" onClick={popupClick}></button>
-                    <Link to={`/components/WriteView/${recentId}`} className='icon-ok-circled write_btn_save' onClick={() => { WriteSaveBtn(); }}></Link>
-                    {/* <button className='icon-ok-circled write_btn_save' onClick={() => { WriteSaveBtn(); }}></button> */}
+                    {/* <Link to={`/components/WriteView/${recentId}`} className='icon-ok-circled write_btn_save' onClick={() => { WriteSaveBtn(); }}></Link> */}
+                    <button className='icon-ok-circled write_btn_save' onClick={() => { WriteSaveBtn(); }}></button>
                 </div>
             </div>
         </div>
@@ -380,19 +392,21 @@ function Write() {
 
     function CateListFac({ i, keywordArr, setKeywordArr }) {
 
-        const [cateActive, setCateActive] = useState(keywordArr.includes(cateListData[i]));
+        const catagory = cateListArr[i].category
+
+        const [cateActive, setCateActive] = useState(keywordArr.includes(catagory));
         const cateClick = () => {
             setKeywordArr((prevKeywordArr) =>
-                keywordArr.includes(cateListData[i])
-                    ? prevKeywordArr.filter((item) => item !== cateListData[i])
-                    : [...prevKeywordArr, cateListData[i]]
+                keywordArr.includes(catagory)
+                    ? prevKeywordArr.filter((item) => item !== catagory)
+                    : [...prevKeywordArr, catagory]
             );
 
             setCateActive((prevCateActive) => !prevCateActive);
         };
 
         return (
-            <span className={`${cateActive ? "active" : ""}`} onClick={cateClick}>{cateListData[i]}</span>
+            <span className={`${cateActive ? "active" : ""}`} onClick={cateClick}>{catagory}</span>
         )
 
     }

@@ -1,6 +1,8 @@
 import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+
+import { useSelector, useDispatch } from 'react-redux';
+import { writeListData } from '../data/api.js';
 import { useParams } from 'react-router-dom';
 import { Slate, Editable } from 'slate-react';
 
@@ -11,15 +13,31 @@ function WriteView() {
     const writeListState = useSelector((state) => state.WriteData);
     let { id } = useParams();
 
-    const [writeContent, setWriteContent] = useState(writeListState[id]);
+    const dispatch = useDispatch();
+    useEffect(() => {
+        dispatch(writeListData())
+    }, [dispatch]);
 
-    const titleDoc = new DOMParser().parseFromString(writeContent.title, 'text/html');
-    const subTitleDoc = new DOMParser().parseFromString(writeContent.subTitle, 'text/html');
-    const contentDoc = new DOMParser().parseFromString(writeContent.content, 'text/html');
+    const writeListArr = writeListState.data.write || [];
+    const writeContent = useState(writeListArr[id]);
+    const keywordsParse = JSON.parse(writeListArr[id].keywords)
+
+    const titleDoc = new DOMParser().parseFromString(writeContent[0].title, 'text/html');
+    const subTitleDoc = new DOMParser().parseFromString(writeContent[0].subTitle, 'text/html');
+    const contentDoc = new DOMParser().parseFromString(writeContent[0].content, 'text/html');
+
+    useEffect(() => {
+        setTimeout(() => {
+            const memoContentElements = document.querySelectorAll('.view_page');
+            memoContentElements.forEach(element => {
+                element.classList.remove('opacity');
+            });
+        }, 100)
+    }, [writeListArr])
 
     return (
 
-        <div className='view_page'>
+        <div className='view_page opacity'>
             <div className='common_page'>
                 <div className='content_area'>
                     <div className='view_content all'>
@@ -27,7 +45,7 @@ function WriteView() {
                         <ViewEdit titleDoc={titleDoc} subTitleDoc={subTitleDoc} contentDoc={contentDoc}></ViewEdit>
 
                         <div className='write_keyword_view'>
-                            {writeContent.keyword.map((k, j) => (
+                            {keywordsParse.map((k, j) => (
                                 <WriteKeyword key={j} writeListKeyword={k} />
                             ))}
                         </div>

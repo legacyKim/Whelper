@@ -10,7 +10,10 @@ const WriteData = createSlice({
     },
     reducers: {
         writeListDataAdd: (state, action) => {
+            console.log(state.data)
             state.data = [...state.data, action.payload];
+            console.log(state.data)
+
         },
         writeListDataUpdate: (state, action) => {
             const updateWriteId = action.payload.id;
@@ -90,6 +93,7 @@ const cateData = createSlice({
         }).addCase(cateListData.fulfilled, (state, action) => {
             state.loading = false;
             state.data = action.payload;
+            console.log(action.payload)
         }).addCase(cateListData.rejected, (state, action) => {
             state.error = action.payload ?? action.error
         })

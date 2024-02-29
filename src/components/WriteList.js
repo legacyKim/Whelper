@@ -18,6 +18,15 @@ function WriteList() {
     const writeListState = useSelector((state) => state.WriteData);
     const writeListArr = writeListState.data.write || [];
 
+    useEffect(() => {
+        setTimeout(() => {
+            const memoContentElements = document.querySelectorAll('.WriteDiv');
+            memoContentElements.forEach(element => {
+                element.classList.remove('opacity');
+            });
+        }, 100)
+    }, [writeListArr])
+
     return (
         <TransitionGroup>
             <div className='common_page'>
@@ -26,9 +35,9 @@ function WriteList() {
                     {
                         writeListArr.map(function (a, i) {
                             return (
-                                <CSSTransition in={someCondition} key={i} timeout={500} classNames="WriteDiv fade">
+                                <div key={i} classNames="WriteDiv opacity">
                                     <WriteShowContents i={i} writeListArr={writeListArr} />
-                                </CSSTransition>
+                                </div>
                             )
                         })
                     }

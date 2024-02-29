@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
-import { useDispatch, useSelector  } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import MyContext from '../context'
 import { toast } from 'react-toastify';
 
@@ -189,6 +189,16 @@ function Memo() {
 
     // memo save
     const [memo, setMemo] = useState(memoListArr);
+
+    useEffect(() => {
+        setTimeout(()=>{
+            const memoContentElements = document.querySelectorAll('.memo_content');
+            memoContentElements.forEach(element => {
+                element.classList.remove('opacity');
+            });
+        }, 100)
+        
+    }, [memoListArr])
 
     var newMemoSource = useRef(null);
     var newMemoAuthor = useRef(null);
@@ -467,11 +477,11 @@ function Memo() {
                     </div>
                 </div>
 
-                <div className={`memo_wrap reverse`}>
+                <div className={`memo_wrap`}>
                     {
                         memoArr.map(function (a, i) {
                             return (
-                                <div className='memo_content' key={i}>
+                                <div className='memo_content opacity' key={i}>
                                     <div className='memoList_btn'>
                                         <button className='icon-edit-alt' onClick={() => memoCorrectOn(a)}></button>
                                         {/* <button className='icon-trash' onClick={() => delMemoList(i)}></button> */}

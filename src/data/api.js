@@ -19,7 +19,6 @@ export const cateListData = createAsyncThunk('cataData/FetchData',
     async () => {
         try {
             const response = await axios.get(`${API_URL}/components/WriteList`);
-            console.log(response)
             return response.data;
         } catch (error) {
             console.error('Error fetching cataListData:', error);
