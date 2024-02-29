@@ -10,9 +10,7 @@ const WriteData = createSlice({
     },
     reducers: {
         writeListDataAdd: (state, action) => {
-            if (!Array.isArray(state.data)) {
-                state.data = [];
-            }
+            console.log(action.payload);
             state.data = [...state.data.slice(), action.payload];
         },
         writeListDataUpdate: (state, action) => {

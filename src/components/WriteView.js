@@ -19,16 +19,19 @@ function WriteView() {
             await dispatch(writeListData());
         };
         fetchData();
+        console.log('test');
     }, [dispatch]);
 
     const writeListArr = writeListState.data.write || [];
-    console.log(writeListState.data.write)
 
     const writeContent = useState(writeListArr[id] || undefined);
-    const titleDoc = new DOMParser().parseFromString(writeContent[0].title, 'text/html');
-    const subTitleDoc = new DOMParser().parseFromString(writeContent[0].subTitle, 'text/html');
-    const contentDoc = new DOMParser().parseFromString(writeContent[0].content, 'text/html');
-    const keywordsParse = JSON.parse(writeListArr[id].keywords)
+
+    console.log(writeContent[0]);
+
+    const titleDoc = (writeContent[0] !== undefined && writeContent.length > 0) ? new DOMParser().parseFromString(writeContent[0].title, 'text/html') : null;
+    const subTitleDoc = (writeContent[0] !== undefined && writeContent.length > 0) ? new DOMParser().parseFromString(writeContent[0].subTitle, 'text/html') : null;
+    const contentDoc = (writeContent[0] !== undefined && writeContent.length > 0) ? new DOMParser().parseFromString(writeContent[0].content, 'text/html') : null;
+    const keywordsParse = (writeContent[0] !== undefined && writeContent.length > 0) ? JSON.parse(writeListArr[id].keywords) : [];
 
     useEffect(() => {
         setTimeout(() => {
