@@ -383,8 +383,8 @@ function Write() {
                 </div>
                 <div className='page_btn'>
                     <button className="write_btn_back icon-reply" onClick={popupClick}></button>
-                    {/* <Link to={`/components/WriteView/${recentId}`} className='icon-ok-circled write_btn_save' onClick={() => { WriteSaveBtn(); }}></Link> */}
-                    <button className='icon-ok-circled write_btn_save' onClick={() => { WriteSaveBtn(); }}></button>
+                    <Link to={`/components/WriteView/${recentId}`} className='icon-ok-circled write_btn_save' onClick={() => { WriteSaveBtn(); }}></Link>
+                    {/* <button className='icon-ok-circled write_btn_save' onClick={() => { WriteSaveBtn(); }}></button> */}
                 </div>
             </div>
         </div>

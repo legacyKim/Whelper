@@ -15,16 +15,20 @@ function WriteView() {
 
     const dispatch = useDispatch();
     useEffect(() => {
-        dispatch(writeListData())
+        const fetchData = async () => {
+            await dispatch(writeListData());
+        };
+        fetchData();
     }, [dispatch]);
 
     const writeListArr = writeListState.data.write || [];
-    const writeContent = useState(writeListArr[id]);
-    const keywordsParse = JSON.parse(writeListArr[id].keywords)
+    console.log(writeListState.data.write)
 
+    const writeContent = useState(writeListArr[id] || undefined);
     const titleDoc = new DOMParser().parseFromString(writeContent[0].title, 'text/html');
     const subTitleDoc = new DOMParser().parseFromString(writeContent[0].subTitle, 'text/html');
     const contentDoc = new DOMParser().parseFromString(writeContent[0].content, 'text/html');
+    const keywordsParse = JSON.parse(writeListArr[id].keywords)
 
     useEffect(() => {
         setTimeout(() => {
