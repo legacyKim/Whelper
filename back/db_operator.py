@@ -1,7 +1,8 @@
 import json
 from db_config import db_config
 
-from sqlalchemy import create_engine, Column, Integer, String, MetaData, Table
+from sqlalchemy import create_engine, Column, Integer, String, MetaData, Table, Text
+from sqlalchemy.orm import sessionmaker
 
 config_write, config_memo = db_config()
 
@@ -18,7 +19,7 @@ tb_write = Table('tb_write', md_write,
                  Column('id', Integer, primary_key=True),
                  Column('title', String(255)),
                  Column('subTitle', String(255)),
-                 Column('content', String(255)),
+                 Column('content', Text),
                  Column('keywords', String(255)),
                  )
 
@@ -29,7 +30,7 @@ tb_cate = Table('tb_cate', md_write,
 
 tb_memo = Table('tb_memo', md_memo,
                 Column('id', Integer, primary_key=True),
-                Column('memoComment', String(255)),
+                Column('memoComment', String(1255)),
                 Column('memoSource', String(255)),
                 Column('memoAuthor', String(255)),
                 Column('memoAnnotation', String(255)),
@@ -46,6 +47,20 @@ def create_table():
 
     md_write.create_all(engine_write)
     md_memo.create_all(engine_memo)
+
+
+def add_write(data, conn):
+    Session = sessionmaker(bind=conn)
+    session = Session()
+    try:
+        new_entry = tb_write.insert().values(data)
+        session.execute(new_entry)
+        session.commit()
+    except Exception as e:
+        print(f"Error adding data: {e}")
+        session.rollback()
+    finally:
+        session.close()
 
 
 if __name__ == '__main__':

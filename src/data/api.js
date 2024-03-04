@@ -15,6 +15,21 @@ export const writeListData = createAsyncThunk('writeData/FetchData',
     },
 )
 
+export const writeListDataPost = createAsyncThunk('writeData/AddData', async (newData) => {
+    try {
+        const response = await axios.post(`${API_URL}/components/Write`, newData, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+        console.log(response.data)
+        return response.data;
+    } catch (error) {
+        console.error('Error adding data:', error);
+        throw error;
+    }
+});
+
 export const cateListData = createAsyncThunk('cataData/FetchData',
     async () => {
         try {

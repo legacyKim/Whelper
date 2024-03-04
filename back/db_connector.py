@@ -1,7 +1,7 @@
 import os
 import mysql.connector
 import json
-from db_operator import create_table
+from db_operator import create_table, add_write
 from db_config import db_config
 from dotenv import load_dotenv
 
@@ -74,6 +74,12 @@ def get_data_from_memo():
     results = excute_query_get_data(queries, conn)
 
     return results[0], results[1]
+
+
+def post_data_from_write(data):
+    conn = get_db_connection(0)
+    add_write(data, conn)
+    return {'message': 'Data added successfully'}
 
 
 if __name__ == '__main__':

@@ -8,11 +8,11 @@ import ViewEdit from './SlateView.js'
 
 function WriteList() {
 
-    const [someCondition, setSomeCondition] = useState(true);
-
     const dispatch = useDispatch();
     useEffect(() => {
         dispatch(writeListData())
+        console.log("기존에 데이터가 있는 경우는 비동기적으로 처리하면 되는데, 문제는 새 데이터가 추가되면 비동기적으로 처리해야함...")
+        console.log("여기로 들어올 때 undefined 추가...")
     }, [dispatch]);
 
     const writeListState = useSelector((state) => state.WriteData);
@@ -28,7 +28,6 @@ function WriteList() {
     }, [writeListArr])
 
     return (
-        <TransitionGroup>
             <div className='common_page'>
                 <div className='content_area'>
 
@@ -44,13 +43,13 @@ function WriteList() {
 
                 </div>
             </div>
-        </TransitionGroup>
-
     )
 
     function WriteShowContents({ i, writeListArr }) {
 
         const [writeContent, setWriteContent] = useState(writeListArr[i]);
+
+        console.log(writeListArr);
 
         const titleDoc = new DOMParser().parseFromString(writeContent.title, 'text/html');
         const subTitleDoc = new DOMParser().parseFromString(writeContent.subTitle, 'text/html');

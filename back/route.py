@@ -1,6 +1,6 @@
-from flask import Flask, jsonify
+from flask import Flask, request, jsonify
 from flask_cors import CORS
-from db_connector import get_data_from_write, get_data_from_memo
+from db_connector import get_data_from_write, get_data_from_memo, post_data_from_write
 
 import json
 
@@ -10,7 +10,7 @@ CORS(app, resources={
 
 
 # @app.route('/')
-@app.route('/components/WriteList')
+@app.route('/components/WriteList', methods=['GET'])
 def get_data_WriteList():
     results = get_data_from_write()
     writeList, cateList = results[0], results[1]
@@ -24,8 +24,19 @@ def get_data_WriteList():
         return jsonify({'error': 'Invalid JSON data'}), 500
 
 
+@app.route('/components/Write', methods=['POST'])
+def post_data_WriteList():
+    try:
+        data = request.get_json()
+        result = post_data_from_write(data)
+        return jsonify(result), 201
+    except Exception as e:
+        print(f"Error: {e}")
+        return jsonify({'error': 'Error handling write post request'}), 500
+
+
 # @app.route('/')
-@app.route('/components/Memo')
+@app.route('/components/Memo', methods=['GET'])
 def get_data_memo():
     results = get_data_from_memo()
     memoList, bookList = results[0], results[1]

@@ -1,17 +1,22 @@
-import { createSlice, configureStore } from '@reduxjs/toolkit';
-import { writeListData, memoListData, cateListData, bookListData } from './api.js'
+import { createSlice, configureStore, current } from '@reduxjs/toolkit';
+import { writeListData, writeListDataPost, memoListData, cateListData, bookListData } from './api.js'
 
 const WriteData = createSlice({
     name: 'WriteData',
     initialState: {
-        data: [],
+        data: {
+            cate: [],
+            write: [],
+        },
         loading: false,
         error: null,
     },
     reducers: {
         writeListDataAdd: (state, action) => {
-            console.log(action.payload);
-            state.data = [...state.data.slice(), action.payload];
+            state.data = {
+                ...state.data,
+                write: [...state.data.write, action.payload],
+            };
         },
         writeListDataUpdate: (state, action) => {
             const updateWriteId = action.payload.id;
@@ -33,6 +38,14 @@ const WriteData = createSlice({
         }).addCase(writeListData.rejected, (state, action) => {
             state.error = action.payload ?? action.error
         })
+        // .addCase(writeListDataPost.pending, (state) => {
+        //     state.loading = true;
+        // }).addCase(writeListDataPost.fulfilled, (state, action) => {
+        //     state.loading = false;
+        //     state.data.write = [...state.data.write, action.payload];
+        // }).addCase(writeListDataPost.rejected, (state, action) => {
+        //     state.error = action.payload ?? action.error
+        // })
     },
 });
 
@@ -45,7 +58,8 @@ const memoData = createSlice({
     },
     reducers: {
         memoListDataAdd(state, action) {
-            state.data = [...state.data, action.payload];
+            console.log(action.payload)
+            console.log(...state)
         },
         memoListDataUpdate(state, action) {
             const updateMemoId = action.payload.id;

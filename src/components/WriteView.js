@@ -2,7 +2,7 @@ import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 
 import { useSelector, useDispatch } from 'react-redux';
-import { writeListData } from '../data/api.js';
+import { writeListDataAdd } from '../data/reducers.js';
 import { useParams } from 'react-router-dom';
 import { Slate, Editable } from 'slate-react';
 
@@ -15,22 +15,15 @@ function WriteView() {
 
     const dispatch = useDispatch();
     useEffect(() => {
-        const fetchData = async () => {
-            await dispatch(writeListData());
-        };
-        fetchData();
-        console.log('test');
+        dispatch(writeListDataAdd());
     }, [dispatch]);
 
     const writeListArr = writeListState.data.write || [];
-
     const writeContent = useState(writeListArr[id] || undefined);
-
-    console.log(writeContent[0]);
 
     const titleDoc = (writeContent[0] !== undefined && writeContent.length > 0) ? new DOMParser().parseFromString(writeContent[0].title, 'text/html') : null;
     const subTitleDoc = (writeContent[0] !== undefined && writeContent.length > 0) ? new DOMParser().parseFromString(writeContent[0].subTitle, 'text/html') : null;
-    const contentDoc = (writeContent[0] !== undefined && writeContent.length > 0) ? new DOMParser().parseFromString(writeContent[0].content, 'text/html') : null;
+    const contentDoc = (writeContent[0] !== undefined && writeContent.length > 0) ? new DOMParser().parseFromString(writeContent[0].content, 'text/html') : null;    
     const keywordsParse = (writeContent[0] !== undefined && writeContent.length > 0) ? JSON.parse(writeListArr[id].keywords) : [];
 
     useEffect(() => {

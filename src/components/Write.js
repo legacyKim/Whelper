@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { Link } from 'react-router-dom';
 
 import { writeListDataAdd } from "../data/reducers"
-import { writeListData, cateListData } from '../data/api.js';
+import { writeListData, cateListData, writeListDataPost } from '../data/api.js';
 
 import { createEditor, Editor, Transforms, Text, Element as SlateElement, Node, } from 'slate';
 import { Slate, Editable, withReact } from 'slate-react'
@@ -59,10 +59,6 @@ const CustomEditor = {
 
 // serial, deserial
 const serialize = nodes => {
-
-    if (Array.isArray(nodes)) {
-
-    }
 
     return nodes.map(node => {
         if (Text.isText(node)) {
@@ -222,9 +218,10 @@ function Write() {
         const contentString = serialize(editorValue);
         const content = contentString;
 
-        const keywords = keywordArr;
+        const keywords = JSON.stringify(keywordArr)
 
         dispatch(writeListDataAdd({ id, title, subTitle, content, keywords }));
+        // dispatch(writeListDataPost({ id, title, subTitle, content, keywords }));
 
         setEdTitle(contentPlaceholder);
         setEdSubTitle(contentPlaceholder);
@@ -384,6 +381,7 @@ function Write() {
                 <div className='page_btn'>
                     <button className="write_btn_back icon-reply" onClick={popupClick}></button>
                     <Link to={`/components/WriteView/${recentId}`} className='icon-ok-circled write_btn_save' onClick={() => { WriteSaveBtn(); }}></Link>
+                    {/* <Link to={`/components/WriteList`} classN   ame='icon-ok-circled write_btn_save' onClick={() => { WriteSaveBtn(); }}></Link> */}
                     {/* <button className='icon-ok-circled write_btn_save' onClick={() => { WriteSaveBtn(); }}></button> */}
                 </div>
             </div>
@@ -435,9 +433,7 @@ function Write() {
                 </Slate>
             </div>
         )
-
     }
-
 }
 
 export default Write;
