@@ -11,12 +11,10 @@ function WriteList() {
     const dispatch = useDispatch();
     useEffect(() => {
         dispatch(writeListData())
-        console.log("기존에 데이터가 있는 경우는 비동기적으로 처리하면 되는데, 문제는 새 데이터가 추가되면 비동기적으로 처리해야함...")
-        console.log("여기로 들어올 때 undefined 추가...")
     }, [dispatch]);
 
     const writeListState = useSelector((state) => state.WriteData);
-    const writeListArr = writeListState.data.write || [];
+    const writeListArr = writeListState.data.write.filter(item => item !== null) || [];
 
     useEffect(() => {
         setTimeout(() => {
@@ -48,12 +46,12 @@ function WriteList() {
     function WriteShowContents({ i, writeListArr }) {
 
         const [writeContent, setWriteContent] = useState(writeListArr[i]);
-
-        console.log(writeListArr);
+        const index = writeListArr[i].id - 1
 
         const titleDoc = new DOMParser().parseFromString(writeContent.title, 'text/html');
         const subTitleDoc = new DOMParser().parseFromString(writeContent.subTitle, 'text/html');
         const contentDoc = new DOMParser().parseFromString(writeContent.content, 'text/html');
+        const keywordsParse = JSON.parse(writeListArr[i].keywords)
 
         /*
         const dispatch = useDispatch();
@@ -69,17 +67,15 @@ function WriteList() {
 
         // const writeDate = writeDateFomatt(writeListArr[i].date);
 
-        const keywordsParse = JSON.parse(writeListArr[i].keywords)
-
         return (
 
             <div>
                 <div className='write_btn'>
-                    <Link className='icon-edit-alt' to={`/components/WriteCorrect/${writeListArr[i].id}`}></Link>
+                    <Link className='icon-edit-alt' to={`/components/WriteCorrect/${index}`}></Link>
                     {/* <button className='icon-trash' onClick={delWriteList}></button> */}
                 </div>
                 <div className='write_list' >
-                    <Link to={`/components/WriteView/${writeListArr[i].id}`}>
+                    <Link to={`/components/WriteView/${index}`}>
                         <ViewEdit titleDoc={titleDoc} subTitleDoc={subTitleDoc} contentDoc={contentDoc}></ViewEdit>
                     </Link>
                     <div className='write_keyword'>

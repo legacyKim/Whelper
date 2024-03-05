@@ -1,6 +1,8 @@
 import React, { useRef, useState, useEffect, useMemo, useCallback } from 'react';
 import { useDispatch, useSelector } from "react-redux"
-import { writeListDataUpdate } from "../data/reducers.js"
+
+import { syncWriteListData } from "../data/reducers.js"
+import { cateListData, writeListDataUpdate } from '../data/api.js';
 
 import { createEditor, Editor, Transforms, Text, Element as SlateElement, Node, } from 'slate';
 import { Slate, Editable, withReact } from 'slate-react'
@@ -130,7 +132,17 @@ function WriteCorrect() {
 
     const navigate = useNavigate();
 
+    const dispatch = useDispatch();
+    useEffect(() => {
+        dispatch(syncWriteListData());
+        dispatch(cateListData())
+    }, [dispatch]);
+
     const writeListState = useSelector((state) => state.WriteData);
+    const cateListState = useSelector((state) => state.cateData);
+
+    const writeListArr = writeListState.data.write || [];
+    const cateListArr = cateListState.data.cate || [];
     let { id } = useParams();
 
     const [popupActive, popupActiveStyle] = useState(false);
@@ -148,11 +160,12 @@ function WriteCorrect() {
     const [editor] = useState(() => withReact(createEditor()))
     const [annoEditor] = useState(() => withReact(createEditor()))
 
-    const [writeContent, setWriteContent] = useState(writeListState[id]);
+    const [writeContent, setWriteContent] = useState(writeListArr[id] || undefined);
 
     const titleDoc = new DOMParser().parseFromString(writeContent.title,'text/html');
     const subTitleDoc = new DOMParser().parseFromString(writeContent.subTitle, 'text/html');
     const contentDoc = new DOMParser().parseFromString(writeContent.content, 'text/html');
+    const keywordsParse = (writeContent !== undefined) ? JSON.parse(writeListArr[id].keywords) : [];
 
     const titleValue = deserialize(titleDoc.body);
     const subTitleValue = deserialize(subTitleDoc.body);
@@ -195,10 +208,7 @@ function WriteCorrect() {
     }, []);
     //// slate text editor
 
-    const dispatch = useDispatch();
-
-    let cateListData = useSelector((state) => state.cateData);
-    const [keywordArr, setKeywordArr] = useState(writeListState[id].keyword);
+    const [keywordArr, setKeywordArr] = useState(keywordsParse);
 
     // content and local storage change
     const [edTitle, setEdTitle] = useState(titleValue);
@@ -209,20 +219,20 @@ function WriteCorrect() {
 
     const WriteCorrectBtn = () => {
 
-        const id = writeListState.length - 1;
+        console.log(id)
 
         const titleString = serialize(edTitle);
-        const updateTitle = titleString;
+        const title = titleString;
 
         const subTitleString = serialize(edSubTitle);
-        const updateSubTitle = subTitleString;
+        const subTitle = subTitleString;
 
         const contentString = serialize(editorValue);
-        const updateContent = contentString;
+        const content = contentString;
 
-        const updateKeyword = keywordArr;
+        const keywords = JSON.stringify(keywordArr)
 
-        dispatch(writeListDataUpdate({ id, updateTitle, updateSubTitle, updateContent, updateKeyword }));
+        dispatch(writeListDataUpdate({ id ,title, subTitle, content, keywords }));
 
         setEdTitle(contentPlaceholder);
         setEdSubTitle(contentPlaceholder);
@@ -251,6 +261,8 @@ function WriteCorrect() {
         setToolbarActive('');
     }
     //// toolbar
+
+    const index = writeListArr[id].id - 1;
 
     return (
         <div className='Write'>
@@ -359,7 +371,7 @@ function WriteCorrect() {
             </Slate>
 
             <div className='page_btn'>
-                <Link to={`/components/WriteView/${writeListState[id].id}`} onClick={() => { navigate(`/components/WriteView/${writeListState[id].id}`) }} className='icon-reply'></Link>
+                <Link to={`/components/WriteView/${index}`} onClick={() => { navigate(`/components/WriteView/${index}`) }} className='icon-reply'></Link>
                 <button className='icon-ok-circled write_btn_save' onClick={() => { popupClick(); }}></button>
             </div>
 
@@ -367,7 +379,7 @@ function WriteCorrect() {
             <div className={`popup ${popupActive ? popupActive : ""}`}>
                 <div className='popup_cate'>
                     {
-                        cateListData.map(function (a, i) {
+                        cateListArr.map(function (a, i) {
                             return (
                                 <div key={i}>
                                     <CateListFac i={i} keywordArr={keywordArr} setKeywordArr={setKeywordArr}></CateListFac>
@@ -378,7 +390,8 @@ function WriteCorrect() {
                 </div>
                 <div className='page_btn'>
                     <button className="write_btn_back icon-reply" onClick={popupClick}></button>
-                    <button className='icon-ok-circled write_btn_save' onClick={() => { navigate('/components/WriteList'); WriteCorrectBtn(); }}></button>
+                    {/* <button className='icon-ok-circled write_btn_save' onClick={() => { navigate('/components/WriteList'); WriteCorrectBtn(); }}></button> */}
+                    <button className='icon-ok-circled write_btn_save' onClick={() => { WriteCorrectBtn(); }}></button>
                     {/* to="/components/WriteList" */}
                 </div>
             </div>
@@ -387,19 +400,20 @@ function WriteCorrect() {
 
     function CateListFac({ i, keywordArr, setKeywordArr }) {
 
-        const [cateActive, setCateActive] = useState(keywordArr.includes(cateListData[i]));
+        const category = cateListArr[i].category
+        const [cateActive, setCateActive] = useState(keywordArr.includes(category));
         const cateClick = () => {
             setKeywordArr((prevKeywordArr) =>
-                keywordArr.includes(cateListData[i])
-                    ? prevKeywordArr.filter((item) => item !== cateListData[i])
-                    : [...prevKeywordArr, cateListData[i]]
+                keywordArr.includes(category)
+                    ? prevKeywordArr.filter((item) => item !== category)
+                    : [...prevKeywordArr, category]
             );
 
             setCateActive((prevCateActive) => !prevCateActive);
         };
 
         return (
-            <span className={`${cateActive ? "active" : ""}`} onClick={cateClick}>{cateListData[i]}</span>
+            <span className={`${cateActive ? "active" : ""}`} onClick={cateClick}>{category}</span>
         )
 
     }

@@ -1,5 +1,6 @@
 import { React, useEffect, useState, useRef, useContext } from 'react';
 import { NavLink, useNavigate } from "react-router-dom";
+import { debounce } from 'lodash';
 import MyContext from './context'
 
 import { ToastContainer } from 'react-toastify';
@@ -63,14 +64,13 @@ function App() {
     const [scrollPosition, setScrollPosition] = useState(0);
 
     useEffect(() => {
-        const updateScroll = () => {
+        const updateScroll = debounce(() => {
             setScrollPosition(window.scrollY || document.documentElement.scrollTop);
-        };
+        }, 300);
         window.addEventListener('scroll', updateScroll);
         return () => {
             window.removeEventListener('scroll', updateScroll);
         };
-
     }, []);
     //// about header scroll
 

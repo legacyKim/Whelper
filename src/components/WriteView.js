@@ -2,7 +2,7 @@ import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 
 import { useSelector, useDispatch } from 'react-redux';
-import { writeListDataAdd } from '../data/reducers.js';
+import { syncWriteListData } from '../data/reducers.js';
 import { useParams } from 'react-router-dom';
 import { Slate, Editable } from 'slate-react';
 
@@ -15,7 +15,7 @@ function WriteView() {
 
     const dispatch = useDispatch();
     useEffect(() => {
-        dispatch(writeListDataAdd());
+        dispatch(syncWriteListData());
     }, [dispatch]);
 
     const writeListArr = writeListState.data.write || [];

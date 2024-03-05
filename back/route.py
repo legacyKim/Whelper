@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from db_connector import get_data_from_write, get_data_from_memo, post_data_from_write
+from db_connector import get_data_from_write, get_data_from_memo
+from db_operator import post_data_from_write, update_data_from_write
 
 import json
 
@@ -29,6 +30,17 @@ def post_data_WriteList():
     try:
         data = request.get_json()
         result = post_data_from_write(data)
+        return jsonify(result), 201
+    except Exception as e:
+        print(f"Error: {e}")
+        return jsonify({'error': 'Error handling write post request'}), 500
+
+
+@app.route('/components/WriteCorrect', methods=['POST'])
+def update_data_WriteList():
+    try:
+        data = request.get_json()
+        result = update_data_from_write(data)
         return jsonify(result), 201
     except Exception as e:
         print(f"Error: {e}")

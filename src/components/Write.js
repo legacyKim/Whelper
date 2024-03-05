@@ -2,7 +2,7 @@ import React, { useRef, useState, useMemo, useCallback, useEffect } from 'react'
 import { useDispatch, useSelector } from "react-redux"
 import { Link } from 'react-router-dom';
 
-import { writeListDataAdd } from "../data/reducers"
+import { syncWriteListData } from "../data/reducers"
 import { writeListData, cateListData, writeListDataPost } from '../data/api.js';
 
 import { createEditor, Editor, Transforms, Text, Element as SlateElement, Node, } from 'slate';
@@ -204,8 +204,6 @@ function Write() {
     // save content
     const WriteSaveBtn = () => {
 
-        const id = writeListArr.length;
-
         localStorage.removeItem('writeTitle');
         const titleString = serialize(edTitle);
         const title = titleString;
@@ -220,8 +218,8 @@ function Write() {
 
         const keywords = JSON.stringify(keywordArr)
 
-        dispatch(writeListDataAdd({ id, title, subTitle, content, keywords }));
-        // dispatch(writeListDataPost({ id, title, subTitle, content, keywords }));
+        dispatch(syncWriteListData({ title, subTitle, content, keywords }));
+        dispatch(writeListDataPost({ title, subTitle, content, keywords }));
 
         setEdTitle(contentPlaceholder);
         setEdSubTitle(contentPlaceholder);
@@ -390,21 +388,21 @@ function Write() {
 
     function CateListFac({ i, keywordArr, setKeywordArr }) {
 
-        const catagory = cateListArr[i].category
+        const category = cateListArr[i].category
 
-        const [cateActive, setCateActive] = useState(keywordArr.includes(catagory));
+        const [cateActive, setCateActive] = useState(keywordArr.includes(category));
         const cateClick = () => {
             setKeywordArr((prevKeywordArr) =>
-                keywordArr.includes(catagory)
-                    ? prevKeywordArr.filter((item) => item !== catagory)
-                    : [...prevKeywordArr, catagory]
+                keywordArr.includes(category)
+                    ? prevKeywordArr.filter((item) => item !== category)
+                    : [...prevKeywordArr, category]
             );
 
             setCateActive((prevCateActive) => !prevCateActive);
         };
 
         return (
-            <span className={`${cateActive ? "active" : ""}`} onClick={cateClick}>{catagory}</span>
+            <span className={`${cateActive ? "active" : ""}`} onClick={cateClick}>{category}</span>
         )
 
     }

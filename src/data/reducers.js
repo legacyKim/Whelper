@@ -1,5 +1,5 @@
 import { createSlice, configureStore, current } from '@reduxjs/toolkit';
-import { writeListData, writeListDataPost, memoListData, cateListData, bookListData } from './api.js'
+import { writeListData, writeListDataPost, writeListDataUpdate, memoListData, cateListData, bookListData } from './api.js'
 
 const WriteData = createSlice({
     name: 'WriteData',
@@ -12,16 +12,13 @@ const WriteData = createSlice({
         error: null,
     },
     reducers: {
-        writeListDataAdd: (state, action) => {
-            state.data = {
-                ...state.data,
-                write: [...state.data.write, action.payload],
-            };
-        },
-        writeListDataUpdate: (state, action) => {
-            const updateWriteId = action.payload.id;
-            const updatedWrite = action.payload;
-            state.data = state.data.map(item => (item.id === updateWriteId ? updatedWrite : item));
+        syncWriteListData: (state, action) => {
+            if (action.payload !== undefined) {
+                state.data = {
+                    ...state.data,
+                    write: [...state.data.write, action.payload],
+                };
+            }
         },
         writeListDataDelete: (state, action) => {
             const deleteWriteId = action.payload.id;
@@ -30,6 +27,8 @@ const WriteData = createSlice({
     },
 
     extraReducers: (builder) => {
+
+        // get data
         builder.addCase(writeListData.pending, (state) => {
             state.loading = true;
         }).addCase(writeListData.fulfilled, (state, action) => {
@@ -38,14 +37,38 @@ const WriteData = createSlice({
         }).addCase(writeListData.rejected, (state, action) => {
             state.error = action.payload ?? action.error
         })
-        // .addCase(writeListDataPost.pending, (state) => {
-        //     state.loading = true;
-        // }).addCase(writeListDataPost.fulfilled, (state, action) => {
-        //     state.loading = false;
-        //     state.data.write = [...state.data.write, action.payload];
-        // }).addCase(writeListDataPost.rejected, (state, action) => {
-        //     state.error = action.payload ?? action.error
-        // })
+        
+        // post data
+        .addCase(writeListDataPost.pending, (state) => {
+            state.loading = true;
+        }).addCase(writeListDataPost.fulfilled, (state, action) => {
+            state.loading = false;
+            state.data = {
+                ...state.data,
+                write: [...state.data.write, action.payload]
+            };
+        }).addCase(writeListDataPost.rejected, (state, action) => {
+            state.error = action.payload ?? action.error
+        })
+        
+        // update data
+        .addCase(writeListDataUpdate.pending, (state) => {
+            state.loading = true;
+        }).addCase(writeListDataUpdate.fulfilled, (state, action) => {
+            state.loading = false;
+            const currentState = current(state);
+            const updatedWrite = currentState.data.write.filter(item => item.id !== action.payload.id);
+
+            console.log(currentState)
+            console.log(updatedWrite)
+            
+            return {
+                ...currentState,
+                write: updatedWrite,
+            };
+        }).addCase(writeListDataUpdate.rejected, (state, action) => {
+            state.error = action.payload ?? action.error
+        })
     },
 });
 
@@ -138,7 +161,7 @@ const bookData = createSlice({
     },
 });
 
-export const { writeListDataAdd, writeListDataUpdate, writeListDataDelete } = WriteData.actions;
+export const { syncWriteListData, syncWriteListDataUpdate, writeListDataDelete } = WriteData.actions;
 export const { memoListDataAdd, memoListDataDelete, memoListDataUpdate, memoListAnno, memoListAnnoUpdate, memoListAnnoDelete } = memoData.actions;
 export const { cateListDataAdd } = cateData.actions;
 export const { bookListDataAdd, bookListDelete } = bookData.actions;

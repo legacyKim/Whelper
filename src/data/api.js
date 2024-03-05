@@ -3,7 +3,8 @@ import axios from 'axios';
 
 const API_URL = 'http://localhost:5000';
 
-export const writeListData = createAsyncThunk('writeData/FetchData',
+// get write dadta
+export const writeListData = createAsyncThunk('writeData/getData',
     async () => {
         try {
             const response = await axios.get(`${API_URL}/components/WriteList`);
@@ -15,34 +16,41 @@ export const writeListData = createAsyncThunk('writeData/FetchData',
     },
 )
 
-export const writeListDataPost = createAsyncThunk('writeData/AddData', async (newData) => {
+// post write data
+export const writeListDataPost = createAsyncThunk('writeData/postData', async (newData) => {
     try {
-        const response = await axios.post(`${API_URL}/components/Write`, newData, {
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        });
-        console.log(response.data)
+        const response = await axios.post(`${API_URL}/components/Write`, newData);
         return response.data;
     } catch (error) {
-        console.error('Error adding data:', error);
         throw error;
     }
 });
 
-export const cateListData = createAsyncThunk('cataData/FetchData',
+// update write data
+export const writeListDataUpdate = createAsyncThunk('writeData/updateData', async (newData) => {
+    try {
+        const response = await axios.post(`${API_URL}/components/WriteCorrect`, newData);
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
+});
+
+// get cate data
+export const cateListData = createAsyncThunk('cateData/getCate',
     async () => {
         try {
             const response = await axios.get(`${API_URL}/components/WriteList`);
             return response.data;
         } catch (error) {
-            console.error('Error fetching cataListData:', error);
+            console.error('Error fetching cateListData:', error);
             throw error;
         }
     },
 )
 
-export const memoListData = createAsyncThunk('memoData/FetchData',
+// get memo data
+export const memoListData = createAsyncThunk('memoData/getMemo',
     async () => {
         try {
             const response = await axios.get(`${API_URL}/components/Memo`);
@@ -54,7 +62,7 @@ export const memoListData = createAsyncThunk('memoData/FetchData',
     },
 )
 
-export const bookListData = createAsyncThunk('bookData/FetchData',
+export const bookListData = createAsyncThunk('bookData/getBook',
     async () => {
         try {
             const response = await axios.get(`${API_URL}/components/Memo`);
