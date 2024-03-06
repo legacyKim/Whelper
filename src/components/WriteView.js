@@ -13,6 +13,10 @@ function WriteView() {
     const writeListState = useSelector((state) => state.WriteData);
     let { id } = useParams();
 
+    useEffect(() => {
+        localStorage.setItem('view_id', id);
+    }, [id]);
+
     const dispatch = useDispatch();
     useEffect(() => {
         dispatch(syncWriteListData());
@@ -24,7 +28,7 @@ function WriteView() {
 
     const titleDoc = (writeContent[0] !== undefined && writeContent.length > 0) ? new DOMParser().parseFromString(writeContent[0].title, 'text/html') : null;
     const subTitleDoc = (writeContent[0] !== undefined && writeContent.length > 0) ? new DOMParser().parseFromString(writeContent[0].subTitle, 'text/html') : null;
-    const contentDoc = (writeContent[0] !== undefined && writeContent.length > 0) ? new DOMParser().parseFromString(writeContent[0].content, 'text/html') : null;    
+    const contentDoc = (writeContent[0] !== undefined && writeContent.length > 0) ? new DOMParser().parseFromString(writeContent[0].content, 'text/html') : null;
     const keywordsParse = (writeContent[0] !== undefined && writeContent.length > 0) ? JSON.parse(writeListArr[id].keywords) : [];
 
     useEffect(() => {

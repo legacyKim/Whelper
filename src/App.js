@@ -66,7 +66,7 @@ function App() {
     useEffect(() => {
         const updateScroll = debounce(() => {
             setScrollPosition(window.scrollY || document.documentElement.scrollTop);
-        }, 300);
+        });
         window.addEventListener('scroll', updateScroll);
         return () => {
             window.removeEventListener('scroll', updateScroll);
