@@ -1,5 +1,5 @@
 import { createSlice, configureStore, current } from '@reduxjs/toolkit';
-import { writeListData, writeListDataPost, writeListDataUpdate, memoListData, cateListData, bookListData } from './api.js'
+import { writeListData, writeListDataPost, memoListData, cateListData, bookListData } from './api.js'
 
 const WriteData = createSlice({
     name: 'WriteData',
@@ -18,6 +18,19 @@ const WriteData = createSlice({
                     ...state.data,
                     write: [...state.data.write, action.payload],
                 };
+            }
+        },
+        syncWriteListDataUpdate: (state, action) => {
+
+            if (action.payload !== undefined) {      
+                
+                console.log(action.payload)
+
+                const updatedWrite = state.data.write.map(item =>
+                    item.id === action.payload.db_id ? action.payload : item
+                );
+        
+                state.data.write = updatedWrite;
             }
         },
         writeListDataDelete: (state, action) => {
@@ -51,24 +64,6 @@ const WriteData = createSlice({
             state.error = action.payload ?? action.error
         })
         
-        // update data
-        .addCase(writeListDataUpdate.pending, (state) => {
-            state.loading = true;
-        }).addCase(writeListDataUpdate.fulfilled, (state, action) => {
-            state.loading = false;
-            const currentState = current(state);
-            const updatedWrite = currentState.data.write.filter(item => item.id !== action.payload.id);
-
-            console.log(currentState)
-            console.log(updatedWrite)
-            
-            return {
-                ...currentState,
-                write: updatedWrite,
-            };
-        }).addCase(writeListDataUpdate.rejected, (state, action) => {
-            state.error = action.payload ?? action.error
-        })
     },
 });
 

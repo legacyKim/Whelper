@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect, useMemo, useCallback } from 'react';
 import { useDispatch, useSelector } from "react-redux"
 
-import { syncWriteListData } from "../data/reducers.js"
+import { syncWriteListData, syncWriteListDataUpdate } from "../data/reducers.js"
 import { cateListData, writeListDataUpdate } from '../data/api.js';
 
 import { createEditor, Editor, Transforms, Text, Element as SlateElement, Node, } from 'slate';
@@ -219,7 +219,7 @@ function WriteCorrect() {
 
     const WriteCorrectBtn = () => {
 
-        console.log(id)
+        const db_id = Number(id) + 1;
 
         const titleString = serialize(edTitle);
         const title = titleString;
@@ -230,9 +230,10 @@ function WriteCorrect() {
         const contentString = serialize(editorValue);
         const content = contentString;
 
-        const keywords = JSON.stringify(keywordArr)
+        const keywords = JSON.stringify(keywordArr);
 
-        dispatch(writeListDataUpdate({ id ,title, subTitle, content, keywords }));
+        dispatch(syncWriteListDataUpdate({ db_id, title, subTitle, content, keywords }));
+        dispatch(writeListDataUpdate({ db_id, title, subTitle, content, keywords }))
 
         setEdTitle(contentPlaceholder);
         setEdSubTitle(contentPlaceholder);
@@ -390,8 +391,8 @@ function WriteCorrect() {
                 </div>
                 <div className='page_btn'>
                     <button className="write_btn_back icon-reply" onClick={popupClick}></button>
-                    {/* <button className='icon-ok-circled write_btn_save' onClick={() => { navigate('/components/WriteList'); WriteCorrectBtn(); }}></button> */}
-                    <button className='icon-ok-circled write_btn_save' onClick={() => { WriteCorrectBtn(); }}></button>
+                    <button className='icon-ok-circled write_btn_save' onClick={() => { navigate(`/components/WriteView/${index}`); WriteCorrectBtn(); }}></button>
+                    {/* <button className='icon-ok-circled write_btn_save' onClick={() => { WriteCorrectBtn(); }}></button> */}
                     {/* to="/components/WriteList" */}
                 </div>
             </div>

@@ -17,7 +17,7 @@ export const writeListData = createAsyncThunk('writeData/getData',
 )
 
 // post write data
-export const writeListDataPost = createAsyncThunk('writeData/postData', async (newData) => {
+export const writeListDataPost = createAsyncThunk('writeData/newData', async (newData) => {
     try {
         const response = await axios.post(`${API_URL}/components/Write`, newData);
         return response.data;
@@ -30,6 +30,7 @@ export const writeListDataPost = createAsyncThunk('writeData/postData', async (n
 export const writeListDataUpdate = createAsyncThunk('writeData/updateData', async (newData) => {
     try {
         const response = await axios.post(`${API_URL}/components/WriteCorrect`, newData);
+        console.log(response)
         return response.data;
     } catch (error) {
         throw error;

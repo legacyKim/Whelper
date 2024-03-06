@@ -1,6 +1,6 @@
 import json
 from db_config import db_config
-from sqlalchemy import create_engine, Column, Integer, String, MetaData, Table, Text
+from sqlalchemy import create_engine, Column, Integer, String, MetaData, Table, Text, text
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
@@ -71,14 +71,33 @@ def post_data_from_write(data):
         print(f"Error adding data: {e}")
 
 
-def update_data_from_write(data):
+def update_data_from_write(data, write_id):
+
+    session = Session_write()
+
+    print('write_idwrite_idwrite_idwrite_idwrite_idwrite_idwrite_idwrite_idwrite_idwrite_idwrite_idwrite_idwrite_idwrite_id', write_id)
+
     try:
-        with Session_write() as session:
-            write_update_instance = Write(**data)
-            session.add(write_update_instance)
+
+        write_instance = session.query(Write).filter_by(id=write_id).first()
+
+        if write_instance:
+            for key, value in data.items():
+                setattr(write_instance, key, value)
+
+            # 세션 커밋
             session.commit()
+            print(f"Data with id={write_id} updated successfully")
+        else:
+            print(f"No data found with id={write_id}")
+
     except Exception as e:
-        print(f"Error adding data: {e}")
+        print(f"Error updating data: {e}")
+        # 에러 발생 시 롤백
+        session.rollback()
+    finally:
+        # 세션 닫기
+        session.close()
 
 
 if __name__ == '__main__':
@@ -86,3 +105,4 @@ if __name__ == '__main__':
     data = {'title': 'Example Title', 'subTitle': 'Example Subtitle',
             'content': 'Example Content', 'keywords': 'Example Keyword'}
     post_data_from_write(data)
+    update_data_from_write(data)

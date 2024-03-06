@@ -18,7 +18,6 @@ def get_data_WriteList():
 
     try:
         data = {'write': json.loads(writeList), 'cate': json.loads(cateList)}
-        print(data)
         return jsonify(data)
     except json.decoder.JSONDecodeError as e:
         print(f"JSON Decode Error: {e}")
@@ -40,7 +39,9 @@ def post_data_WriteList():
 def update_data_WriteList():
     try:
         data = request.get_json()
-        result = update_data_from_write(data)
+        write_id = data['db_id']
+
+        result = update_data_from_write(data, write_id)
         return jsonify(result), 201
     except Exception as e:
         print(f"Error: {e}")

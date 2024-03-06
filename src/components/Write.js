@@ -389,7 +389,6 @@ function Write() {
     function CateListFac({ i, keywordArr, setKeywordArr }) {
 
         const category = cateListArr[i].category
-
         const [cateActive, setCateActive] = useState(keywordArr.includes(category));
         const cateClick = () => {
             setKeywordArr((prevKeywordArr) =>
@@ -397,7 +396,6 @@ function Write() {
                     ? prevKeywordArr.filter((item) => item !== category)
                     : [...prevKeywordArr, category]
             );
-
             setCateActive((prevCateActive) => !prevCateActive);
         };
 
