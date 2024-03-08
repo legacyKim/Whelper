@@ -3,8 +3,8 @@ import { useDispatch, useSelector } from "react-redux"
 import MyContext from '../context'
 import { toast } from 'react-toastify';
 
-import { memoListData, bookListData } from "../data/api"
-import { memoListDataAdd, memoListDataDelete, memoListDataUpdate, memoListAnno, memoListAnnoUpdate, memoListAnnoDelete, bookListDataAdd, bookListDelete } from "../data/reducers.js"
+import { memoListData, bookListData, memoListAnnoUpdate } from "../data/api"
+import { syncMemoListDataAdd, memoListDataDelete, memoListDataUpdate, memoListAnno, syncMemoListAnnoUpdate, memoListAnnoDelete, bookListDataAdd, bookListDelete } from "../data/reducers.js"
 
 
 function Memo() {
@@ -206,14 +206,14 @@ function Memo() {
 
     const MemoSaveBtn = () => {
 
-        const id = memoListArr.length;
         const memoComment = newMemoComment.current.value;
         var memoAuthor = newMemoAuthor.current.value;
         var memoSource = newMemoSource.current.value;
-        var memoAnnotation = {};
+        var memoAnnotation = [];
 
-        dispatch(memoListDataAdd({ id, memoComment, memoAuthor, memoSource, memoAnnotation }));
-        setMemo((prevMemo) => [...prevMemo, { id, memoComment, memoAuthor, memoSource, memoAnnotation }]);
+        dispatch(syncMemoListDataAdd({ memoComment, memoAuthor, memoSource, memoAnnotation }));
+        dispatch(memoListAnnoUpdate({ memoComment, memoAuthor, memoSource, memoAnnotation }));
+        setMemo((prevMemo) => [...prevMemo, { memoComment, memoAuthor, memoSource, memoAnnotation }]);
 
     };
 
@@ -375,7 +375,7 @@ function Memo() {
     const textareaCorr = useRef();
     const [textAreaHeight, setTextAreaHeight] = useState();
 
-    const memoAnnoCorrectBtn = (memo, i) => {
+    const memoAnnoCorrectBtn = (memoAnnoFac, i) => {
 
         const memoAnnoText = document.querySelectorAll('.text');
 
@@ -383,7 +383,7 @@ function Memo() {
             setAnnoCorrectActive('active');
         }
 
-        setMemoAnnoCorrText(memo.memoAnnotation[i]);
+        setMemoAnnoCorrText(memoAnnoFac);
         setTextAreaHeight(memoAnnoText[i].clientHeight);
         setMemoAnnoIndex(i);
     }
@@ -397,11 +397,10 @@ function Memo() {
     // memo anno correct complete
     const memoAnnoCorrComBtn = (memo, memoAnnoCorrProps) => {
 
-        const corrMemoId = memo.id;
         const corrMemoAnno = memoAnnoCorrProps;
         const corrAnnotationKeys = memoAnnoIndex;
 
-        dispatch(memoListAnnoUpdate({ corrMemoId, corrMemoAnno, corrAnnotationKeys }));
+        dispatch(syncMemoListAnnoUpdate({ corrMemoAnno, corrAnnotationKeys }));
         setAnnoCorrectActive('');
         setTextAreaHeight(null);
 
@@ -626,10 +625,14 @@ function Memo() {
 
     function MemoAnno({ memo }) {
 
+        console.log(memo)
+
+        const memoAnnoArr = memo.memoAnnotation || []
+
         return (
             <ul className='memo_annotation'>
                 {
-                    Object.values(memo.memoAnnotation).map(function (m, i) {
+                    memoAnnoArr.map(function (m, i) {
                         return (
                             <li key={i}>
                                 <div className='memo_annotation_fac'>
@@ -637,7 +640,7 @@ function Memo() {
                                     <div className='memo_annotation_fac_box'>
                                         <p className='text'>{memo.memoAnnotation[i]}</p>
                                         <button className='icon-feather' onClick={() => {
-                                            memoAnnoCorrectBtn(memo, i);
+                                            memoAnnoCorrectBtn(m, i);
                                             setMemoAnnoActive('')
                                         }}></button>
                                         <button className='icon-trash' onClick={() => {

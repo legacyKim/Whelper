@@ -21,15 +21,10 @@ const WriteData = createSlice({
             }
         },
         syncWriteListDataUpdate: (state, action) => {
-
-            if (action.payload !== undefined) {      
-                
-                console.log(action.payload)
-
+            if (action.payload !== undefined) {
                 const updatedWrite = state.data.write.map(item =>
                     item.id === action.payload.db_id ? action.payload : item
                 );
-        
                 state.data.write = updatedWrite;
             }
         },
@@ -50,20 +45,20 @@ const WriteData = createSlice({
         }).addCase(writeListData.rejected, (state, action) => {
             state.error = action.payload ?? action.error
         })
-        
-        // post data
-        .addCase(writeListDataPost.pending, (state) => {
-            state.loading = true;
-        }).addCase(writeListDataPost.fulfilled, (state, action) => {
-            state.loading = false;
-            state.data = {
-                ...state.data,
-                write: [...state.data.write, action.payload]
-            };
-        }).addCase(writeListDataPost.rejected, (state, action) => {
-            state.error = action.payload ?? action.error
-        })
-        
+
+            // post data
+            .addCase(writeListDataPost.pending, (state) => {
+                state.loading = true;
+            }).addCase(writeListDataPost.fulfilled, (state, action) => {
+                state.loading = false;
+                state.data = {
+                    ...state.data,
+                    write: [...state.data.write, action.payload]
+                };
+            }).addCase(writeListDataPost.rejected, (state, action) => {
+                state.error = action.payload ?? action.error
+            })
+
     },
 });
 
@@ -75,9 +70,13 @@ const memoData = createSlice({
         error: null,
     },
     reducers: {
-        memoListDataAdd(state, action) {
-            console.log(action.payload)
-            console.log(...state)
+        syncMemoListDataAdd(state, action) {
+            if (action.payload !== undefined) {
+                state.data = {
+                    ...state.data,
+                    memo: [...state.data.memo, action.payload],
+                };
+            }
         },
         memoListDataUpdate(state, action) {
             const updateMemoId = action.payload.id;
@@ -85,8 +84,22 @@ const memoData = createSlice({
             state.data = state.data.map(item => (item.id === updateMemoId ? updateMemo : item));
         },
         memoListAnno(state, action) {
+
         },
-        memoListAnnoUpdate(state, updateAnnoList) {
+        syncMemoListAnnoUpdate(state, action) {
+            const updatedMemoAnno = state.data.memo.map(item =>
+                item.id === action.payload.corrMemoId
+                    ? {
+                        ...item,
+                        memoAnnotation: item.memoAnnotation.map((anno, index) =>
+                            index === action.payload.corrAnnotationKeys
+                                ? action.payload.corrAnnotationKeys
+                                : anno
+                        )
+                    }
+                    : item
+            );
+            state.data.memo = updatedMemoAnno;
         },
         memoListAnnoDelete(state, action) {
         }
@@ -157,7 +170,7 @@ const bookData = createSlice({
 });
 
 export const { syncWriteListData, syncWriteListDataUpdate, writeListDataDelete } = WriteData.actions;
-export const { memoListDataAdd, memoListDataDelete, memoListDataUpdate, memoListAnno, memoListAnnoUpdate, memoListAnnoDelete } = memoData.actions;
+export const { syncMemoListDataAdd, memoListDataDelete, memoListDataUpdate, memoListAnno, syncMemoListAnnoUpdate, memoListAnnoDelete } = memoData.actions;
 export const { cateListDataAdd } = cateData.actions;
 export const { bookListDataAdd, bookListDelete } = bookData.actions;
 

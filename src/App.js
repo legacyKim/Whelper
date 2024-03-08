@@ -179,9 +179,7 @@ function App() {
                 <button className='icon-cancel-squared' onClick={delSearchBtn}></button>
             </div>
         )
-
     }
-
 }
 
 export default App;

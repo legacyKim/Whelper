@@ -34,9 +34,19 @@ def excute_query_get_data(queries, conn):
                 data = []
                 for row in rows:
                     row_data = dict(zip(columns, row))
+
+                    if 'memoAnnotation' in row_data and isinstance(row_data['memoAnnotation'], str):
+                        try:
+                            row_data['memoAnnotation'] = json.loads(
+                                row_data['memoAnnotation'])
+                        except json.JSONDecodeError:
+                            print(
+                                f"Failed to parse memoAnnotation field for row {row}")
+
                     data.append(row_data)
 
                 # JSON 형식으로 데이터 만들기
+
                 result = json.dumps(data, indent=2)
                 results.append(result)
 

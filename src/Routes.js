@@ -45,7 +45,7 @@ function Menu() {
         <div className='menuWrap'>
 
             <TransitionGroup component={null}>
-                <CSSTransition key={location.key} classNames="fade" timeout={1000}>
+                <CSSTransition key={location.key} classNames="fade" timeout={300}>
                     <Routes location={location} history={history}>
 
                         <Route exact path="/" />

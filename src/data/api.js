@@ -3,7 +3,7 @@ import axios from 'axios';
 
 const API_URL = 'http://localhost:5000';
 
-// get write dadta
+// get write data
 export const writeListData = createAsyncThunk('writeData/getData',
     async () => {
         try {
@@ -50,7 +50,7 @@ export const cateListData = createAsyncThunk('cateData/getCate',
     },
 )
 
-// get memo data
+// get memodata
 export const memoListData = createAsyncThunk('memoData/getMemo',
     async () => {
         try {
@@ -63,6 +63,17 @@ export const memoListData = createAsyncThunk('memoData/getMemo',
     },
 )
 
+// post memo data
+export const memoListAnnoUpdate = createAsyncThunk('memoData/postMemo', async (newData) => {
+    try {
+        const response = await axios.post(`${API_URL}/components/Memo`, newData);
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
+});
+
+// get bookdata
 export const bookListData = createAsyncThunk('bookData/getBook',
     async () => {
         try {

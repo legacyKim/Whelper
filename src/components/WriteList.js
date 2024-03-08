@@ -74,7 +74,7 @@ function WriteList() {
                     <Link className='icon-edit-alt' to={`/components/WriteCorrect/${index}`}></Link>
                     {/* <button className='icon-trash' onClick={delWriteList}></button> */}
                 </div>
-                <div className='write_list' >
+                <div className='write_list'>
                     <Link to={`/components/WriteView/${index}`}>
                         <ViewEdit titleDoc={titleDoc} subTitleDoc={subTitleDoc} contentDoc={contentDoc}></ViewEdit>
                     </Link>
@@ -94,18 +94,14 @@ function WriteList() {
                     </div>
                 </div>
             </div>
-
         )
     }
 
     function WriteKeyword({ writeListKeyword }) {
-
         return (
             <Link to={`/components/Category/${writeListKeyword}`}>#{writeListKeyword}</Link>
         );
-
     }
-
 }
 
 export default WriteList;

@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback } from 'react'
+import React, { useState, useMemo, useCallback, useEffect } from 'react'
 import { createEditor, Editor, Transforms, Element } from 'slate';
 import { Slate, Editable, withReact } from 'slate-react'
 
@@ -48,10 +48,18 @@ const ViewEdit = ({ titleDoc, subTitleDoc, contentDoc }) => {
     const [subTitleEditor] = useState(() => withReact(createEditor()))
     const [editor] = useState(() => withReact(createEditor()))
 
-    const titleValue = deserialize(titleDoc.body);
-    const subTitleValue = deserialize(subTitleDoc.body);
-    const contentValue = deserialize(contentDoc.body);
-    
+    const lsTitleValue = JSON.parse(localStorage.getItem('view_title')) || undefined
+    const lsSubTitleValue = JSON.parse(localStorage.getItem('view_subTitle')) || undefined
+    const lsContentValue = JSON.parse(localStorage.getItem('view_content')) || undefined
+
+    const titleValue = titleDoc !== null ? deserialize(titleDoc.body) : lsTitleValue
+    const subTitleValue = subTitleDoc !== null ? deserialize(subTitleDoc.body) : lsSubTitleValue
+    const contentValue = contentDoc !== null ? deserialize(contentDoc.body) : lsContentValue
+
+    localStorage.setItem('view_title', JSON.stringify(titleValue));
+    localStorage.setItem('view_subTitle', JSON.stringify(subTitleValue));
+    localStorage.setItem('view_content', JSON.stringify(contentValue));
+
     const renderElement = useCallback(({ attributes, children, element }) => {
         switch (element.type) {
             case 'bold':
@@ -91,7 +99,7 @@ const ViewEdit = ({ titleDoc, subTitleDoc, contentDoc }) => {
             <Slate editor={editor} initialValue={contentValue}>
                 <Editable className="content" renderElement={renderElement} renderLeaf={renderLeaf} readOnly />
             </Slate>
-            
+
         </div>
     )
 

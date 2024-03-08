@@ -12,10 +12,10 @@ class Write(Base):
     __tablename__ = 'tb_write'
 
     id = Column(Integer, primary_key=True, nullable=False, autoincrement=True)
-    title = Column(String(255), nullable=False)
-    subTitle = Column(String(255), nullable=False)
-    content = Column(Text, nullable=False)
-    keywords = Column(String(255), nullable=False)
+    title = Column(String(255))
+    subTitle = Column(String(255))
+    content = Column(Text)
+    keywords = Column(String(255))
 
 
 class Category(Base):
@@ -28,7 +28,7 @@ class Category(Base):
 class Memo(Base):
     __tablename__ = 'tb_memo'
 
-    id = Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key=True, nullable=False, autoincrement=True)
     memoComment = Column(String(1255))
     memoSource = Column(String(255))
     memoAuthor = Column(String(255))
@@ -75,8 +75,6 @@ def update_data_from_write(data, write_id):
 
     session = Session_write()
 
-    print('write_idwrite_idwrite_idwrite_idwrite_idwrite_idwrite_idwrite_idwrite_idwrite_idwrite_idwrite_idwrite_idwrite_id', write_id)
-
     try:
 
         write_instance = session.query(Write).filter_by(id=write_id).first()
@@ -100,9 +98,49 @@ def update_data_from_write(data, write_id):
         session.close()
 
 
+def post_data_from_memo(data):
+    try:
+        with Session_memo() as session:
+            write_instance = Memo(**data)
+            session.add(write_instance)
+            session.commit()
+    except Exception as e:
+        print(f"Error adding data: {e}")
+
+
+def update_data_from_memo(data, memo_id):
+
+    session = Session_memo()
+
+    try:
+
+        memo_instance = session.query(Memo).filter_by(id=memo_id).first()
+
+        if memo_instance:
+            for key, value in data.items():
+                setattr(memo_instance, key, value)
+
+            # 세션 커밋
+            session.commit()
+            print(f"Data with id={memo_id} updated successfully")
+        else:
+            print(f"No data found with id={memo_id}")
+
+    except Exception as e:
+        print(f"Error updating data: {e}")
+        # 에러 발생 시 롤백
+        session.rollback()
+    finally:
+        # 세션 닫기
+        session.close()
+
+
 if __name__ == '__main__':
     create_table()
     data = {'title': 'Example Title', 'subTitle': 'Example Subtitle',
             'content': 'Example Content', 'keywords': 'Example Keyword'}
+
     post_data_from_write(data)
+    post_data_from_memo(data)
     update_data_from_write(data)
+    update_data_from_memo(data)
