@@ -209,7 +209,7 @@ function Memo() {
         const memoComment = newMemoComment.current.value;
         var memoAuthor = newMemoAuthor.current.value;
         var memoSource = newMemoSource.current.value;
-        var memoAnnotation = [];
+        var memoAnnotation = '[]';
 
         dispatch(syncMemoListDataAdd({ memoComment, memoAuthor, memoSource, memoAnnotation }));
         dispatch(memoListAnnoUpdate({ memoComment, memoAuthor, memoSource, memoAnnotation }));
@@ -350,18 +350,10 @@ function Memo() {
 
         const memoId = memo.id;
         const memoAnno = newMemoAnno.current.value;
+        const annotationKeys = JSON.parse(memo.memoAnnotation);
+        const newKey = annotationKeys.length;
 
-        const annotationKeys = Object.keys(memo.memoAnnotation);
-        if (annotationKeys.length > 0) {
-            var annoKey = Math.max(...annotationKeys.map(key => parseInt(key))) + 1;
-        } else {
-            var annoKey = 0;
-        }
-
-        const newKey = annoKey.toString();
-        const memoAnnoIndex = newKey;
-
-        dispatch(memoListAnno({ memoId, memoAnno, memoAnnoIndex }));
+        dispatch(memoListAnno({ memoId, memoAnno, newKey }));
         setMemoAnnoActive('');
         setTextAreaHeight(null);
 
@@ -625,9 +617,7 @@ function Memo() {
 
     function MemoAnno({ memo }) {
 
-        console.log(memo)
-
-        const memoAnnoArr = memo.memoAnnotation || []
+        const memoAnnoArr = JSON.parse(memo.memoAnnotation) || []
 
         return (
             <ul className='memo_annotation'>

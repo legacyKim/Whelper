@@ -1,5 +1,6 @@
 import { createSlice, configureStore, current } from '@reduxjs/toolkit';
 import { writeListData, writeListDataPost, memoListData, cateListData, bookListData } from './api.js'
+import { memo } from 'react';
 
 const WriteData = createSlice({
     name: 'WriteData',
@@ -84,6 +85,20 @@ const memoData = createSlice({
             state.data = state.data.map(item => (item.id === updateMemoId ? updateMemo : item));
         },
         memoListAnno(state, action) {
+            console.log(action.payload)
+
+            const addAnno = state.data.memo.map(item => 
+                    item.id === action.payload.memoId
+                    ? {
+                        ...item,
+                        memoAnnotation: state.data.memo[memoId].memoAnnotation.map((anno, key)=>
+                            key === action.payload.newKey
+                            ? action.payload.memoAnno
+                            : anno
+                        )
+                    }
+                    : item
+                )
 
         },
         syncMemoListAnnoUpdate(state, action) {
