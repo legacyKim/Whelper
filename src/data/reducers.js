@@ -79,26 +79,29 @@ const memoData = createSlice({
                 };
             }
         },
-        memoListDataUpdate(state, action) {
-            const updateMemoId = action.payload.id;
-            const updateMemo = action.payload;
-            state.data = state.data.map(item => (item.id === updateMemoId ? updateMemo : item));
+        syncMemoListDataUpdate(state, action) {
+
+            if (action.payload !== undefined) {
+                const updateMemo = state.data.memo.map(item =>
+                    item.id === action.payload.memoId ? action.payload : item
+                );
+                state.data.memo = updateMemo;
+            }
+
         },
         memoListAnno(state, action) {
-            console.log(action.payload)
-
-            const addAnno = state.data.memo.map(item => 
-                    item.id === action.payload.memoId
+            const addAnno = state.data.memo.map(item =>
+                item.id === action.payload.memoId
                     ? {
                         ...item,
-                        memoAnnotation: state.data.memo[memoId].memoAnnotation.map((anno, key)=>
+                        memoAnnotation: state.data.memo.memoAnnotation.map((anno, key) =>
                             key === action.payload.newKey
-                            ? action.payload.memoAnno
-                            : anno
+                                ? action.payload.memoAnno
+                                : anno
                         )
                     }
                     : item
-                )
+            );
 
         },
         syncMemoListAnnoUpdate(state, action) {
@@ -185,7 +188,7 @@ const bookData = createSlice({
 });
 
 export const { syncWriteListData, syncWriteListDataUpdate, writeListDataDelete } = WriteData.actions;
-export const { syncMemoListDataAdd, memoListDataDelete, memoListDataUpdate, memoListAnno, syncMemoListAnnoUpdate, memoListAnnoDelete } = memoData.actions;
+export const { syncMemoListDataAdd, memoListDataDelete, syncMemoListDataUpdate, memoListAnno, syncMemoListAnnoUpdate, memoListAnnoDelete } = memoData.actions;
 export const { cateListDataAdd } = cateData.actions;
 export const { bookListDataAdd, bookListDelete } = bookData.actions;
 

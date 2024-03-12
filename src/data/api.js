@@ -30,7 +30,6 @@ export const writeListDataPost = createAsyncThunk('writeData/newData', async (ne
 export const writeListDataUpdate = createAsyncThunk('writeData/updateData', async (newData) => {
     try {
         const response = await axios.post(`${API_URL}/components/WriteCorrect`, newData);
-        console.log(response)
         return response.data;
     } catch (error) {
         throw error;
@@ -63,8 +62,19 @@ export const memoListData = createAsyncThunk('memoData/getMemo',
     },
 )
 
+export const memoListDataPost = createAsyncThunk('memoData/postMemo', async (newData) => {
+    try {
+        const response = await axios.post(`${API_URL}/components/Memo`, newData);
+
+        console.log(response)
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
+});
+
 // post memo data
-export const memoListAnnoUpdate = createAsyncThunk('memoData/postMemo', async (newData) => {
+export const memoListDataUpdate = createAsyncThunk('memoData/updateMemo', async (newData) => {
     try {
         const response = await axios.post(`${API_URL}/components/Memo`, newData);
         return response.data;

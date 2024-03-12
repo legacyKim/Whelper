@@ -1,14 +1,15 @@
 import json
 from db_config import db_config
-from sqlalchemy import create_engine, Column, Integer, String, MetaData, Table, Text, text
+from sqlalchemy import create_engine, Column, Integer, String, MetaData, Table, Text, text, JSON
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
 
-Base = declarative_base()
+Base_write = declarative_base()
+Base_memo = declarative_base()
 
 
-class Write(Base):
+class Write(Base_write):
     __tablename__ = 'tb_write'
 
     id = Column(Integer, primary_key=True, nullable=False, autoincrement=True)
@@ -18,24 +19,24 @@ class Write(Base):
     keywords = Column(String(255))
 
 
-class Category(Base):
+class Category(Base_write):
     __tablename__ = 'tb_cate'
 
     id = Column(Integer, primary_key=True)
     category = Column(String(255))
 
 
-class Memo(Base):
+class Memo(Base_memo):
     __tablename__ = 'tb_memo'
 
     id = Column(Integer, primary_key=True, nullable=False, autoincrement=True)
     memoComment = Column(String(1255))
     memoSource = Column(String(255))
     memoAuthor = Column(String(255))
-    memoAnnotation = Column(String(255))
+    memoAnnotation = Column(JSON)
 
 
-class Book(Base):
+class Book(Base_memo):
     __tablename__ = 'tb_book'
 
     id = Column(Integer, primary_key=True)
@@ -57,8 +58,8 @@ Session_memo = sessionmaker(bind=engine_memo)
 
 def create_table():
 
-    Base.metadata.create_all(engine_write)
-    Base.metadata.create_all(engine_memo)
+    Base_write.metadata.create_all(engine_write)
+    Base_memo.metadata.create_all(engine_memo)
 
 
 def post_data_from_write(data):
@@ -120,7 +121,6 @@ def update_data_from_memo(data, memo_id):
             for key, value in data.items():
                 setattr(memo_instance, key, value)
 
-            # 세션 커밋
             session.commit()
             print(f"Data with id={memo_id} updated successfully")
         else:

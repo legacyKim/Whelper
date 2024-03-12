@@ -3,8 +3,8 @@ import { useDispatch, useSelector } from "react-redux"
 import MyContext from '../context'
 import { toast } from 'react-toastify';
 
-import { memoListData, bookListData, memoListAnnoUpdate } from "../data/api"
-import { syncMemoListDataAdd, memoListDataDelete, memoListDataUpdate, memoListAnno, syncMemoListAnnoUpdate, memoListAnnoDelete, bookListDataAdd, bookListDelete } from "../data/reducers.js"
+import { memoListData, memoListDataPost, memoListDataUpdate, bookListData  } from "../data/api"
+import { syncMemoListDataAdd, memoListDataDelete, syncMemoListDataUpdate, memoListAnno, syncMemoListAnnoUpdate, memoListAnnoDelete, bookListDataAdd, bookListDelete } from "../data/reducers.js"
 
 
 function Memo() {
@@ -209,10 +209,10 @@ function Memo() {
         const memoComment = newMemoComment.current.value;
         var memoAuthor = newMemoAuthor.current.value;
         var memoSource = newMemoSource.current.value;
-        var memoAnnotation = '[]';
+        var memoAnnotation = [];
 
         dispatch(syncMemoListDataAdd({ memoComment, memoAuthor, memoSource, memoAnnotation }));
-        dispatch(memoListAnnoUpdate({ memoComment, memoAuthor, memoSource, memoAnnotation }));
+        dispatch(memoListDataPost({ memoComment, memoAuthor, memoSource, memoAnnotation }));
         setMemo((prevMemo) => [...prevMemo, { memoComment, memoAuthor, memoSource, memoAnnotation }]);
 
     };
@@ -246,7 +246,8 @@ function Memo() {
         const updateMemoAuthor = correctMemoAuthor.current.value;
         const updateMemoComment = correctMemoComment.current.value;
 
-        dispatch(memoListDataUpdate({ memoId, updateMemoSource, updateMemoAuthor, updateMemoComment }));
+        dispatch(syncMemoListDataUpdate({ memoId, updateMemoSource, updateMemoAuthor, updateMemoComment }));
+        dispatch(memoListDataUpdate({ memoId, updateMemoSource, updateMemoAuthor, updateMemoComment }))
 
         setMemoCorrectActive('');
         setMemoActive('active')
@@ -279,6 +280,7 @@ function Memo() {
         } else {
             setMemoArr(memoListArr.filter((item) => item.memoSource === bookTitle));
         }
+
     }, [memoListArr]);
 
     useEffect(() => {
@@ -617,7 +619,7 @@ function Memo() {
 
     function MemoAnno({ memo }) {
 
-        const memoAnnoArr = JSON.parse(memo.memoAnnotation) || []
+        const memoAnnoArr = memo.memoAnnotation;
 
         return (
             <ul className='memo_annotation'>
@@ -649,6 +651,8 @@ function Memo() {
     }
 
     function MemoCorrect({ memo }) {
+
+        console.log(memo)
 
         return (
             <div className="memoCorrect_content_pos">
