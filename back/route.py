@@ -73,13 +73,11 @@ def post_data_memo():
         return jsonify({'error': 'Error handling write post request'}), 500
 
 
+@app.route('/components/Memo/update', methods=['POST'])
 def update_data_MemoList():
     try:
         data = request.get_json()
-
-        print("====================", data)
-
-        memo_id = data['memoId']
+        memo_id = data['id']
 
         result = update_data_from_memo(data, memo_id)
         return jsonify(result), 201

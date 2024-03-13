@@ -80,18 +80,21 @@ const memoData = createSlice({
             }
         },
         syncMemoListDataUpdate(state, action) {
-
             if (action.payload !== undefined) {
                 const updateMemo = state.data.memo.map(item =>
-                    item.id === action.payload.memoId ? action.payload : item
+                    item.id === action.payload.id ? action.payload : item
                 );
                 state.data.memo = updateMemo;
             }
-
         },
+
+        syncBookListDataPost(state, action) {
+            
+        },
+
         memoListAnno(state, action) {
             const addAnno = state.data.memo.map(item =>
-                item.id === action.payload.memoId
+                item.id === action.payload.id
                     ? {
                         ...item,
                         memoAnnotation: state.data.memo.memoAnnotation.map((anno, key) =>

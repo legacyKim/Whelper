@@ -117,6 +117,8 @@ def update_data_from_memo(data, memo_id):
 
         memo_instance = session.query(Memo).filter_by(id=memo_id).first()
 
+        print('=====================', memo_instance)
+
         if memo_instance:
             for key, value in data.items():
                 setattr(memo_instance, key, value)
@@ -128,7 +130,6 @@ def update_data_from_memo(data, memo_id):
 
     except Exception as e:
         print(f"Error updating data: {e}")
-        # 에러 발생 시 롤백
         session.rollback()
     finally:
         # 세션 닫기

@@ -3,8 +3,8 @@ import { useDispatch, useSelector } from "react-redux"
 import MyContext from '../context'
 import { toast } from 'react-toastify';
 
-import { memoListData, memoListDataPost, memoListDataUpdate, bookListData  } from "../data/api"
-import { syncMemoListDataAdd, memoListDataDelete, syncMemoListDataUpdate, memoListAnno, syncMemoListAnnoUpdate, memoListAnnoDelete, bookListDataAdd, bookListDelete } from "../data/reducers.js"
+import { memoListData, memoListDataPost, memoListDataUpdate, bookListData, bookListDataPost } from "../data/api"
+import { syncMemoListDataAdd, memoListDataDelete, syncMemoListDataUpdate, memoListAnno, syncMemoListAnnoUpdate, memoListAnnoDelete, syncBookListDataPost, bookListDataAdd, bookListDelete } from "../data/reducers.js"
 
 
 function Memo() {
@@ -13,6 +13,7 @@ function Memo() {
     useEffect(() => {
         dispatch(memoListData());
         dispatch(bookListData());
+        dispatch(syncMemoListDataUpdate());
     }, [dispatch]);
 
     const memoListState = useSelector((state) => state.memoData);
@@ -191,13 +192,13 @@ function Memo() {
     const [memo, setMemo] = useState(memoListArr);
 
     useEffect(() => {
-        setTimeout(()=>{
+        setTimeout(() => {
             const memoContentElements = document.querySelectorAll('.memo_content');
             memoContentElements.forEach(element => {
                 element.classList.remove('opacity');
             });
         }, 100)
-        
+
     }, [memoListArr])
 
     var newMemoSource = useRef(null);
@@ -206,14 +207,17 @@ function Memo() {
 
     const MemoSaveBtn = () => {
 
+        const id = memoListArr.length + 1;
         const memoComment = newMemoComment.current.value;
         var memoAuthor = newMemoAuthor.current.value;
         var memoSource = newMemoSource.current.value;
         var memoAnnotation = [];
 
-        dispatch(syncMemoListDataAdd({ memoComment, memoAuthor, memoSource, memoAnnotation }));
+        dispatch(syncMemoListDataAdd({ id, memoComment, memoAuthor, memoSource, memoAnnotation }));
         dispatch(memoListDataPost({ memoComment, memoAuthor, memoSource, memoAnnotation }));
         setMemo((prevMemo) => [...prevMemo, { memoComment, memoAuthor, memoSource, memoAnnotation }]);
+
+        dispatch(bookListDataPost({ memoSource }))
 
     };
 
@@ -241,13 +245,13 @@ function Memo() {
 
     const memoCorrectBtn = (a) => {
 
-        const memoId = a.id;
-        const updateMemoSource = correctMemoSource.current.value;
-        const updateMemoAuthor = correctMemoAuthor.current.value;
-        const updateMemoComment = correctMemoComment.current.value;
+        const id = a.id
+        const memoSource = correctMemoSource.current.value;
+        const memoAuthor = correctMemoAuthor.current.value;
+        const memoComment = correctMemoComment.current.value;
 
-        dispatch(syncMemoListDataUpdate({ memoId, updateMemoSource, updateMemoAuthor, updateMemoComment }));
-        dispatch(memoListDataUpdate({ memoId, updateMemoSource, updateMemoAuthor, updateMemoComment }))
+        dispatch(syncMemoListDataUpdate({ id, memoSource, memoAuthor, memoComment }));
+        dispatch(memoListDataUpdate({ id, memoSource, memoAuthor, memoComment }))
 
         setMemoCorrectActive('');
         setMemoActive('active')
@@ -306,6 +310,8 @@ function Memo() {
 
     const [memoArr, setMemoArr] = useState(memoListArr);
     const [memoArrActive, setMemoArrActive] = useState('active');
+
+    console.log(memoListArr)
 
     useEffect(() => {
         if (bookLocalStorage === null) {
@@ -412,7 +418,8 @@ function Memo() {
     // when add new one
     useEffect(() => {
         if (memoCurrent !== null) {
-            setMemoCurrent(memoArr[memoCurrent.id]);
+            var index = memoCurrent.id - 1;
+            setMemoCurrent(memoArr[index]);
         }
     }, [memoArr]);
     //// when add new one
@@ -619,7 +626,7 @@ function Memo() {
 
     function MemoAnno({ memo }) {
 
-        const memoAnnoArr = memo.memoAnnotation;
+        const memoAnnoArr = memo.memoAnnotation !== undefined ? memo.memoAnnotation : [];
 
         return (
             <ul className='memo_annotation'>
@@ -641,7 +648,6 @@ function Memo() {
                                         }}></button>
                                     </div>
                                 </div>
-
                             </li>
                         )
                     })
@@ -651,8 +657,6 @@ function Memo() {
     }
 
     function MemoCorrect({ memo }) {
-
-        console.log(memo)
 
         return (
             <div className="memoCorrect_content_pos">
