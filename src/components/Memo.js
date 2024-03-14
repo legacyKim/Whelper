@@ -4,7 +4,7 @@ import MyContext from '../context'
 import { toast } from 'react-toastify';
 
 import { memoListData, memoListDataPost, memoListDataUpdate, bookListData, bookListDataPost } from "../data/api"
-import { syncMemoListDataAdd, memoListDataDelete, syncMemoListDataUpdate, memoListAnno, syncMemoListAnnoUpdate, memoListAnnoDelete, syncBookListDataPost, bookListDataAdd, bookListDelete } from "../data/reducers.js"
+import { syncMemoListDataAdd, memoListDataDelete, syncMemoListDataUpdate, memoListAnno, syncMemoListAnnoUpdate, memoListAnnoDelete, syncBookListDataPost, syncBookListDataAdd, bookListDelete } from "../data/reducers.js"
 
 
 function Memo() {
@@ -12,7 +12,7 @@ function Memo() {
     const dispatch = useDispatch();
     useEffect(() => {
         dispatch(memoListData());
-        dispatch(bookListData());
+        dispatch(syncBookListDataAdd());
         dispatch(syncMemoListDataUpdate());
     }, [dispatch]);
 
@@ -217,7 +217,7 @@ function Memo() {
         dispatch(memoListDataPost({ memoComment, memoAuthor, memoSource, memoAnnotation }));
         setMemo((prevMemo) => [...prevMemo, { memoComment, memoAuthor, memoSource, memoAnnotation }]);
 
-        dispatch(bookListDataPost({ memoSource }))
+        dispatch(syncBookListDataAdd({ memoSource, memoAuthor }))
 
     };
 
@@ -226,9 +226,9 @@ function Memo() {
     var newAuthor = useRef(null);
 
     const bookSaveBtn = () => {
-        const book = newBook.current.value;
-        const author = newAuthor.current.value;
-        dispatch(bookListDataAdd({ book, author }))
+        const memoSource = newBook.current.value;
+        const memoAuthor = newAuthor.current.value;
+        dispatch(syncBookListDataAdd({ memoSource, memoAuthor }))
     }
 
     const deleteBook = (e) => {

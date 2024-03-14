@@ -158,7 +158,7 @@ const cateData = createSlice({
             state.loading = false;
             state.data = action.payload;
         }).addCase(cateListData.rejected, (state, action) => {
-            state.error = action.payload ?? action.error
+            state.error = action.payload ?? action.error;
         })
     },
 })
@@ -171,8 +171,16 @@ const bookData = createSlice({
         error: null,
     },
     reducers: {
-        bookListDataAdd(state, action) {
-            state.data = [...state.data, action.payload];
+        syncBookListDataAdd(state, action) {
+
+            console.log(action.payload)
+
+            if (action.payload !== undefined) {
+                state.data = {
+                    ...state.data,
+                    memo: [...state.data.memo, action.payload],
+                };
+            }
         },
         bookListDelete(state, action) {
         }
@@ -185,7 +193,7 @@ const bookData = createSlice({
             state.loading = false;
             state.data = action.payload;
         }).addCase(bookListData.rejected, (state, action) => {
-            state.error = action.payload ?? action.errors
+            state.error = action.payload ?? action.errors;
         })
     },
 });
@@ -193,7 +201,7 @@ const bookData = createSlice({
 export const { syncWriteListData, syncWriteListDataUpdate, writeListDataDelete } = WriteData.actions;
 export const { syncMemoListDataAdd, memoListDataDelete, syncMemoListDataUpdate, memoListAnno, syncMemoListAnnoUpdate, memoListAnnoDelete } = memoData.actions;
 export const { cateListDataAdd } = cateData.actions;
-export const { bookListDataAdd, bookListDelete } = bookData.actions;
+export const { syncBookListDataAdd, bookListDelete } = bookData.actions;
 
 const store = configureStore({
     reducer: {
