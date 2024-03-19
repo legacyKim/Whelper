@@ -172,7 +172,6 @@ const bookData = createSlice({
     },
     reducers: {
         syncBookListDataAdd(state, action) {
-
             console.log(action.payload)
 
             if (action.payload !== undefined) {

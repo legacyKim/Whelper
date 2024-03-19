@@ -136,6 +136,16 @@ def update_data_from_memo(data, memo_id):
         session.close()
 
 
+def post_data_from_book(data):
+    try:
+        with Session_memo() as session:
+            book_instance = Memo(**data)
+            session.add(book_instance)
+            session.commit()
+    except Exception as e:
+        print(f"Error adding data: {e}")
+
+
 if __name__ == '__main__':
     create_table()
     data = {'title': 'Example Title', 'subTitle': 'Example Subtitle',
