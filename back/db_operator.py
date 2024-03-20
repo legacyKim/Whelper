@@ -40,8 +40,8 @@ class Book(Base_memo):
     __tablename__ = 'tb_book'
 
     id = Column(Integer, primary_key=True)
-    book = Column(String(255))
-    author = Column(String(255))
+    memoSource = Column(String(255))
+    memoAuthor = Column(String(255))
 
 
 config_write, config_memo = db_config()

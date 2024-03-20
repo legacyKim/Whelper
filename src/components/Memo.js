@@ -12,6 +12,7 @@ function Memo() {
     const dispatch = useDispatch();
     useEffect(() => {
         dispatch(memoListData());
+        dispatch(bookListData());
         dispatch(syncBookListDataAdd());
         dispatch(syncMemoListDataUpdate());
     }, [dispatch]);
@@ -302,9 +303,9 @@ function Memo() {
             setBookTitle("전체")
             localStorage.removeItem('bookTitle');
         } else {
-            setBookTitle(bookListArr[i].book)
+            setBookTitle(bookListArr[i].memoSource)
             setMemoCurrent(null);
-            localStorage.setItem('bookTitle', bookListArr[i].book);
+            localStorage.setItem('bookTitle', bookListArr[i].memoSource);
         }
     }
 
@@ -463,7 +464,7 @@ function Memo() {
                                                 <span className='' onClick={() => {
                                                     bookListClose();
                                                     bookChange(i);
-                                                }}>{bookListArr[i].book}</span>
+                                                }}>{bookListArr[i].memoSource}</span>
                                             </li>
                                         )
                                     })

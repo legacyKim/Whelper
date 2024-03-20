@@ -89,7 +89,7 @@ const memoData = createSlice({
         },
 
         syncBookListDataPost(state, action) {
-            
+
         },
 
         memoListAnno(state, action) {
@@ -166,18 +166,19 @@ const cateData = createSlice({
 const bookData = createSlice({
     name: 'bookData',
     initialState: {
-        data: [],
+        data: {
+            memo: [],
+            book: [],
+        },
         loading: false,
         error: null,
     },
     reducers: {
         syncBookListDataAdd(state, action) {
-            console.log(action.payload)
-
             if (action.payload !== undefined) {
                 state.data = {
                     ...state.data,
-                    memo: [...state.data.memo, action.payload],
+                    book: [...state.data.book, action.payload],
                 };
             }
         },
