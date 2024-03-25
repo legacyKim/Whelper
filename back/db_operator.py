@@ -1,9 +1,8 @@
 import json
 from db_config import db_config
-from sqlalchemy import create_engine, Column, Integer, String, MetaData, Table, Text, text, JSON
+from sqlalchemy import create_engine, Column, Integer, String, MetaData, Table, Text, text
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
-
 
 Base_write = declarative_base()
 Base_memo = declarative_base()
@@ -33,7 +32,7 @@ class Memo(Base_memo):
     memoComment = Column(String(1255))
     memoSource = Column(String(255))
     memoAuthor = Column(String(255))
-    memoAnnotation = Column(JSON)
+    memoAnnotation = Column(String(255))
 
 
 class Book(Base_memo):
@@ -117,12 +116,11 @@ def update_data_from_memo(data, memo_id):
 
         memo_instance = session.query(Memo).filter_by(id=memo_id).first()
 
-        print('=====================', memo_instance)
-
         if memo_instance:
             for key, value in data.items():
                 setattr(memo_instance, key, value)
 
+            # 세션 커밋
             session.commit()
             print(f"Data with id={memo_id} updated successfully")
         else:
@@ -130,6 +128,7 @@ def update_data_from_memo(data, memo_id):
 
     except Exception as e:
         print(f"Error updating data: {e}")
+        # 에러 발생 시 롤백
         session.rollback()
     finally:
         # 세션 닫기
@@ -139,8 +138,8 @@ def update_data_from_memo(data, memo_id):
 def post_data_from_book(data):
     try:
         with Session_memo() as session:
-            book_instance = Memo(**data)
-            session.add(book_instance)
+            memo_instance = Memo(**data)
+            session.add(memo_instance)
             session.commit()
     except Exception as e:
         print(f"Error adding data: {e}")
@@ -154,6 +153,5 @@ if __name__ == '__main__':
 
     post_data_from_write(data)
     post_data_from_memo(data)
-
     update_data_from_write(data)
     update_data_from_memo(data)
