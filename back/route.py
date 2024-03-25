@@ -65,6 +65,7 @@ def get_data_memo():
 @app.route('/components/Memo', methods=['POST'])
 def post_data_memo():
     try:
+
         data = request.get_json()
 
         if 'memoAnnotation' in data and isinstance(data['memoAnnotation'], str):

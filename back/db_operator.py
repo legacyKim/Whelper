@@ -101,8 +101,8 @@ def update_data_from_write(data, write_id):
 def post_data_from_memo(data):
     try:
         with Session_memo() as session:
-            write_instance = Memo(**data)
-            session.add(write_instance)
+            memo_instance = Memo(**data)
+            session.add(memo_instance)
             session.commit()
     except Exception as e:
         print(f"Error adding data: {e}")
@@ -137,6 +137,7 @@ def update_data_from_memo(data, memo_id):
 
 if __name__ == '__main__':
     create_table()
+
     data = {'title': 'Example Title', 'subTitle': 'Example Subtitle',
             'content': 'Example Content', 'keywords': 'Example Keyword'}
 
