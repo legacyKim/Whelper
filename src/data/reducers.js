@@ -1,5 +1,6 @@
 import { createSlice, configureStore, current } from '@reduxjs/toolkit';
 import { writeListData, writeListDataPost, memoListData, cateListData, bookListData } from './api.js'
+import { memo } from 'react';
 
 const WriteData = createSlice({
     name: 'WriteData',
@@ -78,12 +79,32 @@ const memoData = createSlice({
                 };
             }
         },
-        memoListDataUpdate(state, action) {
-            const updateMemoId = action.payload.id;
-            const updateMemo = action.payload;
-            state.data = state.data.map(item => (item.id === updateMemoId ? updateMemo : item));
+        syncMemoListDataUpdate(state, action) {
+            if (action.payload !== undefined) {
+                const updateMemo = state.data.memo.map(item =>
+                    item.id === action.payload.id ? action.payload : item
+                );
+                state.data.memo = updateMemo;
+            }
         },
+
+        syncBookListDataPost(state, action) {
+
+        },
+
         memoListAnno(state, action) {
+            const addAnno = state.data.memo.map(item =>
+                item.id === action.payload.id
+                    ? {
+                        ...item,
+                        memoAnnotation: state.data.memo.memoAnnotation.map((anno, key) =>
+                            key === action.payload.newKey
+                                ? action.payload.memoAnno
+                                : anno
+                        )
+                    }
+                    : item
+            );
 
         },
         syncMemoListAnnoUpdate(state, action) {
@@ -137,7 +158,7 @@ const cateData = createSlice({
             state.loading = false;
             state.data = action.payload;
         }).addCase(cateListData.rejected, (state, action) => {
-            state.error = action.payload ?? action.error
+            state.error = action.payload ?? action.error;
         })
     },
 })
@@ -145,13 +166,21 @@ const cateData = createSlice({
 const bookData = createSlice({
     name: 'bookData',
     initialState: {
-        data: [],
+        data: {
+            memo: [],
+            book: [],
+        },
         loading: false,
         error: null,
     },
     reducers: {
-        bookListDataAdd(state, action) {
-            state.data = [...state.data, action.payload];
+        syncBookListDataAdd(state, action) {
+            if (action.payload !== undefined) {
+                state.data = {
+                    ...state.data,
+                    book: [...state.data.book, action.payload],
+                };
+            }
         },
         bookListDelete(state, action) {
         }
@@ -164,15 +193,15 @@ const bookData = createSlice({
             state.loading = false;
             state.data = action.payload;
         }).addCase(bookListData.rejected, (state, action) => {
-            state.error = action.payload ?? action.errors
+            state.error = action.payload ?? action.errors;
         })
     },
 });
 
 export const { syncWriteListData, syncWriteListDataUpdate, writeListDataDelete } = WriteData.actions;
-export const { syncMemoListDataAdd, memoListDataDelete, memoListDataUpdate, memoListAnno, syncMemoListAnnoUpdate, memoListAnnoDelete } = memoData.actions;
+export const { syncMemoListDataAdd, memoListDataDelete, syncMemoListDataUpdate, memoListAnno, syncMemoListAnnoUpdate, memoListAnnoDelete } = memoData.actions;
 export const { cateListDataAdd } = cateData.actions;
-export const { bookListDataAdd, bookListDelete } = bookData.actions;
+export const { syncBookListDataAdd, bookListDelete } = bookData.actions;
 
 const store = configureStore({
     reducer: {

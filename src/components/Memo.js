@@ -3,8 +3,8 @@ import { useDispatch, useSelector } from "react-redux"
 import MyContext from '../context'
 import { toast } from 'react-toastify';
 
-import { memoListData, bookListData, memoListAnnoUpdate } from "../data/api"
-import { syncMemoListDataAdd, memoListDataDelete, memoListDataUpdate, memoListAnno, syncMemoListAnnoUpdate, memoListAnnoDelete, bookListDataAdd, bookListDelete } from "../data/reducers.js"
+import { memoListData, memoListDataPost, memoListDataUpdate, bookListData, bookListDataPost } from "../data/api"
+import { syncMemoListDataAdd, memoListDataDelete, syncMemoListDataUpdate, memoListAnno, syncMemoListAnnoUpdate, memoListAnnoDelete, syncBookListDataPost, syncBookListDataAdd, bookListDelete } from "../data/reducers.js"
 
 
 function Memo() {
@@ -13,6 +13,8 @@ function Memo() {
     useEffect(() => {
         dispatch(memoListData());
         dispatch(bookListData());
+        dispatch(syncBookListDataAdd());
+        dispatch(syncMemoListDataUpdate());
     }, [dispatch]);
 
     const memoListState = useSelector((state) => state.memoData);
@@ -191,13 +193,13 @@ function Memo() {
     const [memo, setMemo] = useState(memoListArr);
 
     useEffect(() => {
-        setTimeout(()=>{
+        setTimeout(() => {
             const memoContentElements = document.querySelectorAll('.memo_content');
             memoContentElements.forEach(element => {
                 element.classList.remove('opacity');
             });
         }, 100)
-        
+
     }, [memoListArr])
 
     var newMemoSource = useRef(null);
@@ -206,14 +208,17 @@ function Memo() {
 
     const MemoSaveBtn = () => {
 
+        const id = memoListArr.length + 1;
         const memoComment = newMemoComment.current.value;
         var memoAuthor = newMemoAuthor.current.value;
         var memoSource = newMemoSource.current.value;
         var memoAnnotation = [];
 
-        dispatch(syncMemoListDataAdd({ memoComment, memoAuthor, memoSource, memoAnnotation }));
-        dispatch(memoListAnnoUpdate({ memoComment, memoAuthor, memoSource, memoAnnotation }));
+        dispatch(syncMemoListDataAdd({ id, memoComment, memoAuthor, memoSource, memoAnnotation }));
+        dispatch(memoListDataPost({ memoComment, memoAuthor, memoSource, memoAnnotation }));
         setMemo((prevMemo) => [...prevMemo, { memoComment, memoAuthor, memoSource, memoAnnotation }]);
+
+        dispatch(syncBookListDataAdd({ memoSource, memoAuthor }))
 
     };
 
@@ -222,9 +227,9 @@ function Memo() {
     var newAuthor = useRef(null);
 
     const bookSaveBtn = () => {
-        const book = newBook.current.value;
-        const author = newAuthor.current.value;
-        dispatch(bookListDataAdd({ book, author }))
+        const memoSource = newBook.current.value;
+        const memoAuthor = newAuthor.current.value;
+        dispatch(syncBookListDataAdd({ memoSource, memoAuthor }))
     }
 
     const deleteBook = (e) => {
@@ -241,12 +246,13 @@ function Memo() {
 
     const memoCorrectBtn = (a) => {
 
-        const memoId = a.id;
-        const updateMemoSource = correctMemoSource.current.value;
-        const updateMemoAuthor = correctMemoAuthor.current.value;
-        const updateMemoComment = correctMemoComment.current.value;
+        const id = a.id
+        const memoSource = correctMemoSource.current.value;
+        const memoAuthor = correctMemoAuthor.current.value;
+        const memoComment = correctMemoComment.current.value;
 
-        dispatch(memoListDataUpdate({ memoId, updateMemoSource, updateMemoAuthor, updateMemoComment }));
+        dispatch(syncMemoListDataUpdate({ id, memoSource, memoAuthor, memoComment }));
+        dispatch(memoListDataUpdate({ id, memoSource, memoAuthor, memoComment }))
 
         setMemoCorrectActive('');
         setMemoActive('active')
@@ -279,6 +285,7 @@ function Memo() {
         } else {
             setMemoArr(memoListArr.filter((item) => item.memoSource === bookTitle));
         }
+
     }, [memoListArr]);
 
     useEffect(() => {
@@ -296,14 +303,16 @@ function Memo() {
             setBookTitle("전체")
             localStorage.removeItem('bookTitle');
         } else {
-            setBookTitle(bookListArr[i].book)
+            setBookTitle(bookListArr[i].memoSource)
             setMemoCurrent(null);
-            localStorage.setItem('bookTitle', bookListArr[i].book);
+            localStorage.setItem('bookTitle', bookListArr[i].memoSource);
         }
     }
 
     const [memoArr, setMemoArr] = useState(memoListArr);
     const [memoArrActive, setMemoArrActive] = useState('active');
+
+    console.log(memoListArr)
 
     useEffect(() => {
         if (bookLocalStorage === null) {
@@ -350,18 +359,10 @@ function Memo() {
 
         const memoId = memo.id;
         const memoAnno = newMemoAnno.current.value;
+        const annotationKeys = JSON.parse(memo.memoAnnotation);
+        const newKey = annotationKeys.length;
 
-        const annotationKeys = Object.keys(memo.memoAnnotation);
-        if (annotationKeys.length > 0) {
-            var annoKey = Math.max(...annotationKeys.map(key => parseInt(key))) + 1;
-        } else {
-            var annoKey = 0;
-        }
-
-        const newKey = annoKey.toString();
-        const memoAnnoIndex = newKey;
-
-        dispatch(memoListAnno({ memoId, memoAnno, memoAnnoIndex }));
+        dispatch(memoListAnno({ memoId, memoAnno, newKey }));
         setMemoAnnoActive('');
         setTextAreaHeight(null);
 
@@ -418,7 +419,8 @@ function Memo() {
     // when add new one
     useEffect(() => {
         if (memoCurrent !== null) {
-            setMemoCurrent(memoArr[memoCurrent.id]);
+            var index = memoCurrent.id - 1;
+            setMemoCurrent(memoArr[index]);
         }
     }, [memoArr]);
     //// when add new one
@@ -462,7 +464,7 @@ function Memo() {
                                                 <span className='' onClick={() => {
                                                     bookListClose();
                                                     bookChange(i);
-                                                }}>{bookListArr[i].book}</span>
+                                                }}>{bookListArr[i].memoSource}</span>
                                             </li>
                                         )
                                     })
@@ -625,9 +627,7 @@ function Memo() {
 
     function MemoAnno({ memo }) {
 
-        console.log(memo)
-
-        const memoAnnoArr = memo.memoAnnotation || []
+        const memoAnnoArr = memo.memoAnnotation !== undefined ? memo.memoAnnotation : [];
 
         return (
             <ul className='memo_annotation'>
@@ -649,7 +649,6 @@ function Memo() {
                                         }}></button>
                                     </div>
                                 </div>
-
                             </li>
                         )
                     })

@@ -21,7 +21,6 @@ create_table()
 def excute_query_get_data(queries, conn):
     try:
         if conn.is_connected():
-            print("Connected to MySQL")
 
             cursor = conn.cursor()
 
