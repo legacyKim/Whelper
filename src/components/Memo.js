@@ -3,8 +3,8 @@ import { useDispatch, useSelector } from "react-redux"
 import MyContext from '../context'
 import { toast } from 'react-toastify';
 
-import { memoListData, memoListDataPost, memoListDataUpdate, bookListData, bookListDataPost } from "../data/api"
-import { syncMemoListDataAdd, memoListDataDelete, syncMemoListDataUpdate, memoListAnno, syncMemoListAnnoUpdate, memoListAnnoDelete, syncBookListDataPost, syncBookListDataAdd, bookListDelete } from "../data/reducers.js"
+import { memoListData, memoListDataPost, memoListDataUpdate, memoListAnnoPost, memoListAnnoUpdate, bookListData, bookListDataPost } from "../data/api"
+import { syncMemoListDataAdd, memoListDataDelete, syncMemoListDataUpdate, syncMemoListAnno, syncMemoListAnnoUpdate, memoListAnnoDelete, syncBookListDataAdd, bookListDelete } from "../data/reducers.js"
 
 
 function Memo() {
@@ -229,7 +229,10 @@ function Memo() {
     const bookSaveBtn = () => {
         const memoSource = newBook.current.value;
         const memoAuthor = newAuthor.current.value;
+
         dispatch(syncBookListDataAdd({ memoSource, memoAuthor }))
+        dispatch(bookListDataPost({ memoSource, memoAuthor }));
+
     }
 
     const deleteBook = (e) => {
@@ -246,12 +249,15 @@ function Memo() {
 
     const memoCorrectBtn = (a) => {
 
+        console.log(a)
+
         const id = a.id
         const memoSource = correctMemoSource.current.value;
         const memoAuthor = correctMemoAuthor.current.value;
         const memoComment = correctMemoComment.current.value;
+        const memoAnnotation = a.memoAnnotation;
 
-        dispatch(syncMemoListDataUpdate({ id, memoSource, memoAuthor, memoComment }));
+        dispatch(syncMemoListDataUpdate({ id, memoSource, memoAuthor, memoComment, memoAnnotation }));
         dispatch(memoListDataUpdate({ id, memoSource, memoAuthor, memoComment }))
 
         setMemoCorrectActive('');
@@ -312,8 +318,6 @@ function Memo() {
     const [memoArr, setMemoArr] = useState(memoListArr);
     const [memoArrActive, setMemoArrActive] = useState('active');
 
-    console.log(memoListArr)
-
     useEffect(() => {
         if (bookLocalStorage === null) {
             setBookTitle("전체")
@@ -357,12 +361,14 @@ function Memo() {
     // memo anno add
     const memoAnnoBtn = (memo) => {
 
-        const memoId = memo.id;
+        const id = memo.id;
         const memoAnno = newMemoAnno.current.value;
-        const annotationKeys = JSON.parse(memo.memoAnnotation);
-        const newKey = annotationKeys.length;
+        const memoComment = memo.memoComment;
+        const memoSource = memo.memoSource;
+        const memoAuthor = memo.memoAuthor;
 
-        dispatch(memoListAnno({ memoId, memoAnno, newKey }));
+        dispatch(syncMemoListAnno({ id, memoAnno }));
+        dispatch(memoListAnnoPost({ id, memoComment, memoSource, memoAuthor, memoAnno }))
         setMemoAnnoActive('');
         setTextAreaHeight(null);
 
@@ -398,10 +404,17 @@ function Memo() {
     // memo anno correct complete
     const memoAnnoCorrComBtn = (memo, memoAnnoCorrProps) => {
 
-        const corrMemoAnno = memoAnnoCorrProps;
+        const id = memo.id;
+
+        const memoAnno = memoAnnoCorrProps;
+        const memoComment = memo.memoComment;
+        const memoSource = memo.memoSource;
+        const memoAuthor = memo.memoAuthor;
+
         const corrAnnotationKeys = memoAnnoIndex;
 
-        dispatch(syncMemoListAnnoUpdate({ corrMemoAnno, corrAnnotationKeys }));
+        dispatch(syncMemoListAnnoUpdate({ id, memoAnno, corrAnnotationKeys }));
+        dispatch(memoListAnnoUpdate({ id, memoComment, memoSource, memoAuthor, memoAnno, corrAnnotationKeys }));
         setAnnoCorrectActive('');
         setTextAreaHeight(null);
 

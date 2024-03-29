@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from db_connector import get_data_from_write, get_data_from_memo
-from db_operator import post_data_from_write, update_data_from_write, post_data_from_memo
+from db_operator import post_data_from_write, update_data_from_write, post_data_from_memo, update_data_from_memo, post_data_from_memoAnno, update_data_from_memoAnno, post_data_from_book
 
 import json
 
@@ -74,6 +74,55 @@ def post_data_memo():
                 print(f"Failed to parse memoAnnotation field for row")
 
         result = post_data_from_memo(data)
+        return jsonify(result), 201
+    except Exception as e:
+        print(f"Error: {e}")
+        return jsonify({'error': 'Error handling memo post request'}), 500
+
+
+@app.route('/components/Memo/update', methods=['POST'])
+def update_data_memo():
+    try:
+        data = request.get_json()
+        memo_id = data['id']
+
+        result = update_data_from_memo(data, memo_id)
+        return jsonify(result), 201
+    except Exception as e:
+        print(f"Error: {e}")
+        return jsonify({'error': 'Error handling write post request'}), 500
+
+
+@app.route('/components/Memo/anno', methods=['POST'])
+def post_data_memoAnno():
+    try:
+        data = request.get_json()
+        result = post_data_from_memoAnno(data)
+
+        return jsonify(result), 201
+    except Exception as e:
+        print(f"Error: {e}")
+        return jsonify({'error': 'Error handling memo post request'}), 500
+
+
+@app.route('/components/Memo/updateAnno', methods=['POST'])
+def update_data_memoAnno():
+    try:
+        data = request.get_json()
+        result = update_data_from_memoAnno(data)
+
+        return jsonify(result), 201
+    except Exception as e:
+        print(f"Error: {e}")
+        return jsonify({'error': 'Error handling memo post request'}), 500
+
+
+@app.route('/components/Memo/book', methods=['POST'])
+def post_data_book():
+    try:
+        data = request.get_json()
+        result = post_data_from_book(data)
+
         return jsonify(result), 201
     except Exception as e:
         print(f"Error: {e}")

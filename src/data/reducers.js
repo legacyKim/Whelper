@@ -79,6 +79,7 @@ const memoData = createSlice({
                 };
             }
         },
+
         syncMemoListDataUpdate(state, action) {
             if (action.payload !== undefined) {
                 const updateMemo = state.data.memo.map(item =>
@@ -92,36 +93,36 @@ const memoData = createSlice({
 
         },
 
-        memoListAnno(state, action) {
-            const addAnno = state.data.memo.map(item =>
-                item.id === action.payload.id
+        syncMemoListAnno(state, action) {
+            const { id, memoAnno } = action.payload;
+            const addMemoAnno = state.data.memo.map(item =>
+                item.id === id
                     ? {
                         ...item,
-                        memoAnnotation: state.data.memo.memoAnnotation.map((anno, key) =>
-                            key === action.payload.newKey
-                                ? action.payload.memoAnno
-                                : anno
-                        )
+                        memoAnnotation: [...item.memoAnnotation, memoAnno]
                     }
                     : item
             );
-
+            return { ...state, data: { ...state.data, memo: addMemoAnno } };
         },
+
         syncMemoListAnnoUpdate(state, action) {
+            const { id, memoAnno, corrAnnotationKeys } = action.payload;
             const updatedMemoAnno = state.data.memo.map(item =>
-                item.id === action.payload.corrMemoId
+                item.id === id
                     ? {
                         ...item,
                         memoAnnotation: item.memoAnnotation.map((anno, index) =>
-                            index === action.payload.corrAnnotationKeys
-                                ? action.payload.corrAnnotationKeys
+                            index === corrAnnotationKeys
+                                ? memoAnno
                                 : anno
                         )
                     }
                     : item
             );
-            state.data.memo = updatedMemoAnno;
+            return { ...state, data: { ...state.data, memo: updatedMemoAnno } };
         },
+
         memoListAnnoDelete(state, action) {
         }
     },
@@ -196,10 +197,11 @@ const bookData = createSlice({
             state.error = action.payload ?? action.errors;
         })
     },
+
 });
 
 export const { syncWriteListData, syncWriteListDataUpdate, writeListDataDelete } = WriteData.actions;
-export const { syncMemoListDataAdd, memoListDataDelete, syncMemoListDataUpdate, memoListAnno, syncMemoListAnnoUpdate, memoListAnnoDelete } = memoData.actions;
+export const { syncMemoListDataAdd, memoListDataDelete, syncMemoListDataUpdate, syncMemoListAnno, syncMemoListAnnoUpdate, memoListAnnoDelete } = memoData.actions;
 export const { cateListDataAdd } = cateData.actions;
 export const { syncBookListDataAdd, bookListDelete } = bookData.actions;
 

@@ -81,6 +81,25 @@ export const memoListDataUpdate = createAsyncThunk('memoData/updateMemo', async 
     }
 });
 
+// post memo Anno data
+export const memoListAnnoPost = createAsyncThunk('memoData/annoPost', async (newData) => {
+    try {
+        const response = await axios.post(`${API_URL}/components/Memo/anno`, newData);
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
+});
+
+export const memoListAnnoUpdate = createAsyncThunk('memoData/updateAnno', async (newData) => {
+    try {
+        const response = await axios.post(`${API_URL}/components/Memo/updateAnno`, newData);
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
+});
+
 // get bookdata
 export const bookListData = createAsyncThunk('bookData/getBook',
     async () => {
@@ -96,7 +115,7 @@ export const bookListData = createAsyncThunk('bookData/getBook',
 
 export const bookListDataPost = createAsyncThunk('bookData/bookPost', async (newData) => {
     try {
-        const response = await axios.post(`${API_URL}/components/Memo`, newData);
+        const response = await axios.post(`${API_URL}/components/Memo/book`, newData);
         return response.data;
     } catch (error) {
         throw error;

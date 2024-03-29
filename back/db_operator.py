@@ -135,6 +135,41 @@ def update_data_from_memo(data, memo_id):
         session.close()
 
 
+def post_data_from_memoAnno(data):
+    try:
+        with Session_memo() as session:
+            memo_id = data.get('id')
+            new_annotation = data.get('memoAnno')
+
+            memo_instance = session.query(Memo).filter_by(id=memo_id).first()
+            annotation_list = json.loads(memo_instance.memoAnnotation)
+            annotation_list.append(new_annotation)
+            updated_annotation = json.dumps(annotation_list)
+            memo_instance.memoAnnotation = updated_annotation
+            session.commit()
+    except Exception as e:
+        print(f"Error adding data: {e}")
+
+
+def update_data_from_memoAnno(data):
+    try:
+        with Session_memo() as session:
+            memo_id = data.get('id')
+            update_annotation_content = data.get('memoAnno')
+            update_annotation_index = data.get('corrAnnotationKeys')
+
+            memo_instance = session.query(Memo).filter_by(id=memo_id).first()
+            annotation_list = json.loads(memo_instance.memoAnnotation)
+
+            annotation_list[update_annotation_index] = update_annotation_content
+
+            updated_annotation = json.dumps(annotation_list)
+            memo_instance.memoAnnotation = updated_annotation
+            session.commit()
+    except Exception as e:
+        print(f"Error update memo: {e}")
+
+
 def post_data_from_book(data):
     try:
         with Session_memo() as session:
@@ -145,13 +180,14 @@ def post_data_from_book(data):
         print(f"Error adding data: {e}")
 
 
-if __name__ == '__main__':
-    create_table()
+# 일단 주석 처리
+# if __name__ == '__main__':
+#     create_table()
 
-    data = {'title': 'Example Title', 'subTitle': 'Example Subtitle',
-            'content': 'Example Content', 'keywords': 'Example Keyword'}
+#     data = {'title': 'Example Title', 'subTitle': 'Example Subtitle',
+#             'content': 'Example Content', 'keywords': 'Example Keyword'}
 
-    post_data_from_write(data)
-    post_data_from_memo(data)
-    update_data_from_write(data)
-    update_data_from_memo(data)
+#     post_data_from_write(data)
+#     post_data_from_memo(data)
+#     update_data_from_write(data)
+#     update_data_from_memo(data)
