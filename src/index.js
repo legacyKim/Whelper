@@ -8,6 +8,7 @@ import './css/index.css';
 import './css/base.css';
 import './css/style.css';
 import './css/fontello/css/fontello.css'
+import './css/fontello/css/animation.css'
 
 import App from './App';
 import reportWebVitals from './reportWebVitals';

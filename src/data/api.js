@@ -49,6 +49,30 @@ export const cateListData = createAsyncThunk('cateData/getCate',
     },
 )
 
+export const cateListData_cate = createAsyncThunk('cateData/getCate',
+    async () => {
+        try {
+            const response = await axios.get(`${API_URL}/components/Category`);
+            return response.data;
+        } catch (error) {
+            console.error('Error fetching cateListData:', error);
+            throw error;
+        }
+    },
+)
+
+export const cateListDataPost = createAsyncThunk('cateData/postCate',
+    async () => {
+        try {
+            const response = await axios.get(`${API_URL}/components/Write/cate`);
+            return response.data;
+        } catch (error) {
+            console.error('Error fetching memoListData:', error);
+            throw error;
+        }
+    }
+)
+
 // get memodata
 export const memoListData = createAsyncThunk('memoData/getMemo',
     async () => {

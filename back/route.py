@@ -48,6 +48,32 @@ def update_data_WriteList():
         return jsonify({'error': 'Error handling write post request'}), 500
 
 
+@app.route('/components/Category', methods=['GET'])
+def get_data_to_cate():
+    results = get_data_from_write()
+    writeList, cateList = results[0], results[1]
+
+    try:
+        data = {'write': json.loads(writeList), 'cate': json.loads(cateList)}
+        return jsonify(data)
+    except json.decoder.JSONDecodeError as e:
+        print(f"JSON Decode Error: {e}")
+        return jsonify({'error': 'Invalid JSON data'}), 500
+
+
+@app.route('/components/Write/cate', methods=['POST'])
+def post_data_cate():
+    try:
+        data = request.get_json()
+        write_id = data['db_id']
+
+        result = update_data_from_write(data, write_id)
+        return jsonify(result), 201
+    except Exception as e:
+        print(f"Error: {e}")
+        return jsonify({'error': 'Error handling write post request'}), 500
+
+
 # @app.route('/')
 @app.route('/components/Memo', methods=['GET'])
 def get_data_memo():

@@ -150,6 +150,14 @@ const cateData = createSlice({
         cateListDataAdd(state, action) {
             state.data = [...state.data, action.payload];
         },
+        syncCateListData(state, action) {
+            if (action.payload !== undefined) {
+                state.data = {
+                    ...state.data,
+                    cate: [...state.data.category, action.payload],
+                };
+            }
+        }
     },
 
     extraReducers: (builder) => {
@@ -202,7 +210,7 @@ const bookData = createSlice({
 
 export const { syncWriteListData, syncWriteListDataUpdate, writeListDataDelete } = WriteData.actions;
 export const { syncMemoListDataAdd, memoListDataDelete, syncMemoListDataUpdate, syncMemoListAnno, syncMemoListAnnoUpdate, memoListAnnoDelete } = memoData.actions;
-export const { cateListDataAdd } = cateData.actions;
+export const { cateListDataAdd, syncCateListData } = cateData.actions;
 export const { syncBookListDataAdd, bookListDelete } = bookData.actions;
 
 const store = configureStore({

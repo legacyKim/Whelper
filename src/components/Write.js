@@ -2,8 +2,8 @@ import React, { useRef, useState, useMemo, useCallback, useEffect } from 'react'
 import { useDispatch, useSelector } from "react-redux"
 import { Link } from 'react-router-dom';
 
-import { syncWriteListData } from "../data/reducers"
-import { writeListData, cateListData, writeListDataPost } from '../data/api.js';
+import { syncWriteListData, syncCateListData } from "../data/reducers"
+import { writeListData, writeListDataPost, cateListData, cateListDataPost } from '../data/api.js';
 
 import { createEditor, Editor, Transforms, Text, Element as SlateElement, Node, } from 'slate';
 import { Slate, Editable, withReact } from 'slate-react'
@@ -114,6 +114,28 @@ function Write() {
         }
     };
     //// category popup
+
+    // category add popup
+    const [catePopup, catePopupActive] = useState("");
+    const cateAdd = () => {
+        catePopupActive(!catePopup);
+        if (!catePopup) {
+            catePopupActive('active');
+        } else {
+            catePopupActive('');
+        }
+    }
+
+    var cateInput = useRef(null);
+
+    const cateSaveBtn = () => {
+        console.log(cateListArr);
+        const id = cateListArr;
+        const category = cateInput;
+
+        dispatch(syncCateListData({ id, category }));
+    }
+    //// category add popup
 
     // slate text editor
     const [titleEditor] = useState(() => withReact(createEditor()))
@@ -267,9 +289,7 @@ function Write() {
                         setEdTitle(value)
                     }
                 }}>
-                <Editable className='write_title'
-                    placeholder="Title"
-                    editor={titleEditor} />
+                <Editable className='write_title' placeholder="Title" editor={titleEditor} />
             </Slate>
 
             <Slate
@@ -365,22 +385,23 @@ function Write() {
 
             {/* category popup */}
             <div className={`popup ${popupActive ? popupActive : ""}`}>
-                <div className='popup_cate'>
+                <ul className='popup_cate'>
                     {
                         cateListArr.map(function (a, i) {
                             return (
-                                <div key={i}>
+                                <li key={i}>
                                     <CateListFac i={i} keywordArr={keywordArr} setKeywordArr={setKeywordArr}></CateListFac>
-                                </div>
+                                </li>
                             )
                         })
                     }
-                </div>
+                    <CateFacAdd></CateFacAdd>
+                </ul>
+
                 <div className='page_btn'>
                     <button className="write_btn_back icon-reply" onClick={popupClick}></button>
+                    <button className="write_btn_back icon-plus-squared" onClick={cateAdd}></button>
                     <Link to={`/components/WriteView/${recentId}`} className='icon-ok-circled write_btn_save' onClick={() => { WriteSaveBtn(); }}></Link>
-                    {/* <Link to={`/components/WriteList`} classN   ame='icon-ok-circled write_btn_save' onClick={() => { WriteSaveBtn(); }}></Link> */}
-                    {/* <button className='icon-ok-circled write_btn_save' onClick={() => { WriteSaveBtn(); }}></button> */}
                 </div>
             </div>
         </div>
@@ -405,31 +426,16 @@ function Write() {
 
     }
 
-    function Annotation() {
-
+    function CateFacAdd() {
         return (
-            <div className='annotation'>
-                <Slate
-                    editor={titleEditor}
-                    initialValue={titleValue}
-                    onChange={value => {
-                        const isAstChange = titleEditor.operations.some(
-                            op => 'set_selection' !== op.type
-                        )
-                        if (isAstChange) {
-                            // Save the value to Local Storage.
-                            setEdTitle(value)
-                        }
-                    }}>
-                    <Editable className='write_title'
-                        placeholder="Title"
-                        editor={titleEditor}
-                        renderElement={renderElement}
-                        renderLeaf={renderLeaf} />
-                </Slate>
+            <div className={`cateAdd ${catePopup ? catePopup : ""}`}>
+                <i className='icon-hash'></i>
+                <input type="text" ref={cateInput} />
+                <button onCick={cateSaveBtn}><i className='icon-plus-circled'></i></button>
             </div>
         )
     }
+
 }
 
 export default Write;

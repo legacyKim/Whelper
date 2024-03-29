@@ -249,8 +249,6 @@ function Memo() {
 
     const memoCorrectBtn = (a) => {
 
-        console.log(a)
-
         const id = a.id
         const memoSource = correctMemoSource.current.value;
         const memoAuthor = correctMemoAuthor.current.value;

@@ -1,13 +1,25 @@
 
 import { React, useEffect, useState, useRef } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 
 import ViewEdit from './SlateView.js'
+import { writeListData, cateListData_cate } from '../data/api.js';
 
 function Category() {
 
-    let cateListData = useSelector((state) => state.cateData);
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(writeListData())
+        dispatch(cateListData_cate())
+    }, [dispatch]);
+
+    const writeListState = useSelector((state) => state.WriteData);
+    const cateListState = useSelector((state) => state.cateData);
+
+    const writeListArr = writeListState.data.write.filter(item => item !== null) || [];
+    const cateListArr = cateListState.data.cate || [];
 
     var cateScrollArea = useRef();
     var cateScrollPos = useRef();
@@ -63,7 +75,6 @@ function Category() {
     //// cate arr setting
 
     // cate result
-    const writeListState = useSelector((state) => state.WriteData);
     let [cateFilterRes, setCateFilterRes] = useState([]);
     //// cate result
 
@@ -72,8 +83,8 @@ function Category() {
         // filter writeList
         let newCateFilter = [];
         cateArr.forEach((cateItem) => {
-            writeListState.forEach((writeItem) => {
-                if (writeItem.keyword.includes(cateItem)) {
+            writeListArr.forEach((writeItem) => {
+                if (JSON.parse(writeItem.keywords).includes(cateItem)) {
                     newCateFilter = [...newCateFilter, writeItem];
                     newCateFilter = [...new Set(newCateFilter)];
                     return newCateFilter;
@@ -106,7 +117,7 @@ function Category() {
             <div className='cate_list_pos' ref={cateScrollArea} >
                 <ul className='cate_list' ref={cateScrollPos}>
                     {
-                        cateListData.map(function (a, i) {
+                        cateListArr.map(function (a, i) {
                             return (
                                 <li key={i}>
                                     <CategoryList cate={a} cateArr={cateArr} setCateArr={setCateArr}></CategoryList>
@@ -145,15 +156,15 @@ function Category() {
 
     function CategoryList({ cate, cateArr, setCateArr }) {
 
-        const [cateActive, setCateActive] = useState(cateArr.includes(cate));
+        const cate_check = cate.category
+        const [cateActive, setCateActive] = useState(cateArr.includes(cate_check));
 
         function cateClick() {
-
             setTimeout(() => {
                 setCateArr((prevKeywordArr) =>
-                    cateArr.includes(cate)
-                        ? prevKeywordArr.filter((item) => item !== cate)
-                        : [...prevKeywordArr, cate]
+                    cateArr.includes(cate_check)
+                        ? prevKeywordArr.filter((item) => item !== cate_check)
+                        : [...prevKeywordArr, cate_check]
                 );
             }, 300)
 
@@ -161,7 +172,7 @@ function Category() {
         };
 
         return (
-            <span className={`${cateActive ? "active" : ""}`} onClick={cateClick}>{cate}</span>
+            <span className={`${cateActive ? "active" : ""}`} onClick={cateClick}>{cate_check}</span>
         )
     }
 
@@ -170,16 +181,17 @@ function Category() {
         const titleDoc = new DOMParser().parseFromString(cateFilterRes[i].title, 'text/html');
         const subTitleDoc = new DOMParser().parseFromString(cateFilterRes[i].subTitle, 'text/html');
         const contentDoc = new DOMParser().parseFromString(cateFilterRes[i].content, 'text/html');
+        const keywordsParse = JSON.parse(writeListArr[i].keywords)
 
         return (
             <div className='write_list'>
-                <Link to={`/components/WriteView/${writeListState[i].id}`}>
+                <Link to={`/components/WriteView/${writeListArr[i].id}`}>
                     <ViewEdit titleDoc={titleDoc} subTitleDoc={subTitleDoc} contentDoc={contentDoc}></ViewEdit>
                 </Link>
                 <div className='write_keyword'>
                     <ul className='write_keyword_list'>
                         {
-                            writeListState[i].keyword.map((k, i) => (
+                            keywordsParse.map((k, i) => (
                                 <li key={i}>
                                     <WriteKeyword writeListKeyword={k} />
                                 </li>
