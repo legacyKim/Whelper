@@ -93,11 +93,8 @@ def post_data_memo():
     try:
         data = request.get_json()
 
-        if 'memoAnnotation' in data and isinstance(data['memoAnnotation'], str):
-            try:
-                data['memoAnnotation'] = json.loads(data['memoAnnotation'])
-            except json.JSONDecodeError:
-                print(f"Failed to parse memoAnnotation field for row")
+        if 'memoAnnotation' in data and isinstance(data['memoAnnotation'], list):
+            data['memoAnnotation'] = str(data['memoAnnotation'])
 
         result = post_data_from_memo(data)
         return jsonify(result), 201
