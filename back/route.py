@@ -48,6 +48,19 @@ def update_data_WriteList():
         return jsonify({'error': 'Error handling write post request'}), 500
 
 
+@app.route('/components/Search', methods=['GET'])
+def get_data_to_Search():
+    results = get_data_from_write()
+    writeList, cateList = results[0], results[1]
+
+    try:
+        data = {'write': json.loads(writeList), 'cate': json.loads(cateList)}
+        return jsonify(data)
+    except json.decoder.JSONDecodeError as e:
+        print(f"JSON Decode Error: {e}")
+        return jsonify({'error': 'Invalid JSON data'}), 500
+
+
 @app.route('/components/Category', methods=['GET'])
 def get_data_to_cate():
     results = get_data_from_write()

@@ -36,6 +36,19 @@ export const writeListDataUpdate = createAsyncThunk('writeData/updateData', asyn
     }
 });
 
+// get write data in search
+export const writeListData_search = createAsyncThunk('writeData/getData',
+    async () => {
+        try {
+            const response = await axios.get(`${API_URL}/components/Search`);
+            return response.data;
+        } catch (error) {
+            console.error('Error fetching writeListData:', error);
+            throw error;
+        }
+    },
+)
+
 // get cate data
 export const cateListData = createAsyncThunk('cateData/getCate',
     async () => {

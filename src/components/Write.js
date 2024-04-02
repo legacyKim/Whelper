@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { Link } from 'react-router-dom';
 
 import { syncWriteListData, syncCateListData } from "../data/reducers"
-import { writeListData, writeListDataPost, cateListData, cateListDataPost } from '../data/api.js';
+import { writeListData, writeListDataPost, cateListData } from '../data/api.js';
 
 import { createEditor, Editor, Transforms, Text, Element as SlateElement, Node, } from 'slate';
 import { Slate, Editable, withReact } from 'slate-react'

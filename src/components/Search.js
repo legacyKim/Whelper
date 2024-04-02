@@ -5,6 +5,7 @@ import { useParams, Link } from 'react-router-dom';
 import MyContext from '../context'
 
 import ViewEdit from './SlateView.js'
+import { writeListData_search } from '../data/api.js';
 
 function Search() {
 
@@ -18,13 +19,11 @@ function Search() {
     const newSearch = useRef();
     let newSearchBtn = () => {
         setSearchPageInput(searchFrist);
-
         setSearchArr((prevKeywordArr) =>
             searchArr.includes(searchFrist)
                 ? [...new Set(prevKeywordArr.filter((item) => item !== searchFrist)), searchFrist]
                 : [...prevKeywordArr, searchFrist]
         );
-
     }
 
     useEffect(() => {
@@ -34,9 +33,15 @@ function Search() {
     //// about search
 
     // about search result filter
-    let writeListState = useSelector((state) => state.WriteData);
+    const dispatch = useDispatch();
+    useEffect(() => {
+        dispatch(writeListData_search())
+    }, [dispatch]);
 
-    var searchFilter = writeListState.filter((a) => {
+    const writeListState = useSelector((state) => state.WriteData);
+    const writeListArr = writeListState.data.write.filter(item => item !== null) || [];
+        
+    var searchFilter = writeListArr.filter((a) => {
         var searchCompare = a.content;
         return searchCompare.includes(searchPageInput);
     });
@@ -63,7 +68,6 @@ function Search() {
                 </ul>
             </div>
         </div>
-
     )
 
     function SearchResult({ i, searchFilter }) {
