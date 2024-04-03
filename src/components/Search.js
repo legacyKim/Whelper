@@ -7,6 +7,46 @@ import MyContext from '../context'
 import ViewEdit from './SlateView.js'
 import { writeListData_search } from '../data/api.js';
 
+const deserialize = (el, markAttributes = {}) => {
+
+    if (el.nodeType === 3) {
+        return { text: el.textContent, ...markAttributes };
+    } else if (el.nodeType !== 1) {
+        return null
+    }
+
+    const nodeAttributes = { ...markAttributes }
+
+    switch (el.nodeName) {
+        case 'STRONG':
+            nodeAttributes.bold = true
+            break;
+        case 'SPAN':
+            if (el.classList.contains('editor_highlight')) {
+                nodeAttributes.highlight = true;
+            }
+            break;
+    }
+
+    const children = Array.from(el.childNodes)
+        .map(node => deserialize(node, { ...nodeAttributes }))
+        .flat()
+
+    if (children.length === 0) {
+        children.push({ text: '', ...nodeAttributes });
+    }
+
+    switch (el.nodeName) {
+        case 'BODY':
+            return children;
+        case 'P':
+            return { type: 'paragraph', children };
+        default:
+            return children;
+    }
+
+}
+
 function Search() {
 
     let { searchInputValue } = useParams();
@@ -40,12 +80,17 @@ function Search() {
 
     const writeListState = useSelector((state) => state.WriteData);
     const writeListArr = writeListState.data.write.filter(item => item !== null) || [];
-        
+
     var searchFilter = writeListArr.filter((a) => {
-        var searchCompare = a.content;
+        const contentDoc = new DOMParser().parseFromString(a.content, 'text/html');
+        const contentValue = deserialize(contentDoc.body);
+        var searchCompare = contentValue !== null ? contentValue[0].children[0].text : '';
         return searchCompare.includes(searchPageInput);
     });
     //// about search result filter
+
+    console.log(searchFilter)
+    console.log(searchPageInput)
 
     return (
 
@@ -75,6 +120,7 @@ function Search() {
         const titleDoc = new DOMParser().parseFromString(searchFilter[i].title, 'text/html');
         const subTitleDoc = new DOMParser().parseFromString(searchFilter[i].subTitle, 'text/html');
         const contentDoc = new DOMParser().parseFromString(searchFilter[i].content, 'text/html');
+        const keywordsParse = JSON.parse(searchFilter[i].keywords)
 
         return (
 
@@ -85,7 +131,7 @@ function Search() {
                 <div className='write_keyword'>
                     <ul className='write_keyword_list'>
                         {
-                            searchFilter[i].keyword.map((k, i) => (
+                            keywordsParse.map((k, i) => (
                                 <li key={i}>
                                     <WriteKeyword writeListKeyword={k} />
                                 </li>
