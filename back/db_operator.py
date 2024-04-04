@@ -61,7 +61,7 @@ def create_table():
     Base_memo.metadata.create_all(engine_memo)
 
 
-def post_data_from_write(data):
+def post_data_to_write(data):
     try:
         with Session_write() as session:
             write_instance = Write(**data)
@@ -96,6 +96,16 @@ def update_data_from_write(data, write_id):
     finally:
         # 세션 닫기
         session.close()
+
+
+def post_data_to_cate(data):
+    try:
+        with Session_write() as session:
+            cate_instance = Category(**data)
+            session.add(cate_instance)
+            session.commit()
+    except Exception as e:
+        print(f"Error adding data: {e}")
 
 
 def post_data_from_memo(data):

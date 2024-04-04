@@ -47,18 +47,18 @@ const WriteData = createSlice({
             state.error = action.payload ?? action.error
         })
 
-            // post data
-            .addCase(writeListDataPost.pending, (state) => {
-                state.loading = true;
-            }).addCase(writeListDataPost.fulfilled, (state, action) => {
-                state.loading = false;
-                state.data = {
-                    ...state.data,
-                    write: [...state.data.write, action.payload]
-                };
-            }).addCase(writeListDataPost.rejected, (state, action) => {
-                state.error = action.payload ?? action.error
-            })
+        // post data
+        .addCase(writeListDataPost.pending, (state) => {
+            state.loading = true;
+        }).addCase(writeListDataPost.fulfilled, (state, action) => {
+            state.loading = false;
+            state.data = {
+                ...state.data,
+                write: [...state.data.write, action.payload]
+            };
+        }).addCase(writeListDataPost.rejected, (state, action) => {
+            state.error = action.payload ?? action.error
+        })
 
     },
 });
@@ -154,7 +154,7 @@ const cateData = createSlice({
             if (action.payload !== undefined) {
                 state.data = {
                     ...state.data,
-                    cate: [...state.data.category, action.payload],
+                    cate: [...state.data.cate, action.payload],
                 };
             }
         }
@@ -169,6 +169,7 @@ const cateData = createSlice({
         }).addCase(cateListData.rejected, (state, action) => {
             state.error = action.payload ?? action.error;
         })
+        
     },
 })
 

@@ -2,7 +2,7 @@ import React, { useRef, useState, useMemo, useCallback, useEffect } from 'react'
 import { useDispatch, useSelector } from "react-redux"
 import { Link } from 'react-router-dom';
 
-import { syncWriteListData, syncCateListData } from "../data/reducers"
+import { syncWriteListData } from "../data/reducers"
 import { writeListData, writeListDataPost, cateListData } from '../data/api.js';
 
 import { createEditor, Editor, Transforms, Text, Element as SlateElement, Node, } from 'slate';
@@ -91,10 +91,9 @@ const serialize = nodes => {
 function Write() {
 
     const dispatch = useDispatch();
-
     useEffect(() => {
-        dispatch(writeListData())
-        dispatch(cateListData())
+        dispatch(writeListData());
+        dispatch(cateListData());
     }, [dispatch]);
 
     const writeListState = useSelector((state) => state.WriteData);
@@ -114,28 +113,6 @@ function Write() {
         }
     };
     //// category popup
-
-    // category add popup
-    const [catePopup, catePopupActive] = useState("");
-    const cateAdd = () => {
-        catePopupActive(!catePopup);
-        if (!catePopup) {
-            catePopupActive('active');
-        } else {
-            catePopupActive('');
-        }
-    }
-
-    var cateInput = useRef(null);
-
-    const cateSaveBtn = () => {
-        console.log(cateListArr);
-        const id = cateListArr;
-        const category = cateInput;
-
-        dispatch(syncCateListData({ id, category }));
-    }
-    //// category add popup
 
     // slate text editor
     const [titleEditor] = useState(() => withReact(createEditor()))
@@ -395,12 +372,10 @@ function Write() {
                             )
                         })
                     }
-                    <CateFacAdd></CateFacAdd>
                 </ul>
 
                 <div className='page_btn'>
                     <button className="write_btn_back icon-reply" onClick={popupClick}></button>
-                    <button className="write_btn_back icon-plus-squared" onClick={cateAdd}></button>
                     <Link to={`/components/WriteView/${recentId}`} className='icon-ok-circled write_btn_save' onClick={() => { WriteSaveBtn(); }}></Link>
                 </div>
             </div>
@@ -424,16 +399,6 @@ function Write() {
             <span className={`${cateActive ? "active" : ""}`} onClick={cateClick}>{category}</span>
         )
 
-    }
-
-    function CateFacAdd() {
-        return (
-            <div className={`cateAdd ${catePopup ? catePopup : ""}`}>
-                <i className='icon-hash'></i>
-                <input type="text" ref={cateInput} />
-                <button onCick={cateSaveBtn}><i className='icon-plus-circled'></i></button>
-            </div>
-        )
     }
 
 }

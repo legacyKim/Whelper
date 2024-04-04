@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect, useMemo, useCallback } from 'react';
 import { useDispatch, useSelector } from "react-redux"
 
-import { syncWriteListData, syncWriteListDataUpdate } from "../data/reducers.js"
+import { syncWriteListData, syncWriteListDataUpdate, syncCateListData } from "../data/reducers.js"
 import { cateListData, writeListDataUpdate } from '../data/api.js';
 
 import { createEditor, Editor, Transforms, Text, Element as SlateElement, Node, } from 'slate';
@@ -135,7 +135,7 @@ function WriteCorrect() {
     const dispatch = useDispatch();
     useEffect(() => {
         dispatch(syncWriteListData());
-        dispatch(cateListData())
+        dispatch(cateListData());
     }, [dispatch]);
 
     const writeListState = useSelector((state) => state.WriteData);
@@ -392,8 +392,6 @@ function WriteCorrect() {
                 <div className='page_btn'>
                     <button className="write_btn_back icon-reply" onClick={popupClick}></button>
                     <button className='icon-ok-circled write_btn_save' onClick={() => { navigate(`/components/WriteView/${index}`); WriteCorrectBtn(); }}></button>
-                    {/* <button className='icon-ok-circled write_btn_save' onClick={() => { WriteCorrectBtn(); }}></button> */}
-                    {/* to="/components/WriteList" */}
                 </div>
             </div>
         </div>

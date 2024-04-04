@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from db_connector import get_data_from_write, get_data_from_memo
-from db_operator import post_data_from_write, update_data_from_write, post_data_from_memo, update_data_from_memo, post_data_from_memoAnno, update_data_from_memoAnno, post_data_from_book
+from db_operator import post_data_to_write, update_data_from_write, post_data_to_cate, post_data_from_memo, update_data_from_memo, post_data_from_memoAnno, update_data_from_memoAnno, post_data_from_book
 
 import json
 
@@ -28,7 +28,7 @@ def get_data_WriteList():
 def post_data_WriteList():
     try:
         data = request.get_json()
-        result = post_data_from_write(data)
+        result = post_data_to_write(data)
         return jsonify(result), 201
     except Exception as e:
         print(f"Error: {e}")
@@ -74,13 +74,22 @@ def get_data_to_cate():
         return jsonify({'error': 'Invalid JSON data'}), 500
 
 
-@app.route('/components/Write/cate', methods=['POST'])
+@app.route('/components/Category', methods=['POST'])
 def post_data_cate():
     try:
         data = request.get_json()
-        write_id = data['db_id']
+        result = post_data_to_cate(data)
+        return jsonify(result), 201
+    except Exception as e:
+        print(f"Error: {e}")
+        return jsonify({'error': 'Error handling write post request'}), 500
 
-        result = update_data_from_write(data, write_id)
+
+@app.route('/components/WriteCorrect/cate', methods=['POST'])
+def post_data_cate_in_correct():
+    try:
+        data = request.get_json()
+        result = post_data_to_cate(data)
         return jsonify(result), 201
     except Exception as e:
         print(f"Error: {e}")

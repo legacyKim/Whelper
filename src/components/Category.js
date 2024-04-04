@@ -4,7 +4,8 @@ import { Link, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from "react-redux"
 
 import ViewEdit from './SlateView.js'
-import { writeListData, cateListData_cate } from '../data/api.js';
+import { syncCateListData } from '../data/reducers.js'
+import { writeListData, cateListData_cate, cateListDataPost } from '../data/api.js';
 
 function Category() {
 
@@ -105,6 +106,32 @@ function Category() {
         localStorage.setItem('cateHistory', JSON.stringify(cateArr));
     }, [cateArr])
 
+    // category add popup
+    const [catePopup, catePopupActive] = useState("");
+    const cateAdd = () => {
+        catePopupActive(!catePopup);
+        if (!catePopup) {
+            catePopupActive('active');
+        } else {
+            catePopupActive('');
+        }
+    }
+
+    var cateInput = useRef(null);
+    const cateSaveBtn = () => {
+        const category = cateInput.current.value;
+
+        dispatch(syncCateListData({ category }));
+        dispatch(cateListDataPost({ category }))
+
+        cateInput.current.value = '';
+    }
+
+    const cateCloseBtn = () => {
+        catePopupActive('');
+    }
+    //// category add popup
+
     useEffect(() => {
         if (cateProps !== undefined) {
             setCateArr([cateProps])
@@ -114,6 +141,7 @@ function Category() {
     return (
 
         <div className='content_area'>
+            <button className='cate_add_btn' onClick={cateAdd}><i className='icon-ok'></i></button>
             <div className='cate_list_pos' ref={cateScrollArea} >
                 <ul className='cate_list' ref={cateScrollPos}>
                     {
@@ -149,6 +177,12 @@ function Category() {
                         })
                     }
                 </ul>
+            </div>
+
+            <div className={`cateAdd ${catePopup ? catePopup : ""}`}>
+                <input type="text" ref={cateInput} placeholder='Category' />
+                <button onClick={cateSaveBtn}><i className='icon-ok'></i></button>
+                <button onClick={cateCloseBtn}><i className='icon-cancel'></i></button>
             </div>
         </div>
 
