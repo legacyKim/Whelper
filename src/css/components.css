@@ -90,42 +90,9 @@
 .view_content>span { position: relative; display: block; font-size: 24px; font-weight: 400; line-height: 1.5; color: var(--font-color); padding-bottom: 14px; }
 .view_content>p { position: relative; display: block; font-size: 18px; font-weight: 400; line-height: 1.5; color: var(--font-color); }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* 동적 작업을 위한.... 23.02.10 */
-
 .showThis { opacity: 1; transition: opacity 1s ease-in-out; z-index: 999; }
 
 /* 버튼 공통 */
-
-
 .write_btn_save,
 .memo_btn_save,
 .content_write_save { background-color: #217af4; border-radius: 50%; width: 16px; height: 16px; }

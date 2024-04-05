@@ -181,9 +181,6 @@ function Write() {
     }, []);
     //// slate text editor
 
-    // const newTitle = useRef();
-    // const newSubTitle = useRef();
-
     const [keywordArr, setKeywordArr] = useState([]);
 
     // content and local storage change

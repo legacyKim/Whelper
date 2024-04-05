@@ -29,9 +29,14 @@ const WriteData = createSlice({
                 state.data.write = updatedWrite;
             }
         },
-        writeListDataDelete: (state, action) => {
-            const deleteWriteId = action.payload.id;
-            state.data = state.data.filter(item => item.id !== deleteWriteId);
+        syncWriteListDataDelete: (state, action) => {
+            if (action.payload !== undefined) {
+                const delWrite = state.data.write.filter(item =>
+                    item.id !== action.payload.id
+                )
+                state.data.write = delWrite;
+            }
+
         },
     },
 
@@ -47,18 +52,18 @@ const WriteData = createSlice({
             state.error = action.payload ?? action.error
         })
 
-        // post data
-        .addCase(writeListDataPost.pending, (state) => {
-            state.loading = true;
-        }).addCase(writeListDataPost.fulfilled, (state, action) => {
-            state.loading = false;
-            state.data = {
-                ...state.data,
-                write: [...state.data.write, action.payload]
-            };
-        }).addCase(writeListDataPost.rejected, (state, action) => {
-            state.error = action.payload ?? action.error
-        })
+            // post data
+            .addCase(writeListDataPost.pending, (state) => {
+                state.loading = true;
+            }).addCase(writeListDataPost.fulfilled, (state, action) => {
+                state.loading = false;
+                state.data = {
+                    ...state.data,
+                    write: [...state.data.write, action.payload]
+                };
+            }).addCase(writeListDataPost.rejected, (state, action) => {
+                state.error = action.payload ?? action.error
+            })
 
     },
 });
@@ -169,7 +174,7 @@ const cateData = createSlice({
         }).addCase(cateListData.rejected, (state, action) => {
             state.error = action.payload ?? action.error;
         })
-        
+
     },
 })
 
@@ -209,7 +214,7 @@ const bookData = createSlice({
 
 });
 
-export const { syncWriteListData, syncWriteListDataUpdate, writeListDataDelete } = WriteData.actions;
+export const { syncWriteListData, syncWriteListDataUpdate, syncWriteListDataDelete } = WriteData.actions;
 export const { syncMemoListDataAdd, memoListDataDelete, syncMemoListDataUpdate, syncMemoListAnno, syncMemoListAnnoUpdate, memoListAnnoDelete } = memoData.actions;
 export const { cateListDataAdd, syncCateListData } = cateData.actions;
 export const { syncBookListDataAdd, bookListDelete } = bookData.actions;
