@@ -243,6 +243,15 @@ function Memo() {
         dispatch(bookListDelete({ book: bookTitle }))
     }
 
+    // memo anno delete
+    const memoDeleteBtn = (memoCurrent) => {
+        const corrMemoId = memoCurrent.id;
+        dispatch(syncMemoListDelete(corrMemoId));
+        dispatch(memoListDataDelete(corrMemoId))
+        setMemoCurrent(null);
+    }
+    //// memo Annotation
+
     // memo correct btn
     var correctMemoSource = useRef();
     var correctMemoAuthor = useRef();
