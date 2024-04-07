@@ -163,6 +163,23 @@ def update_data_from_memo(data, memo_id):
         session.close()
 
 
+def delete_data_from_memo(memo_id):
+    try:
+        with Session_memo() as session:
+            # 삭제할 데이터를 조회합니다.
+            memo_instance = session.query(Memo).filter_by(id=memo_id).first()
+
+            # 조회된 데이터가 있을 경우 삭제합니다.
+            if memo_instance:
+                session.delete(memo_instance)
+                session.commit()
+                print(f"Data with id={memo_id} deleted successfully")
+            else:
+                print(f"No data found with id={memo_id}")
+    except Exception as e:
+        print(f"Error deleting data: {e}")
+
+
 def post_data_from_memoAnno(data):
     try:
         with Session_memo() as session:

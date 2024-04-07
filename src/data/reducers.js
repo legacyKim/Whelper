@@ -86,10 +86,12 @@ const memoData = createSlice({
         },
 
         syncMemoListDelete(state, action) {
+            console.log(action.payload)
             if (action.payload !== undefined) {
                 const deleteMemo = state.data.memo.filter(item =>
-                    item.id !== action.payload.id
+                    item.id !== action.payload
                 )
+                console.log(deleteMemo)
                 state.data.memo = deleteMemo;
             }
         },

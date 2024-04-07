@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux"
 import MyContext from '../context'
 import { toast } from 'react-toastify';
 
-import { memoListData, memoListDataPost, memoListDataUpdate, memoListAnnoPost, memoListAnnoUpdate, bookListData, bookListDataPost } from "../data/api"
+import { memoListData, memoListDataPost, memoListDataUpdate, memoListDataDelete, memoListAnnoPost, memoListAnnoUpdate, bookListData, bookListDataPost } from "../data/api"
 import { syncMemoListDataAdd, syncMemoListDelete, syncMemoListDataUpdate, syncMemoListAnno, syncMemoListAnnoUpdate, memoListAnnoDelete, syncBookListDataAdd, bookListDelete } from "../data/reducers.js"
 
 
@@ -355,9 +355,8 @@ function Memo() {
         }
     }, [memoAnnoActive]);
 
-    var newMemoAnno = useRef();
-
     // memo anno add
+    var newMemoAnno = useRef();
     const memoAnnoBtn = (memo) => {
 
         const id = memo.id;
@@ -372,6 +371,7 @@ function Memo() {
         setTextAreaHeight(null);
 
     }
+    //// memo anno add
 
     // memo anno correct box open
     const [memoAnnoCorrText, setMemoAnnoCorrText] = useState();
@@ -420,9 +420,11 @@ function Memo() {
     }
 
     // memo anno delete
-    const memoAnnoDeleteBtn = (memoCurrent) => {
+    const memoDeleteBtn = (memoCurrent) => {
         const corrMemoId = memoCurrent.id;
         dispatch(syncMemoListDelete(corrMemoId));
+        dispatch(memoListDataDelete(corrMemoId))
+        setMemoCurrent(null);
     }
     //// memo Annotation
 
@@ -526,7 +528,7 @@ function Memo() {
                             }}></button>
                         <button className='icon-trash'
                             onClick={() => {
-                                memoAnnoDeleteBtn(memoCurrent)
+                                memoDeleteBtn(memoCurrent)
                                 memoDetailClose();
                             }}>
                         </button>
@@ -659,6 +661,7 @@ function Memo() {
                                             memoAnnoCorrectBtn(m, i);
                                             setMemoAnnoActive('')
                                         }}></button>
+                                        <button className='icon-trash'></button>
                                     </div>
                                 </div>
                             </li>
@@ -690,25 +693,3 @@ function Memo() {
 }
 
 export default Memo;
-
-// const memoSubmit = async (event) => {
-
-//     try {
-//         const response = await axios.post('http://localhost:3000/api/Memo', { memo: newMemo });
-//         setMemo([...props, response.data]);
-//         setNewMemo('');
-//     } catch (err) {
-//         console.error(err);
-//     }
-// }
-
-// const memoDelete = async (a) => {
-
-//     try {
-//         const response = await axios.delete(`http://localhost:3000/api/Memo`, { data: { memo: a.memo } });
-//         const updatedMemoList = props.MainMemoData.filter(memo => memo.memo !== a.memo);
-//         setMemo(updatedMemoList);
-//     } catch (err) {
-//         console.error(err);
-//     }
-// }
