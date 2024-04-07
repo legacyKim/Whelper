@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { syncWriteListData, syncWriteListDataUpdate } from '../data/reducers.js';
+import { writeListDataDel } from '../data/api.js'
 import { useParams } from 'react-router-dom';
 import { Slate, Editable } from 'slate-react';
 
@@ -28,6 +29,8 @@ function WriteView() {
 
     const lsKeywords = JSON.parse(localStorage.getItem('view_keywords')) || [];
     const keywordsParse = (writeContent[0] !== undefined && writeContent.length > 0) ? JSON.parse(writeListArr[id].keywords) : lsKeywords;
+
+
     localStorage.setItem('view_keywords', JSON.stringify(keywordsParse));
 
     useEffect(() => {
@@ -38,6 +41,10 @@ function WriteView() {
             });
         }, 100)
     }, [writeListArr])
+
+    const delWriteList = () => {
+        dispatch(writeListDataDel(id))
+    }
 
     return (
 
@@ -54,9 +61,10 @@ function WriteView() {
                             ))}
                         </div>
                     </div>
-                    <button className='page_btn'>
+                    <div className='page_btn'>
+                        <Link className='icon-trash' onClick={delWriteList} to={`/components/WriteList`}></Link>
                         <Link className='icon-edit-alt' to={`/components/WriteCorrect/${id}`} />
-                    </button>
+                    </div>
                 </div>
             </div>
         </div>

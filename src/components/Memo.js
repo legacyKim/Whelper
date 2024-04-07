@@ -4,7 +4,7 @@ import MyContext from '../context'
 import { toast } from 'react-toastify';
 
 import { memoListData, memoListDataPost, memoListDataUpdate, memoListAnnoPost, memoListAnnoUpdate, bookListData, bookListDataPost } from "../data/api"
-import { syncMemoListDataAdd, memoListDataDelete, syncMemoListDataUpdate, syncMemoListAnno, syncMemoListAnnoUpdate, memoListAnnoDelete, syncBookListDataAdd, bookListDelete } from "../data/reducers.js"
+import { syncMemoListDataAdd, syncMemoListDelete, syncMemoListDataUpdate, syncMemoListAnno, syncMemoListAnnoUpdate, memoListAnnoDelete, syncBookListDataAdd, bookListDelete } from "../data/reducers.js"
 
 
 function Memo() {
@@ -15,6 +15,7 @@ function Memo() {
         dispatch(bookListData());
         dispatch(syncBookListDataAdd());
         dispatch(syncMemoListDataUpdate());
+        dispatch(syncMemoListDelete())
     }, [dispatch]);
 
     const memoListState = useSelector((state) => state.memoData);
@@ -419,11 +420,9 @@ function Memo() {
     }
 
     // memo anno delete
-    const memoAnnoDeleteBtn = (memo, i) => {
-        const corrMemoId = memo.id;
-        const corrAnnotationKeys = i;
-
-        dispatch(memoListAnnoDelete({ corrMemoId, corrAnnotationKeys }));
+    const memoAnnoDeleteBtn = (memoCurrent) => {
+        const corrMemoId = memoCurrent.id;
+        dispatch(syncMemoListDelete(corrMemoId));
     }
     //// memo Annotation
 
@@ -525,6 +524,12 @@ function Memo() {
                                 memoCorrectOn(memoCurrent);
                                 memoDetailClose();
                             }}></button>
+                        <button className='icon-trash'
+                            onClick={() => {
+                                memoAnnoDeleteBtn(memoCurrent)
+                                memoDetailClose();
+                            }}>
+                        </button>
                         <button className='icon-cancel' onClick={() => {
                             memoDetailClose();
                             setAnnoCorrectActive('');
@@ -653,10 +658,6 @@ function Memo() {
                                         <button className='icon-feather' onClick={() => {
                                             memoAnnoCorrectBtn(m, i);
                                             setMemoAnnoActive('')
-                                        }}></button>
-                                        <button className='icon-trash' onClick={() => {
-                                            // memoAnnoDeleteBtn(memo, i);
-                                            showToast();
                                         }}></button>
                                     </div>
                                 </div>

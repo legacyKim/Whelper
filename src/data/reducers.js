@@ -29,15 +29,6 @@ const WriteData = createSlice({
                 state.data.write = updatedWrite;
             }
         },
-        syncWriteListDataDelete: (state, action) => {
-            if (action.payload !== undefined) {
-                const delWrite = state.data.write.filter(item =>
-                    item.id !== action.payload.id
-                )
-                state.data.write = delWrite;
-            }
-
-        },
     },
 
     extraReducers: (builder) => {
@@ -94,8 +85,13 @@ const memoData = createSlice({
             }
         },
 
-        syncBookListDataPost(state, action) {
-
+        syncMemoListDelete(state, action) {
+            if (action.payload !== undefined) {
+                const deleteMemo = state.data.memo.filter(item =>
+                    item.id !== action.payload.id
+                )
+                state.data.memo = deleteMemo;
+            }
         },
 
         syncMemoListAnno(state, action) {
@@ -214,8 +210,8 @@ const bookData = createSlice({
 
 });
 
-export const { syncWriteListData, syncWriteListDataUpdate, syncWriteListDataDelete } = WriteData.actions;
-export const { syncMemoListDataAdd, memoListDataDelete, syncMemoListDataUpdate, syncMemoListAnno, syncMemoListAnnoUpdate, memoListAnnoDelete } = memoData.actions;
+export const { syncWriteListData, syncWriteListDataUpdate } = WriteData.actions;
+export const { syncMemoListDataAdd, syncMemoListDelete, syncMemoListDataUpdate, syncMemoListAnno, syncMemoListAnnoUpdate, memoListAnnoDelete } = memoData.actions;
 export const { cateListDataAdd, syncCateListData } = cateData.actions;
 export const { syncBookListDataAdd, bookListDelete } = bookData.actions;
 

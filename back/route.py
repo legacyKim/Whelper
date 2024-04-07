@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from db_connector import get_data_from_write, get_data_from_memo
-from db_operator import post_data_to_write, update_data_from_write, post_data_to_cate, post_data_from_memo, update_data_from_memo, post_data_from_memoAnno, update_data_from_memoAnno, post_data_from_book
+from db_operator import post_data_to_write, update_data_from_write, delete_data_from_write, post_data_to_cate, post_data_from_memo, update_data_from_memo, post_data_from_memoAnno, update_data_from_memoAnno, post_data_from_book
 
 import json
 
@@ -94,6 +94,16 @@ def post_data_cate_in_correct():
     except Exception as e:
         print(f"Error: {e}")
         return jsonify({'error': 'Error handling write post request'}), 500
+
+
+@app.route('/components/WriteView/<int:id>', methods=['DELETE'])
+def delete_data_WriteList(id):
+    try:
+        result = delete_data_from_write(id)
+        return jsonify({'message': 'Data deleted successfully'}), 200
+    except Exception as e:
+        print(f"Error: {e}")
+        return jsonify({'error': 'Error handling delete request'}), 500
 
 
 # @app.route('/')

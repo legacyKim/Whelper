@@ -4,7 +4,6 @@ import { CSSTransition, TransitionGroup } from 'react-transition-group';
 
 import { useSelector, useDispatch } from "react-redux"
 import { writeListData } from '../data/api.js';
-import { syncWriteListDataDelete } from '../data/reducers.js'
 import ViewEdit from './SlateView.js'
 
 function WriteList() {
@@ -54,10 +53,6 @@ function WriteList() {
         const contentDoc = new DOMParser().parseFromString(writeContent.content, 'text/html');
         const keywordsParse = JSON.parse(writeListArr[i].keywords)
 
-        const delWriteList = () => {
-            dispatch(syncWriteListDataDelete({ id: writeListArr[i].id }))
-        }
-
         // function writeDateFomatt(date) {
         //     const options = { day: '2-digit', month: '2-digit', year: '2-digit' };
         //     return date.toLocaleDateString('en-US', options).replace(/\//g, '.');
@@ -70,7 +65,6 @@ function WriteList() {
             <div>
                 <div className='write_btn'>
                     <Link className='icon-edit-alt' to={`/components/WriteCorrect/${index}`}></Link>
-                    <button className='icon-trash' onClick={delWriteList}></button>
                 </div>
                 <div className='write_list'>
                     <Link to={`/components/WriteView/${index}`}>

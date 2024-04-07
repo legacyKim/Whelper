@@ -49,6 +49,15 @@ export const writeListData_search = createAsyncThunk('writeData/getData',
     },
 )
 
+export const writeListDataDel = createAsyncThunk('writeData/deleteWrite', async (id) => {
+    try {
+        const response = await axios.delete(`${API_URL}/components/WriteView/${id}`);
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
+});
+
 // get cate data
 export const cateListData = createAsyncThunk('cateData/getCate',
     async () => {

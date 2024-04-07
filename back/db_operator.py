@@ -98,6 +98,24 @@ def update_data_from_write(data, write_id):
         session.close()
 
 
+def delete_data_from_write(write_id):
+    try:
+        with Session_write() as session:
+            # 삭제할 데이터를 조회합니다.
+            write_instance = session.query(
+                Write).filter_by(id=write_id).first()
+
+            # 조회된 데이터가 있을 경우 삭제합니다.
+            if write_instance:
+                session.delete(write_instance)
+                session.commit()
+                print(f"Data with id={write_id} deleted successfully")
+            else:
+                print(f"No data found with id={write_id}")
+    except Exception as e:
+        print(f"Error deleting data: {e}")
+
+
 def post_data_to_cate(data):
     try:
         with Session_write() as session:
