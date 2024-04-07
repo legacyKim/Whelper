@@ -418,15 +418,7 @@ function Memo() {
         setTextAreaHeight(null);
 
     }
-
-    // memo anno delete
-    const memoDeleteBtn = (memoCurrent) => {
-        const corrMemoId = memoCurrent.id;
-        dispatch(syncMemoListDelete(corrMemoId));
-        dispatch(memoListDataDelete(corrMemoId))
-        setMemoCurrent(null);
-    }
-    //// memo Annotation
+    //// memo anno correct complete
 
     // when add new one
     useEffect(() => {
