@@ -429,10 +429,18 @@ function Memo() {
     }
     //// memo anno correct complete
 
+    // memo anno delete 
+
+    const memoAnnoDelete = () => {
+        
+    }
+
+    //// memo anno delete
+
     // when add new one
     useEffect(() => {
         if (memoCurrent !== null) {
-            var index = memoCurrent.id - 1;
+            var index = memoArr.length - 1;
             setMemoCurrent(memoArr[index]);
         }
     }, [memoArr]);
@@ -594,6 +602,8 @@ function Memo() {
     )
 
     function MemoView({ memo }) {
+
+        console.log(memo)
 
         const [memoAnnoCorrProps, setMemoAnnoCorrProps] = useState(memoAnnoCorrText);
         const memoCorrTextChange = (e) => {

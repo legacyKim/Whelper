@@ -32,7 +32,7 @@ class Memo(Base_memo):
     memoComment = Column(String(1255))
     memoSource = Column(String(255))
     memoAuthor = Column(String(255))
-    memoAnnotation = Column(String(255))
+    memoAnnotation = Column(String)
 
 
 class Book(Base_memo):
@@ -188,6 +188,7 @@ def post_data_from_memoAnno(data):
 
             memo_instance = session.query(Memo).filter_by(id=memo_id).first()
             annotation_list = json.loads(memo_instance.memoAnnotation)
+
             annotation_list.append(new_annotation)
             updated_annotation = json.dumps(annotation_list)
             memo_instance.memoAnnotation = updated_annotation
