@@ -218,7 +218,6 @@ function Memo() {
         dispatch(syncMemoListDataAdd({ id, memoComment, memoAuthor, memoSource, memoAnnotation }));
         dispatch(memoListDataPost({ memoComment, memoAuthor, memoSource, memoAnnotation }));
         setMemo((prevMemo) => [...prevMemo, { memoComment, memoAuthor, memoSource, memoAnnotation }]);
-
         dispatch(syncBookListDataAdd({ memoSource, memoAuthor }))
 
     };
@@ -434,14 +433,14 @@ function Memo() {
     const memoAnnoDelete = () => {
         
     }
-
     //// memo anno delete
 
     // when add new one
     useEffect(() => {
         if (memoCurrent !== null) {
-            var index = memoArr.length - 1;
-            setMemoCurrent(memoArr[index]);
+            var index = memoCurrent.id;
+            const memoRecent = memoArr.filter(item => item.id === index)
+            setMemoCurrent(memoRecent[0]);
         }
     }, [memoArr]);
     //// when add new one
@@ -602,8 +601,6 @@ function Memo() {
     )
 
     function MemoView({ memo }) {
-
-        console.log(memo)
 
         const [memoAnnoCorrProps, setMemoAnnoCorrProps] = useState(memoAnnoCorrText);
         const memoCorrTextChange = (e) => {
