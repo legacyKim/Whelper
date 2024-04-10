@@ -125,7 +125,6 @@ export const memoListDataUpdate = createAsyncThunk('memoData/updateMemo', async 
 });
 
 export const memoListDataDelete = createAsyncThunk('memoData/deleteMemo', async (memo_id) => {
-    console.log(memo_id)
     try {
         const response = await axios.delete(`${API_URL}/components/Memo/${memo_id}`);
         return response.data;

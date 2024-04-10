@@ -96,12 +96,12 @@ const memoData = createSlice({
         },
 
         syncMemoListAnno(state, action) {
-            const { id, memoAnno } = action.payload;
+            const { memoSource, memoAnnotation } = action.payload;
             const addMemoAnno = state.data.memo.map(item =>
-                item.id === id
+                item.memoSource === memoSource
                     ? {
                         ...item,
-                        memoAnnotation: [...item.memoAnnotation, memoAnno]
+                        memoAnnotation: [...item.memoAnnotation, memoAnnotation]
                     }
                     : item
             );

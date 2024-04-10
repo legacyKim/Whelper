@@ -139,6 +139,7 @@ def post_data_memo():
 def update_data_memo():
     try:
         data = request.get_json()
+        print(data, "testtesttesttesttesttesttesttesttesttesttesttesttesttesttest")
         memo_id = data['id']
 
         result = update_data_from_memo(data, memo_id)

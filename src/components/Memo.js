@@ -200,7 +200,6 @@ function Memo() {
                 element.classList.remove('opacity');
             });
         }, 100)
-
     }, [memoListArr])
 
     var newMemoSource = useRef(null);
@@ -209,17 +208,18 @@ function Memo() {
 
     const MemoSaveBtn = () => {
 
-        const id = memoListArr.length + 1;
         const memoComment = newMemoComment.current.value;
         var memoAuthor = newMemoAuthor.current.value;
         var memoSource = newMemoSource.current.value;
         var memoAnnotation = [];
 
-        dispatch(syncMemoListDataAdd({ id, memoComment, memoAuthor, memoSource, memoAnnotation }));
+        dispatch(syncMemoListDataAdd({ memoComment, memoAuthor, memoSource, memoAnnotation }));
         dispatch(memoListDataPost({ memoComment, memoAuthor, memoSource, memoAnnotation }));
         setMemo((prevMemo) => [...prevMemo, { memoComment, memoAuthor, memoSource, memoAnnotation }]);
-        dispatch(syncBookListDataAdd({ memoSource, memoAuthor }))
+        dispatch(syncBookListDataAdd({ memoSource, memoAuthor }));
+        dispatch(bookListDataPost({ memoSource, memoAuthor }));
 
+        setMemoCurrent(null);
     };
 
     // book save
@@ -367,14 +367,13 @@ function Memo() {
     var newMemoAnno = useRef();
     const memoAnnoBtn = (memo) => {
 
-        const id = memo.id;
-        const memoAnno = newMemoAnno.current.value;
+        const memoAnnotation = newMemoAnno.current.value;
         const memoComment = memo.memoComment;
         const memoSource = memo.memoSource;
         const memoAuthor = memo.memoAuthor;
 
-        dispatch(syncMemoListAnno({ id, memoAnno }));
-        dispatch(memoListAnnoPost({ id, memoComment, memoSource, memoAuthor, memoAnno }))
+        dispatch(syncMemoListAnno({ memoSource, memoAnnotation }));
+        dispatch(memoListAnnoPost({ memoComment, memoSource, memoAuthor, memoAnnotation }))
         setMemoAnnoActive('');
         setTextAreaHeight(null);
 
@@ -429,9 +428,8 @@ function Memo() {
     //// memo anno correct complete
 
     // memo anno delete 
-
     const memoAnnoDelete = () => {
-        
+
     }
     //// memo anno delete
 
@@ -669,7 +667,9 @@ function Memo() {
                                             memoAnnoCorrectBtn(m, i);
                                             setMemoAnnoActive('')
                                         }}></button>
-                                        <button className='icon-trash'></button>
+                                        <button className='icon-trash' onClick={() => {
+                                            memoAnnoDelete()
+                                        }}></button>
                                     </div>
                                 </div>
                             </li>

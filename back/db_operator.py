@@ -32,7 +32,7 @@ class Memo(Base_memo):
     memoComment = Column(String(1255))
     memoSource = Column(String(255))
     memoAuthor = Column(String(255))
-    memoAnnotation = Column(String)
+    memoAnnotation = Column(String(1255))
 
 
 class Book(Base_memo):
@@ -127,6 +127,7 @@ def post_data_to_cate(data):
 
 
 def post_data_from_memo(data):
+
     try:
         with Session_memo() as session:
             memo_instance = Memo(**data)
@@ -181,18 +182,21 @@ def delete_data_from_memo(memo_id):
 
 
 def post_data_from_memoAnno(data):
+
     try:
         with Session_memo() as session:
-            memo_id = data.get('id')
-            new_annotation = data.get('memoAnno')
 
-            memo_instance = session.query(Memo).filter_by(id=memo_id).first()
+            memo_comment = data.get('memoComment')
+            new_annotation = data.get('memoAnnotation')
+            memo_instance = session.query(Memo).filter_by(
+                memoComment=memo_comment).first()
             annotation_list = json.loads(memo_instance.memoAnnotation)
 
             annotation_list.append(new_annotation)
             updated_annotation = json.dumps(annotation_list)
             memo_instance.memoAnnotation = updated_annotation
             session.commit()
+
     except Exception as e:
         print(f"Error adding data: {e}")
 
@@ -219,9 +223,16 @@ def update_data_from_memoAnno(data):
 def post_data_from_book(data):
     try:
         with Session_memo() as session:
-            memo_instance = Memo(**data)
-            session.add(memo_instance)
-            session.commit()
+            existing_book = session.query(Book).filter_by(
+                memoSource=data['memoSource']).first()
+            if existing_book:
+                print(
+                    f"memoSource '{data['memoSource']}' already exists. Skipping insertion.")
+            else:
+                book_instance = Book(**data)
+                session.add(book_instance)
+                session.commit()
+                print("Data added successfully.")
     except Exception as e:
         print(f"Error adding data: {e}")
 
