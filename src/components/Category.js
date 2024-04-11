@@ -217,9 +217,11 @@ function Category() {
         const contentDoc = new DOMParser().parseFromString(cateFilterRes[i].content, 'text/html');
         const keywordsParse = JSON.parse(writeListArr[i].keywords)
 
+        const index = writeListArr[i].id - 1;
+
         return (
             <div className='write_list'>
-                <Link to={`/components/WriteView/${writeListArr[i].id}`}>
+                <Link to={`/components/WriteView/${index}`}>
                     <ViewEdit titleDoc={titleDoc} subTitleDoc={subTitleDoc} contentDoc={contentDoc}></ViewEdit>
                 </Link>
                 <div className='write_keyword'>

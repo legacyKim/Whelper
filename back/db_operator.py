@@ -212,7 +212,6 @@ def update_data_from_memoAnno(data):
             annotation_list = json.loads(memo_instance.memoAnnotation)
 
             annotation_list[update_annotation_index] = update_annotation_content
-
             updated_annotation = json.dumps(annotation_list)
             memo_instance.memoAnnotation = updated_annotation
             session.commit()
@@ -220,21 +219,47 @@ def update_data_from_memoAnno(data):
         print(f"Error update memo: {e}")
 
 
+def delete_data_from_memoAnno(anno_id, corrAnnotationKeys):
+    try:
+        with Session_memo() as session:
+            memo_instance = session.query(Memo).filter_by(id=anno_id).first()
+            annotation_list = json.loads(memo_instance.memoAnnotation)
+
+            del annotation_list[corrAnnotationKeys]
+            updated_annotation = json.dumps(annotation_list)
+            memo_instance.memoAnnotation = updated_annotation
+            session.commit()
+            print("Annotation deleted successfully.")
+
+    except Exception as e:
+        print(f"Error deleting data: {e}")
+
+
 def post_data_from_book(data):
     try:
         with Session_memo() as session:
-            existing_book = session.query(Book).filter_by(
-                memoSource=data['memoSource']).first()
-            if existing_book:
-                print(
-                    f"memoSource '{data['memoSource']}' already exists. Skipping insertion.")
-            else:
-                book_instance = Book(**data)
-                session.add(book_instance)
-                session.commit()
-                print("Data added successfully.")
+            book_instance = Book(**data)
+            session.add(book_instance)
+            session.commit()
     except Exception as e:
         print(f"Error adding data: {e}")
+
+
+def delete_data_from_book(memoSource):
+    try:
+        with Session_memo() as session:
+            memo_instance = session.query(Book).filter_by(
+                memoSource=memoSource).first()
+
+            if memo_instance:
+                session.delete(memo_instance)
+                session.commit()
+                print(
+                    f"Data with memoSource={memoSource} deleted successfully")
+            else:
+                print(f"No data found with memoSource={memoSource}")
+    except Exception as e:
+        print(f"Error deleting data: {e}")
 
 
 # 일단 주석 처리

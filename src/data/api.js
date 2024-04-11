@@ -143,7 +143,7 @@ export const memoListAnnoPost = createAsyncThunk('memoData/annoPost', async (new
     }
 });
 
-export const memoListAnnoUpdate = createAsyncThunk('memoData/updateAnno', async (newData) => {
+export const memoListAnnoUpdate = createAsyncThunk('memoData/annoUpdate', async (newData) => {
     try {
         const response = await axios.post(`${API_URL}/components/Memo/updateAnno`, newData);
         return response.data;
@@ -151,6 +151,15 @@ export const memoListAnnoUpdate = createAsyncThunk('memoData/updateAnno', async 
         throw error;
     }
 });
+
+export const memoListAnnoDelete = createAsyncThunk('memoData/annoDelete', async (data) => {
+    try {
+        const response = await axios.delete(`${API_URL}/components/Memo/${data.id}/${data.corrAnnotationKeys}`);
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
+})
 
 // get bookdata
 export const bookListData = createAsyncThunk('bookData/getBook',
@@ -168,6 +177,15 @@ export const bookListData = createAsyncThunk('bookData/getBook',
 export const bookListDataPost = createAsyncThunk('bookData/bookPost', async (newData) => {
     try {
         const response = await axios.post(`${API_URL}/components/Memo/book`, newData);
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
+});
+
+export const bookListDataDelete = createAsyncThunk('bookData/bookDelete', async (data) => {
+    try {
+        const response = await axios.delete(`${API_URL}/components/Memo/${data.memoSource}`);
         return response.data;
     } catch (error) {
         throw error;

@@ -20,8 +20,11 @@ function WriteView() {
         dispatch(syncWriteListDataUpdate());
     }, [dispatch]);
 
+
     const writeListArr = writeListState.data.write || [];
     const writeContent = useState(writeListArr[id] || undefined);
+
+    console.log(writeContent[0])
 
     const titleDoc = (writeContent[0] !== undefined && writeContent.length > 0) ? new DOMParser().parseFromString(writeContent[0].title, 'text/html') : null;
     const subTitleDoc = (writeContent[0] !== undefined && writeContent.length > 0) ? new DOMParser().parseFromString(writeContent[0].subTitle, 'text/html') : null;
@@ -29,7 +32,6 @@ function WriteView() {
 
     const lsKeywords = JSON.parse(localStorage.getItem('view_keywords')) || [];
     const keywordsParse = (writeContent[0] !== undefined && writeContent.length > 0) ? JSON.parse(writeListArr[id].keywords) : lsKeywords;
-
 
     localStorage.setItem('view_keywords', JSON.stringify(keywordsParse));
 
@@ -43,7 +45,7 @@ function WriteView() {
     }, [writeListArr])
 
     const delWriteList = () => {
-        dispatch(writeListDataDel(id))
+        dispatch(writeListDataDel(writeListArr[0].id))
     }
 
     return (

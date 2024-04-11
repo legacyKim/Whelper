@@ -160,12 +160,12 @@ function WriteCorrect() {
     const [editor] = useState(() => withReact(createEditor()))
     const [annoEditor] = useState(() => withReact(createEditor()))
 
-    const [writeContent, setWriteContent] = useState(writeListArr[id] || undefined);
+    const [writeContent, setWriteContent] = useState(writeListArr[0] || undefined);
 
     const titleDoc = new DOMParser().parseFromString(writeContent.title,'text/html');
     const subTitleDoc = new DOMParser().parseFromString(writeContent.subTitle, 'text/html');
     const contentDoc = new DOMParser().parseFromString(writeContent.content, 'text/html');
-    const keywordsParse = (writeContent !== undefined) ? JSON.parse(writeListArr[id].keywords) : [];
+    const keywordsParse = (writeContent !== undefined) ? JSON.parse(writeContent.keywords) : [];
 
     const titleValue = deserialize(titleDoc.body);
     const subTitleValue = deserialize(subTitleDoc.body);
@@ -263,7 +263,7 @@ function WriteCorrect() {
     }
     //// toolbar
 
-    const index = writeListArr[id].id - 1;
+    const index = writeListArr[0].id - 1;
 
     return (
         <div className='Write'>

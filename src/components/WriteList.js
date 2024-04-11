@@ -46,19 +46,12 @@ function WriteList() {
     function WriteShowContents({ i, writeListArr }) {
 
         const [writeContent, setWriteContent] = useState(writeListArr[i]);
-        const index = writeListArr[i].id - 1
+        const index = writeListArr[i].id - 1;
 
         const titleDoc = new DOMParser().parseFromString(writeContent.title, 'text/html');
         const subTitleDoc = new DOMParser().parseFromString(writeContent.subTitle, 'text/html');
         const contentDoc = new DOMParser().parseFromString(writeContent.content, 'text/html');
         const keywordsParse = JSON.parse(writeListArr[i].keywords)
-
-        // function writeDateFomatt(date) {
-        //     const options = { day: '2-digit', month: '2-digit', year: '2-digit' };
-        //     return date.toLocaleDateString('en-US', options).replace(/\//g, '.');
-        // }
-
-        // const writeDate = writeDateFomatt(writeListArr[i].date);
 
         return (
 

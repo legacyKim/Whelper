@@ -3,8 +3,8 @@ import { useDispatch, useSelector } from "react-redux"
 import MyContext from '../context'
 import { toast } from 'react-toastify';
 
-import { memoListData, memoListDataPost, memoListDataUpdate, memoListDataDelete, memoListAnnoPost, memoListAnnoUpdate, bookListData, bookListDataPost } from "../data/api"
-import { syncMemoListDataAdd, syncMemoListDelete, syncMemoListDataUpdate, syncMemoListAnno, syncMemoListAnnoUpdate, memoListAnnoDelete, syncBookListDataAdd, bookListDelete } from "../data/reducers.js"
+import { memoListData, memoListDataPost, memoListDataUpdate, memoListDataDelete, memoListAnnoPost, memoListAnnoUpdate, memoListAnnoDelete, bookListData, bookListDataPost, bookListDataDelete } from "../data/api"
+import { syncMemoListDataAdd, syncMemoListDelete, syncMemoListDataUpdate, syncMemoListAnno, syncMemoListAnnoUpdate, syncMemoListAnnoDelete, syncBookListDataAdd, syncBookListDelete } from "../data/reducers.js"
 
 
 function Memo() {
@@ -216,8 +216,22 @@ function Memo() {
         dispatch(syncMemoListDataAdd({ memoComment, memoAuthor, memoSource, memoAnnotation }));
         dispatch(memoListDataPost({ memoComment, memoAuthor, memoSource, memoAnnotation }));
         setMemo((prevMemo) => [...prevMemo, { memoComment, memoAuthor, memoSource, memoAnnotation }]);
-        dispatch(syncBookListDataAdd({ memoSource, memoAuthor }));
-        dispatch(bookListDataPost({ memoSource, memoAuthor }));
+        
+        if (memoListArr.length === 0) {
+            dispatch(syncBookListDataAdd({ memoSource, memoAuthor }));
+            dispatch(bookListDataPost({ memoSource, memoAuthor }));
+        } else {
+            for (const key in memoListArr) {
+                const item = memoListArr[key];
+                if (item.memoSource !== memoSource) {
+                    dispatch(syncBookListDataAdd({ memoSource, memoAuthor }));
+                    dispatch(bookListDataPost({ memoSource, memoAuthor }));
+                    break;
+                } else {
+                    break;
+                }
+            }
+        }
 
         setMemoCurrent(null);
     };
@@ -230,16 +244,32 @@ function Memo() {
         const memoSource = newBook.current.value;
         const memoAuthor = newAuthor.current.value;
 
-        dispatch(syncBookListDataAdd({ memoSource, memoAuthor }))
-        dispatch(bookListDataPost({ memoSource, memoAuthor }));
+        if (memoListArr.length === 0) {
+            dispatch(syncBookListDataAdd({ memoSource, memoAuthor }))
+            dispatch(bookListDataPost({ memoSource, memoAuthor }));
+        } else {
+            for (const key in memoListArr) {
+                const item = memoListArr[key];
+                if (item.memoSource !== memoSource) {
+                    dispatch(syncBookListDataAdd({ memoSource, memoAuthor }))
+                    dispatch(bookListDataPost({ memoSource, memoAuthor }));
+                    break;
+                } else {
+                    break;
+                }
+            }
+        }
 
     }
 
+    // book delete
     const deleteBook = (e) => {
         e.stopPropagation();
         localStorage.removeItem('bookTitle');
         setBookTitle('전체');
-        dispatch(bookListDelete({ book: bookTitle }))
+        const memoSource = bookTitle;
+        dispatch(syncBookListDelete({ memoSource }))
+        dispatch(bookListDataDelete({ memoSource: bookTitle }))
     }
 
     // memo anno delete
@@ -411,7 +441,6 @@ function Memo() {
     const memoAnnoCorrComBtn = (memo, memoAnnoCorrProps) => {
 
         const id = memo.id;
-
         const memoAnno = memoAnnoCorrProps;
         const memoComment = memo.memoComment;
         const memoSource = memo.memoSource;
@@ -419,7 +448,7 @@ function Memo() {
 
         const corrAnnotationKeys = memoAnnoIndex;
 
-        dispatch(syncMemoListAnnoUpdate({ id, memoAnno, corrAnnotationKeys }));
+        dispatch(syncMemoListAnnoUpdate({ id, corrAnnotationKeys }));
         dispatch(memoListAnnoUpdate({ id, memoComment, memoSource, memoAuthor, memoAnno, corrAnnotationKeys }));
         setAnnoCorrectActive('');
         setTextAreaHeight(null);
@@ -428,7 +457,13 @@ function Memo() {
     //// memo anno correct complete
 
     // memo anno delete 
-    const memoAnnoDelete = () => {
+    const memoAnnoDelete = (memo, i) => {
+
+        const id = memo.id;
+        const corrAnnotationKeys = i;
+
+        dispatch(syncMemoListAnnoDelete({ id, corrAnnotationKeys }))
+        dispatch(memoListAnnoDelete({ id, corrAnnotationKeys }));
 
     }
     //// memo anno delete
@@ -668,7 +703,7 @@ function Memo() {
                                             setMemoAnnoActive('')
                                         }}></button>
                                         <button className='icon-trash' onClick={() => {
-                                            memoAnnoDelete()
+                                            memoAnnoDelete(memo, i)
                                         }}></button>
                                     </div>
                                 </div>

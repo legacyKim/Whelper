@@ -22,6 +22,7 @@ const WriteData = createSlice({
             }
         },
         syncWriteListDataUpdate: (state, action) => {
+            console.log(action.payload)
             if (action.payload !== undefined) {
                 const updatedWrite = state.data.write.map(item =>
                     item.id === action.payload.db_id ? action.payload : item
@@ -90,7 +91,6 @@ const memoData = createSlice({
                 const deleteMemo = state.data.memo.filter(item =>
                     item.id !== action.payload
                 )
-                console.log(deleteMemo)
                 state.data.memo = deleteMemo;
             }
         },
@@ -125,7 +125,18 @@ const memoData = createSlice({
             return { ...state, data: { ...state.data, memo: updatedMemoAnno } };
         },
 
-        memoListAnnoDelete(state, action) {
+        syncMemoListAnnoDelete(state, action) {
+            const { id, corrAnnotationKeys } = action.payload;
+            const updatedMemo = state.data.memo.map(item => {
+                if (item.id === id) {
+                    const updatedAnnotations = item.memoAnnotation.filter((index) => index !== corrAnnotationKeys);
+                    return { ...item, memoAnnotation: updatedAnnotations };
+                } else {
+                    return item;
+                }
+            });
+
+            return { ...state, data: { ...state.data, memo: updatedMemo } };
         }
     },
 
@@ -194,7 +205,13 @@ const bookData = createSlice({
                 };
             }
         },
-        bookListDelete(state, action) {
+        syncBookListDelete(state, action) {
+            if (action.payload !== undefined) {
+                const deleteBook = state.data.book.filter(item =>
+                    item.memoSource !== action.payload.memoSource
+                )
+                state.data.book = deleteBook;
+            }
         }
     },
 
@@ -212,9 +229,9 @@ const bookData = createSlice({
 });
 
 export const { syncWriteListData, syncWriteListDataUpdate } = WriteData.actions;
-export const { syncMemoListDataAdd, syncMemoListDelete, syncMemoListDataUpdate, syncMemoListAnno, syncMemoListAnnoUpdate, memoListAnnoDelete } = memoData.actions;
+export const { syncMemoListDataAdd, syncMemoListDelete, syncMemoListDataUpdate, syncMemoListAnno, syncMemoListAnnoUpdate, syncMemoListAnnoDelete } = memoData.actions;
 export const { cateListDataAdd, syncCateListData } = cateData.actions;
-export const { syncBookListDataAdd, bookListDelete } = bookData.actions;
+export const { syncBookListDataAdd, syncBookListDelete } = bookData.actions;
 
 const store = configureStore({
     reducer: {
