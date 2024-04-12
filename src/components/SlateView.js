@@ -44,6 +44,8 @@ const deserialize = (el, markAttributes = {}) => {
 
 const ViewEdit = ({ titleDoc, subTitleDoc, contentDoc }) => {
 
+    console.log(titleDoc)
+
     const [titleEditor] = useState(() => withReact(createEditor()))
     const [subTitleEditor] = useState(() => withReact(createEditor()))
     const [editor] = useState(() => withReact(createEditor()))

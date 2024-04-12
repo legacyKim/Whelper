@@ -160,7 +160,7 @@ function WriteCorrect() {
     const [editor] = useState(() => withReact(createEditor()))
     const [annoEditor] = useState(() => withReact(createEditor()))
 
-    const [writeContent, setWriteContent] = useState(writeListArr[0] || undefined);
+    const [writeContent, setWriteContent] = useState(writeListArr[id] || undefined);
 
     const titleDoc = new DOMParser().parseFromString(writeContent.title,'text/html');
     const subTitleDoc = new DOMParser().parseFromString(writeContent.subTitle, 'text/html');
@@ -219,7 +219,7 @@ function WriteCorrect() {
 
     const WriteCorrectBtn = () => {
 
-        const db_id = Number(id) + 1;
+        const db_id = writeContent.id;
 
         const titleString = serialize(edTitle);
         const title = titleString;
@@ -262,8 +262,6 @@ function WriteCorrect() {
         setToolbarActive('');
     }
     //// toolbar
-
-    const index = writeListArr[0].id - 1;
 
     return (
         <div className='Write'>
@@ -372,7 +370,7 @@ function WriteCorrect() {
             </Slate>
 
             <div className='page_btn'>
-                <Link to={`/components/WriteView/${index}`} onClick={() => { navigate(`/components/WriteView/${index}`) }} className='icon-reply'></Link>
+                <Link to={`/components/WriteView/${id}`} onClick={() => { navigate(`/components/WriteView/${id}`) }} className='icon-reply'></Link>
                 <button className='icon-ok-circled write_btn_save' onClick={() => { popupClick(); }}></button>
             </div>
 
@@ -391,7 +389,7 @@ function WriteCorrect() {
                 </div>
                 <div className='page_btn'>
                     <button className="write_btn_back icon-reply" onClick={popupClick}></button>
-                    <button className='icon-ok-circled write_btn_save' onClick={() => { navigate(`/components/WriteView/${index}`); WriteCorrectBtn(); }}></button>
+                    <Link className='icon-ok-circled write_btn_save' to={`/components/WriteView/${id}`} onClick={() => { navigate(`/components/WriteView/${id}`); WriteCorrectBtn(); }}></Link>
                 </div>
             </div>
         </div>

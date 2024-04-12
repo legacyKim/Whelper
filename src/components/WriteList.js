@@ -46,7 +46,6 @@ function WriteList() {
     function WriteShowContents({ i, writeListArr }) {
 
         const [writeContent, setWriteContent] = useState(writeListArr[i]);
-        const index = writeListArr[i].id - 1;
 
         const titleDoc = new DOMParser().parseFromString(writeContent.title, 'text/html');
         const subTitleDoc = new DOMParser().parseFromString(writeContent.subTitle, 'text/html');
@@ -57,10 +56,10 @@ function WriteList() {
 
             <div>
                 <div className='write_btn'>
-                    <Link className='icon-edit-alt' to={`/components/WriteCorrect/${index}`}></Link>
+                    <Link className='icon-edit-alt' to={`/components/WriteCorrect/${i}`}></Link>
                 </div>
                 <div className='write_list'>
-                    <Link to={`/components/WriteView/${index}`}>
+                    <Link to={`/components/WriteView/${i}`}>
                         <ViewEdit titleDoc={titleDoc} subTitleDoc={subTitleDoc} contentDoc={contentDoc}></ViewEdit>
                     </Link>
                     <div className='write_keyword'>
