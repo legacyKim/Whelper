@@ -1,6 +1,5 @@
-import { createSlice, configureStore, current } from '@reduxjs/toolkit';
-import { writeListData, writeListDataPost, memoListData, cateListData, bookListData } from './api.js'
-import { memo } from 'react';
+import { createSlice, configureStore } from '@reduxjs/toolkit';
+import { writeListData, writeListDataPost, memoListData, cateListData, bookListData, userCheck } from './api.js'
 
 const WriteData = createSlice({
     name: 'WriteData',
@@ -227,6 +226,33 @@ const bookData = createSlice({
 
 });
 
+const loginCheck = createSlice({
+    name: 'auth',
+    initialState : {
+        loading: false,
+        loggedIn: false,
+        error: null,
+    },
+    reducers: {},
+    extraReducers: (builder) => {
+        builder
+            .addCase(userCheck.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(userCheck.fulfilled, (state) => {
+                state.loading = false;
+                state.loggedIn = true;
+                state.error = null;
+            })
+            .addCase(userCheck.rejected, (state, action) => {
+                state.loading = false;
+                state.loggedIn = false;
+                state.error = action.error.message;
+            });
+    },
+});
+
 export const { syncWriteListData, syncWriteListDataUpdate } = WriteData.actions;
 export const { syncMemoListDataAdd, syncMemoListDelete, syncMemoListDataUpdate, syncMemoListAnno, syncMemoListAnnoUpdate, syncMemoListAnnoDelete } = memoData.actions;
 export const { cateListDataAdd, syncCateListData } = cateData.actions;
@@ -238,6 +264,7 @@ const store = configureStore({
         memoData: memoData.reducer,
         cateData: cateData.reducer,
         bookData: bookData.reducer,
+        loginData: loginCheck.reducer,
     }
 });
 

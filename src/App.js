@@ -1,6 +1,6 @@
-import { React, useEffect, useState, useRef, useContext } from 'react';
+import { React, useEffect, useState, useRef } from 'react';
 import { NavLink, useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { debounce } from 'lodash';
 import MyContext from './context'
 
@@ -16,6 +16,14 @@ function App() {
 
     const navigate = useNavigate();
     const [theme, themeChange] = useState('dark');
+
+    const dispatch = useDispatch();
+    useEffect(()=>{
+        dispatch(userCheck())
+    }, [dispatch])
+
+    const loggedIn = useSelector(state => state.auth);
+    console.log(loggedIn)
 
     // about change theme
     const themeChangeBtn = () => {
@@ -190,7 +198,6 @@ function App() {
 
         const username = useRef();
         const userPassword = useRef();
-        const dispatch = useDispatch();
         const loginCheck = () => {
             const username_v = username.current.value;
             const userpassword_v = userPassword.current.value;

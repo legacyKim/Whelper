@@ -3,6 +3,7 @@ from db_config import db_config
 from sqlalchemy import create_engine, Column, Integer, String, MetaData, Table, Text, text
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
+import hashlib
 
 Base_user = declarative_base()
 Base_write = declarative_base()
@@ -50,6 +51,7 @@ class User(Base_user):
     id = Column(Integer, primary_key=True)
     username = Column(String(255))
     password = Column(String(255))
+    authority = Column(Integer)
 
 
 config_write, config_memo, config_login = db_config()
@@ -271,16 +273,32 @@ def delete_data_from_book(memoSource):
         print(f"Error deleting data: {e}")
 
 
+def hash_password(password):
+    password_bytes = userpassword_check.encode('utf-8')
+    hash_function = hashlib.sha256()
+    hash_function.update(password_bytes)
+    hashed_password = hash_function.hexdigest()
+
+    return hashed_password
+
+
 def post_data_from_pwd(data):
     try:
-        username_check = data.get('username_v')
-        userpassword_check = data.get('userpassword_v')
-        user = User.query.filter_by(username=username_check).first()
+        with Session_login() as session:
 
-        if user and user.password == userpassword_check:
-            return True
-        else:
-            return False
+            username_check = data.get('username_v')
+            userpassword_check = data.get('userpassword_v')
+
+            user = session.query(User).filter_by(
+                username=username_check).first()
+
+            # if user and user.password == hash_password(userpassword_check):
+            if user and user.password == userpassword_check:
+                print(
+                    'truetruetruetruetruetruetruetruetruetruetruetruetruetruetruetruetruetruetruetruetruetrue')
+                return True
+            else:
+                return False
 
     except Exception as e:
         print(f"Error deleting data: {e}")

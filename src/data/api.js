@@ -191,9 +191,7 @@ export const bookListDataDelete = createAsyncThunk('bookData/bookDelete', async 
     }
 });
 
-export const userCheck = createAsyncThunk('pwd', async (data) => {
-    console.log(data)
-    console.log(API_URL)
+export const userCheck = createAsyncThunk('user', async (data) => {
     try {
         const response = await axios.post(`${API_URL}/login`, data);
         return response.data;
