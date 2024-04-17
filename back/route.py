@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from db_connector import get_data_from_write, get_data_from_memo
-from db_operator import post_data_to_write, update_data_from_write, delete_data_from_write, post_data_to_cate, post_data_from_memo, update_data_from_memo, delete_data_from_memo, post_data_from_memoAnno, update_data_from_memoAnno, delete_data_from_memoAnno, post_data_from_book, delete_data_from_book
+from db_operator import post_data_to_write, update_data_from_write, delete_data_from_write, post_data_to_cate, post_data_from_memo, update_data_from_memo, delete_data_from_memo, post_data_from_memoAnno, update_data_from_memoAnno, delete_data_from_memoAnno, post_data_from_book, delete_data_from_book, post_data_from_pwd
 
 import json
 
@@ -10,7 +10,6 @@ CORS(app, resources={
      r'*': {'origins': 'http://localhost:3000'}}, supports_credentials=True)
 
 
-# @app.route('/')
 @app.route('/components/WriteList', methods=['GET'])
 def get_data_WriteList():
     results = get_data_from_write()
@@ -213,6 +212,17 @@ def delete_data_book(memoSource):
     except Exception as e:
         print(f"Error: {e}")
         return jsonify({'error': 'Error handling delete request'}), 500
+
+
+@app.route('/login', methods=['POST'])
+def post_data_login():
+    try:
+        data = request.get_json()
+        result = post_data_from_pwd(data)
+        return jsonify(result), 201
+    except Exception as e:
+        print(f"Error: {e}")
+        return jsonify({'error': 'Error handling memo post request'}), 500
 
 
 if __name__ == '__main__':

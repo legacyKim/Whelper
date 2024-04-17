@@ -1,10 +1,13 @@
 import { React, useEffect, useState, useRef, useContext } from 'react';
 import { NavLink, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux"
 import { debounce } from 'lodash';
 import MyContext from './context'
 
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+
+import { userCheck } from './data/api.js'
 
 import './css/style.css';
 import Routes from './Routes'
@@ -152,6 +155,8 @@ function App() {
                         </ol>
                     </div>
                 </div>
+
+                <Login />
             </div>
         </MyContext.Provider>
     )
@@ -177,6 +182,28 @@ function App() {
             <div>
                 <span onClick={searchVal} >{searchArr[i]}</span>
                 <button className='icon-cancel-squared' onClick={delSearchBtn}></button>
+            </div>
+        )
+    }
+
+    function Login() {
+
+        const username = useRef();
+        const userPassword = useRef();
+        const dispatch = useDispatch();
+        const loginCheck = () => {
+            const username_v = username.current.value;
+            const userpassword_v = userPassword.current.value;
+            dispatch(userCheck({ username_v, userpassword_v }))
+        }
+
+        return (
+            <div className='login'>
+                <div className='form'>
+                    <input ref={username}></input>
+                    <input ref={userPassword}></input>
+                    <button onClick={loginCheck}></button>
+                </div>
             </div>
         )
     }

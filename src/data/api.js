@@ -4,16 +4,15 @@ import axios from 'axios';
 const API_URL = 'http://localhost:5000';
 
 // get write data
-export const writeListData = createAsyncThunk('writeData/getData',
-    async () => {
-        try {
-            const response = await axios.get(`${API_URL}/components/WriteList`);
-            return response.data;
-        } catch (error) {
-            console.error('Error fetching writeListData:', error);
-            throw error;
-        }
-    },
+export const writeListData = createAsyncThunk('writeData/getData', async () => {
+    try {
+        const response = await axios.get(`${API_URL}/components/WriteList`);
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching writeListData:', error);
+        throw error;
+    }
+},
 )
 
 // post write data
@@ -186,6 +185,17 @@ export const bookListDataPost = createAsyncThunk('bookData/bookPost', async (new
 export const bookListDataDelete = createAsyncThunk('bookData/bookDelete', async (data) => {
     try {
         const response = await axios.delete(`${API_URL}/components/Memo/${data.memoSource}`);
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
+});
+
+export const userCheck = createAsyncThunk('pwd', async (data) => {
+    console.log(data)
+    console.log(API_URL)
+    try {
+        const response = await axios.post(`${API_URL}/login`, data);
         return response.data;
     } catch (error) {
         throw error;

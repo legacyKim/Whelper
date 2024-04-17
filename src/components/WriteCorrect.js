@@ -1,10 +1,10 @@
-import React, { useRef, useState, useEffect, useMemo, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useDispatch, useSelector } from "react-redux"
 
-import { syncWriteListData, syncWriteListDataUpdate, syncCateListData } from "../data/reducers.js"
+import { syncWriteListData, syncWriteListDataUpdate } from "../data/reducers.js"
 import { cateListData, writeListDataUpdate } from '../data/api.js';
 
-import { createEditor, Editor, Transforms, Text, Element as SlateElement, Node, } from 'slate';
+import { createEditor, Editor, Text, Element as SlateElement, Node, } from 'slate';
 import { Slate, Editable, withReact } from 'slate-react'
 import escapeHtml from 'escape-html'
 

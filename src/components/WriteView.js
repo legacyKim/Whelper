@@ -42,7 +42,7 @@ function WriteView() {
     }, [writeListArr])
 
     const delWriteList = () => {
-        dispatch(writeListDataDel(writeListArr[0].id))
+        dispatch(writeListDataDel(writeContent[0].id))
     }
 
     return (

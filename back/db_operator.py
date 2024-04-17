@@ -4,6 +4,7 @@ from sqlalchemy import create_engine, Column, Integer, String, MetaData, Table, 
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
+Base_user = declarative_base()
 Base_write = declarative_base()
 Base_memo = declarative_base()
 
@@ -43,7 +44,15 @@ class Book(Base_memo):
     memoAuthor = Column(String(255))
 
 
-config_write, config_memo = db_config()
+class User(Base_user):
+    __tablename__ = 'tb_user'
+
+    id = Column(Integer, primary_key=True)
+    username = Column(String(255))
+    password = Column(String(255))
+
+
+config_write, config_memo, config_login = db_config()
 
 engine_write = create_engine(
     f"mysql://{config_write['user']}:{config_write['password']}@{config_write['host']}/{config_write['database']}", echo=True)
@@ -51,14 +60,20 @@ engine_write = create_engine(
 engine_memo = create_engine(
     f"mysql://{config_memo['user']}:{config_memo['password']}@{config_memo['host']}/{config_memo['database']}", echo=True)
 
+engine_login = create_engine(
+    f"mysql://{config_login['user']}:{config_login['password']}@{config_login['host']}/{config_login['database']}", echo=True)
+
+
 Session_write = sessionmaker(bind=engine_write)
 Session_memo = sessionmaker(bind=engine_memo)
+Session_login = sessionmaker(bind=engine_login)
 
 
 def create_table():
 
     Base_write.metadata.create_all(engine_write)
     Base_memo.metadata.create_all(engine_memo)
+    Base_user.metadata.create_all(engine_login)
 
 
 def post_data_to_write(data):
@@ -72,9 +87,7 @@ def post_data_to_write(data):
 
 
 def update_data_from_write(data, write_id):
-
     session = Session_write()
-
     try:
 
         write_instance = session.query(Write).filter_by(id=write_id).first()
@@ -127,7 +140,6 @@ def post_data_to_cate(data):
 
 
 def post_data_from_memo(data):
-
     try:
         with Session_memo() as session:
             memo_instance = Memo(**data)
@@ -138,9 +150,7 @@ def post_data_from_memo(data):
 
 
 def update_data_from_memo(data, memo_id):
-
     session = Session_memo()
-
     try:
 
         memo_instance = session.query(Memo).filter_by(id=memo_id).first()
@@ -182,7 +192,6 @@ def delete_data_from_memo(memo_id):
 
 
 def post_data_from_memoAnno(data):
-
     try:
         with Session_memo() as session:
 
@@ -261,6 +270,20 @@ def delete_data_from_book(memoSource):
     except Exception as e:
         print(f"Error deleting data: {e}")
 
+
+def post_data_from_pwd(data):
+    try:
+        username_check = data.get('username_v')
+        userpassword_check = data.get('userpassword_v')
+        user = User.query.filter_by(username=username_check).first()
+
+        if user and user.password == userpassword_check:
+            return True
+        else:
+            return False
+
+    except Exception as e:
+        print(f"Error deleting data: {e}")
 
 # 일단 주석 처리
 # if __name__ == '__main__':

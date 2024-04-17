@@ -135,7 +135,6 @@ const memoData = createSlice({
                     return item;
                 }
             });
-
             return { ...state, data: { ...state.data, memo: updatedMemo } };
         }
     },
