@@ -294,8 +294,6 @@ def post_data_from_pwd(data):
 
             # if user and user.password == hash_password(userpassword_check):
             if user and user.password == userpassword_check:
-                print(
-                    'truetruetruetruetruetruetruetruetruetruetruetruetruetruetruetruetruetruetruetruetruetrue')
                 return True
             else:
                 return False

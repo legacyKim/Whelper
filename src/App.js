@@ -17,12 +17,21 @@ function App() {
     const navigate = useNavigate();
     const [theme, themeChange] = useState('dark');
 
+    const username = useRef();
+    const userPassword = useRef();
+
     const dispatch = useDispatch();
+    const loginCheck = () => {
+        const username_v = username.current.value;
+        const userpassword_v = userPassword.current.value;
+        dispatch(userCheck({ username_v, userpassword_v }))
+    }
+
     useEffect(()=>{
         dispatch(userCheck())
     }, [dispatch])
 
-    const loggedIn = useSelector(state => state.auth);
+    const loggedIn = useSelector(state => state.login);
     console.log(loggedIn)
 
     // about change theme
@@ -195,14 +204,6 @@ function App() {
     }
 
     function Login() {
-
-        const username = useRef();
-        const userPassword = useRef();
-        const loginCheck = () => {
-            const username_v = username.current.value;
-            const userpassword_v = userPassword.current.value;
-            dispatch(userCheck({ username_v, userpassword_v }))
-        }
 
         return (
             <div className='login'>

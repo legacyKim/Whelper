@@ -12,8 +12,7 @@ export const writeListData = createAsyncThunk('writeData/getData', async () => {
         console.error('Error fetching writeListData:', error);
         throw error;
     }
-},
-)
+})
 
 // post write data
 export const writeListDataPost = createAsyncThunk('writeData/newData', async (newData) => {

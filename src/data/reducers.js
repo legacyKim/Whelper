@@ -227,7 +227,7 @@ const bookData = createSlice({
 });
 
 const loginCheck = createSlice({
-    name: 'auth',
+    name: 'login',
     initialState : {
         loading: false,
         loggedIn: false,
@@ -240,9 +240,9 @@ const loginCheck = createSlice({
                 state.loading = true;
                 state.error = null;
             })
-            .addCase(userCheck.fulfilled, (state) => {
+            .addCase(userCheck.fulfilled, (state, action) => {
                 state.loading = false;
-                state.loggedIn = true;
+                state.loggedIn = action.payload;
                 state.error = null;
             })
             .addCase(userCheck.rejected, (state, action) => {

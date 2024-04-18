@@ -222,7 +222,7 @@ def post_data_login():
         return jsonify(result), 201
     except Exception as e:
         print(f"Error: {e}")
-        return jsonify({'error': 'Error handling memo post request'}), 500
+        return jsonify({'error': str(e)}), 500
 
 
 if __name__ == '__main__':
