@@ -226,8 +226,8 @@ const bookData = createSlice({
 
 });
 
-const loginCheck = createSlice({
-    name: 'login',
+const loginData = createSlice({
+    name: 'loginData',
     initialState : {
         loading: false,
         loggedIn: false,
@@ -264,7 +264,7 @@ const store = configureStore({
         memoData: memoData.reducer,
         cateData: cateData.reducer,
         bookData: bookData.reducer,
-        loginData: loginCheck.reducer,
+        loginData: loginData.reducer,
     }
 });
 

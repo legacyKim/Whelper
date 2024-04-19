@@ -1,4 +1,5 @@
 import json
+from flask import session
 from db_config import db_config
 from sqlalchemy import create_engine, Column, Integer, String, MetaData, Table, Text, text
 from sqlalchemy.ext.declarative import declarative_base
@@ -283,23 +284,27 @@ def hash_password(password):
 
 
 def post_data_from_pwd(data):
+
     try:
-        with Session_login() as session:
+        session = Session_login()
+        username = data.get('username_v')
+        password = data.get('userpassword_v')
+        user = session.query(User).filter_by(username=username).first()
 
-            username_check = data.get('username_v')
-            userpassword_check = data.get('userpassword_v')
-
-            user = session.query(User).filter_by(
-                username=username_check).first()
-
-            # if user and user.password == hash_password(userpassword_check):
-            if user and user.password == userpassword_check:
-                return True
-            else:
-                return False
+        if user and user.password == password:
+            session['user_id'] = user.id
+            return 'Login successful'
+        else:
+            return 'Invalid username or password', 401
 
     except Exception as e:
-        print(f"Error deleting data: {e}")
+        print(f"Error authenticating user: {e}")
+        return 'Error occurred while authenticating user', 500
+
+    finally:
+        # 세션 닫기
+        session.close()
+
 
 # 일단 주석 처리
 # if __name__ == '__main__':

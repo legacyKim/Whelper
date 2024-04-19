@@ -1,13 +1,10 @@
 import { React, useEffect, useState, useRef } from 'react';
 import { NavLink, useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux"
 import { debounce } from 'lodash';
 import MyContext from './context'
 
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
-import { userCheck } from './data/api.js'
 
 import './css/style.css';
 import Routes from './Routes'
@@ -16,23 +13,6 @@ function App() {
 
     const navigate = useNavigate();
     const [theme, themeChange] = useState('dark');
-
-    const username = useRef();
-    const userPassword = useRef();
-
-    const dispatch = useDispatch();
-    const loginCheck = () => {
-        const username_v = username.current.value;
-        const userpassword_v = userPassword.current.value;
-        dispatch(userCheck({ username_v, userpassword_v }))
-    }
-
-    useEffect(()=>{
-        dispatch(userCheck())
-    }, [dispatch])
-
-    const loggedIn = useSelector(state => state.login);
-    console.log(loggedIn)
 
     // about change theme
     const themeChangeBtn = () => {
@@ -147,6 +127,7 @@ function App() {
                         <li className='btn'><NavLink to={`/components/Search/${searchInputValue}`} className='icon-link-1' onClick={() => { navigate('/components/Search') }}></NavLink></li>
                         <li className='btn'><NavLink to={`/components/Date`} className='icon-calendar' onClick={() => { navigate('/components/Date') }}></NavLink></li>
                         <li className='btn'><NavLink to={`/components/Category`} className='icon-bookmark' onClick={() => { navigate('/components/Category') }}></NavLink></li>
+                        <li className='btn'><NavLink to={`/components/Login`} className='icon-bookmark' onClick={() => { navigate('/components/Category') }}></NavLink></li>
                         <li className='btn'><button className='icon-search' onClick={searchOn}></button></li>
                         <li><div id='theme_screen' className='icon-arrows-ccw' onClick={themeChangeBtn}></div></li>
                     </ul>
@@ -173,7 +154,6 @@ function App() {
                     </div>
                 </div>
 
-                <Login />
             </div>
         </MyContext.Provider>
     )
@@ -203,18 +183,6 @@ function App() {
         )
     }
 
-    function Login() {
-
-        return (
-            <div className='login'>
-                <div className='form'>
-                    <input ref={username}></input>
-                    <input ref={userPassword}></input>
-                    <button onClick={loginCheck}></button>
-                </div>
-            </div>
-        )
-    }
 }
 
 export default App;

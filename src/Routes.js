@@ -17,6 +17,7 @@ import Book from './components/Book.js'
 import Date from './components/Date.js'
 import Category from './components/Category.js'
 import Search from './components/Search.js'
+import Login from './components/Login.js'
 
 function Menu() {
 
@@ -51,6 +52,8 @@ function Menu() {
                         <Route exact path="/" />
 
                         {/* <Route path="/components/Slate" element={<Slate />} /> */}
+                        <Route path="/components/Login" element={<Login />} />
+
                         <Route path="/components/Write" element={<Write />} />
                         <Route path="/components/WriteList" element={<WriteList />} />
                         <Route path="/components/WriteView/:id" element={<WriteView />} />

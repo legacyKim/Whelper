@@ -192,7 +192,7 @@ export const bookListDataDelete = createAsyncThunk('bookData/bookDelete', async 
 
 export const userCheck = createAsyncThunk('user', async (data) => {
     try {
-        const response = await axios.post(`${API_URL}/login`, data);
+        const response = await axios.post(`${API_URL}/components/login`, data);
         return response.data;
     } catch (error) {
         throw error;
