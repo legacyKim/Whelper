@@ -1,7 +1,10 @@
 import { React, useEffect, useState, useRef } from 'react';
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useNavigate, Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux"
 import { debounce } from 'lodash';
 import MyContext from './context'
+
+import { userCheck } from './data/api.js'
 
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -10,6 +13,35 @@ import './css/style.css';
 import Routes from './Routes'
 
 function App() {
+
+    // login
+    const logged = useSelector(state => state.loginData);
+
+    const [setLogin, setLoginOn] = useState(null);
+    const login_page = () => {
+        setLoginOn(true);
+    }
+
+    const username = useRef();
+    const userPassword = useRef();
+
+    const dispatch = useDispatch();
+    const loginCheck = () => {
+        const username_v = username.current.value;
+        const userpassword_v = userPassword.current.value;
+        dispatch(userCheck({ username_v, userpassword_v }));
+    }
+    
+    useEffect(()=>{
+        sessionStorage.setItem('login', logged.loggedIn);
+        if (logged.loggedIn === true) {
+            setLoginOn(false)
+            alert('success')
+        } else {
+            alert('fail')
+        }
+    }, [logged.loggedIn])
+    //// login
 
     const navigate = useNavigate();
     const [theme, themeChange] = useState('dark');
@@ -127,8 +159,8 @@ function App() {
                         <li className='btn'><NavLink to={`/components/Search/${searchInputValue}`} className='icon-link-1' onClick={() => { navigate('/components/Search') }}></NavLink></li>
                         <li className='btn'><NavLink to={`/components/Date`} className='icon-calendar' onClick={() => { navigate('/components/Date') }}></NavLink></li>
                         <li className='btn'><NavLink to={`/components/Category`} className='icon-bookmark' onClick={() => { navigate('/components/Category') }}></NavLink></li>
-                        <li className='btn'><NavLink to={`/components/Login`} className='icon-bookmark' onClick={() => { navigate('/components/Category') }}></NavLink></li>
                         <li className='btn'><button className='icon-search' onClick={searchOn}></button></li>
+                        <li id='login' className='icon-arrows-ccw' onClick={login_page}></li>
                         <li><div id='theme_screen' className='icon-arrows-ccw' onClick={themeChangeBtn}></div></li>
                     </ul>
                 </div>
@@ -153,7 +185,7 @@ function App() {
                         </ol>
                     </div>
                 </div>
-
+                {setLogin === true && (<Login />)}
             </div>
         </MyContext.Provider>
     )
@@ -181,6 +213,20 @@ function App() {
                 <button className='icon-cancel-squared' onClick={delSearchBtn}></button>
             </div>
         )
+    }
+
+    function Login() {
+
+        return (
+            <div className='login'>
+                <div className='form'>
+                    <input ref={username}></input>
+                    <input ref={userPassword}></input>
+                    <button onClick={loginCheck}></button>
+                </div>
+            </div>
+        )
+
     }
 
 }

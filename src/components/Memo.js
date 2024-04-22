@@ -9,6 +9,8 @@ import { syncMemoListDataAdd, syncMemoListDelete, syncMemoListDataUpdate, syncMe
 
 function Memo() {
 
+    const log_In = sessionStorage.getItem('login') === 'true';
+
     const dispatch = useDispatch();
     useEffect(() => {
         dispatch(memoListData());
@@ -216,7 +218,7 @@ function Memo() {
         dispatch(syncMemoListDataAdd({ memoComment, memoAuthor, memoSource, memoAnnotation }));
         dispatch(memoListDataPost({ memoComment, memoAuthor, memoSource, memoAnnotation }));
         setMemo((prevMemo) => [...prevMemo, { memoComment, memoAuthor, memoSource, memoAnnotation }]);
-        
+
         if (memoListArr.length === 0) {
             dispatch(syncBookListDataAdd({ memoSource, memoAuthor }));
             dispatch(bookListDataPost({ memoSource, memoAuthor }));
@@ -525,10 +527,12 @@ function Memo() {
                             </ul>
                         </div>
                     </div>
-                    <div className={`memo_btn ${scrollPosition > 0 ? "scroll_event" : ""}`}>
-                        <button onClick={memoAddOn} className='icon-pencil-alt'></button>
-                        <button onClick={bookAddOn} className='icon-book-2'></button>
-                    </div>
+                    {log_In && (
+                        <div className={`memo_btn ${scrollPosition > 0 ? "scroll_event" : ""}`}>
+                            <button onClick={memoAddOn} className='icon-pencil-alt'></button>
+                            <button onClick={bookAddOn} className='icon-book-2'></button>
+                        </div>
+                    )}
                 </div>
 
                 <div className={`memo_wrap`}>
@@ -536,10 +540,12 @@ function Memo() {
                         memoArr.map(function (a, i) {
                             return (
                                 <div className='memo_content opacity' key={i}>
-                                    <div className='memoList_btn'>
-                                        <button className='icon-edit-alt' onClick={() => memoCorrectOn(a)}></button>
-                                        {/* <button className='icon-trash' onClick={() => delMemoList(i)}></button> */}
-                                    </div>
+                                    {log_In && (
+                                        <div className='memoList_btn'>
+                                            <button className='icon-edit-alt' onClick={() => memoCorrectOn(a)}></button>
+                                            {/* <button className='icon-trash' onClick={() => delMemoList(i)}></button> */}
+                                        </div>
+                                    )}
                                     <div className='memo_content_box'>
                                         <p className='font_text' onClick={() => memoDetailOn(a)}>{memoArr[i].memoComment}</p>
                                         <div className='memo_content_btn_box'>
@@ -557,22 +563,26 @@ function Memo() {
                 <div className={`memoDetail_content ${memoActive ? memoActive : ""}`}>
                     {memoCurrent !== null && <MemoView memo={memoCurrent} />}
                     <div className='memoDetail_btn'>
-                        <button className='icon-flow-split' onClick={() => {
-                            setMemoAnnoActive('active');
-                            setAnnoCorrectActive('');
-                            setTextAreaHeight(null);
-                        }}></button>
-                        <button className='icon-edit-alt'
-                            onClick={() => {
-                                memoCorrectOn(memoCurrent);
-                                memoDetailClose();
-                            }}></button>
-                        <button className='icon-trash'
-                            onClick={() => {
-                                memoDeleteBtn(memoCurrent)
-                                memoDetailClose();
-                            }}>
-                        </button>
+                        {log_In && (
+                            <div className='flex'>
+                                <button className='icon-flow-split' onClick={() => {
+                                    setMemoAnnoActive('active');
+                                    setAnnoCorrectActive('');
+                                    setTextAreaHeight(null);
+                                }}></button>
+                                <button className='icon-edit-alt'
+                                    onClick={() => {
+                                        memoCorrectOn(memoCurrent);
+                                        memoDetailClose();
+                                    }}></button>
+                                <button className='icon-trash'
+                                    onClick={() => {
+                                        memoDeleteBtn(memoCurrent)
+                                        memoDetailClose();
+                                    }}>
+                                </button>
+                            </div>
+                        )}
                         <button className='icon-cancel' onClick={() => {
                             memoDetailClose();
                             setAnnoCorrectActive('');
@@ -607,7 +617,9 @@ function Memo() {
                         <input type='text' placeholder='newAuthor' ref={newAuthor}></input>
                     </div>
                     <div className='memo_btn flex-end'>
-                        <button className='icon-ok' onClick={bookSaveBtn}></button>
+                        {log_In && (
+                            <button className='icon-ok' onClick={bookSaveBtn}></button>
+                        )}
                         <button className='icon-cancel' onClick={bookAddClose}></button>
                     </div>
                 </div>
@@ -622,7 +634,9 @@ function Memo() {
                         <input type='text' placeholder='newMemoAuthor' ref={newMemoAuthor}></input>
                     </div>
                     <div className='memo_btn flex-end'>
+                    {log_In && (
                         <button className='icon-ok' onClick={MemoSaveBtn}></button>
+                    )}
                         <button className='icon-cancel' onClick={memoAddClose}></button>
                     </div>
                 </div>

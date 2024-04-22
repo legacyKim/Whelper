@@ -8,6 +8,8 @@ import ViewEdit from './SlateView.js'
 
 function WriteList() {
 
+    const log_In = sessionStorage.getItem('login') === 'true';
+
     const dispatch = useDispatch();
     useEffect(() => {
         dispatch(writeListData())
@@ -55,9 +57,11 @@ function WriteList() {
         return (
 
             <div>
-                <div className='write_btn'>
-                    <Link className='icon-edit-alt' to={`/components/WriteCorrect/${i}`}></Link>
-                </div>
+                {log_In && (
+                    <div className='write_btn'>
+                        <Link className='icon-edit-alt' to={`/components/WriteCorrect/${i}`}></Link>
+                    </div>
+                )}
                 <div className='write_list'>
                     <Link to={`/components/WriteView/${i}`}>
                         <ViewEdit titleDoc={titleDoc} subTitleDoc={subTitleDoc} contentDoc={contentDoc}></ViewEdit>

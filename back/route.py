@@ -214,7 +214,7 @@ def delete_data_book(memoSource):
         return jsonify({'error': 'Error handling delete request'}), 500
 
 
-@app.route('/components/login', methods=['POST'])
+@app.route('/login', methods=['POST'])
 def post_data_login():
     try:
         data = request.get_json()

@@ -1,16 +1,16 @@
-import React, { useState, useMemo, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { syncWriteListData, syncWriteListDataUpdate } from '../data/reducers.js';
 import { writeListDataDel } from '../data/api.js'
 import { useParams } from 'react-router-dom';
-import { Slate, Editable } from 'slate-react';
 
 import ViewEdit from './SlateView.js'
 
 function WriteView() {
 
+    const log_In = sessionStorage.getItem('login') === 'true';
     const writeListState = useSelector((state) => state.WriteData);
     let { id } = useParams();
 
@@ -60,10 +60,12 @@ function WriteView() {
                             ))}
                         </div>
                     </div>
-                    <div className='page_btn'>
-                        <Link className='icon-trash' onClick={delWriteList} to={`/components/WriteList`}></Link>
-                        <Link className='icon-edit-alt' to={`/components/WriteCorrect/${id}`} />
-                    </div>
+                    {log_In && (
+                        <div className='page_btn'>
+                            <Link className='icon-trash' onClick={delWriteList} to={`/components/WriteList`}></Link>
+                            <Link className='icon-edit-alt' to={`/components/WriteCorrect/${id}`}></Link>
+                        </div>
+                    )}
                 </div>
             </div>
         </div>

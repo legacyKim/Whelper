@@ -292,10 +292,10 @@ def post_data_from_pwd(data):
         user = session.query(User).filter_by(username=username).first()
 
         if user and user.password == password:
-            session['user_id'] = user.id
-            return 'Login successful'
+            # session['username'] = username
+            return True
         else:
-            return 'Invalid username or password', 401
+            return False
 
     except Exception as e:
         print(f"Error authenticating user: {e}")
