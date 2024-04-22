@@ -1,5 +1,4 @@
 import json
-from flask import session
 from db_config import db_config
 from sqlalchemy import create_engine, Column, Integer, String, MetaData, Table, Text, text
 from sqlalchemy.ext.declarative import declarative_base
@@ -275,10 +274,8 @@ def delete_data_from_book(memoSource):
 
 
 def hash_password(password):
-    password_bytes = userpassword_check.encode('utf-8')
-    hash_function = hashlib.sha256()
-    hash_function.update(password_bytes)
-    hashed_password = hash_function.hexdigest()
+    password_bytes = password.encode('utf-8')
+    hashed_password = hashlib.sha256(password_bytes).hexdigest()
 
     return hashed_password
 
@@ -291,9 +288,13 @@ def post_data_from_pwd(data):
         password = data.get('userpassword_v')
         user = session.query(User).filter_by(username=username).first()
 
-        if user and user.password == password:
-            # session['username'] = username
-            return True
+        if user and user.password == hash_password(password):
+            user_info = {
+                "username": user.username,
+                "authority": user.authority
+            }
+            print("testtesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttest")
+            return user_info
         else:
             return False
 

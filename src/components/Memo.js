@@ -502,7 +502,9 @@ function Memo() {
                             <i className='icon-book'></i>
                             <strong>{bookTitle}</strong>
                             <b onClick={(e) => refreshTitle(e)} className={`icon-cancel ${bookTitle !== '전체' ? 'active' : ''}`}></b>
-                            <b onClick={(e) => deleteBook(e)} className={`icon-trash hover_opacity ${bookTitle !== '전체' ? 'active' : ''}`}></b>
+                            {log_In && (
+                                <b onClick={(e) => deleteBook(e)} className={`icon-trash hover_opacity ${bookTitle !== '전체' ? 'active' : ''}`}></b>
+                            )}
                         </div>
                         <div className={`book_list_box ${bookListActive ? bookListActive : ''}`}>
                             <ul className='scroll'>

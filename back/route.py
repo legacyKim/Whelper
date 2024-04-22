@@ -1,4 +1,5 @@
-from flask import Flask, request, jsonify
+import os
+from flask import Flask, request, jsonify, session
 from flask_cors import CORS
 from db_connector import get_data_from_write, get_data_from_memo
 from db_operator import post_data_to_write, update_data_from_write, delete_data_from_write, post_data_to_cate, post_data_from_memo, update_data_from_memo, delete_data_from_memo, post_data_from_memoAnno, update_data_from_memoAnno, delete_data_from_memoAnno, post_data_from_book, delete_data_from_book, post_data_from_pwd
@@ -6,6 +7,7 @@ from db_operator import post_data_to_write, update_data_from_write, delete_data_
 import json
 
 app = Flask(__name__)
+app.secret_key = os.urandom(24)
 CORS(app, resources={
      r'*': {'origins': 'http://localhost:3000'}}, supports_credentials=True)
 
@@ -214,16 +216,22 @@ def delete_data_book(memoSource):
         return jsonify({'error': 'Error handling delete request'}), 500
 
 
-@app.route('/login', methods=['POST'])
+@app.route('/components/Login', methods=['POST'])
 def post_data_login():
     try:
         data = request.get_json()
         result = post_data_from_pwd(data)
-        return jsonify(result), 201
+
+        if result:
+            # session['user_id'] = data['username_v']
+            return jsonify(result), 201
+        else:
+            return jsonify({'message': 'Invalid username or password'}), 401
     except Exception as e:
         print(f"Error: {e}")
         return jsonify({'error': str(e)}), 500
 
 
 if __name__ == '__main__':
+    ""
     app.run(debug=True)

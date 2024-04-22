@@ -6,6 +6,8 @@ import axios from 'axios';
 import { Route, Routes, useLocation } from "react-router-dom";
 import history from './history.ts'
 
+import Login from './components/Login.js'
+
 import Memo from './components/Memo.js'
 
 import Write from './components/Write.js'
@@ -51,6 +53,7 @@ function Menu() {
                         <Route exact path="/" />
 
                         {/* <Route path="/components/Slate" element={<Slate />} /> */}
+                        <Route path="/components/Login" element={<Login />} />
 
                         <Route path="/components/Write" element={<Write />} />
                         <Route path="/components/WriteList" element={<WriteList />} />
