@@ -293,7 +293,6 @@ def post_data_from_pwd(data):
                 "username": user.username,
                 "authority": user.authority
             }
-            print("testtesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttest")
             return user_info
         else:
             return False

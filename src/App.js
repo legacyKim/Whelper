@@ -1,5 +1,6 @@
 import { React, useEffect, useState, useRef } from 'react';
 import { NavLink, useNavigate, Link } from "react-router-dom";
+import { useSelector } from "react-redux"
 
 import { debounce } from 'lodash';
 import MyContext from './context'
@@ -13,6 +14,9 @@ import './css/style.css';
 import Routes from './Routes'
 
 function App() {
+
+    const logged = useSelector(state => state.loginData);
+    console.log(logged)
 
     const navigate = useNavigate();
     const [theme, themeChange] = useState('dark');

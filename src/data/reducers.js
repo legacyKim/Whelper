@@ -1,5 +1,5 @@
 import { createSlice, configureStore } from '@reduxjs/toolkit';
-import { writeListData, writeListDataPost, memoListData, cateListData, bookListData, userCheck } from './api.js'
+import { writeListData, writeListDataPost, memoListData, cateListData, bookListData, userInfo } from './api.js'
 
 const WriteData = createSlice({
     name: 'WriteData',
@@ -236,16 +236,16 @@ const loginData = createSlice({
     reducers: {},
     extraReducers: (builder) => {
         builder
-            .addCase(userCheck.pending, (state) => {
+            .addCase(userInfo.pending, (state) => {
                 state.loading = true;
                 state.error = null;
             })
-            .addCase(userCheck.fulfilled, (state, action) => {
+            .addCase(userInfo.fulfilled, (state, action) => {
                 state.loading = false;
                 state.loggedIn = action.payload;
                 state.error = null;
             })
-            .addCase(userCheck.rejected, (state, action) => {
+            .addCase(userInfo.rejected, (state, action) => {
                 state.loading = false;
                 state.loggedIn = false;
                 state.error = action.error.message;

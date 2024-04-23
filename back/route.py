@@ -222,14 +222,28 @@ def post_data_login():
         data = request.get_json()
         result = post_data_from_pwd(data)
 
+        print(result)
+
         if result:
-            # session['user_id'] = data['username_v']
+            session['user_name'] = result['username']
+            session['user_authority'] = result['authority']
             return jsonify(result), 201
-        else:
-            return jsonify({'message': 'Invalid username or password'}), 401
+        # else:
+        #     return jsonify({'message': 'Invalid username or password'}), 401
     except Exception as e:
         print(f"Error: {e}")
         return jsonify({'error': str(e)}), 500
+
+
+@app.route('/login_info', methods=['GET'])
+def login_info():
+    user_name = session.get('user_name')
+    user_author = session.get('user_authority')
+
+    if user_name:
+        return jsonify({'username': user_name, 'authrity': user_author}), 200
+    else:
+        return jsonify({'message': 'User not logged in'}), 401
 
 
 if __name__ == '__main__':

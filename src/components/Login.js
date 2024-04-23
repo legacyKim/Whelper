@@ -1,7 +1,7 @@
 
-import { React, useEffect, useState, useRef } from 'react';
+import { React, useRef } from 'react';
 import { useDispatch, useSelector } from "react-redux"
-import { NavLink, useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 import { userCheck } from '../data/api.js'
 
@@ -22,7 +22,9 @@ function Login() {
         dispatch(userCheck({ username_v, userpassword_v }));
     }
 
-    var login_info = useState(logged.loggedIn);
+    if (logged.loggedIn !== '') {
+        console.log(logged.loggedIn.username);
+    }
     //// login
 
     return (
@@ -30,9 +32,12 @@ function Login() {
             <div className='form'>
                 <input ref={username}></input>
                 <input type='password' ref={userPassword}></input>
-                <button onClick={loginCheck}></button>
+                <Link to={`/${logged.loggedIn.username}`} onClick={() => {
+                    loginCheck();
+                }}></Link>
             </div>
-            <Link className='icon-cancel' to="/" onClick={() => { navigate('/') }}></Link>
+            {/* <Link className='icon-cancel' onClick={navigate('/')}></Link> */}
+            <Link className='icon-cancel' to={'/'}></Link>
         </div>
     )
 
