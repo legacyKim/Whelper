@@ -199,9 +199,18 @@ export const userCheck = createAsyncThunk('user', async (data) => {
     }
 });
 
-export const userInfo = createAsyncThunk('user', async (data) => {
+export const login = createAsyncThunk('user', async (data) => {
     try {
-        const response = await axios.get(`${API_URL}/login_info`, data);
+        const response = await axios.get(`${API_URL}/login`, data);
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
+});
+
+export const logout = createAsyncThunk('user', async (data) => {
+    try {
+        const response = await axios.get(`${API_URL}/logout`, data);
         return response.data;
     } catch (error) {
         throw error;

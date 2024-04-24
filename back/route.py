@@ -222,8 +222,6 @@ def post_data_login():
         data = request.get_json()
         result = post_data_from_pwd(data)
 
-        print(result)
-
         if result:
             session['user_name'] = result['username']
             session['user_authority'] = result['authority']
@@ -235,15 +233,24 @@ def post_data_login():
         return jsonify({'error': str(e)}), 500
 
 
-@app.route('/login_info', methods=['GET'])
-def login_info():
+@app.route('/login', methods=['GET'])
+def login():
     user_name = session.get('user_name')
     user_author = session.get('user_authority')
 
     if user_name:
-        return jsonify({'username': user_name, 'authrity': user_author}), 200
+        return jsonify({'username': user_name, 'authority': user_author}), 200
     else:
         return jsonify({'message': 'User not logged in'}), 401
+
+
+@app.route('/logout', methods=['POST'])
+def logout():
+    # 로그아웃 처리
+    session.pop('username', None)
+    session.pop('user_authority', None)
+
+    return jsonify({'success': True}), 200
 
 
 if __name__ == '__main__':

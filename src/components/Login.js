@@ -10,8 +10,6 @@ function Login() {
     const navigate = useNavigate();
 
     // login
-    const logged = useSelector(state => state.loginData);
-
     const username = useRef();
     const userPassword = useRef();
 
@@ -20,10 +18,6 @@ function Login() {
         const username_v = username.current.value;
         const userpassword_v = userPassword.current.value;
         dispatch(userCheck({ username_v, userpassword_v }));
-    }
-
-    if (logged.loggedIn !== '') {
-        console.log(logged.loggedIn.username);
     }
     //// login
 

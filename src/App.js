@@ -1,11 +1,12 @@
 import { React, useEffect, useState, useRef } from 'react';
 import { NavLink, useNavigate, Link } from "react-router-dom";
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 
 import { debounce } from 'lodash';
 import MyContext from './context'
 
 import { userCheck } from './data/api.js'
+import { logout } from './data/reducers.js'
 
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -15,16 +16,23 @@ import Routes from './Routes'
 
 function App() {
 
+    const dispatch = useDispatch();
     const logged = useSelector(state => state.loginData);
     
     const [loginIcon, setLoginIcon] = useState()
     useEffect(() => {
         if (logged.loggedIn !== false) {
-            setLoginIcon('icon-logout')
+            // setLoginIcon('icon-logout');
         } else {
-            setLoginIcon('icon-login')
+            // setLoginIcon('icon-login');
         }
     }, [logged.loggedIn])
+    
+    const loggedOut = () => {
+        dispatch(logout())
+        setLoginIcon('icon-login')
+    }
+
 
     const navigate = useNavigate();
     const [theme, themeChange] = useState('dark');
@@ -147,7 +155,7 @@ function App() {
                         {loginIcon === 'icon-login' ? (
                             <li className='btn'><NavLink to={`/components/Login`} className={`${loginIcon}`} onClick={() => { navigate('/components/Login') }}></NavLink></li>
                         ) : (
-                            <li className='btn'><NavLink to={`/`} className={`${loginIcon}`} onClick={() => { navigate('/') }}></NavLink></li>
+                            <li className='btn'><NavLink to={`/`} className={`${loginIcon}`} onClick={loggedOut()}></NavLink></li>
                         )}
 
                         <li><div id='theme_screen' className='icon-arrows-ccw' onClick={themeChangeBtn}></div></li>

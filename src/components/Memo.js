@@ -54,7 +54,6 @@ function Memo() {
         setTimeout(() => {
             setIsBookAdd(false);
         }, 300);
-
         setBookAddActive('');
     };
 

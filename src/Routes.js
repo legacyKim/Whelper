@@ -6,6 +6,7 @@ import axios from 'axios';
 import { Route, Routes, useLocation } from "react-router-dom";
 import history from './history.ts'
 
+// import App from './App.js'
 import Login from './components/Login.js'
 
 import Memo from './components/Memo.js'
