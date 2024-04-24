@@ -9,7 +9,8 @@ import { syncMemoListDataAdd, syncMemoListDelete, syncMemoListDataUpdate, syncMe
 
 function Memo() {
 
-    const log_In = sessionStorage.getItem('login') === 'true';
+    const logged = useSelector(state => state.loginData);
+    const [log_auth] = useState(logged.loggedIn.authority);
 
     const dispatch = useDispatch();
     useEffect(() => {
@@ -502,7 +503,7 @@ function Memo() {
                             <i className='icon-book'></i>
                             <strong>{bookTitle}</strong>
                             <b onClick={(e) => refreshTitle(e)} className={`icon-cancel ${bookTitle !== '전체' ? 'active' : ''}`}></b>
-                            {log_In && (
+                            {log_auth === 0 && (
                                 <b onClick={(e) => deleteBook(e)} className={`icon-trash hover_opacity ${bookTitle !== '전체' ? 'active' : ''}`}></b>
                             )}
                         </div>
@@ -529,7 +530,7 @@ function Memo() {
                             </ul>
                         </div>
                     </div>
-                    {log_In && (
+                    {log_auth === 0 && (
                         <div className={`memo_btn ${scrollPosition > 0 ? "scroll_event" : ""}`}>
                             <button onClick={memoAddOn} className='icon-pencil-alt'></button>
                             <button onClick={bookAddOn} className='icon-book-2'></button>
@@ -542,7 +543,7 @@ function Memo() {
                         memoArr.map(function (a, i) {
                             return (
                                 <div className='memo_content opacity' key={i}>
-                                    {log_In && (
+                                    {log_auth === 0 && (
                                         <div className='memoList_btn'>
                                             <button className='icon-edit-alt' onClick={() => memoCorrectOn(a)}></button>
                                             {/* <button className='icon-trash' onClick={() => delMemoList(i)}></button> */}
@@ -565,7 +566,7 @@ function Memo() {
                 <div className={`memoDetail_content ${memoActive ? memoActive : ""}`}>
                     {memoCurrent !== null && <MemoView memo={memoCurrent} />}
                     <div className='memoDetail_btn'>
-                        {log_In && (
+                        {log_auth === 0 && (
                             <div className='flex'>
                                 <button className='icon-flow-split' onClick={() => {
                                     setMemoAnnoActive('active');
@@ -619,7 +620,7 @@ function Memo() {
                         <input type='text' placeholder='newAuthor' ref={newAuthor}></input>
                     </div>
                     <div className='memo_btn flex-end'>
-                        {log_In && (
+                        {log_auth === 0 && (
                             <button className='icon-ok' onClick={bookSaveBtn}></button>
                         )}
                         <button className='icon-cancel' onClick={bookAddClose}></button>
@@ -636,9 +637,9 @@ function Memo() {
                         <input type='text' placeholder='newMemoAuthor' ref={newMemoAuthor}></input>
                     </div>
                     <div className='memo_btn flex-end'>
-                    {log_In && (
-                        <button className='icon-ok' onClick={MemoSaveBtn}></button>
-                    )}
+                        {log_auth === 0 && (
+                            <button className='icon-ok' onClick={MemoSaveBtn}></button>
+                        )}
                         <button className='icon-cancel' onClick={memoAddClose}></button>
                     </div>
                 </div>

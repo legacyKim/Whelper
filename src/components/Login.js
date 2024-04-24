@@ -32,7 +32,7 @@ function Login() {
             <div className='form'>
                 <input ref={username}></input>
                 <input type='password' ref={userPassword}></input>
-                <Link to={`/${logged.loggedIn.username}`} onClick={() => {
+                <Link to={`/`} onClick={() => {
                     loginCheck();
                 }}></Link>
             </div>
