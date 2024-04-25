@@ -17,22 +17,14 @@ import Routes from './Routes'
 function App() {
 
     const dispatch = useDispatch();
-    const logged = useSelector(state => state.loginData);
-    
-    const [loginIcon, setLoginIcon] = useState()
-    useEffect(() => {
-        if (logged.loggedIn !== false) {
-            // setLoginIcon('icon-logout');
-        } else {
-            // setLoginIcon('icon-login');
-        }
-    }, [logged.loggedIn])
-    
+
+    const logSession = sessionStorage.getItem('userInfo');
+    const logParse = JSON.parse(logSession)
+
     const loggedOut = () => {
         dispatch(logout())
-        setLoginIcon('icon-login')
+        sessionStorage.removeItem('userInfo');
     }
-
 
     const navigate = useNavigate();
     const [theme, themeChange] = useState('dark');
@@ -152,10 +144,10 @@ function App() {
                         <li className='btn'><NavLink to={`/components/Category`} className='icon-bookmark' onClick={() => { navigate('/components/Category') }}></NavLink></li>
                         <li className='btn'><button className='icon-search' onClick={searchOn}></button></li>
 
-                        {loginIcon === 'icon-login' ? (
-                            <li className='btn'><NavLink to={`/components/Login`} className={`${loginIcon}`} onClick={() => { navigate('/components/Login') }}></NavLink></li>
+                        {logSession === null ? (
+                            <li className='btn'><NavLink to={`/components/Login`} className='icon-login' onClick={() => { navigate('/components/Login') }}></NavLink></li>
                         ) : (
-                            <li className='btn'><NavLink to={`/`} className={`${loginIcon}`} onClick={loggedOut()}></NavLink></li>
+                            <li className='btn'><NavLink to={`/`} className='icon-logout' onClick={loggedOut()}></NavLink></li>
                         )}
 
                         <li><div id='theme_screen' className='icon-arrows-ccw' onClick={themeChangeBtn}></div></li>

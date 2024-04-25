@@ -52,7 +52,6 @@ function Menu() {
                     <Routes location={location} history={history}>
 
                         <Route exact path="/" />
-                        <Route path="/other" />
 
                         {/* <Route path="/components/Slate" element={<Slate />} /> */}
                         <Route path="/components/Login" element={<Login />} />

@@ -1,24 +1,40 @@
 
 import { React, useRef } from 'react';
 import { useDispatch, useSelector } from "react-redux"
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, NavLink } from "react-router-dom";
 
 import { userCheck } from '../data/api.js'
 
 function Login() {
 
-    const navigate = useNavigate();
-
     // login
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+
     const username = useRef();
     const userPassword = useRef();
 
-    const dispatch = useDispatch();
-    const loginCheck = () => {
+    const loginCheck = async () => {
         const username_v = username.current.value;
         const userpassword_v = userPassword.current.value;
-        dispatch(userCheck({ username_v, userpassword_v }));
-    }
+        const result = await dispatch(userCheck({ username_v, userpassword_v }));
+
+        console.log(result.payload)
+
+        if (result.payload) {
+            const userInfo = result.payload;
+            sessionStorage.setItem('userInfo', JSON.stringify(userInfo))
+            navigate('/');
+        } else {
+            alert('돌아가슈~');
+        }
+    };
+
+    const handleLogin = () => {
+        loginCheck().catch(error => {
+            console.error(error);
+        });
+    };
     //// login
 
     return (
@@ -26,11 +42,8 @@ function Login() {
             <div className='form'>
                 <input ref={username}></input>
                 <input type='password' ref={userPassword}></input>
-                <Link to={`/`} onClick={() => {
-                    loginCheck();
-                }}></Link>
+                <button onClick={handleLogin}></button>
             </div>
-            {/* <Link className='icon-cancel' onClick={navigate('/')}></Link> */}
             <Link className='icon-cancel' to={'/'}></Link>
         </div>
     )
