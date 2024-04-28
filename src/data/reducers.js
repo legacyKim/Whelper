@@ -95,46 +95,53 @@ const memoData = createSlice({
         },
 
         syncMemoListAnno(state, action) {
-            const { memoSource, memoAnnotation } = action.payload;
-            const addMemoAnno = state.data.memo.map(item =>
-                item.memoSource === memoSource
-                    ? {
-                        ...item,
-                        memoAnnotation: [...item.memoAnnotation, memoAnnotation]
-                    }
-                    : item
-            );
-            return { ...state, data: { ...state.data, memo: addMemoAnno } };
+            if (action.payload !== undefined) {
+                const { memoSource, memoAnnotation } = action.payload;
+                const addMemoAnno = state.data.memo.map(item =>
+                    item.memoSource === memoSource
+                        ? {
+                            ...item,
+                            memoAnnotation: [...item.memoAnnotation, memoAnnotation]
+                        }
+                        : item
+                );
+                return { ...state, data: { ...state.data, memo: addMemoAnno } };
+            }
         },
 
         syncMemoListAnnoUpdate(state, action) {
-            const { id, memoAnno, corrAnnotationKeys } = action.payload;
-            const updatedMemoAnno = state.data.memo.map(item =>
-                item.id === id
-                    ? {
-                        ...item,
-                        memoAnnotation: item.memoAnnotation.map((anno, index) =>
-                            index === corrAnnotationKeys
-                                ? memoAnno
-                                : anno
-                        )
-                    }
-                    : item
-            );
-            return { ...state, data: { ...state.data, memo: updatedMemoAnno } };
+            if (action.payload !== undefined) {
+
+                const { id, memoAnno, corrAnnotationKeys } = action.payload;
+                const updatedMemoAnno = state.data.memo.map(item =>
+                    item.id === id
+                        ? {
+                            ...item,
+                            memoAnnotation: item.memoAnnotation.map((anno, index) =>
+                                index === corrAnnotationKeys
+                                    ? memoAnno
+                                    : anno
+                            )
+                        }
+                        : item
+                );
+                return { ...state, data: { ...state.data, memo: updatedMemoAnno } };
+            }
         },
 
         syncMemoListAnnoDelete(state, action) {
-            const { id, corrAnnotationKeys } = action.payload;
-            const updatedMemo = state.data.memo.map(item => {
-                if (item.id === id) {
-                    const updatedAnnotations = item.memoAnnotation.filter((index) => index !== corrAnnotationKeys);
-                    return { ...item, memoAnnotation: updatedAnnotations };
-                } else {
-                    return item;
-                }
-            });
-            return { ...state, data: { ...state.data, memo: updatedMemo } };
+            if (action.payload !== undefined) {
+                const { id, corrAnnotationKeys } = action.payload;
+                const updatedMemo = state.data.memo.map(item => {
+                    if (item.id === id) {
+                        const updatedAnnotations = item.memoAnnotation.filter((index) => index !== corrAnnotationKeys);
+                        return { ...item, memoAnnotation: updatedAnnotations };
+                    } else {
+                        return item;
+                    }
+                });
+                return { ...state, data: { ...state.data, memo: updatedMemo } };
+            }
         }
     },
 

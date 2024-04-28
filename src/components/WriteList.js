@@ -8,7 +8,8 @@ import ViewEdit from './SlateView.js'
 
 function WriteList() {
 
-    const log_In = sessionStorage.getItem('login') === 'true';
+    const logged = useSelector(state => state.loginData);
+    const [log_auth] = useState(logged.loggedIn.authority);
 
     const dispatch = useDispatch();
     useEffect(() => {
@@ -57,7 +58,7 @@ function WriteList() {
         return (
 
             <div>
-                {log_In && (
+                {log_auth === 0 && (
                     <div className='write_btn'>
                         <Link className='icon-edit-alt' to={`/components/WriteCorrect/${i}`}></Link>
                     </div>

@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { debounce } from 'lodash';
 import MyContext from './context'
 
-import { userCheck } from './data/api.js'
+import { userCheck, login } from './data/api.js'
 import { logout } from './data/reducers.js'
 
 import { ToastContainer } from 'react-toastify';
@@ -17,14 +17,20 @@ import Routes from './Routes'
 function App() {
 
     const dispatch = useDispatch();
+    // useEffect(()=>{
+    //     dispatch(login())
+    // }, []);
 
     const logSession = sessionStorage.getItem('userInfo');
-    const logParse = JSON.parse(logSession)
+    const logParse = JSON.parse(logSession);
+
+    const logged = useSelector(state => state.loginData);
+    const log_auth = logged.loggedIn.authority;
 
     const loggedOut = () => {
-        dispatch(logout())
+        dispatch(logout());
         sessionStorage.removeItem('userInfo');
-    }
+    };
 
     const navigate = useNavigate();
     const [theme, themeChange] = useState('dark');
@@ -135,7 +141,9 @@ function App() {
                     </div>
                     <ul className='header_btn'>
                         {/* <li className='btn'><NavLink to="/components/Slate" className='icon-vector-pencil' onClick={() => { navigate('/components/Slate') }}></NavLink></li> */}
-                        <li className='btn'><NavLink to="/components/Write" className='icon-vector-pencil' onClick={() => { navigate('/components/Write') }}></NavLink></li>
+                        {log_auth === 0 && (
+                            <li className='btn'><NavLink to="/components/Write" className='icon-vector-pencil' onClick={() => { navigate('/components/Write') }}></NavLink></li>
+                        )}
                         <li className='btn'><NavLink to="/components/WriteList" className='icon-clipboard' onClick={() => { navigate('/components/WriteList') }}></NavLink></li>
                         <li className='btn'><NavLink to="/components/Memo" className='icon-comment' onClick={() => { navigate('/components/Memo') }}></NavLink></li>
                         {/* <li className='btn'><NavLink to="/components/Book" className='icon-book-1' onClick={() => { navigate('/components/Book') }}></NavLink></li> */}
@@ -144,10 +152,10 @@ function App() {
                         <li className='btn'><NavLink to={`/components/Category`} className='icon-bookmark' onClick={() => { navigate('/components/Category') }}></NavLink></li>
                         <li className='btn'><button className='icon-search' onClick={searchOn}></button></li>
 
-                        {logSession === null ? (
+                        {logParse === null ? (
                             <li className='btn'><NavLink to={`/components/Login`} className='icon-login' onClick={() => { navigate('/components/Login') }}></NavLink></li>
                         ) : (
-                            <li className='btn'><NavLink to={`/`} className='icon-logout' onClick={loggedOut()}></NavLink></li>
+                            <li className='btn'><button className='icon-logout' onClick={loggedOut}></button></li>
                         )}
 
                         <li><div id='theme_screen' className='icon-arrows-ccw' onClick={themeChangeBtn}></div></li>

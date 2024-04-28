@@ -6,13 +6,12 @@ import { toast } from 'react-toastify';
 import { memoListData, memoListDataPost, memoListDataUpdate, memoListDataDelete, memoListAnnoPost, memoListAnnoUpdate, memoListAnnoDelete, bookListData, bookListDataPost, bookListDataDelete } from "../data/api"
 import { syncMemoListDataAdd, syncMemoListDelete, syncMemoListDataUpdate, syncMemoListAnno, syncMemoListAnnoUpdate, syncMemoListAnnoDelete, syncBookListDataAdd, syncBookListDelete } from "../data/reducers.js"
 
-
 function Memo() {
 
     const logged = useSelector(state => state.loginData);
     const [log_auth] = useState(logged.loggedIn.authority);
 
-    console.log(log_auth)
+    console.log(logged, "memo")
 
     const dispatch = useDispatch();
     useEffect(() => {
@@ -20,7 +19,9 @@ function Memo() {
         dispatch(bookListData());
         dispatch(syncBookListDataAdd());
         dispatch(syncMemoListDataUpdate());
-        dispatch(syncMemoListDelete())
+        dispatch(syncMemoListDelete());
+        dispatch(syncMemoListAnno());
+        dispatch(syncMemoListAnnoUpdate());
     }, [dispatch]);
 
     const memoListState = useSelector((state) => state.memoData);
@@ -263,7 +264,6 @@ function Memo() {
                 }
             }
         }
-
     }
 
     // book delete
@@ -327,7 +327,7 @@ function Memo() {
         }
 
         if (bookLocalStorage === null) {
-            setBookTitle("전체")
+            setBookTitle("전체");
             setMemoArr(memoListArr)
         } else {
             setMemoArr(memoListArr.filter((item) => item.memoSource === bookTitle));
@@ -452,7 +452,7 @@ function Memo() {
 
         const corrAnnotationKeys = memoAnnoIndex;
 
-        dispatch(syncMemoListAnnoUpdate({ id, corrAnnotationKeys }));
+        dispatch(syncMemoListAnnoUpdate({ id, memoAnno, corrAnnotationKeys }));
         dispatch(memoListAnnoUpdate({ id, memoComment, memoSource, memoAuthor, memoAnno, corrAnnotationKeys }));
         setAnnoCorrectActive('');
         setTextAreaHeight(null);
@@ -676,7 +676,7 @@ function Memo() {
                 </div>
 
                 <div className={`memo_anno_common ${memoAnnoActive ? 'active' : ''}`}>
-                    <textarea className='memo_anno_textarea' rows={1} placeholder="memo_annotation" ref={newMemoAnno} onChange={annoTextareaChange}></textarea>
+                    <textarea className='memo_anno_textarea' placeholder="memo_annotation" ref={newMemoAnno} onChange={annoTextareaChange}></textarea>
                     <button className='icon-ok' onClick={() => memoAnnoBtn(memo)}></button>
                     <button className='icon-cancel' onClick={() => {
                         setMemoAnnoActive('')

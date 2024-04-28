@@ -10,7 +10,9 @@ import ViewEdit from './SlateView.js'
 
 function WriteView() {
 
-    const log_In = sessionStorage.getItem('login') === 'true';
+    const logged = useSelector(state => state.loginData);
+    const [log_auth] = useState(logged.loggedIn.authority);
+
     const writeListState = useSelector((state) => state.WriteData);
     let { id } = useParams();
 
@@ -60,7 +62,7 @@ function WriteView() {
                             ))}
                         </div>
                     </div>
-                    {log_In && (
+                    {log_auth === 0 && (
                         <div className='page_btn'>
                             <Link className='icon-trash' onClick={delWriteList} to={`/components/WriteList`}></Link>
                             <Link className='icon-edit-alt' to={`/components/WriteCorrect/${id}`}></Link>

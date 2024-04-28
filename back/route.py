@@ -1,5 +1,5 @@
 import os
-from flask import Flask, request, jsonify, session
+from flask import Flask, request, jsonify, session, make_response
 from flask_cors import CORS
 from db_connector import get_data_from_write, get_data_from_memo
 from db_operator import post_data_to_write, update_data_from_write, delete_data_from_write, post_data_to_cate, post_data_from_memo, update_data_from_memo, delete_data_from_memo, post_data_from_memoAnno, update_data_from_memoAnno, delete_data_from_memoAnno, post_data_from_book, delete_data_from_book, post_data_from_pwd
@@ -225,9 +225,12 @@ def post_data_login():
         if result:
             session['user_name'] = result['username']
             session['user_authority'] = result['authority']
-            return jsonify(result), 201
-        # else:
-        #     return jsonify({'message': 'Invalid username or password'}), 401
+
+            response = jsonify(result)
+            response.set_cookie('user_id', '123', max_age=3600)
+            return response, 201
+        else:
+            return jsonify({'message': 'Invalid username or password'}), 401
     except Exception as e:
         print(f"Error: {e}")
         return jsonify({'error': str(e)}), 500
@@ -235,20 +238,19 @@ def post_data_login():
 
 @app.route('/login', methods=['GET'])
 def login():
-    user_name = session.get('user_name')
-    user_author = session.get('user_authority')
-
-    if user_name:
-        return jsonify({'username': user_name, 'authority': user_author}), 200
+    if 'username' in session:
+        return jsonify({'username': session['username'], 'authority': session['user_authority']})
     else:
         return jsonify({'message': 'User not logged in'}), 401
 
 
 @app.route('/logout', methods=['POST'])
 def logout():
-    # 로그아웃 처리
     session.pop('username', None)
     session.pop('user_authority', None)
+
+    response = make_response(jsonify({'message': 'Logout successful'}))
+    response.set_cookie('user_id', '', expires=0)
 
     return jsonify({'success': True}), 200
 

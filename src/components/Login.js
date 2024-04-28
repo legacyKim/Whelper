@@ -19,8 +19,6 @@ function Login() {
         const userpassword_v = userPassword.current.value;
         const result = await dispatch(userCheck({ username_v, userpassword_v }));
 
-        console.log(result.payload)
-
         if (result.payload) {
             const userInfo = result.payload;
             sessionStorage.setItem('userInfo', JSON.stringify(userInfo))
@@ -42,9 +40,12 @@ function Login() {
             <div className='form'>
                 <input ref={username}></input>
                 <input type='password' ref={userPassword}></input>
-                <button onClick={handleLogin}></button>
+                <div className='btn'>
+                <button onClick={handleLogin} className='icon-ok'></button>
+                <Link className='icon-cancel' to={'/'}></Link>
             </div>
-            <Link className='icon-cancel' to={'/'}></Link>
+            </div>
+           
         </div>
     )
 
