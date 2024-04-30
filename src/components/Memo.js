@@ -11,8 +11,6 @@ function Memo() {
     const logged = useSelector(state => state.loginData);
     const [log_auth] = useState(logged.loggedIn.authority);
 
-    console.log(logged, "memo")
-
     const dispatch = useDispatch();
     useEffect(() => {
         dispatch(memoListData());
