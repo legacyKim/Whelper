@@ -89,9 +89,6 @@ function Search() {
     });
     //// about search result filter
 
-    console.log(searchFilter)
-    console.log(searchPageInput)
-
     return (
 
         <div className='content_area'>

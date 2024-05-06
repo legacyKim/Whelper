@@ -41,11 +41,10 @@ function Login() {
                 <input ref={username}></input>
                 <input type='password' ref={userPassword}></input>
                 <div className='btn'>
-                <button onClick={handleLogin} className='icon-ok'></button>
-                <Link className='icon-cancel' to={'/'}></Link>
+                    <button onClick={handleLogin} className='icon-ok'></button>
+                    <Link className='icon-cancel' to={'/'}></Link>
+                </div>
             </div>
-            </div>
-           
         </div>
     )
 

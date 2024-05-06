@@ -11,8 +11,6 @@ function Memo() {
     const logged = useSelector(state => state.loginData);
     const [log_auth] = useState(logged.loggedIn.authority);
 
-    console.log(logged, "memo")
-
     const dispatch = useDispatch();
     useEffect(() => {
         dispatch(memoListData());
@@ -600,6 +598,9 @@ function Memo() {
                 {/* memoCorrect */}
                 <div className={`memoDetail_content ${memoCorrectActive ? memoCorrectActive : ""}`}>
                     {memoCurrent !== null && <MemoCorrect memo={memoCurrent} />}
+                    <div className='page_btn'>
+                        <button className='icon-ok-circled' onClick={() => memoCorrectBtn(memoCurrent)}></button>
+                    </div>
                     <div className='memoDetail_btn'>
                         <button className='icon-clipboard'
                             onClick={() => {
@@ -607,9 +608,6 @@ function Memo() {
                                 memoCorrectClose();
                             }}></button>
                         <button className='icon-cancel' onClick={memoCorrectClose}></button>
-                    </div>
-                    <div className='page_btn'>
-                        <button className='icon-ok-circled' onClick={() => memoCorrectBtn(memoCurrent)}></button>
                     </div>
                 </div>
                 {/* memoCorrect */}
