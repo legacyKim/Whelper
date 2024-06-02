@@ -77,7 +77,7 @@ const memoData = createSlice({
         },
 
         syncMemoListDataUpdate(state, action) {
-            console.log(action.payload)
+
             if (action.payload !== undefined) {
                 const updateMemo = state.data.memo.map(item =>
                     item.id === action.payload.id ? action.payload : item

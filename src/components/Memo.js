@@ -317,23 +317,6 @@ function Memo() {
     };
 
     useEffect(() => {
-        newMemoComment.current.value = null;
-
-        if (memoRecord !== 'active') {
-            newMemoSource.current.value = null;
-            newMemoAuthor.current.value = null;
-        }
-
-        if (bookLocalStorage === null) {
-            setBookTitle("전체");
-            setMemoArr(memoListArr)
-        } else {
-            setMemoArr(memoListArr.filter((item) => item.memoSource === bookTitle));
-        }
-
-    }, [memoListArr]);
-
-    useEffect(() => {
         newBook.current.value = null;
         newAuthor.current.value = null;
     }, [bookListArr])
@@ -368,6 +351,22 @@ function Memo() {
         }
         setMemoCurrent(null);
     }, [bookTitle]);
+
+    useEffect(() => {
+        newMemoComment.current.value = null;
+
+        if (memoRecord !== 'active') {
+            newMemoSource.current.value = null;
+            newMemoAuthor.current.value = null;
+        }
+
+        if (bookLocalStorage === null) {
+            setBookTitle("전체");
+        } else {
+            setMemoArr(memoListArr.filter((item) => item.memoSource === bookTitle));
+        }
+
+    }, [memoListArr]);
     //// book name check
 
     // context api scroll pos

@@ -1,9 +1,11 @@
+import hashlib
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import create_engine, Column, Integer, String, MetaData, Table, Text, text
 import json
 from db_config import db_config
-from sqlalchemy import create_engine, Column, Integer, String, MetaData, Table, Text, text
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
-import hashlib
+import pymysql
+pymysql.install_as_MySQLdb()
 
 Base_user = declarative_base()
 Base_write = declarative_base()

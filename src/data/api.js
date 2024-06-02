@@ -1,7 +1,8 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
-const API_URL = 'http://localhost:5000';
+// const API_URL = 'http://localhost:5000';
+const API_URL = 'http://bambueong.net';
 
 // get write data
 export const writeListData = createAsyncThunk('writeData/getData', async () => {
@@ -12,7 +13,7 @@ export const writeListData = createAsyncThunk('writeData/getData', async () => {
         console.error('Error fetching writeListData:', error);
         throw error;
     }
-})
+});
 
 // post write data
 export const writeListDataPost = createAsyncThunk('writeData/newData', async (newData) => {
@@ -45,7 +46,7 @@ export const writeListData_search = createAsyncThunk('writeData/getData',
             throw error;
         }
     },
-)
+);
 
 export const writeListDataDel = createAsyncThunk('writeData/deleteWrite', async (id) => {
     try {
@@ -67,7 +68,7 @@ export const cateListData = createAsyncThunk('cateData/getCate',
             throw error;
         }
     },
-)
+);
 
 export const cateListData_cate = createAsyncThunk('cateData/getCate',
     async () => {
@@ -79,7 +80,7 @@ export const cateListData_cate = createAsyncThunk('cateData/getCate',
             throw error;
         }
     },
-)
+);
 
 export const cateListDataPost = createAsyncThunk('writeData/newData', async (newData) => {
     try {
@@ -101,7 +102,7 @@ export const memoListData = createAsyncThunk('memoData/getMemo',
             throw error;
         }
     },
-)
+);
 
 export const memoListDataPost = createAsyncThunk('memoData/postMemo', async (newData) => {
     try {
@@ -157,7 +158,7 @@ export const memoListAnnoDelete = createAsyncThunk('memoData/annoDelete', async 
     } catch (error) {
         throw error;
     }
-})
+});
 
 // get bookdata
 export const bookListData = createAsyncThunk('bookData/getBook',
@@ -170,7 +171,7 @@ export const bookListData = createAsyncThunk('bookData/getBook',
             throw error;
         }
     },
-)
+);
 
 export const bookListDataPost = createAsyncThunk('bookData/bookPost', async (newData) => {
     try {
