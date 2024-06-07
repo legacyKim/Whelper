@@ -8,11 +8,11 @@ import json
 
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
-# CORS(app, resources={
-#      r'*': {'origins': 'http://localhost:3000'}}, supports_credentials=True)
-
 CORS(app, resources={
-     r'*': {'origins': 'http://bambueong.net/'}}, supports_credentials=True)
+     r'*': {'origins': 'http://localhost:3000'}}, supports_credentials=True)
+
+# CORS(app, resources={
+#      r'*': {'origins': 'http://bambueong.net/'}}, supports_credentials=True)
 
 
 @app.route('/components/WriteList', methods=['GET'])

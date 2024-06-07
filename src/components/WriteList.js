@@ -35,7 +35,7 @@ function WriteList() {
                 {
                     writeListArr.map(function (a, i) {
                         return (
-                            <div key={i} classNames="WriteDiv opacity">
+                            <div key={i} className="WriteDiv opacity">
                                 <WriteShowContents i={i} writeListArr={writeListArr} />
                             </div>
                         )

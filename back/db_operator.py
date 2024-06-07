@@ -4,8 +4,8 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import create_engine, Column, Integer, String, MetaData, Table, Text, text
 import json
 from db_config import db_config
-import pymysql
-pymysql.install_as_MySQLdb()
+# import pymysql
+# pymysql.install_as_MySQLdb()
 
 Base_user = declarative_base()
 Base_write = declarative_base()

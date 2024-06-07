@@ -25,24 +25,6 @@ function Menu() {
 
     const location = useLocation();
 
-    // useEffect(async () => {
-    //     try {
-    //         const response = await axios.get(`http://localhost:3000/api/WriteList`);
-    //         setWriteListData(response.data);
-    //     } catch (error) {
-    //         console.error(error);
-    //     }
-    // }, []);
-
-    // useEffect(async () => {
-    //     try {
-    //         const response = await axios.get(`http://localhost:3000/api/Memo`);
-    //         MainMemoCorrect(response.data);
-    //     } catch (error) {
-    //         console.error(error);
-    //     }
-    // }, []);
-
     return (
 
         <div className='menuWrap'>

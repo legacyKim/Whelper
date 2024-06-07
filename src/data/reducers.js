@@ -21,7 +21,6 @@ const WriteData = createSlice({
             }
         },
         syncWriteListDataUpdate: (state, action) => {
-            console.log(action.payload)
             if (action.payload !== undefined) {
                 const updatedWrite = state.data.write.map(item =>
                     item.id === action.payload.db_id ? action.payload : item
@@ -82,7 +81,6 @@ const memoData = createSlice({
                 const updateMemo = state.data.memo.map(item =>
                     item.id === action.payload.id ? action.payload : item
                 );
-                console.log(updateMemo)
                 state.data.memo = updateMemo;
             }
         },

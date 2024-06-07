@@ -251,8 +251,8 @@ function Memo() {
             dispatch(syncBookListDataAdd({ memoSource, memoAuthor }))
             dispatch(bookListDataPost({ memoSource, memoAuthor }));
         } else {
-            for (const key in memoListArr) {
-                const item = memoListArr[key];
+            for (const key in bookListArr) {
+                const item = bookListArr[key];
                 if (item.memoSource !== memoSource) {
                     dispatch(syncBookListDataAdd({ memoSource, memoAuthor }))
                     dispatch(bookListDataPost({ memoSource, memoAuthor }));
@@ -618,9 +618,7 @@ function Memo() {
                         <input type='text' placeholder='newAuthor' ref={newAuthor}></input>
                     </div>
                     <div className='memo_btn flex-end'>
-                        {log_auth === 0 && (
-                            <button className='icon-ok' onClick={bookSaveBtn}></button>
-                        )}
+                        <button className='icon-ok' onClick={bookSaveBtn}></button>
                         <button className='icon-cancel' onClick={bookAddClose}></button>
                     </div>
                 </div>
