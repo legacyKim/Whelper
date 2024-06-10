@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { syncWriteListData } from "../data/reducers"
 import { writeListData, writeListDataPost, cateListData } from '../data/api.js';
 
-import { createEditor, Editor, Transforms, Text, Element as SlateElement, Node, } from 'slate';
+import { createEditor, Editor, Transforms, Text, Element as SlateElement, Node } from 'slate';
 import { Slate, Editable, withReact } from 'slate-react'
 import escapeHtml from 'escape-html'
 

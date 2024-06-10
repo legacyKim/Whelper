@@ -67,16 +67,18 @@ const memoData = createSlice({
     },
     reducers: {
         syncMemoListDataAdd(state, action) {
+            console.log(action.payload)
+
             if (action.payload !== undefined) {
                 state.data = {
                     ...state.data,
                     memo: [...state.data.memo, action.payload],
                 };
             }
+
         },
 
         syncMemoListDataUpdate(state, action) {
-
             if (action.payload !== undefined) {
                 const updateMemo = state.data.memo.map(item =>
                     item.id === action.payload.id ? action.payload : item

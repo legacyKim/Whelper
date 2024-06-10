@@ -3,7 +3,6 @@ import axios from 'axios';
 
 const API_URL = 'http://localhost:5000';
 // const API_URL = 'http://bambueong.net';
-// code pipeline test
 
 // get write data
 export const writeListData = createAsyncThunk('writeData/getData', async () => {
