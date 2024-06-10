@@ -20,8 +20,9 @@ function Login() {
         const result = await dispatch(userCheck({ username_v, userpassword_v }));
 
         if (result.payload) {
-            const userInfo = result.payload;
-            sessionStorage.setItem('userInfo', JSON.stringify(userInfo))
+            const token = result.payload.access_token;
+            console.log(token);
+            sessionStorage.setItem('access_token', token);
             navigate('/');
         } else {
             alert('돌아가슈~');

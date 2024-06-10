@@ -1,8 +1,9 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
-const API_URL = 'http://localhost:5000';
-// const API_URL = 'http://bambueong.net';
+// const API_URL = 'http://localhost:5000';
+// const API_URL = 'http://ec2-3-35-209-244.ap-northeast-2.compute.amazonaws.com';
+const API_URL = 'http://bambueong.net';
 
 // get write data
 export const writeListData = createAsyncThunk('writeData/getData', async () => {
