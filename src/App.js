@@ -25,7 +25,8 @@ function App() {
     const logParse = JSON.parse(logSession);
 
     const logged = useSelector(state => state.loginData);
-    const log_auth = logged.loggedIn.authority;
+    // const log_auth = logged.loggedIn.authority;
+    const log_auth = 0;
 
     const loggedOut = () => {
         dispatch(logout());

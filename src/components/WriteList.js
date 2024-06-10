@@ -9,7 +9,8 @@ import ViewEdit from './SlateView.js'
 function WriteList() {
 
     const logged = useSelector(state => state.loginData);
-    const [log_auth] = useState(logged.loggedIn.authority);
+    // const [log_auth] = useState(logged.loggedIn.authority);
+    const [log_auth] = useState(0);
 
     const dispatch = useDispatch();
     useEffect(() => {

@@ -9,17 +9,22 @@ import { syncMemoListDataAdd, syncMemoListDelete, syncMemoListDataUpdate, syncMe
 function Memo() {
 
     const logged = useSelector(state => state.loginData);
-    const [log_auth] = useState(logged.loggedIn.authority);
+    // const [log_auth] = useState(logged.loggedIn.authority);
+    const [log_auth] = useState(0);
 
     const dispatch = useDispatch();
     useEffect(() => {
         dispatch(memoListData());
+
         dispatch(bookListData());
         dispatch(syncBookListDataAdd());
+
+        dispatch(syncMemoListDataAdd());
         dispatch(syncMemoListDataUpdate());
         dispatch(syncMemoListDelete());
         dispatch(syncMemoListAnno());
         dispatch(syncMemoListAnnoUpdate());
+        dispatch(syncMemoListAnnoDelete());
     }, [dispatch]);
 
     const memoListState = useSelector((state) => state.memoData);
@@ -194,7 +199,7 @@ function Memo() {
     //// book list
 
     // memo save
-    const [memo, setMemo] = useState(memoListArr);
+    // const [memo, setMemo] = useState(memoListArr);
 
     useEffect(() => {
         setTimeout(() => {
@@ -218,7 +223,6 @@ function Memo() {
 
         dispatch(syncMemoListDataAdd({ memoComment, memoAuthor, memoSource, memoAnnotation }));
         dispatch(memoListDataPost({ memoComment, memoAuthor, memoSource, memoAnnotation }));
-        setMemo((prevMemo) => [...prevMemo, { memoComment, memoAuthor, memoSource, memoAnnotation }]);
 
         if (memoListArr.length === 0) {
             dispatch(syncBookListDataAdd({ memoSource, memoAuthor }));
@@ -278,7 +282,7 @@ function Memo() {
     const memoDeleteBtn = (memoCurrent) => {
         const corrMemoId = memoCurrent.id;
         dispatch(syncMemoListDelete(corrMemoId));
-        dispatch(memoListDataDelete(corrMemoId))
+        dispatch(memoListDataDelete(corrMemoId));
         setMemoCurrent(null);
     }
     //// memo Annotation
@@ -298,6 +302,8 @@ function Memo() {
 
         dispatch(syncMemoListDataUpdate({ id, memoSource, memoAuthor, memoComment, memoAnnotation }));
         dispatch(memoListDataUpdate({ id, memoSource, memoAuthor, memoComment }))
+
+        setMemoCurrent({ id, memoSource, memoAuthor, memoComment, memoAnnotation });
 
         setMemoCorrectActive('');
         setMemoActive('active')
@@ -633,9 +639,7 @@ function Memo() {
                         <input type='text' placeholder='newMemoAuthor' ref={newMemoAuthor}></input>
                     </div>
                     <div className='memo_btn flex-end'>
-                        {log_auth === 0 && (
-                            <button className='icon-ok' onClick={MemoSaveBtn}></button>
-                        )}
+                        <button className='icon-ok' onClick={MemoSaveBtn}></button>
                         <button className='icon-cancel' onClick={memoAddClose}></button>
                     </div>
                 </div>
