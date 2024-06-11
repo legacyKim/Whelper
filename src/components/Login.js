@@ -24,7 +24,7 @@ function Login() {
             sessionStorage.setItem('access_token', token);
             navigate('/');
         } else {
-            alert('돌아가슈~');
+            alert('돌아가');
         }
     };
 
