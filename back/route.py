@@ -12,11 +12,11 @@ app.secret_key = os.urandom(24)
 app.config['JWT_SECRET_KEY'] = 'your_jwt_secret_key'
 jwt = JWTManager(app)
 
-# CORS(app, resources={
-#      r'*': {'origins': 'http://localhost:3000'}}, supports_credentials=True)
-
 CORS(app, resources={
-     r'*': {'origins': 'http://bambueong.net/'}}, supports_credentials=True)
+     r'*': {'origins': 'http://localhost:3000'}}, supports_credentials=True)
+
+# CORS(app, resources={
+#      r'*': {'origins': 'http://bambueong.net/'}}, supports_credentials=True)
 
 
 @app.route('/components/WriteList', methods=['GET'])
