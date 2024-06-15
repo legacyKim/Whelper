@@ -15,8 +15,8 @@ jwt = JWTManager(app)
 CORS(app, resources={
      r'*': {'origins': 'http://localhost:3000'}}, supports_credentials=True)
 
-# CORS(app, resources={
-#      r'*': {'origins': 'http://bambueong.net/'}}, supports_credentials=True)
+CORS(app, resources={
+     r'*': {'origins': 'http://bambueong.net/'}}, supports_credentials=True)
 
 
 @app.route('/components/WriteList', methods=['GET'])
