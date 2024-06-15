@@ -346,6 +346,8 @@ function Memo() {
     const [memoArr, setMemoArr] = useState(memoListArr);
     const [memoArrActive, setMemoArrActive] = useState('active');
 
+    console.log(memoArr)
+
     useEffect(() => {
         if (bookLocalStorage === null) {
             setBookTitle("전체")
