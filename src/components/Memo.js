@@ -216,12 +216,13 @@ function Memo() {
 
     const MemoSaveBtn = () => {
 
+        var randomId = Math.random().toString(36).substr(2, 9);
         const memoComment = newMemoComment.current.value;
         var memoAuthor = newMemoAuthor.current.value;
         var memoSource = newMemoSource.current.value;
         var memoAnnotation = [];
 
-        dispatch(syncMemoListDataAdd({ memoComment, memoAuthor, memoSource, memoAnnotation }));
+        dispatch(syncMemoListDataAdd({ memoComment, memoAuthor, memoSource, memoAnnotation, randomId }));
         dispatch(memoListDataPost({ memoComment, memoAuthor, memoSource, memoAnnotation }));
 
         if (memoListArr.length === 0) {
@@ -280,6 +281,7 @@ function Memo() {
 
     // memo anno delete
     const memoDeleteBtn = (memoCurrent) => {
+
         const corrMemoId = memoCurrent.id;
         dispatch(syncMemoListDelete(corrMemoId));
         dispatch(memoListDataDelete(corrMemoId));
@@ -301,12 +303,12 @@ function Memo() {
         const memoAnnotation = a.memoAnnotation;
 
         dispatch(syncMemoListDataUpdate({ id, memoSource, memoAuthor, memoComment, memoAnnotation }));
-        dispatch(memoListDataUpdate({ id, memoSource, memoAuthor, memoComment }))
+        dispatch(memoListDataUpdate({ id, memoSource, memoAuthor, memoComment }));
 
         setMemoCurrent({ id, memoSource, memoAuthor, memoComment, memoAnnotation });
 
         setMemoCorrectActive('');
-        setMemoActive('active')
+        setMemoActive('active');
     };
     //// memo correct btn
 
@@ -337,7 +339,7 @@ function Memo() {
             setBookTitle("전체")
             localStorage.removeItem('bookTitle');
         } else {
-            setBookTitle(bookListArr[i].memoSource)
+            setBookTitle(bookListArr[i].memoSource);
             setMemoCurrent(null);
             localStorage.setItem('bookTitle', bookListArr[i].memoSource);
         }
@@ -362,6 +364,7 @@ function Memo() {
 
     useEffect(() => {
         newMemoComment.current.value = null;
+        setMemoArr(memoListArr)
 
         if (memoRecord !== 'active') {
             newMemoSource.current.value = null;
@@ -378,7 +381,7 @@ function Memo() {
     //// book name check
 
     // context api scroll pos
-    const { scrollPosition, setScrollPosition } = useContext(MyContext);
+    const { scrollPosition } = useContext(MyContext);
     //// context api scroll pos
 
     const bookFilter = (i) => {
@@ -571,34 +574,6 @@ function Memo() {
                 {/* memoDetail */}
                 <div className={`memoDetail_content ${memoActive ? memoActive : ""}`}>
                     {memoCurrent !== null && <MemoView memo={memoCurrent} />}
-                    <div className='memoDetail_btn'>
-                        {log_auth === 0 && (
-                            <div className='flex'>
-                                <button className='icon-flow-split' onClick={() => {
-                                    setMemoAnnoActive('active');
-                                    setAnnoCorrectActive('');
-                                    setTextAreaHeight(null);
-                                }}></button>
-                                <button className='icon-edit-alt'
-                                    onClick={() => {
-                                        memoCorrectOn(memoCurrent);
-                                        memoDetailClose();
-                                    }}></button>
-                                <button className='icon-trash'
-                                    onClick={() => {
-                                        memoDeleteBtn(memoCurrent)
-                                        memoDetailClose();
-                                    }}>
-                                </button>
-                            </div>
-                        )}
-                        <button className='icon-cancel' onClick={() => {
-                            memoDetailClose();
-                            setAnnoCorrectActive('');
-                            setMemoAnnoActive('');
-                            setTextAreaHeight(null);
-                        }}></button>
-                    </div>
                 </div>
                 {/* memoDetail */}
 
@@ -699,6 +674,40 @@ function Memo() {
 
                 {memo.memoAnnotation !== null && <MemoAnno memo={memo} />}
 
+                <div className='memoDetail_btn'>
+                    {log_auth === 0 && (
+                        <div className='flex'>
+                            <button className='icon-flow-split' onClick={() => {
+                                setMemoAnnoActive('active');
+                                setAnnoCorrectActive('');
+                                setTextAreaHeight(null);
+                            }}></button>
+
+                            {memo.id !== undefined && (
+                                <button className='icon-edit-alt'
+                                    onClick={() => {
+                                        memoCorrectOn(memoCurrent);
+                                        memoDetailClose();
+                                    }}></button>
+                            )}
+                            {memo.id !== undefined && (
+                                <button className='icon-trash'
+                                    onClick={() => {
+                                        memoDeleteBtn(memoCurrent)
+                                        memoDetailClose();
+                                    }}>
+                                </button>
+                            )}
+                        </div>
+                    )}
+                    <button className='icon-cancel' onClick={() => {
+                        memoDetailClose();
+                        setAnnoCorrectActive('');
+                        setMemoAnnoActive('');
+                        setTextAreaHeight(null);
+                    }}></button>
+                </div>
+
             </div>
         )
     }
@@ -716,14 +725,20 @@ function Memo() {
                                 <div className='memo_annotation_fac'>
                                     <i className='icon-level-down'></i>
                                     <div className='memo_annotation_fac_box'>
-                                        <p className='text'>{memo.memoAnnotation[i]}</p>
-                                        <button className='icon-feather' onClick={() => {
-                                            memoAnnoCorrectBtn(m, i);
-                                            setMemoAnnoActive('')
-                                        }}></button>
-                                        <button className='icon-trash' onClick={() => {
-                                            memoAnnoDelete(memo, i)
-                                        }}></button>
+                                        <p className={`text ${memo.id === undefined ? 'once' : ''}`}>{memo.memoAnnotation[i]}</p>
+
+                                        {memo.id !== undefined && (
+                                            <button className='icon-feather' onClick={() => {
+                                                memoAnnoCorrectBtn(m, i);
+                                                setMemoAnnoActive('')
+                                            }}></button>
+                                        )}
+                                        {memo.id !== undefined && (
+                                            <button className='icon-trash' onClick={() => {
+                                                memoAnnoDelete(memo, i)
+                                            }}></button>
+                                        )}
+
                                     </div>
                                 </div>
                             </li>

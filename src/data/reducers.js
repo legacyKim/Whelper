@@ -73,7 +73,6 @@ const memoData = createSlice({
                     memo: [...state.data.memo, action.payload],
                 };
             }
-
         },
 
         syncMemoListDataUpdate(state, action) {
@@ -154,6 +153,7 @@ const memoData = createSlice({
         }).addCase(memoListData.rejected, (state, action) => {
             state.error = action.payload ?? action.error
         })
+        
     },
 })
 
