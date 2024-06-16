@@ -21,16 +21,16 @@ function App() {
     //     dispatch(login())
     // }, []);
 
-    const logSession = sessionStorage.getItem('userInfo');
-    const logParse = JSON.parse(logSession);
+    const logSession = sessionStorage.getItem('access_token');
+    const log_res = sessionStorage.getItem('auth');
 
-    const logged = useSelector(state => state.loginData);
+    // const logged = useSelector(state => state.loginData);
     // const log_auth = logged.loggedIn.authority;
     const log_auth = 0;
 
     const loggedOut = () => {
-        dispatch(logout());
-        sessionStorage.removeItem('userInfo');
+        sessionStorage.removeItem('access_token');
+        sessionStorage.removeItem('auth');
     };
 
     const navigate = useNavigate();
@@ -153,7 +153,7 @@ function App() {
                         <li className='btn'><NavLink to={`/components/Category`} className='icon-bookmark' onClick={() => { navigate('/components/Category') }}></NavLink></li>
                         <li className='btn'><button className='icon-search' onClick={searchOn}></button></li>
 
-                        {logParse === null ? (
+                        {logSession === null ? (
                             <li className='btn'><NavLink to={`/components/Login`} className='icon-login' onClick={() => { navigate('/components/Login') }}></NavLink></li>
                         ) : (
                             <li className='btn'><button className='icon-logout' onClick={loggedOut}></button></li>

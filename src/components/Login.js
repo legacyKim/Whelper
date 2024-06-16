@@ -20,8 +20,8 @@ function Login() {
 
         if (result.payload) {
             const token = result.payload.access_token;
-            console.log(token);
             sessionStorage.setItem('access_token', token);
+            sessionStorage.setItem('auth', result.payload.log.authority)
             navigate('/');
         } else {
             alert('돌아가');

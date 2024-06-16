@@ -9,8 +9,7 @@ import { syncMemoListDataAdd, syncMemoListDelete, syncMemoListDataUpdate, syncMe
 function Memo() {
 
     const logged = useSelector(state => state.loginData);
-    // const [log_auth] = useState(logged.loggedIn.authority);
-    const [log_auth] = useState(0);
+    const [log_auth] = useState(logged.loggedIn.authority);
 
     const dispatch = useDispatch();
     useEffect(() => {

@@ -8,15 +8,19 @@ from db_operator import post_data_to_write, update_data_from_write, delete_data_
 import json
 
 app = Flask(__name__)
-app.secret_key = os.urandom(24)
-app.config['JWT_SECRET_KEY'] = 'your_jwt_secret_key'
+
+app.secret_key = os.getenv('SECRET_KEY', os.urandom(24))
+app.config['JWT_SECRET_KEY'] = os.getenv(
+    'JWT_SECRET_KEY', 'fallback_secret_key')
+app.config['JWT_ACCESS_TOKEN_EXPIRES'] = int(
+    os.getenv('JWT_ACCESS_TOKEN_EXPIRES', 3600))
 jwt = JWTManager(app)
 
 CORS(app, resources={
      r'*': {'origins': 'http://localhost:3000'}}, supports_credentials=True)
 
-CORS(app, resources={
-     r'*': {'origins': 'http://bambueong.net/'}}, supports_credentials=True)
+# CORS(app, resources={
+#      r'*': {'origins': 'http://bambueong.net/'}}, supports_credentials=True)
 
 
 @app.route('/components/WriteList', methods=['GET'])
@@ -233,12 +237,9 @@ def post_data_login():
             session['user_name'] = result['username']
             session['user_authority'] = result['authority']
 
-            access_token = create_access_token(identity=username)
-            return jsonify(access_token=access_token)
+            access_token = create_access_token(identity=result['username'])
+            return jsonify(access_token=access_token, log=result)
 
-            # response = jsonify(result)
-            # response.set_cookie('user_id', '123', max_age=3600)
-            # return response, 201
         else:
             return jsonify({'message': 'Invalid username or password'}), 401
     except Exception as e:
