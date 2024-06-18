@@ -32,6 +32,9 @@ function Memo() {
     const memoListArr = memoListState.data.memo || [];
     const bookListArr = bookListState.data.book || [];
 
+    const [memoArr, setMemoArr] = useState(memoListArr);
+    const [memoReal, setMemoReal] = useState(memoArr);
+
     // alert
     const showToast = () => {
         toast('안녕하세요!', {
@@ -152,7 +155,6 @@ function Memo() {
         }, 300);
 
         setMemoCorrectActive('');
-
     };
 
     useEffect(() => {
@@ -199,15 +201,6 @@ function Memo() {
 
     // memo save
     // const [memo, setMemo] = useState(memoListArr);
-
-    useEffect(() => {
-        setTimeout(() => {
-            const memoContentElements = document.querySelectorAll('.memo_content');
-            memoContentElements.forEach(element => {
-                element.classList.remove('opacity');
-            });
-        }, 100)
-    }, [memoListArr])
 
     var newMemoSource = useRef(null);
     var newMemoAuthor = useRef(null);
@@ -280,7 +273,6 @@ function Memo() {
 
     // memo anno delete
     const memoDeleteBtn = (memoCurrent) => {
-
         const corrMemoId = memoCurrent.id;
         dispatch(syncMemoListDelete(corrMemoId));
         dispatch(memoListDataDelete(corrMemoId));
@@ -344,10 +336,63 @@ function Memo() {
         }
     }
 
-    const [memoArr, setMemoArr] = useState(memoListArr);
-    const [memoArrActive, setMemoArrActive] = useState('active');
+    // infinite scroll
+    var memoScrollArea = useRef();
+    var memoScrollPos = useRef();
+    var currentY = 0;
+    var previousY = 0;
+    var scrollAmount = 112.2;
 
-    console.log(memoArr)
+    const memoScrollMove = (e) => {
+
+        currentY = memoScrollArea.current.scrollTop;
+        if (e.deltaY > 0) {
+            currentY += scrollAmount;
+        } else {
+            currentY -= scrollAmount;
+        }
+        memoScrollArea.current.scrollTop = currentY;
+        previousY = currentY;
+
+        var scroll_num = Math.round(currentY / scrollAmount);
+
+        if (0 <= scroll_num && scroll_num < memoListArr.length - 5 && 5 < memoArr.length) {
+            memoScrollPos.current.style.top = `${scrollAmount * scroll_num}px`
+
+            var rows = [];
+            for (let i = scroll_num; i < scroll_num + 6; i += 1) {
+                if (memoArr[i] !== undefined) rows.push(memoArr[i])
+            }
+
+            setMemoReal(rows)
+
+            const memoContentElements = document.querySelectorAll('.memo_content');
+            memoContentElements.forEach(element => {
+                const elementTop = element.getBoundingClientRect().top;
+                if (elementTop < 500) {
+                    element.classList.remove('opacity');
+                }
+            });
+
+        }
+
+    }
+
+    useEffect(() => {
+        const currentScrollArea = memoScrollArea.current;
+        currentScrollArea.addEventListener('wheel', memoScrollMove);
+
+        var rows = [];
+        for (let i = 0; i < 6; i += 1) {
+            if (memoArr[i] !== undefined) rows.push(memoArr[i])
+        }
+        setMemoReal(rows)
+
+        return () => {
+            currentScrollArea.removeEventListener('wheel', memoScrollMove);
+        };
+    }, [memoArr]);
+    //// infinite scroll
 
     useEffect(() => {
         if (bookLocalStorage === null) {
@@ -359,6 +404,7 @@ function Memo() {
             setMemoArr(memoListArr.filter((item) => item.memoSource === bookTitle));
         }
         setMemoCurrent(null);
+        memoScrollPos.current.style.top = '0px';
     }, [bookTitle]);
 
     useEffect(() => {
@@ -546,29 +592,32 @@ function Memo() {
                     )}
                 </div>
 
-                <div className={`memo_wrap`}>
-                    {
-                        memoArr.map(function (a, i) {
-                            return (
-                                <div className='memo_content opacity' key={i}>
-                                    {log_auth === 0 && (
-                                        <div className='memoList_btn'>
-                                            <button className='icon-edit-alt' onClick={() => memoCorrectOn(a)}></button>
-                                            {/* <button className='icon-trash' onClick={() => delMemoList(i)}></button> */}
-                                        </div>
-                                    )}
-                                    <div className='memo_content_box'>
-                                        <p className='font_text' onClick={() => memoDetailOn(a)}>{memoArr[i].memoComment}</p>
-                                        <div className='memo_content_btn_box'>
-                                            <button onClick={() => bookFilter(i)}>{memoArr[i].memoSource}</button>
-                                            <span>{memoArr[i].memoAuthor}</span>
+                <div className='memo_scroll' ref={memoScrollArea}>
+                    <div className={`memo_wrap`} ref={memoScrollPos}>
+                        {
+                            memoReal.map(function (a, i) {
+                                return (
+                                    <div className='memo_content opacity' key={i}>
+                                        {log_auth === 0 && (
+                                            <div className='memoList_btn'>
+                                                <button className='icon-edit-alt' onClick={() => memoCorrectOn(a)}></button>
+                                                {/* <button className='icon-trash' onClick={() => delMemoList(i)}></button> */}
+                                            </div>
+                                        )}
+                                        <div className='memo_content_box'>
+                                            <p className='font_text' onClick={() => memoDetailOn(a)}>{memoReal[i].memoComment}</p>
+                                            <div className='memo_content_btn_box'>
+                                                <button onClick={() => bookFilter(i)}>{memoReal[i].memoSource}</button>
+                                                <span>{memoReal[i].memoAuthor}</span>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            )
-                        })
-                    }
+                                )
+                            })
+                        }
+                    </div>
                 </div>
+
 
                 {/* memoDetail */}
                 <div className={`memoDetail_content ${memoActive ? memoActive : ""}`}>
