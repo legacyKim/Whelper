@@ -20,7 +20,7 @@ function Login() {
 
         if (result.payload) {
             const token = result.payload.access_token;
-            sessionStorage.setItem('access_token', token);
+            localStorage.setItem('access_token', token);
             navigate('/');
         } else {
             alert('돌아가');

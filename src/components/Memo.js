@@ -1,15 +1,16 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
+import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux"
 import MyContext from '../context'
 import { toast } from 'react-toastify';
 
 import { memoListData, memoListDataPost, memoListDataUpdate, memoListDataDelete, memoListAnnoPost, memoListAnnoUpdate, memoListAnnoDelete, bookListData, bookListDataPost, bookListDataDelete } from "../data/api"
 import { syncMemoListDataAdd, syncMemoListDelete, syncMemoListDataUpdate, syncMemoListAnno, syncMemoListAnnoUpdate, syncMemoListAnnoDelete, syncBookListDataAdd, syncBookListDelete } from "../data/reducers.js"
+import { token_check } from '../data/token_check.js'
 
 function Memo() {
 
-    const logged = useSelector(state => state.loginData);
-    const [log_auth] = useState(logged.loggedIn.authority);
+    const navigate = useNavigate();
 
     const dispatch = useDispatch();
     useEffect(() => {
@@ -31,6 +32,9 @@ function Memo() {
 
     const memoListArr = memoListState.data.memo || [];
     const bookListArr = bookListState.data.book || [];
+
+    const [memoArr, setMemoArr] = useState(memoListArr);
+    const [memoReal, setMemoReal] = useState(memoArr);
 
     // alert
     const showToast = () => {
@@ -152,7 +156,6 @@ function Memo() {
         }, 300);
 
         setMemoCorrectActive('');
-
     };
 
     useEffect(() => {
@@ -200,69 +203,70 @@ function Memo() {
     // memo save
     // const [memo, setMemo] = useState(memoListArr);
 
-    useEffect(() => {
-        setTimeout(() => {
-            const memoContentElements = document.querySelectorAll('.memo_content');
-            memoContentElements.forEach(element => {
-                element.classList.remove('opacity');
-            });
-        }, 100)
-    }, [memoListArr])
-
     var newMemoSource = useRef(null);
     var newMemoAuthor = useRef(null);
     var newMemoComment = useRef(null);
 
-    const MemoSaveBtn = () => {
+    const MemoSaveBtn = async () => {
 
-        var randomId = Math.random().toString(36).substr(2, 9);
-        const memoComment = newMemoComment.current.value;
-        var memoAuthor = newMemoAuthor.current.value;
-        var memoSource = newMemoSource.current.value;
-        var memoAnnotation = [];
+        const isTokenValid = await token_check(navigate);
+        if (isTokenValid) {
 
-        dispatch(syncMemoListDataAdd({ memoComment, memoAuthor, memoSource, memoAnnotation, randomId }));
-        dispatch(memoListDataPost({ memoComment, memoAuthor, memoSource, memoAnnotation }));
+            var randomId = Math.random().toString(36).substr(2, 9);
+            const memoComment = newMemoComment.current.value;
+            var memoAuthor = newMemoAuthor.current.value;
+            var memoSource = newMemoSource.current.value;
+            var memoAnnotation = [];
 
-        if (memoListArr.length === 0) {
-            dispatch(syncBookListDataAdd({ memoSource, memoAuthor }));
-            dispatch(bookListDataPost({ memoSource, memoAuthor }));
-        } else {
-            for (const key in memoListArr) {
-                const item = memoListArr[key];
-                if (item.memoSource !== memoSource) {
-                    dispatch(syncBookListDataAdd({ memoSource, memoAuthor }));
-                    dispatch(bookListDataPost({ memoSource, memoAuthor }));
-                    break;
-                } else {
-                    break;
+            dispatch(syncMemoListDataAdd({ memoComment, memoAuthor, memoSource, memoAnnotation, randomId }));
+            dispatch(memoListDataPost({ memoComment, memoAuthor, memoSource, memoAnnotation }));
+
+            if (memoListArr.length === 0) {
+                dispatch(syncBookListDataAdd({ memoSource, memoAuthor }));
+                dispatch(bookListDataPost({ memoSource, memoAuthor }));
+            } else {
+                for (const key in memoListArr) {
+                    const item = memoListArr[key];
+                    if (item.memoSource !== memoSource) {
+                        dispatch(syncBookListDataAdd({ memoSource, memoAuthor }));
+                        dispatch(bookListDataPost({ memoSource, memoAuthor }));
+                        break;
+                    } else {
+                        break;
+                    }
                 }
             }
+
+            setMemoCurrent(null);
         }
 
-        setMemoCurrent(null);
     };
 
     // book save
     var newBook = useRef(null);
     var newAuthor = useRef(null);
 
-    const bookSaveBtn = () => {
-        const memoSource = newBook.current.value;
-        const memoAuthor = newAuthor.current.value;
+    const bookSaveBtn = async () => {
 
-        if (memoListArr.length === 0) {
-            dispatch(syncBookListDataAdd({ memoSource, memoAuthor }))
-            dispatch(bookListDataPost({ memoSource, memoAuthor }));
-        } else {
-            for (const key in bookListArr) {
-                const item = bookListArr[key];
-                if (item.memoSource !== memoSource) {
-                    dispatch(syncBookListDataAdd({ memoSource, memoAuthor }))
-                    dispatch(bookListDataPost({ memoSource, memoAuthor }));
-                    break;
-                } else {
-                    break;
+        const isTokenValid = await token_check(navigate);
+        if (isTokenValid) {
+
+            const memoSource = newBook.current.value;
+            const memoAuthor = newAuthor.current.value;
+
+            if (memoListArr.length === 0) {
+                dispatch(syncBookListDataAdd({ memoSource, memoAuthor }))
+                dispatch(bookListDataPost({ memoSource, memoAuthor }));
+            } else {
+                for (const key in bookListArr) {
+                    const item = bookListArr[key];
+                    if (item.memoSource !== memoSource) {
+                        dispatch(syncBookListDataAdd({ memoSource, memoAuthor }))
+                        dispatch(bookListDataPost({ memoSource, memoAuthor }));
+                        break;
+                    } else {
+                        break;
+                    }
                 }
             }
         }
@@ -279,12 +283,14 @@ function Memo() {
     }
 
     // memo anno delete
-    const memoDeleteBtn = (memoCurrent) => {
-
-        const corrMemoId = memoCurrent.id;
-        dispatch(syncMemoListDelete(corrMemoId));
-        dispatch(memoListDataDelete(corrMemoId));
-        setMemoCurrent(null);
+    const memoDeleteBtn = async (memoCurrent) => {
+        const isTokenValid = await token_check(navigate);
+        if (isTokenValid) {
+            const corrMemoId = memoCurrent.id;
+            dispatch(syncMemoListDelete(corrMemoId));
+            dispatch(memoListDataDelete(corrMemoId));
+            setMemoCurrent(null);
+        }
     }
     //// memo Annotation
 
@@ -293,21 +299,26 @@ function Memo() {
     var correctMemoAuthor = useRef();
     var correctMemoComment = useRef();
 
-    const memoCorrectBtn = (a) => {
+    const memoCorrectBtn = async (a) => {
 
-        const id = a.id
-        const memoSource = correctMemoSource.current.value;
-        const memoAuthor = correctMemoAuthor.current.value;
-        const memoComment = correctMemoComment.current.value;
-        const memoAnnotation = a.memoAnnotation;
+        const isTokenValid = await token_check(navigate);
+        if (isTokenValid) {
 
-        dispatch(syncMemoListDataUpdate({ id, memoSource, memoAuthor, memoComment, memoAnnotation }));
-        dispatch(memoListDataUpdate({ id, memoSource, memoAuthor, memoComment }));
+            const id = a.id
+            const memoSource = correctMemoSource.current.value;
+            const memoAuthor = correctMemoAuthor.current.value;
+            const memoComment = correctMemoComment.current.value;
+            const memoAnnotation = a.memoAnnotation;
 
-        setMemoCurrent({ id, memoSource, memoAuthor, memoComment, memoAnnotation });
+            dispatch(syncMemoListDataUpdate({ id, memoSource, memoAuthor, memoComment, memoAnnotation }));
+            dispatch(memoListDataUpdate({ id, memoSource, memoAuthor, memoComment }));
 
-        setMemoCorrectActive('');
-        setMemoActive('active');
+            setMemoCurrent({ id, memoSource, memoAuthor, memoComment, memoAnnotation });
+
+            setMemoCorrectActive('');
+            setMemoActive('active');
+
+        }
     };
     //// memo correct btn
 
@@ -344,10 +355,55 @@ function Memo() {
         }
     }
 
-    const [memoArr, setMemoArr] = useState(memoListArr);
-    const [memoArrActive, setMemoArrActive] = useState('active');
+    // infinite scroll
+    var memoScrollArea = useRef();
+    var memoScrollPos = useRef();
+    var currentY = 0;
+    var previousY = 0;
+    var scrollAmount = 138.4;
 
-    console.log(memoArr)
+    const memoScrollMove = (e) => {
+
+        currentY = memoScrollArea.current.scrollTop;
+        if (e.deltaY > 0) {
+            currentY += scrollAmount;
+        } else {
+            currentY -= scrollAmount;
+        }
+        memoScrollArea.current.scrollTop = currentY;
+        previousY = currentY;
+
+        var scroll_num = Math.round(currentY / scrollAmount);
+
+        if (0 <= scroll_num && scroll_num < memoListArr.length - 5 && 5 < memoArr.length) {
+            memoScrollPos.current.style.top = `${scrollAmount * scroll_num}px`
+
+            var rows = [];
+            for (let i = scroll_num; i < scroll_num + 6; i += 1) {
+                if (memoArr[i] !== undefined) rows.push(memoArr[i])
+            }
+
+            setMemoReal(rows)
+
+        }
+
+    }
+
+    useEffect(() => {
+        const currentScrollArea = memoScrollArea.current;
+        currentScrollArea.addEventListener('wheel', memoScrollMove);
+
+        var rows = [];
+        for (let i = 0; i < 6; i += 1) {
+            if (memoArr[i] !== undefined) rows.push(memoArr[i])
+        }
+        setMemoReal(rows)
+
+        return () => {
+            currentScrollArea.removeEventListener('wheel', memoScrollMove);
+        };
+    }, [memoArr]);
+    //// infinite scroll
 
     useEffect(() => {
         if (bookLocalStorage === null) {
@@ -359,6 +415,7 @@ function Memo() {
             setMemoArr(memoListArr.filter((item) => item.memoSource === bookTitle));
         }
         setMemoCurrent(null);
+        memoScrollPos.current.style.top = '0px';
     }, [bookTitle]);
 
     useEffect(() => {
@@ -406,17 +463,20 @@ function Memo() {
 
     // memo anno add
     var newMemoAnno = useRef();
-    const memoAnnoBtn = (memo) => {
+    const memoAnnoBtn = async (memo) => {
+        const isTokenValid = await token_check(navigate);
+        if (isTokenValid) {
 
-        const memoAnnotation = newMemoAnno.current.value;
-        const memoComment = memo.memoComment;
-        const memoSource = memo.memoSource;
-        const memoAuthor = memo.memoAuthor;
+            const memoAnnotation = newMemoAnno.current.value;
+            const memoComment = memo.memoComment;
+            const memoSource = memo.memoSource;
+            const memoAuthor = memo.memoAuthor;
 
-        dispatch(syncMemoListAnno({ memoSource, memoAnnotation }));
-        dispatch(memoListAnnoPost({ memoComment, memoSource, memoAuthor, memoAnnotation }))
-        setMemoAnnoActive('');
-        setTextAreaHeight(null);
+            dispatch(syncMemoListAnno({ memoSource, memoAnnotation }));
+            dispatch(memoListAnnoPost({ memoComment, memoSource, memoAuthor, memoAnnotation }))
+            setMemoAnnoActive('');
+            setTextAreaHeight(null);
+        }
 
     }
     //// memo anno add
@@ -449,20 +509,25 @@ function Memo() {
     }, [textAreaHeight])
 
     // memo anno correct complete
-    const memoAnnoCorrComBtn = (memo, memoAnnoCorrProps) => {
+    const memoAnnoCorrComBtn = async (memo, memoAnnoCorrProps) => {
 
-        const id = memo.id;
-        const memoAnno = memoAnnoCorrProps;
-        const memoComment = memo.memoComment;
-        const memoSource = memo.memoSource;
-        const memoAuthor = memo.memoAuthor;
+        const isTokenValid = await token_check(navigate);
+        if (isTokenValid) {
 
-        const corrAnnotationKeys = memoAnnoIndex;
+            const id = memo.id;
+            const memoAnno = memoAnnoCorrProps;
+            const memoComment = memo.memoComment;
+            const memoSource = memo.memoSource;
+            const memoAuthor = memo.memoAuthor;
 
-        dispatch(syncMemoListAnnoUpdate({ id, memoAnno, corrAnnotationKeys }));
-        dispatch(memoListAnnoUpdate({ id, memoComment, memoSource, memoAuthor, memoAnno, corrAnnotationKeys }));
-        setAnnoCorrectActive('');
-        setTextAreaHeight(null);
+            const corrAnnotationKeys = memoAnnoIndex;
+
+            dispatch(syncMemoListAnnoUpdate({ id, memoAnno, corrAnnotationKeys }));
+            dispatch(memoListAnnoUpdate({ id, memoComment, memoSource, memoAuthor, memoAnno, corrAnnotationKeys }));
+            setAnnoCorrectActive('');
+            setTextAreaHeight(null);
+
+        }
 
     }
     //// memo anno correct complete
@@ -501,6 +566,8 @@ function Memo() {
     }
     //// anno textarea height
 
+    var log = 'test';
+
     return (
 
         <div className='common_page'>
@@ -511,7 +578,7 @@ function Memo() {
                             <i className='icon-book'></i>
                             <strong>{bookTitle}</strong>
                             <b onClick={(e) => refreshTitle(e)} className={`icon-cancel ${bookTitle !== '전체' ? 'active' : ''}`}></b>
-                            {log_auth === 0 && (
+                            {log !== null && (
                                 <b onClick={(e) => deleteBook(e)} className={`icon-trash hover_opacity ${bookTitle !== '전체' ? 'active' : ''}`}></b>
                             )}
                         </div>
@@ -538,7 +605,7 @@ function Memo() {
                             </ul>
                         </div>
                     </div>
-                    {log_auth === 0 && (
+                    {log !== null && (
                         <div className={`memo_btn ${scrollPosition > 0 ? "scroll_event" : ""}`}>
                             <button onClick={memoAddOn} className='icon-pencil-alt'></button>
                             <button onClick={bookAddOn} className='icon-book-2'></button>
@@ -546,49 +613,44 @@ function Memo() {
                     )}
                 </div>
 
-                <div className={`memo_wrap`}>
-                    {
-                        memoArr.map(function (a, i) {
-                            return (
-                                <div className='memo_content opacity' key={i}>
-                                    {log_auth === 0 && (
-                                        <div className='memoList_btn'>
-                                            <button className='icon-edit-alt' onClick={() => memoCorrectOn(a)}></button>
-                                            {/* <button className='icon-trash' onClick={() => delMemoList(i)}></button> */}
-                                        </div>
-                                    )}
-                                    <div className='memo_content_box'>
-                                        <p className='font_text' onClick={() => memoDetailOn(a)}>{memoArr[i].memoComment}</p>
-                                        <div className='memo_content_btn_box'>
-                                            <button onClick={() => bookFilter(i)}>{memoArr[i].memoSource}</button>
-                                            <span>{memoArr[i].memoAuthor}</span>
+                <div className='memo_scroll' ref={memoScrollArea}>
+                    <div className={`memo_wrap`} ref={memoScrollPos}>
+                        {
+                            memoReal.map(function (a, i) {
+                                return (
+                                    <div className='memo_content' key={i}>
+                                        {log !== null && (
+                                            <div className='memoList_btn'>
+                                                <button className='icon-edit-alt' onClick={() => memoCorrectOn(a)}></button>
+                                                {/* <button className='icon-trash' onClick={() => delMemoList(i)}></button> */}
+                                            </div>
+                                        )}
+                                        <div className='memo_content_box'>
+                                            <p className='font_text' onClick={() => memoDetailOn(a)}>{memoReal[i].memoComment}</p>
+                                            <div className='memo_content_btn_box'>
+                                                <button onClick={() => bookFilter(i)}>{memoReal[i].memoSource}</button>
+                                                <span>{memoReal[i].memoAuthor}</span>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            )
-                        })
-                    }
+                                )
+                            })
+                        }
+                    </div>
                 </div>
 
+
                 {/* memoDetail */}
-                <div className={`memoDetail_content ${memoActive ? memoActive : ""}`}>
+                <div className={`memo_content_pos ${memoActive ? memoActive : ""}`}>
                     {memoCurrent !== null && <MemoView memo={memoCurrent} />}
                 </div>
                 {/* memoDetail */}
 
                 {/* memoCorrect */}
-                <div className={`memoDetail_content ${memoCorrectActive ? memoCorrectActive : ""}`}>
+                <div className={`memo_content_pos ${memoCorrectActive ? memoCorrectActive : ""}`}>
                     {memoCurrent !== null && <MemoCorrect memo={memoCurrent} />}
                     <div className='page_btn'>
                         <button className='icon-ok-circled' onClick={() => memoCorrectBtn(memoCurrent)}></button>
-                    </div>
-                    <div className='memoDetail_btn'>
-                        <button className='icon-clipboard'
-                            onClick={() => {
-                                memoDetailOn(memoCurrent);
-                                memoCorrectClose();
-                            }}></button>
-                        <button className='icon-cancel' onClick={memoCorrectClose}></button>
                     </div>
                 </div>
                 {/* memoCorrect */}
@@ -674,7 +736,7 @@ function Memo() {
                 {memo.memoAnnotation !== null && <MemoAnno memo={memo} />}
 
                 <div className='memoDetail_btn'>
-                    {log_auth === 0 && (
+                    {log !== null && (
                         <div className='flex'>
                             <button className='icon-flow-split' onClick={() => {
                                 setMemoAnnoActive('active');
@@ -763,6 +825,15 @@ function Memo() {
                     </li>
                 </ul>
                 <textarea type="text" plsaceholder="correctMemoComment" className="memo_comment scroll" defaultValue={memo.memoComment} ref={correctMemoComment}></textarea>
+
+                <div className='memoDetail_btn'>
+                    <button className='icon-clipboard'
+                        onClick={() => {
+                            memoDetailOn(memoCurrent);
+                            memoCorrectClose();
+                        }}></button>
+                    <button className='icon-cancel' onClick={memoCorrectClose}></button>
+                </div>
             </div>
         )
     }

@@ -7,6 +7,7 @@ import MyContext from './context'
 
 import { userCheck, login } from './data/api.js'
 import { logout } from './data/reducers.js'
+import { token_check } from './data/token_check.js'
 
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -21,15 +22,10 @@ function App() {
     //     dispatch(login())
     // }, []);
 
-    const logSession = sessionStorage.getItem('access_token');
-    const log_res = sessionStorage.getItem('auth');
-
-    // const logged = useSelector(state => state.loginData);
-    // const log_auth = logged.loggedIn.authority;
-    const log_auth = 0;
+    const log = localStorage.getItem('access_token');
 
     const loggedOut = () => {
-        sessionStorage.removeItem('access_token');
+        localStorage.removeItem('access_token');
     };
 
     const navigate = useNavigate();
@@ -127,9 +123,18 @@ function App() {
     }
     //// about search
 
+    // write 검증
+    const writeNavi = async () => {
+        const isTokenValid = await token_check(navigate);
+        if (isTokenValid) {
+            navigate('/components/Write');
+        }
+    };
+    //// write 검증
+
     return (
 
-        <MyContext.Provider value={{ searchArr, setSearchArr, scrollPosition, setScrollPosition }}>
+        <MyContext.Provider value={{ searchArr, setSearchArr, scrollPosition, setScrollPosition}}>
             <div id='app' className={`App ${theme}`}>
 
                 <Routes></Routes>
@@ -141,9 +146,7 @@ function App() {
                     </div>
                     <ul className='header_btn'>
                         {/* <li className='btn'><NavLink to="/components/Slate" className='icon-vector-pencil' onClick={() => { navigate('/components/Slate') }}></NavLink></li> */}
-                        {log_auth === 0 && (
-                            <li className='btn'><NavLink to="/components/Write" className='icon-vector-pencil' onClick={() => { navigate('/components/Write') }}></NavLink></li>
-                        )}
+                        <li className='btn'><NavLink to="/components/Write" className='icon-vector-pencil' onClick={writeNavi}></NavLink></li>
                         <li className='btn'><NavLink to="/components/WriteList" className='icon-clipboard' onClick={() => { navigate('/components/WriteList') }}></NavLink></li>
                         <li className='btn'><NavLink to="/components/Memo" className='icon-comment' onClick={() => { navigate('/components/Memo') }}></NavLink></li>
                         {/* <li className='btn'><NavLink to="/components/Book" className='icon-book-1' onClick={() => { navigate('/components/Book') }}></NavLink></li> */}
@@ -152,7 +155,7 @@ function App() {
                         <li className='btn'><NavLink to={`/components/Category`} className='icon-bookmark' onClick={() => { navigate('/components/Category') }}></NavLink></li>
                         <li className='btn'><button className='icon-search' onClick={searchOn}></button></li>
 
-                        {logSession === null ? (
+                        {log === null ? (
                             <li className='btn'><NavLink to={`/components/Login`} className='icon-login' onClick={() => { navigate('/components/Login') }}></NavLink></li>
                         ) : (
                             <li className='btn'><button className='icon-logout' onClick={loggedOut}></button></li>
