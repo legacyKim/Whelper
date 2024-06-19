@@ -30,7 +30,6 @@ function App() {
 
     const loggedOut = () => {
         sessionStorage.removeItem('access_token');
-        sessionStorage.removeItem('auth');
     };
 
     const navigate = useNavigate();
