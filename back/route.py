@@ -238,7 +238,7 @@ def post_data_login():
             session['user_authority'] = result['authority']
 
             access_token = create_access_token(identity=result['username'])
-            return jsonify(access_token=access_token, log=result)
+            return jsonify(access_token=access_token, info=result)
 
         else:
             return jsonify({'message': 'Invalid username or password'}), 401
