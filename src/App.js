@@ -124,8 +124,10 @@ function App() {
     //// about search
 
     // write 검증
-    const writeNavi = async () => {
+    const writeNavi = async (e) => {
+        e.preventDefault();
         const isTokenValid = await token_check(navigate);
+        console.log(isTokenValid);
         if (isTokenValid) {
             navigate('/components/Write');
         }

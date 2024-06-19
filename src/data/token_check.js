@@ -25,10 +25,12 @@ export const token_check = async (navigate) => {
 
         const data = await response.json();
         return true;
+
     } catch (error) {
         console.error('Token check failed', error);
         alert('토큰이 유효하지 않습니다.');
         return false;
     }
+
 };
 //// 토큰 검증
