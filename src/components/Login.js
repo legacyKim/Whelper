@@ -41,7 +41,7 @@ function Login() {
                 <input type='password' ref={userPassword}></input>
                 <div className='btn'>
                     <button onClick={handleLogin} className='icon-ok'></button>
-                    <Link className='icon-cancel' to={'/'}></Link>
+                    <NavLink className='icon-cancel' to={'/'}></NavLink>
                 </div>
             </div>
         </div>

@@ -24,9 +24,11 @@ export const token_check = async (navigate) => {
         }
 
         const data = await response.json();
+        console.log(data);
         return true;
 
     } catch (error) {
+        console.log(error)
         console.error('Token check failed', error);
         alert('토큰이 유효하지 않습니다.');
         return false;

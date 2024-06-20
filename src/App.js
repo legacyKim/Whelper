@@ -22,7 +22,7 @@ function App() {
     //     dispatch(login())
     // }, []);
 
-    var [log, setlog] = useState(null);
+    var [log_check, setlog] = useState(null);
 
     useEffect(() => {
         const token = localStorage.getItem('access_token');
@@ -30,6 +30,8 @@ function App() {
             setlog(token);
         }
     }, []);
+
+    console.log(log_check)
 
     const loggedOut = () => {
         localStorage.removeItem('access_token');
@@ -164,7 +166,7 @@ function App() {
                         <li className='btn'><NavLink to={`/components/Category`} className='icon-bookmark' onClick={() => { navigate('/components/Category') }}></NavLink></li>
                         <li className='btn'><button className='icon-search' onClick={searchOn}></button></li>
 
-                        {log === null ? (
+                        {log_check === null ? (
                             <li className='btn'><NavLink to={`/components/Login`} className='icon-login' onClick={() => { navigate('/components/Login') }}></NavLink></li>
                         ) : (
                             <li className='btn'><button className='icon-logout' onClick={loggedOut}></button></li>
