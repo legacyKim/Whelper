@@ -360,7 +360,7 @@ function Memo() {
     var memoScrollPos = useRef();
     var currentY = 0;
     var previousY = 0;
-    var scrollAmount = 138.4;
+    var scrollAmount = 140;
 
     const memoScrollMove = (e) => {
 

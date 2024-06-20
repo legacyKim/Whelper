@@ -22,10 +22,18 @@ function App() {
     //     dispatch(login())
     // }, []);
 
-    const log = localStorage.getItem('access_token');
+    var [log, setlog] = useState(null);
+
+    useEffect(() => {
+        const token = localStorage.getItem('access_token');
+        if (token) {
+            setlog(token);
+        }
+    }, []);
 
     const loggedOut = () => {
         localStorage.removeItem('access_token');
+        setlog(null);
     };
 
     const navigate = useNavigate();
@@ -127,7 +135,6 @@ function App() {
     const writeNavi = async (e) => {
         e.preventDefault();
         const isTokenValid = await token_check(navigate);
-        console.log(isTokenValid);
         if (isTokenValid) {
             navigate('/components/Write');
         }
@@ -136,7 +143,7 @@ function App() {
 
     return (
 
-        <MyContext.Provider value={{ searchArr, setSearchArr, scrollPosition, setScrollPosition}}>
+        <MyContext.Provider value={{ searchArr, setSearchArr, scrollPosition, setScrollPosition }}>
             <div id='app' className={`App ${theme}`}>
 
                 <Routes></Routes>

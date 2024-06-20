@@ -23,7 +23,7 @@ function Login() {
             localStorage.setItem('access_token', token);
             navigate('/');
         } else {
-            alert('돌아가');
+            alert('아이디 또는 비밀번호가 틀렸습니다.');
         }
     };
 
