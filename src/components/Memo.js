@@ -366,8 +366,7 @@ function Memo() {
         var scY = window.innerHeight;
         const memoScrollTop = memoScrollArea.current.getBoundingClientRect().top;
         var memoAreaHeight = (scY - memoScrollTop) / scrollAmount;
-
-        console.log(Math.floor(memoAreaHeight))
+        memoScrollArea.current.style.height = Math.floor(memoAreaHeight) * scrollAmount + 'px';
     }
 
     const memoScrollMove = (e) => {
@@ -399,6 +398,7 @@ function Memo() {
 
     useEffect(() => {
 
+        // check web size and attribute height;
         memoAreaCheck();
 
         const currentScrollArea = memoScrollArea.current;
