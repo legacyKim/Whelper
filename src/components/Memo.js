@@ -362,6 +362,14 @@ function Memo() {
     var previousY = 0;
     var scrollAmount = 140;
 
+    const memoAreaCheck = () => {
+        var scY = window.innerHeight;
+        const memoScrollTop = memoScrollArea.current.getBoundingClientRect().top;
+        var memoAreaHeight = (scY - memoScrollTop) / scrollAmount;
+
+        console.log(Math.floor(memoAreaHeight))
+    }
+
     const memoScrollMove = (e) => {
 
         currentY = memoScrollArea.current.scrollTop;
@@ -390,6 +398,9 @@ function Memo() {
     }
 
     useEffect(() => {
+
+        memoAreaCheck();
+
         const currentScrollArea = memoScrollArea.current;
         currentScrollArea.addEventListener('wheel', memoScrollMove);
 

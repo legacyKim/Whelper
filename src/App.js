@@ -5,10 +5,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { debounce } from 'lodash';
 import MyContext from './context'
 
-import { userCheck, login } from './data/api.js'
-import { logout } from './data/reducers.js'
 import { token_check } from './data/token_check.js'
-
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -17,21 +14,14 @@ import Routes from './Routes'
 
 function App() {
 
-    const dispatch = useDispatch();
-    // useEffect(()=>{
-    //     dispatch(login())
-    // }, []);
-
     var [log_check, setlog] = useState(null);
+    const token = localStorage.getItem('access_token');
 
     useEffect(() => {
-        const token = localStorage.getItem('access_token');
         if (token) {
             setlog(token);
         }
-    }, []);
-
-    console.log(log_check)
+    }, [token]);
 
     const loggedOut = () => {
         localStorage.removeItem('access_token');

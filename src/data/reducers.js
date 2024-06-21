@@ -1,5 +1,5 @@
 import { createSlice, configureStore } from '@reduxjs/toolkit';
-import { writeListData, writeListDataPost, memoListData, cateListData, bookListData, login } from './api.js'
+import { writeListData, writeListDataPost, memoListData, cateListData, bookListData } from './api.js'
 
 const WriteData = createSlice({
     name: 'WriteData',
@@ -233,44 +233,10 @@ const bookData = createSlice({
 
 });
 
-const loginData = createSlice({
-    name: 'loginData',
-    initialState: {
-        loading: false,
-        loggedIn: false,
-        error: null,
-    },
-    reducers: {
-        logout: (state) => {
-            state.loading = false;
-            state.loggedIn = false;
-            state.error = null;
-        },
-    },
-    extraReducers: (builder) => {
-        builder
-            .addCase(login.pending, (state) => {
-                state.loading = true;
-                state.error = null;
-            })
-            .addCase(login.fulfilled, (state, action) => {
-                state.loading = false;
-                state.loggedIn = action.payload;
-                state.error = null;
-            })
-            .addCase(login.rejected, (state, action) => {
-                state.loading = false;
-                state.loggedIn = false;
-                state.error = action.error.message;
-            });
-    },
-});
-
 export const { syncWriteListData, syncWriteListDataUpdate } = WriteData.actions;
 export const { syncMemoListDataAdd, syncMemoListDelete, syncMemoListDataUpdate, syncMemoListAnno, syncMemoListAnnoUpdate, syncMemoListAnnoDelete } = memoData.actions;
 export const { cateListDataAdd, syncCateListData } = cateData.actions;
 export const { syncBookListDataAdd, syncBookListDelete } = bookData.actions;
-export const { logout } = loginData.actions;
 
 const store = configureStore({
     reducer: {
@@ -278,7 +244,6 @@ const store = configureStore({
         memoData: memoData.reducer,
         cateData: cateData.reducer,
         bookData: bookData.reducer,
-        loginData: loginData.reducer,
     }
 });
 
