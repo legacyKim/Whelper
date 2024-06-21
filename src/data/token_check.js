@@ -4,6 +4,8 @@ const API_URL = 'http://localhost:5000';
 export const token_check = async (navigate) => {
 
     const token = localStorage.getItem('access_token');
+
+    console.log(token, ' token 이 문제인가?')
     if (!token) {
         alert('로그인이 필요합니다.')
         navigate('/components/Login');
@@ -19,12 +21,14 @@ export const token_check = async (navigate) => {
             },
         });
 
+        console.log(response, " get 요청 문제인가?")
+
         if (!response.ok) {
             throw new Error('토큰 검증에 실패했습니다.');
         }
 
-        const data = await response.json();
-        console.log(data);
+        // const data = await response.json();
+
         return true;
 
     } catch (error) {
