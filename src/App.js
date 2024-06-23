@@ -147,19 +147,40 @@ function App() {
                     </div>
                     <ul className='header_btn'>
                         {/* <li className='btn'><NavLink to="/components/Slate" className='icon-vector-pencil' onClick={() => { navigate('/components/Slate') }}></NavLink></li> */}
-                        <li className='btn'><NavLink to="/components/Write" className='icon-vector-pencil' onClick={writeNavi}></NavLink></li>
-                        <li className='btn'><NavLink to="/components/WriteList" className='icon-clipboard' onClick={() => { navigate('/components/WriteList') }}></NavLink></li>
-                        <li className='btn'><NavLink to="/components/Memo" className='icon-comment' onClick={() => { navigate('/components/Memo') }}></NavLink></li>
+                        <li className='btn'><NavLink to="/components/Write" className='icon-vector-pencil' onClick={writeNavi}>
+                            <div className='tooltip'><span>Write</span></div>
+                        </NavLink></li>
+                        <li className='btn'><NavLink to="/components/WriteList" className='icon-clipboard' onClick={() => { navigate('/components/WriteList') }}>
+                            <div className='tooltip'><span>Write-List</span></div>
+                        </NavLink></li>
+                        <li className='btn'><NavLink to="/components/Memo" className='icon-comment' onClick={() => { navigate('/components/Memo') }}>
+                            <div className='tooltip'><span>Memo</span></div>
+                        </NavLink></li>
                         {/* <li className='btn'><NavLink to="/components/Book" className='icon-book-1' onClick={() => { navigate('/components/Book') }}></NavLink></li> */}
-                        <li className='btn'><NavLink to={`/components/Search/${searchInputValue}`} className='icon-link-1' onClick={() => { navigate('/components/Search') }}></NavLink></li>
-                        <li className='btn'><NavLink to={`/components/Date`} className='icon-calendar' onClick={() => { navigate('/components/Date') }}></NavLink></li>
-                        <li className='btn'><NavLink to={`/components/Category`} className='icon-bookmark' onClick={() => { navigate('/components/Category') }}></NavLink></li>
-                        <li className='btn'><button className='icon-search' onClick={searchOn}></button></li>
+                        <li className='btn'><NavLink to={`/components/Search/${searchInputValue}`} className='icon-link-1' onClick={() => { navigate('/components/Search') }}>
+                            <div className='tooltip'><span>Search</span></div>
+                        </NavLink></li>
+                        <li className='btn'><NavLink to={`/components/Date`} className='icon-calendar' onClick={() => { navigate('/components/Date') }}>
+                            <div className='tooltip'><span>Date</span></div>
+                        </NavLink></li>
+                        <li className='btn'><NavLink to={`/components/Category`} className='icon-bookmark' onClick={() => { navigate('/components/Category') }}>
+                            <div className='tooltip'><span>Category</span></div>
+                        </NavLink></li>
+                        <li className='btn'><button className='icon-search' onClick={searchOn}>
+                            <div className='tooltip'><span>Search</span></div>
+                        </button></li>
+                        <li className='btn'><NavLink to={`/components/Work`} className='icon-list-bullet' onClick={() => { navigate('/components/Work') }}>
+                            <div className='tooltip'><span>Work</span></div>
+                        </NavLink></li>
 
                         {log_check === null ? (
-                            <li className='btn'><NavLink to={`/components/Login`} className='icon-login' onClick={() => { navigate('/components/Login') }}></NavLink></li>
+                            <li className='btn'><NavLink to={`/components/Login`} className='icon-login' onClick={() => { navigate('/components/Login') }}>
+                                <div className='tooltip'><span>Log-In</span></div>
+                            </NavLink></li>
                         ) : (
-                            <li className='btn'><button className='icon-logout' onClick={loggedOut}></button></li>
+                            <li className='btn'><button className='icon-logout' onClick={loggedOut}>
+                                <div className='tooltip'><span>Log-Out</span></div>
+                            </button></li>
                         )}
 
                         {/* <li><div id='theme_screen' className='icon-arrows-ccw' onClick={themeChangeBtn}></div></li> */}
