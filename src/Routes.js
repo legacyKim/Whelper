@@ -21,6 +21,8 @@ import Date from './components/Date.js'
 import Category from './components/Category.js'
 import Search from './components/Search.js'
 
+import Work from './components/Work.js'
+
 function Menu() {
 
     const location = useLocation();
@@ -51,7 +53,7 @@ function Menu() {
                         <Route path="/components/Search/:searchInputValue" element={<Search />} />
 
                         <Route path="/components/Memo" element={<Memo />} />
-                        {/* <Route path="/components/Book" element={<Book />} /> */}
+                        <Route path="/components/Work" element={<Work />} />
 
                     </Routes>
                 </CSSTransition>

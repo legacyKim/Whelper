@@ -162,7 +162,7 @@ function App() {
                             <li className='btn'><button className='icon-logout' onClick={loggedOut}></button></li>
                         )}
 
-                        <li><div id='theme_screen' className='icon-arrows-ccw' onClick={themeChangeBtn}></div></li>
+                        {/* <li><div id='theme_screen' className='icon-arrows-ccw' onClick={themeChangeBtn}></div></li> */}
                     </ul>
                 </div>
 

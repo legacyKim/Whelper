@@ -1,4 +1,4 @@
-import { React, useRef } from 'react';
+import { React, useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from "react-redux"
 import { useNavigate, Link, NavLink } from "react-router-dom";
 
@@ -27,21 +27,27 @@ function Login() {
         }
     };
 
-    const handleLogin = () => {
+    const LoginClick = () => {
         loginCheck().catch(error => {
             console.error(error);
         });
     };
     //// login
 
+    const [loginOn, setLoginOn] = useState('on')
+    
     return (
         <div className='login'>
-            <div className='form'>
+            <div className={`form ${loginOn}`}>
+                <strong>Login</strong>
+                <p>My portfolio login</p>
+                <span>Admin ID</span>
                 <input ref={username}></input>
+                <span>password</span>
                 <input type='password' ref={userPassword}></input>
                 <div className='btn'>
-                    <button onClick={handleLogin} className='icon-ok'></button>
-                    <NavLink className='icon-cancel' to={'/'}></NavLink>
+                    <button onClick={LoginClick} className=''>Login</button>
+                    <NavLink to={'/'}>Close</NavLink>
                 </div>
             </div>
         </div>
