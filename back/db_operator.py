@@ -1,9 +1,11 @@
 import hashlib
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import create_engine, Column, Integer, String, MetaData, Table, Text, text
+from sqlalchemy import create_engine, Column, Integer, String, MetaData, Table, Text, text, DateTime
+from datetime import datetime
 import json
 from db_config import db_config
+
 # import pymysql
 # pymysql.install_as_MySQLdb()
 
@@ -20,6 +22,9 @@ class Write(Base_write):
     subTitle = Column(String(255))
     content = Column(Text)
     keywords = Column(String(255))
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow,
+                        onupdate=datetime.utcnow)
 
 
 class Category(Base_write):
@@ -82,6 +87,10 @@ def create_table():
 
 def post_data_to_write(data):
     try:
+
+        now = datetime.utcnow()
+        data['created_at'] = now
+        data['updated_at'] = now
         with Session_write() as session:
             write_instance = Write(**data)
             session.add(write_instance)
