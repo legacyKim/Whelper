@@ -46,7 +46,7 @@ function Login() {
                 <span>password</span>
                 <input type='password' ref={userPassword}></input>
                 <div className='btn'>
-                    <button onClick={LoginClick} className=''>Login</button>
+                    <button onClick={LoginClick} className=''>Login <i className='icon-rocket'></i></button>
                     <NavLink to={'/'}>Close</NavLink>
                 </div>
             </div>

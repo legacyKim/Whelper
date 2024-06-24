@@ -10,7 +10,7 @@
 .list li a .img { position: relative; display: block; border-radius: 4px; overflow: hidden; height: 200px; margin-bottom: 12px; transition: all 0.3s ease-in-out; } 
 .list li a .img img { position: relative; display: block; width: 100%; height: 100%; object-fit: cover; } 
 
-.list li a svg { position: absolute; top: 150%; left: 50%; transform: translate(-50%, -50%); transition: all 0.7s ease-in-out; color: #fff; z-index: 9; width: 32px; height: 32px; filter: drop-shadow(0px 0px 10px); } 
+.list li a svg { position: absolute; top: 150%; left: 50%; transform: translate(-50%, -50%); transition: all 0.7s ease-in-out; color: #fff; z-index: 9; width: 18px; height: 18px; filter: drop-shadow(0px 0px 10px); } 
 .list li a .img::after { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.58); transition: all 0.3s ease-in-out; opacity: 0; } 
 
 .list li a:hover .img {scale: 1.03;}

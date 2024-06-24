@@ -449,6 +449,66 @@
       "css": "logout",
       "code": 59448,
       "src": "entypo"
+    },
+    {
+      "uid": "34e68aa8fbf61f02a748043ccf448a3b",
+      "css": "moon",
+      "code": 59457,
+      "src": "meteocons"
+    },
+    {
+      "uid": "95fb2e5fdd1ea7e4a420b6ed330e6b08",
+      "css": "sun",
+      "code": 59458,
+      "src": "meteocons"
+    },
+    {
+      "uid": "7997220c4eb58edae98e04de570089c2",
+      "css": "lock-1",
+      "code": 62738,
+      "src": "mfglabs"
+    },
+    {
+      "uid": "e67bcab050d99eb04d44027139ae05f5",
+      "css": "lock-open-1",
+      "code": 62739,
+      "src": "mfglabs"
+    },
+    {
+      "uid": "c91522256a4c3972e9a2765b995b7252",
+      "css": "pinboard",
+      "code": 59459,
+      "src": "zocial"
+    },
+    {
+      "uid": "e7d17d4d07756f4ab5eb690eea1275ca",
+      "css": "stackoverflow",
+      "code": 59460,
+      "src": "zocial"
+    },
+    {
+      "uid": "3cdeca193a3d47ef93a4b45f5d88ba0c",
+      "css": "font",
+      "code": 59461,
+      "src": "elusive"
+    },
+    {
+      "uid": "838db85de51df09e2d0c34a17dc30ff6",
+      "css": "code",
+      "code": 59462,
+      "src": "websymbols"
+    },
+    {
+      "uid": "9248ce8062fb4707a6919bfe9ac1af8e",
+      "css": "popup",
+      "code": 59463,
+      "src": "entypo"
+    },
+    {
+      "uid": "9c7fd7637a41b59a358cb70893f945a5",
+      "css": "rocket",
+      "code": 59464,
+      "src": "entypo"
     }
   ]
 }
