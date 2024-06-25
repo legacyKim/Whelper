@@ -577,8 +577,6 @@ function Memo() {
     }
     //// anno textarea height
 
-    var log = 'test';
-
     return (
 
         <div className='common_page'>
@@ -589,9 +587,7 @@ function Memo() {
                             <i className='icon-book'></i>
                             <strong>{bookTitle}</strong>
                             <b onClick={(e) => refreshTitle(e)} className={`icon-cancel ${bookTitle !== '전체' ? 'active' : ''}`}></b>
-                            {log !== null && (
-                                <b onClick={(e) => deleteBook(e)} className={`icon-trash hover_opacity ${bookTitle !== '전체' ? 'active' : ''}`}></b>
-                            )}
+                            <b onClick={(e) => deleteBook(e)} className={`icon-trash hover_opacity ${bookTitle !== '전체' ? 'active' : ''}`}></b>
                         </div>
                         <div className={`book_list_box ${bookListActive ? bookListActive : ''}`}>
                             <ul className='scroll'>
@@ -616,12 +612,10 @@ function Memo() {
                             </ul>
                         </div>
                     </div>
-                    {log !== null && (
-                        <div className={`memo_btn ${scrollPosition > 0 ? "scroll_event" : ""}`}>
-                            <button onClick={memoAddOn} className='icon-pencil-alt'></button>
-                            <button onClick={bookAddOn} className='icon-book-2'></button>
-                        </div>
-                    )}
+                    <div className={`memo_btn ${scrollPosition > 0 ? "scroll_event" : ""}`}>
+                        <button onClick={memoAddOn} className='icon-pencil-alt'></button>
+                        <button onClick={bookAddOn} className='icon-book-2'></button>
+                    </div>
                 </div>
 
                 <div className='memo_scroll' ref={memoScrollArea}>
@@ -630,12 +624,10 @@ function Memo() {
                             memoReal.map(function (a, i) {
                                 return (
                                     <div className='memo_content' key={i}>
-                                        {log !== null && (
-                                            <div className='memoList_btn'>
-                                                <button className='icon-edit-alt' onClick={() => memoCorrectOn(a)}></button>
-                                                {/* <button className='icon-trash' onClick={() => delMemoList(i)}></button> */}
-                                            </div>
-                                        )}
+                                        <div className='memoList_btn'>
+                                            <button className='icon-edit-alt' onClick={() => memoCorrectOn(a)}></button>
+                                            {/* <button className='icon-trash' onClick={() => delMemoList(i)}></button> */}
+                                        </div>
                                         <div className='memo_content_box'>
                                             <p className='font_text' onClick={() => memoDetailOn(a)}>{memoReal[i].memoComment}</p>
                                             <div className='memo_content_btn_box'>
@@ -747,31 +739,29 @@ function Memo() {
                 {memo.memoAnnotation !== null && <MemoAnno memo={memo} />}
 
                 <div className='memoDetail_btn'>
-                    {log !== null && (
-                        <div className='flex'>
-                            <button className='icon-flow-split' onClick={() => {
-                                setMemoAnnoActive('active');
-                                setAnnoCorrectActive('');
-                                setTextAreaHeight(null);
-                            }}></button>
+                    <div className='flex'>
+                        <button className='icon-flow-split' onClick={() => {
+                            setMemoAnnoActive('active');
+                            setAnnoCorrectActive('');
+                            setTextAreaHeight(null);
+                        }}></button>
 
-                            {memo.id !== undefined && (
-                                <button className='icon-edit-alt'
-                                    onClick={() => {
-                                        memoCorrectOn(memoCurrent);
-                                        memoDetailClose();
-                                    }}></button>
-                            )}
-                            {memo.id !== undefined && (
-                                <button className='icon-trash'
-                                    onClick={() => {
-                                        memoDeleteBtn(memoCurrent)
-                                        memoDetailClose();
-                                    }}>
-                                </button>
-                            )}
-                        </div>
-                    )}
+                        {memo.id !== undefined && (
+                            <button className='icon-edit-alt'
+                                onClick={() => {
+                                    memoCorrectOn(memoCurrent);
+                                    memoDetailClose();
+                                }}></button>
+                        )}
+                        {memo.id !== undefined && (
+                            <button className='icon-trash'
+                                onClick={() => {
+                                    memoDeleteBtn(memoCurrent)
+                                    memoDetailClose();
+                                }}>
+                            </button>
+                        )}
+                    </div>
                     <button className='icon-cancel' onClick={() => {
                         memoDetailClose();
                         setAnnoCorrectActive('');

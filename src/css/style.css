@@ -83,8 +83,8 @@ button i { transition: all 0.3s ease-in-out; }
 .header_btn>li>*:hover { color: var(--main-color); } 
 .header.active { top:16px; background-color: var(--background-color); margin: 16px; margin-top: 0; box-shadow: 0px 0px 15px 10px var(--shadow-color); border-radius: 16px; width: calc(100% - 32px); } 
 
-.header_btn>li>*:hover .tooltip { top: 23px; opacity: 1; transition: all 0.3s ease-in-out; } 
-.header_btn>li>* .tooltip { position: absolute; top: 33px; left: 50%; transform: translateX(-50%); display: flex; justify-content: center; align-items: center; padding: 6px 8px 4px; border-radius: 4px; border: 1px solid rgba(255, 255, 255, 0.78); opacity: 0; box-shadow: 0 0 2px 4px rgba(255, 255, 255, 0.12); white-space: nowrap; } 
+.header_btn>li>*:hover .tooltip { top: 25px; opacity: 1; transition: all 0.3s ease-in-out; } 
+.header_btn>li>* .tooltip { position: absolute; top: 33px; left: 50%; transform: translateX(-50%); display: flex; justify-content: center; align-items: center; padding: 4px 6px 3px; border-radius: 4px; border: 1px solid rgba(255, 255, 255, 0.78); opacity: 0; box-shadow: 0 0 2px 4px rgba(255, 255, 255, 0.12); white-space: nowrap; } 
 .header_btn>li>* .tooltip span { font-size: 12px; font-weight: 700; line-height: 1.4; color: rgba(255, 255, 255, 0.78); } 
 
 /* menu */
@@ -243,7 +243,7 @@ button i { transition: all 0.3s ease-in-out; }
 .write_keyword_view a { font-size: 14px; font-weight: 700; line-height: 1.4; color: var(--font-color); padding: 2px 5px 1px; margin-right: 6px; border-radius: 4px; transition: all 0.3s ease-in-out; } 
 .write_keyword_view a:hover { color: var(--main-color); } 
 
-.write_date { font-size: 14px; font-weight: 300; line-height: 1.4; color: var(--font-color); opacity: 0.7; } 
+.write_date { font-size: 14px; font-weight: 300; line-height: 1.4; color: var(--font-color); opacity: 0.4; } 
 
 /* editor btn */
 .editor_btn { position: fixed; display: none; justify-content: flex-start; align-items: center; z-index: 9; background-color: var(--box-color); border-radius: 4px; box-shadow: 0px 0px 2px 1px rgba(255, 255, 255, 0.78); padding: 4px; padding-bottom: 5px; } 

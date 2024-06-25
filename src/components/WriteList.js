@@ -8,10 +8,6 @@ import ViewEdit from './SlateView.js'
 
 function WriteList() {
 
-    const logged = useSelector(state => state.loginData);
-    // const [log_auth] = useState(logged.loggedIn.authority);
-    const [log_auth] = useState(0);
-
     const dispatch = useDispatch();
     useEffect(() => {
         dispatch(writeListData())
@@ -55,15 +51,14 @@ function WriteList() {
         const subTitleDoc = new DOMParser().parseFromString(writeContent.subTitle, 'text/html');
         const contentDoc = new DOMParser().parseFromString(writeContent.content, 'text/html');
         const keywordsParse = JSON.parse(writeListArr[i].keywords)
+        const create_date = writeContent.created_at;
 
         return (
 
             <div>
-                {log_auth === 0 && (
-                    <div className='write_btn'>
-                        <Link className='icon-edit-alt' to={`/components/WriteCorrect/${i}`}></Link>
-                    </div>
-                )}
+                <div className='write_btn'>
+                    <Link className='icon-edit-alt' to={`/components/WriteCorrect/${i}`}></Link>
+                </div>
                 <div className='write_list'>
                     <Link to={`/components/WriteView/${i}`}>
                         <ViewEdit titleDoc={titleDoc} subTitleDoc={subTitleDoc} contentDoc={contentDoc}></ViewEdit>
@@ -79,7 +74,7 @@ function WriteList() {
                             }
                         </ul>
 
-                        {/* <b className='write_date'>{writeDate}</b> */}
+                        <b className='write_date'>{create_date}.</b>
 
                     </div>
                 </div>
