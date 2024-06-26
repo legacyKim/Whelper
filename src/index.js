@@ -4,7 +4,6 @@ import { Provider } from "react-redux";
 
 import store from './data/reducers.js'
 
-import './css/index.css';
 import './css/base.css';
 import './css/style.css';
 import './css/fontello/css/fontello.css'

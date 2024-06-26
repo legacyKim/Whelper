@@ -232,8 +232,11 @@ function WriteCorrect() {
 
         const keywords = JSON.stringify(keywordArr);
 
-        dispatch(syncWriteListDataUpdate({ db_id, title, subTitle, content, keywords }));
-        dispatch(writeListDataUpdate({ db_id, title, subTitle, content, keywords }))
+        const now = new Date();
+        const update_time = new Date(now.getTime() + (9 * 60 * 60 * 1000)).toISOString();
+
+        dispatch(syncWriteListDataUpdate({ db_id, title, subTitle, content, keywords, update_time }));
+        dispatch(writeListDataUpdate({ db_id, title, subTitle, content, keywords, update_time }))
 
         setEdTitle(contentPlaceholder);
         setEdSubTitle(contentPlaceholder);

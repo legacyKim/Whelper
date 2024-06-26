@@ -17,7 +17,6 @@ import WriteView from './components/WriteView.js'
 import WriteCorrect from './components/WriteCorrect.js'
 
 import Book from './components/Book.js'
-import Date from './components/Date.js'
 import Category from './components/Category.js'
 import Search from './components/Search.js'
 
@@ -44,8 +43,6 @@ function Menu() {
                         <Route path="/components/WriteList" element={<WriteList />} />
                         <Route path="/components/WriteView/:id" element={<WriteView />} />
                         <Route path="/components/WriteCorrect/:id" element={<WriteCorrect />} />
-
-                        <Route path="/components/Date" element={<Date />} />
 
                         <Route path="/components/Category" element={<Category />} />
                         <Route path="/components/Category/:writeListKeyword" element={<Category />} />

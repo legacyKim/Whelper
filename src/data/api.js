@@ -15,6 +15,16 @@ export const writeListData = createAsyncThunk('writeData/getData', async () => {
     }
 });
 
+export const writeListDataDate = createAsyncThunk('writeData/getData', async () => {
+    try {
+        const response = await axios.get(`${API_URL}`);
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching writeListData:', error);
+        throw error;
+    }
+});
+
 // post write data
 export const writeListDataPost = createAsyncThunk('writeData/newData', async (newData) => {
     try {

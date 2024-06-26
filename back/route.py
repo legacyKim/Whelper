@@ -23,6 +23,19 @@ CORS(app, resources={
 #      r'*': {'origins': 'http://bambueong.net/'}}, supports_credentials=True)
 
 
+@app.route('/', methods=['GET'])
+def get_data_WriteList_date():
+    results = get_data_from_write()
+    writeList = results[0]
+
+    try:
+        data = {'write': json.loads(writeList)}
+        return jsonify(data)
+    except json.decoder.JSONDecodeError as e:
+        print(f"JSON Decode Error: {e}")
+        return jsonify({'error': 'Invalid JSON data'}), 500
+
+
 @app.route('/components/WriteList', methods=['GET'])
 def get_data_WriteList():
     results = get_data_from_write()

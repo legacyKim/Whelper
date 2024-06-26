@@ -4,7 +4,7 @@ import json
 from db_operator import create_table
 from db_config import db_config
 from dotenv import load_dotenv
-from datetime import datetime
+from datetime import datetime, timedelta
 
 load_dotenv()
 
@@ -43,7 +43,8 @@ def excute_query_get_data(queries, conn):
 
                     for key, value in row_data.items():
                         if isinstance(value, datetime):
-                            row_data[key] = value.strftime('%y. %m. %d')
+                            kst_value = value + timedelta(hours=9)
+                            row_data[key] = kst_value.isoformat()
 
                     data.append(row_data)
 

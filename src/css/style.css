@@ -7,6 +7,13 @@
 @font-face { font-family: 'GmarketSans'; src: url('../font/GmarketSansTTF/GmarketSansTTFBold.ttf') format('truetype'); font-weight: 700; /* Bold */
  font-style: normal; } 
 
+ * { margin: 0; padding: 0; box-sizing: border-box; outline-style: none; color: var(--font-color); } 
+
+html { font-size: 16px; width: 100%; overflow-x: hidden; scroll-behavior: smooth; } 
+body { width: 100%; /* overflow-x: hidden; */ } 
+#root { position: relative; display: block; width: 100%; height: 100%; } 
+body::-webkit-scrollbar { display: none; } 
+
 .fs_main { font-size: 32px; font-weight: 700; line-height: 2; } 
 .fs_sub { font-size: 24px; font-weight: 300; line-height: 1.5; } 
 .fs_text { font-size: 18px; font-weight: 300; line-height: 1.5; } 
@@ -40,6 +47,8 @@
 .hover_opacity:hover { opacity: 1 !important; } 
 
 .content_area { position: relative; display: flex; flex-direction: column-reverse; width:100%; min-height: 100%; margin: 0 auto; padding: 0 16px; padding-top: 98px; padding-bottom: 32px; } 
+.content_area.main { display: none; transition: all 0.3s ease-in-out; opacity: 0; } 
+.content_area.main.active { display: block; opacity: 1; } 
 .content_area.reverse { flex-direction: column; } 
 .page { position: relative !important; display: block !important; width: 100%; height: 100%; } 
 
@@ -253,7 +262,7 @@ button i { transition: all 0.3s ease-in-out; }
 .editor_btn button:hover { color:var(--main-color); } 
 
 .write_list .editor_highlight span { background: transparent; } 
-.editor_highlight span { background: linear-gradient(to top, rgba(255, 243, 150, 0.6) 95%, transparent 100%) } 
+.editor_highlight span { background: linear-gradient(to top, rgba(255, 243, 150, 0.6) 95%, transparent 100%); } 
 
 /* main memo textarea */
 .Main_memo_textarea { position: relative; display: block; } 
@@ -279,6 +288,7 @@ button i { transition: all 0.3s ease-in-out; }
 .view_content.all .view_common .content::-webkit-scrollbar-thumb { height: 30%; background: #217af4; border-radius: 10px; } 
 .view_content.all .view_common .content::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.3); border-radius: 100px; } 
 .view_common .content span { font-size: 14px; font-weight: inherit; line-height: 1.5; color: var(--font-color); white-space:pre-wrap; letter-spacing: -0.5px; text-align: justify; } 
+.view_common .content span::selection { background: rgba(255, 243, 150, 0.3); } 
 .view_content>b { position: absolute; top: 0; right: 0; display: block; font-size: 14px; font-weight: 700; line-height: 1.5; color: var(--font-color); opacity: 0.58; } 
 
 .write_btn { position: relative; display: flex; justify-content: flex-end; align-items: center; } 

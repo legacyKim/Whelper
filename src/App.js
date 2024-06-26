@@ -1,6 +1,7 @@
 import { React, useEffect, useState, useRef } from 'react';
-import { NavLink, useNavigate, Link } from "react-router-dom";
+import { NavLink, useNavigate, Link, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux"
+import { format, subDays, isAfter } from 'date-fns';
 
 import { debounce } from 'lodash';
 import MyContext from './context'
@@ -9,8 +10,18 @@ import { token_check } from './data/token_check.js'
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+import { writeListDataDate } from './data/api.js';
+import ViewEdit from './components/SlateView.js'
+
 import './css/style.css';
 import Routes from './Routes'
+
+const useRouteChange = (callback) => {
+    const location = useLocation();
+    useEffect(() => {
+        callback(location);
+    }, [location, callback]);
+};
 
 function App() {
 
@@ -40,6 +51,33 @@ function App() {
         }
     }
     //// about change theme
+
+    // writeList date
+    const dispatch = useDispatch();
+    useEffect(() => {
+        dispatch(writeListDataDate());
+        console.log('test');
+    }, [dispatch]);
+
+    const writeListState = useSelector((state) => state.WriteData);
+    const today = new Date();
+    const sevenDaysAgo = subDays(today, 7);
+
+    const writeListArr = writeListState.data.write.filter(item => {
+        const updatedAt = new Date(item.updated_at);
+        return isAfter(updatedAt, sevenDaysAgo);
+    }).sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at)) || [];
+
+    const [writeListActive, setWriteListActive] = useState();
+
+    useRouteChange((location) => {
+        if(location.pathname === '/') {
+            setWriteListActive('active');
+        } else {            
+            setWriteListActive('');
+        }
+    });
+    //// writeList date
 
     // about search ShowHide
     const [isSearchOn, setIsSearchOn] = useState(false);
@@ -138,8 +176,19 @@ function App() {
         <MyContext.Provider value={{ searchArr, setSearchArr, scrollPosition, setScrollPosition }}>
             <div id='app' className={`App ${theme}`}>
 
-                <Routes></Routes>
                 <ToastContainer />
+
+                <div className={`content_area main ${writeListActive}`}>
+                    {
+                        writeListArr.map(function (a, i) {
+                            return (
+                                <div key={i} className="WriteDiv">
+                                    <WriteShowContents i={i} writeListArr={writeListArr} />
+                                </div>
+                            )
+                        })
+                    }
+                </div>
 
                 <div className={`header ${scrollPosition > 0 ? "active" : ""}`}>
                     <div className='logo'>
@@ -157,18 +206,16 @@ function App() {
                             <div className='tooltip'><span>Memo</span></div>
                         </NavLink></li>
                         {/* <li className='btn'><NavLink to="/components/Book" className='icon-book-1' onClick={() => { navigate('/components/Book') }}></NavLink></li> */}
-                        <li className='btn'><NavLink to={`/components/Search/${searchInputValue}`} className='icon-link-1' onClick={() => { navigate('/components/Search') }}>
-                            <div className='tooltip'><span>Search</span></div>
-                        </NavLink></li>
-                        <li className='btn'><NavLink to={`/components/Date`} className='icon-calendar' onClick={() => { navigate('/components/Date') }}>
-                            <div className='tooltip'><span>Date</span></div>
-                        </NavLink></li>
+
                         <li className='btn'><NavLink to={`/components/Category`} className='icon-bookmark' onClick={() => { navigate('/components/Category') }}>
                             <div className='tooltip'><span>Category</span></div>
                         </NavLink></li>
                         <li className='btn'><button className='icon-search' onClick={searchOn}>
                             <div className='tooltip'><span>Search</span></div>
                         </button></li>
+                        <li className='btn'><NavLink to={`/components/Search/${searchInputValue}`} className='icon-link-1' onClick={() => { navigate('/components/Search') }}>
+                            <div className='tooltip'><span>Search Res</span></div>
+                        </NavLink></li>
                         <li className='btn'><NavLink to={`/components/Work`} className='icon-list-bullet' onClick={() => { navigate('/components/Work') }}>
                             <div className='tooltip'><span>Work</span></div>
                         </NavLink></li>
@@ -186,6 +233,8 @@ function App() {
                         {/* <li><div id='theme_screen' className='icon-arrows-ccw' onClick={themeChangeBtn}></div></li> */}
                     </ul>
                 </div>
+
+                <Routes></Routes>
 
                 <div className={`search ${searchActive ? searchActive : ""}`}>
                     <div className="search_box">
@@ -210,6 +259,30 @@ function App() {
             </div>
         </MyContext.Provider>
     )
+
+    function WriteShowContents({ i, writeListArr }) {
+
+        const [writeContent, setWriteContent] = useState(writeListArr[i]);
+
+        const titleDoc = new DOMParser().parseFromString(writeContent.title, 'text/html');
+        const subTitleDoc = new DOMParser().parseFromString(writeContent.subTitle, 'text/html');
+        const contentDoc = new DOMParser().parseFromString(writeContent.content, 'text/html');
+        const create_date = writeContent.created_at;
+
+        return (
+
+            <div>
+                <div className='write_btn'>
+                    <Link className='icon-edit-alt' to={`/components/WriteCorrect/${i}`}></Link>
+                </div>
+                <div className='write_list'>
+                    <Link to={`/components/WriteView/${i}`}>
+                        <ViewEdit titleDoc={titleDoc} subTitleDoc={subTitleDoc} contentDoc={contentDoc}></ViewEdit>
+                    </Link>
+                </div>
+            </div>
+        )
+    }
 
     function SearchListContents({ i }) {
 

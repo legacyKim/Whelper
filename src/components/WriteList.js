@@ -51,7 +51,11 @@ function WriteList() {
         const subTitleDoc = new DOMParser().parseFromString(writeContent.subTitle, 'text/html');
         const contentDoc = new DOMParser().parseFromString(writeContent.content, 'text/html');
         const keywordsParse = JSON.parse(writeListArr[i].keywords)
-        const create_date = writeContent.created_at;
+        const create_date = new Date(writeContent.created_at).toLocaleDateString('ko-KR', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit'
+        });
 
         return (
 
@@ -74,7 +78,7 @@ function WriteList() {
                             }
                         </ul>
 
-                        <b className='write_date'>{create_date}.</b>
+                        <b className='write_date'>{create_date}</b>
 
                     </div>
                 </div>
