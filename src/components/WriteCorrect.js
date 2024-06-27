@@ -130,6 +130,8 @@ const deserialize = (el, markAttributes = {}) => {
 
 function WriteCorrect() {
 
+    let { id } = useParams();
+
     const navigate = useNavigate();
 
     const dispatch = useDispatch();
@@ -142,8 +144,14 @@ function WriteCorrect() {
     const cateListState = useSelector((state) => state.cateData);
 
     const writeListArr = writeListState.data.write || [];
+    const writeListCheck = (id) => {
+        for (var i = 0; i < writeListArr.length; i++) {
+            if (writeListArr[i].id === Number(id)) {
+                return writeListArr[i];
+            }
+        }
+    };
     const cateListArr = cateListState.data.cate || [];
-    let { id } = useParams();
 
     const [popupActive, popupActiveStyle] = useState(false);
     const popupClick = () => {
@@ -160,7 +168,7 @@ function WriteCorrect() {
     const [editor] = useState(() => withReact(createEditor()))
     const [annoEditor] = useState(() => withReact(createEditor()))
 
-    const [writeContent, setWriteContent] = useState(writeListArr[id] || undefined);
+    const [writeContent, setWriteContent] = useState(() => writeListCheck(id));
 
     const titleDoc = new DOMParser().parseFromString(writeContent.title,'text/html');
     const subTitleDoc = new DOMParser().parseFromString(writeContent.subTitle, 'text/html');
@@ -219,7 +227,7 @@ function WriteCorrect() {
 
     const WriteCorrectBtn = () => {
 
-        const db_id = writeContent.id;
+        const id = writeContent.id;
 
         const titleString = serialize(edTitle);
         const title = titleString;
@@ -235,8 +243,8 @@ function WriteCorrect() {
         const now = new Date();
         const update_time = new Date(now.getTime() + (9 * 60 * 60 * 1000)).toISOString();
 
-        dispatch(syncWriteListDataUpdate({ db_id, title, subTitle, content, keywords, update_time }));
-        dispatch(writeListDataUpdate({ db_id, title, subTitle, content, keywords, update_time }))
+        dispatch(syncWriteListDataUpdate({ id, title, subTitle, content, keywords, update_time }));
+        dispatch(writeListDataUpdate({ id, title, subTitle, content, keywords, update_time }))
 
         setEdTitle(contentPlaceholder);
         setEdSubTitle(contentPlaceholder);
@@ -373,7 +381,7 @@ function WriteCorrect() {
             </Slate>
 
             <div className='page_btn'>
-                <Link to={`/components/WriteView/${id}`} onClick={() => { navigate(`/components/WriteView/${id}`) }} className='icon-reply'></Link>
+                <Link to={`/components/WriteView/${writeContent.id}`} onClick={() => { navigate(`/components/WriteView/${writeContent.id}`) }} className='icon-reply'></Link>
                 <button className='icon-ok-circled write_btn_save' onClick={() => { popupClick(); }}></button>
             </div>
 
@@ -392,7 +400,7 @@ function WriteCorrect() {
                 </div>
                 <div className='page_btn'>
                     <button className="write_btn_back icon-reply" onClick={popupClick}></button>
-                    <Link className='icon-ok-circled write_btn_save' to={`/components/WriteView/${id}`} onClick={() => { navigate(`/components/WriteView/${id}`); WriteCorrectBtn(); }}></Link>
+                    <Link className='icon-ok-circled write_btn_save' to={`/components/WriteView/${writeContent.id}`} onClick={() => { navigate(`/components/WriteView/${writeContent.id}`); WriteCorrectBtn(); }}></Link>
                 </div>
             </div>
         </div>

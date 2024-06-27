@@ -23,7 +23,7 @@ const WriteData = createSlice({
         syncWriteListDataUpdate: (state, action) => {
             if (action.payload !== undefined) {
                 const updatedWrite = state.data.write.map(item =>
-                    item.id === action.payload.db_id ? action.payload : item
+                    item.id === action.payload.id ? action.payload : item
                 );
                 state.data.write = updatedWrite;
             }

@@ -24,18 +24,26 @@ function WriteView() {
     }, [dispatch]);
 
     const writeListArr = writeListState.data.write || [];
-    const writeContent = useState(writeListArr[id] || undefined);
+    const writeListCheck = (id) => {
+        for (var i = 0; i < writeListArr.length; i++) {
+            if (writeListArr[i].id === Number(id)) {
+                return writeListArr[i];
+            }
+        }
+    };
 
-    const titleDoc = (writeContent[0] !== undefined && writeContent.length > 0) ? new DOMParser().parseFromString(writeContent[0].title, 'text/html') : null;
-    const subTitleDoc = (writeContent[0] !== undefined && writeContent.length > 0) ? new DOMParser().parseFromString(writeContent[0].subTitle, 'text/html') : null;
-    const contentDoc = (writeContent[0] !== undefined && writeContent.length > 0) ? new DOMParser().parseFromString(writeContent[0].content, 'text/html') : null;
+    const [writeContent, setWriteContent] = useState(() => writeListCheck(id));
+
+    const titleDoc = (writeContent !== undefined ) ? new DOMParser().parseFromString(writeContent.title, 'text/html') : null;
+    const subTitleDoc = (writeContent !== undefined ) ? new DOMParser().parseFromString(writeContent.subTitle, 'text/html') : null;
+    const contentDoc = (writeContent !== undefined ) ? new DOMParser().parseFromString(writeContent.content, 'text/html') : null;
 
     const lsKeywords = JSON.parse(localStorage.getItem('view_keywords')) || [];
-    const keywordsParse = (writeContent[0] !== undefined && writeContent.length > 0) ? JSON.parse(writeListArr[id].keywords) : lsKeywords;
+    const keywordsParse = (writeContent !== undefined ) ? JSON.parse(writeContent.keywords) : lsKeywords;
 
     localStorage.setItem('view_keywords', JSON.stringify(keywordsParse));
 
-    useEffect(() => {
+    useEffect((id) => {
         setTimeout(() => {
             const memoContentElements = document.querySelectorAll('.view_page');
             memoContentElements.forEach(element => {
@@ -45,7 +53,7 @@ function WriteView() {
     }, [writeListArr])
 
     const delWriteList = () => {
-        dispatch(writeListDataDel(writeContent[0].id))
+        dispatch(writeListDataDel(writeContent.id))
     }
 
     return (
@@ -63,12 +71,10 @@ function WriteView() {
                             ))}
                         </div>
                     </div>
-                    {log_auth === 0 && (
-                        <div className='page_btn'>
-                            <Link className='icon-trash' onClick={delWriteList} to={`/components/WriteList`}></Link>
-                            <Link className='icon-edit-alt' to={`/components/WriteCorrect/${id}`}></Link>
-                        </div>
-                    )}
+                    <div className='page_btn'>
+                        <Link className='icon-trash' onClick={delWriteList} to={`/components/WriteList`}></Link>
+                        <Link className='icon-edit-alt' to={`/components/WriteCorrect/${writeContent.id}`}></Link>
+                    </div>
                 </div>
             </div>
         </div>

@@ -64,7 +64,7 @@ def post_data_WriteList():
 def update_data_WriteList():
     try:
         data = request.get_json()
-        write_id = data['db_id']
+        write_id = data['id']
 
         result = update_data_from_write(data, write_id)
         return jsonify(result), 201

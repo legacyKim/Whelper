@@ -61,10 +61,10 @@ function WriteList() {
 
             <div>
                 <div className='write_btn'>
-                    <Link className='icon-edit-alt' to={`/components/WriteCorrect/${i}`}></Link>
+                    <Link className='icon-edit-alt' to={`/components/WriteCorrect/${writeListArr[i].id}`}></Link>
                 </div>
                 <div className='write_list'>
-                    <Link to={`/components/WriteView/${i}`}>
+                    <Link to={`/components/WriteView/${writeListArr[i].id}`}>
                         <ViewEdit titleDoc={titleDoc} subTitleDoc={subTitleDoc} contentDoc={contentDoc}></ViewEdit>
                     </Link>
                     <div className='write_keyword'>

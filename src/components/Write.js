@@ -96,10 +96,7 @@ function Write() {
         dispatch(cateListData());
     }, [dispatch]);
 
-    const writeListState = useSelector((state) => state.WriteData);
     const cateListState = useSelector((state) => state.cateData);
-
-    const writeListArr = writeListState.data.write || [];
     const cateListArr = cateListState.data.cate || [];
 
     // category popup
@@ -213,8 +210,9 @@ function Write() {
         const content = contentString;
 
         const keywords = JSON.stringify(keywordArr)
-
-        dispatch(syncWriteListData({ title, subTitle, content, keywords }));
+        const id = 9999;
+        
+        dispatch(syncWriteListData({ id, title, subTitle, content, keywords }));
         dispatch(writeListDataPost({ title, subTitle, content, keywords }));
 
         setEdTitle(contentPlaceholder);
@@ -224,7 +222,7 @@ function Write() {
     };
 
     // save and keep the last num of id
-    const recentId = writeListArr.length;
+    const recentId = 9999;
     //// save content
 
     // toolbar
