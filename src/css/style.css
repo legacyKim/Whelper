@@ -47,8 +47,8 @@ body::-webkit-scrollbar { display: none; }
 .hover_opacity:hover { opacity: 1 !important; } 
 
 .content_area { position: relative; display: flex; flex-direction: column-reverse; width:100%; min-height: 100%; margin: 0 auto; padding: 0 16px; padding-top: 98px; padding-bottom: 32px; } 
-.content_area.main { display: none; transition: all 0.3s ease-in-out; opacity: 0; } 
-.content_area.main.active { display: flex; opacity: 1; } 
+.content_area.date { display: none; transition: all 0.3s ease-in-out; opacity: 0; } 
+.content_area.date.active { display: flex; opacity: 1; } 
 .content_area.reverse { flex-direction: column; } 
 .page { position: relative !important; display: block !important; width: 100%; height: 100%; } 
 

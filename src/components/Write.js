@@ -210,9 +210,13 @@ function Write() {
         const content = contentString;
 
         const keywords = JSON.stringify(keywordArr)
-        const id = 9999;
+        const id = 99999;
+
+        const currentTime = new Date().toISOString();
+        const updated_at = currentTime;
+        const created_at = currentTime;
         
-        dispatch(syncWriteListData({ id, title, subTitle, content, keywords }));
+        dispatch(syncWriteListData({ id, title, subTitle, content, keywords, updated_at, created_at }));
         dispatch(writeListDataPost({ title, subTitle, content, keywords }));
 
         setEdTitle(contentPlaceholder);
@@ -222,7 +226,7 @@ function Write() {
     };
 
     // save and keep the last num of id
-    const recentId = 9999;
+    const recentId = 99999;
     //// save content
 
     // toolbar

@@ -8,6 +8,7 @@ import { debounce } from 'lodash';
 import 'react-toastify/dist/ReactToastify.css';
 
 import { writeListDataDate } from '../data/api.js';
+import { syncWriteListData } from "../data/reducers"
 import ViewEdit from './SlateView.js'
 
 const useRouteChange = (callback) => {
@@ -23,6 +24,7 @@ function Date_sort() {
     const dispatch = useDispatch();
     useEffect(() => {
         dispatch(writeListDataDate());
+        dispatch(syncWriteListData());
     }, [dispatch]);
 
     const writeListState = useSelector((state) => state.WriteData);
@@ -31,8 +33,10 @@ function Date_sort() {
     const sevenDaysAgo = subDays(today, 7);
 
     const writeListArr = writeListState.data.write.filter(item => {
-        const updatedAt = new Date(item.updated_at);
-        return isAfter(updatedAt, sevenDaysAgo);
+        if (item !== null) {
+            const updatedAt = new Date(item.updated_at);
+            return isAfter(updatedAt, sevenDaysAgo);
+        }
     }).sort((a, b) => new Date(a.updated_at) - new Date(b.updated_at)) || [];
 
     const [writeListActive, setWriteListActive] = useState();
@@ -46,8 +50,31 @@ function Date_sort() {
     });
     //// writeList date
 
+    // list create
+
+    const createList = () => {
+
+        for (var i = 0; i < writeListArr.length; i++) {
+            
+            // 2. 날짜에 해당하는 데이테 정렬
+            // 3. 날짜와 해당 데이터를 순차적으로 뿌려주기
+
+            // 날짜 변형
+            const date = new Date(writeListArr[i].updated_at).toLocaleDateString('ko-KR', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit'
+            });
+        }
+
+    }
+
+    createList()
+    
+    //// list create
+
     return (
-        <div className={`content_area main ${writeListActive}`}>
+        <div className={`content_area date ${writeListActive}`}>
             {
                 writeListArr.map(function (a, i) {
                     return (
