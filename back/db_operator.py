@@ -91,6 +91,7 @@ def post_data_to_write(data):
         now = datetime.utcnow()
         data['created_at'] = now
         data['updated_at'] = now
+
         with Session_write() as session:
             write_instance = Write(**data)
             session.add(write_instance)

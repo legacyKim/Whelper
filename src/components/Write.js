@@ -17,15 +17,30 @@ const CustomEditor = {
         return marks ? marks.bold === true : false
     },
 
+    isUnderlineActive(editor) {
+        const marks = Editor.marks(editor)
+        return marks ? marks.underline === true : false
+    },
+
     isHighlightActive(editor) {
         const marks = Editor.marks(editor)
         return marks ? marks.highlight === true : false
+    },
+
+    isQuote(editor) {
+        const marks = Editor.marks(editor)
+        return marks ? marks.isQuote === true : false
     },
 
     isAnnotation(editor) {
         const marks = Editor.marks(editor)
         return marks ? marks.isAnnotation === true : false
     },
+
+
+
+
+
 
     toggleBoldMark(editor) {
         const isActive = CustomEditor.isBoldMarkActive(editor)
@@ -36,12 +51,30 @@ const CustomEditor = {
         }
     },
 
+    toggleUnderline(editor) {
+        const isActive = CustomEditor.isUnderlineActive(editor)
+        if (isActive) {
+            Editor.removeMark(editor, 'underline')
+        } else {
+            Editor.addMark(editor, 'underline', true)
+        }
+    },
+
     toggleHighlight(editor) {
         const isActive = CustomEditor.isHighlightActive(editor);
         if (isActive) {
             Editor.removeMark(editor, 'highlight');
         } else {
             Editor.addMark(editor, 'highlight', true);
+        }
+    },
+
+    toggleQuote(editor) {
+        const isActive = CustomEditor.isQuote(editor);
+        if (isActive) {
+            Editor.removeMark(editor, 'quote');
+        } else {
+            Editor.addMark(editor, 'quote', true);
         }
     },
 
@@ -67,6 +100,12 @@ const serialize = nodes => {
                 string = `<strong>${string}</strong>`;
             } else if (node.highlight) {
                 string = `<span class="editor_highlight">${string}</span>`;
+            } else if (node.underline) {
+                string = `<span class="editor_underline">${string}</span`
+            } else if (node.quote) {
+                string = `<span class="editor_quote">${string}</span`
+            } else if (node.annotation) {
+                string = `<span class="editor_annotation">${string}</span`
             }
             return string;
         }
@@ -76,8 +115,14 @@ const serialize = nodes => {
         switch (node.type) {
             case 'bold':
                 return `<strong>${children}</strong>`;
+            case 'underline':
+                return `<span class="editor_underline">${children}</span>`;
             case 'highlight':
                 return `<span class="editor_highlight">${children}</span>`;
+            case 'quote':
+                return `<span class="editor_quote">${children}</span>`;
+            case 'annotation':
+                return `<span class="editor_annotation">${children}</span>`;
             case 'paragraph':
                 return `<p>${children}</p>`;
             default:
@@ -153,8 +198,14 @@ function Write() {
         switch (element.type) {
             case 'bold':
                 return <strong {...attributes} style={{ fontWeight: 'bold' }}>{children}</strong>
+            case 'underline':
+                return <span className='editor_underline' style={{textDecoration: 'underline', textUnderlinePosition: 'from-font'}}>{children}</span>
             case 'highlight':
                 return <span className='editor_highlight' {...attributes}>{children}</span>
+            case 'quote':
+                return <span className='editor_quote'>{children}</span>
+            case 'annotation':
+                return <span className='editor_annotation'>{children}</span>
             default:
                 return <p {...attributes}>{children}</p>;
         }
@@ -165,6 +216,8 @@ function Write() {
         const style = {
             fontWeight: leaf.bold ? 'bold' : 'normal',
             backgroundColor: leaf.highlight ? true : false,
+            textDecoration: leaf.underline ? 'underline': 'none',
+            textUnderlinePosition: leaf.underline ? 'under': 'none'
         };
 
         return (
@@ -215,7 +268,7 @@ function Write() {
         const currentTime = new Date().toISOString();
         const updated_at = currentTime;
         const created_at = currentTime;
-        
+
         dispatch(syncWriteListData({ id, title, subTitle, content, keywords, updated_at, created_at }));
         dispatch(writeListDataPost({ title, subTitle, content, keywords }));
 
@@ -296,7 +349,7 @@ function Write() {
                     }
                 }}>
 
-                <div className={`editor_btn ${toolbarActive ? toolbarActive : ""}`}>
+                <div className={`editor_btn active ${toolbarActive ? toolbarActive : ""}`}>
                     <button className='icon-gwallet'
                         onMouseDown={event => {
                             event.preventDefault();
@@ -311,10 +364,24 @@ function Write() {
                             toolbarClose();
                         }}>
                     </button>
-                    <button className='icon-flow-cascade'
+                    <button className='icon-underline'
                         onMouseDown={event => {
                             event.preventDefault()
-                            CustomEditor.toggleAnnotation(editor)
+                            CustomEditor.toggleUnderline(editor)
+                            toolbarClose();
+                        }}>
+                    </button>
+                    <button className='icon-quote'
+                        onMouseDown={event => {
+                            event.preventDefault()
+                            CustomEditor.toggleQuote(editor)
+                            toolbarClose();
+                        }}>
+                    </button>
+                    <button className='icon-list-bullet'
+                        onMouseDown={event => {
+                            event.preventDefault()
+                            CustomEditor.toggleAnnotaion(editor)
                             toolbarClose();
                         }}>
                     </button>

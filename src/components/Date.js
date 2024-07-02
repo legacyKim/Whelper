@@ -51,39 +51,33 @@ function Date_sort() {
     //// writeList date
 
     // list create
+    const groupedData = writeListArr.reduce((acc, item) => {
+        const date = format(new Date(item.updated_at), 'yyyy년 MM월 dd일');
+        if (!acc[date]) {
+            acc[date] = [];
+        }
+        acc[date].push(item);
+        return acc;
+    }, {});
 
     const createList = () => {
+        return Object.keys(groupedData).map(date => (
+            <div className='date_box' key={date}>
+                <h2>{date}</h2>
+                {groupedData[date].map((item, i) => (
+                    <div className='date_list' key={i}>
+                        <WriteShowContents i={i} writeListArr={writeListArr} />
+                    </div>
+                ))}
+            </div>
+        ));
+    };
 
-        for (var i = 0; i < writeListArr.length; i++) {
-            
-            // 2. 날짜에 해당하는 데이테 정렬
-            // 3. 날짜와 해당 데이터를 순차적으로 뿌려주기
-
-            // 날짜 변형
-            const date = new Date(writeListArr[i].updated_at).toLocaleDateString('ko-KR', {
-                year: 'numeric',
-                month: '2-digit',
-                day: '2-digit'
-            });
-        }
-
-    }
-
-    createList()
-    
     //// list create
 
     return (
         <div className={`content_area date ${writeListActive}`}>
-            {
-                writeListArr.map(function (a, i) {
-                    return (
-                        <div key={i} className="WriteDiv">
-                            <WriteShowContents i={i} writeListArr={writeListArr} />
-                        </div>
-                    )
-                })
-            }
+            {createList()}
         </div>
     )
 
@@ -96,17 +90,9 @@ function Date_sort() {
         const create_date = writeContent.created_at;
 
         return (
-
-            <div>
-                <div className='write_btn'>
-                    <Link className='icon-edit-alt' to={`/components/WriteCorrect/${writeListArr[i].id}`}></Link>
-                </div>
-                <div className='write_list'>
-                    <Link to={`/components/WriteView/${writeListArr[i].id}`}>
-                        <ViewEdit titleDoc={titleDoc} subTitleDoc={subTitleDoc} contentDoc={contentDoc}></ViewEdit>
-                    </Link>
-                </div>
-            </div>
+            <Link to={`/components/WriteView/${writeListArr[i].id}`}>
+                <ViewEdit titleDoc={titleDoc} subTitleDoc={subTitleDoc} contentDoc={contentDoc}></ViewEdit>
+            </Link>
         )
     }
 
