@@ -213,6 +213,8 @@ function Write() {
 
     const renderLeaf = useCallback(({ attributes, children, leaf }) => {
 
+        console.log(leaf)
+
         const style = {
             fontWeight: leaf.bold ? 'bold' : 'normal',
             backgroundColor: leaf.highlight ? true : false,

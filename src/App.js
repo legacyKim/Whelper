@@ -173,7 +173,7 @@ function App() {
                             <div className='tooltip'><span>Work</span></div>
                         </NavLink></li>
 
-                        {log_check === null ? (
+                        {token === null ? (
                             <li className='btn'><NavLink to={`/components/Login`} className='icon-login' onClick={() => { navigate('/components/Login') }}>
                                 <div className='tooltip'><span>Log-In</span></div>
                             </NavLink></li>

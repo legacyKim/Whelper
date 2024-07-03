@@ -21,6 +21,15 @@ const deserialize = (el, markAttributes = {}) => {
                 nodeAttributes.highlight = true;
             }
             break;
+        case 'SPAN':
+            nodeAttributes.underline = true;
+            break;
+        case 'SPAN':
+            nodeAttributes.quote = true;
+            break;
+        case 'SPAN':
+            nodeAttributes.annotation = true;
+            break;
     }
 
     const children = Array.from(el.childNodes)
@@ -44,7 +53,6 @@ const deserialize = (el, markAttributes = {}) => {
 
 const ViewEdit = ({ titleDoc, subTitleDoc, contentDoc }) => {
 
-
     const [titleEditor] = useState(() => withReact(createEditor()))
     const [subTitleEditor] = useState(() => withReact(createEditor()))
     const [editor] = useState(() => withReact(createEditor()))
@@ -65,17 +73,26 @@ const ViewEdit = ({ titleDoc, subTitleDoc, contentDoc }) => {
         switch (element.type) {
             case 'bold':
                 return <strong {...attributes} style={{ fontWeight: 'bold' }}>{children}</strong>
+            case 'underline':
+                return <span className='editor_underline' style={{ textDecoration: 'underline', textUnderlinePosition: 'from-font' }}>{children}</span>
             case 'highlight':
                 return <span className='editor_highlight' {...attributes}>{children}</span>
+            case 'quote':
+                return <span className='editor_quote'>{children}</span>
+            case 'annotation':
+                return <span className='editor_annotation'>{children}</span>
             default:
                 return <p {...attributes}>{children}</p>;
         }
     }, [])
 
     const renderLeaf = useCallback(({ attributes, children, leaf }) => {
+
         const style = {
             fontWeight: leaf.bold ? 'bold' : 'normal',
             backgroundColor: leaf.highlight ? true : false,
+            textDecoration: leaf.underline ? 'underline' : 'none',
+            textUnderlinePosition: leaf.underline ? 'under' : 'none'
         };
 
         return (
@@ -85,6 +102,7 @@ const ViewEdit = ({ titleDoc, subTitleDoc, contentDoc }) => {
                 {children}
             </span>
         );
+
     }, []);
 
     return (
