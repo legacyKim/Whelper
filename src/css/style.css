@@ -282,7 +282,7 @@ button i { transition: all 0.3s ease-in-out; }
 .view_common .subtitle { max-height: 24px; overflow: hidden; } 
 .view_content.all .view_common .subtitle { max-height: initial; } 
 .view_common .subtitle span { font-size: 16px; font-weight: 700; line-height: 1.5; color: var(--font-color); letter-spacing: -0.5px; } 
-.view_common .content { max-height: 66px; overflow: hidden; } 
+.view_common .content { max-height: 64px; overflow: hidden; } 
 .view_content.all .view_common .content { max-height: 62vh; overflow-y: auto; } 
 .view_content.all .view_common .content::-webkit-scrollbar { width: 4px; } 
 .view_content.all .view_common .content::-webkit-scrollbar-thumb { height: 30%; background: #217af4; border-radius: 10px; } 

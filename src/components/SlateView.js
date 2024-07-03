@@ -19,16 +19,13 @@ const deserialize = (el, markAttributes = {}) => {
         case 'SPAN':
             if (el.classList.contains('editor_highlight')) {
                 nodeAttributes.highlight = true;
+            } else if (el.classList.contains('editor_underline')) {
+                nodeAttributes.underline = true;
+            } else if (el.classList.contains('editor_quote')) {
+                nodeAttributes.quote = true;
+            } else if (el.classList.contains('editor_annotation')) {
+                nodeAttributes.annotation = true;
             }
-            break;
-        case 'SPAN':
-            nodeAttributes.underline = true;
-            break;
-        case 'SPAN':
-            nodeAttributes.quote = true;
-            break;
-        case 'SPAN':
-            nodeAttributes.annotation = true;
             break;
     }
 
@@ -70,17 +67,18 @@ const ViewEdit = ({ titleDoc, subTitleDoc, contentDoc }) => {
     localStorage.setItem('view_content', JSON.stringify(contentValue));
 
     const renderElement = useCallback(({ attributes, children, element }) => {
+
         switch (element.type) {
             case 'bold':
                 return <strong {...attributes} style={{ fontWeight: 'bold' }}>{children}</strong>
             case 'underline':
-                return <span className='editor_underline' style={{ textDecoration: 'underline', textUnderlinePosition: 'from-font' }}>{children}</span>
+                return <span {...attributes} style={{ textDecoration: 'underline', textUnderlinePosition: 'from-font' }} className='editor_underline' >{children}</span>
             case 'highlight':
-                return <span className='editor_highlight' {...attributes}>{children}</span>
+                return <span {...attributes} className='editor_highlight'>{children}</span>
             case 'quote':
-                return <span className='editor_quote'>{children}</span>
+                return <span {...attributes} className='editor_quote'>{children}</span>
             case 'annotation':
-                return <span className='editor_annotation'>{children}</span>
+                return <span {...attributes} className='editor_annotation'>{children}</span>
             default:
                 return <p {...attributes}>{children}</p>;
         }
@@ -88,17 +86,22 @@ const ViewEdit = ({ titleDoc, subTitleDoc, contentDoc }) => {
 
     const renderLeaf = useCallback(({ attributes, children, leaf }) => {
 
-        const style = {
-            fontWeight: leaf.bold ? 'bold' : 'normal',
-            backgroundColor: leaf.highlight ? true : false,
-            textDecoration: leaf.underline ? 'underline' : 'none',
-            textUnderlinePosition: leaf.underline ? 'under' : 'none'
-        };
+        let style = {};
+        if (leaf.bold) {
+            style.fontWeight = 'bold';
+        }
+        if (leaf.highlight) {
+            style.backgroundColor = 'linear-gradient(to top, rgba(255, 243, 150, 0.6) 95%, transparent 100%)';
+        }
+        if (leaf.underline) {
+            style.textDecoration = 'underline';
+            style.textUnderlinePosition = 'under';
+        }
 
         return (
-            <span className={style.backgroundColor == true ? 'editor_highlight' : ''}
-                {...attributes}
-                style={style}>
+            <span  {...attributes}
+                style={style}
+                className={`${leaf.highlight ? 'editor_highlight' : ''} ${leaf.underline ? 'editor_underline' : ''}`}>
                 {children}
             </span>
         );

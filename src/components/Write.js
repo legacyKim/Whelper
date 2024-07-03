@@ -37,11 +37,6 @@ const CustomEditor = {
         return marks ? marks.isAnnotation === true : false
     },
 
-
-
-
-
-
     toggleBoldMark(editor) {
         const isActive = CustomEditor.isBoldMarkActive(editor)
         if (isActive) {
@@ -78,7 +73,7 @@ const CustomEditor = {
         }
     },
 
-    toggleAnnotation(editor) {
+    toggleAnnotaion(editor) {
         const isActive = CustomEditor.isAnnotation(editor);
         if (isActive) {
             Editor.removeMark(editor, 'annotation');
@@ -94,6 +89,7 @@ const CustomEditor = {
 const serialize = nodes => {
 
     return nodes.map(node => {
+
         if (Text.isText(node)) {
             let string = escapeHtml(node.text);
             if (node.bold) {
@@ -101,11 +97,11 @@ const serialize = nodes => {
             } else if (node.highlight) {
                 string = `<span class="editor_highlight">${string}</span>`;
             } else if (node.underline) {
-                string = `<span class="editor_underline">${string}</span`
+                string = `<span class="editor_underline">${string}</span>`
             } else if (node.quote) {
-                string = `<span class="editor_quote">${string}</span`
+                string = `<span class="editor_quote">${string}</span>`
             } else if (node.annotation) {
-                string = `<span class="editor_annotation">${string}</span`
+                string = `<span class="editor_annotation">${string}</span>`
             }
             return string;
         }
@@ -128,6 +124,8 @@ const serialize = nodes => {
             default:
                 return children;
         }
+
+
     }).join('');
 
 };
@@ -199,13 +197,13 @@ function Write() {
             case 'bold':
                 return <strong {...attributes} style={{ fontWeight: 'bold' }}>{children}</strong>
             case 'underline':
-                return <span className='editor_underline' style={{textDecoration: 'underline', textUnderlinePosition: 'from-font'}}>{children}</span>
+                return <span {...attributes} className='editor_underline' style={{ textDecoration: 'underline', textUnderlinePosition: 'from-font' }}>{children}</span>
             case 'highlight':
-                return <span className='editor_highlight' {...attributes}>{children}</span>
+                return <span {...attributes} className='editor_highlight'>{children}</span>
             case 'quote':
-                return <span className='editor_quote'>{children}</span>
+                return <span {...attributes} className='editor_quote'>{children}</span>
             case 'annotation':
-                return <span className='editor_annotation'>{children}</span>
+                return <span {...attributes} className='editor_annotation'>{children}</span>
             default:
                 return <p {...attributes}>{children}</p>;
         }
@@ -213,19 +211,22 @@ function Write() {
 
     const renderLeaf = useCallback(({ attributes, children, leaf }) => {
 
-        console.log(leaf)
-
-        const style = {
-            fontWeight: leaf.bold ? 'bold' : 'normal',
-            backgroundColor: leaf.highlight ? true : false,
-            textDecoration: leaf.underline ? 'underline': 'none',
-            textUnderlinePosition: leaf.underline ? 'under': 'none'
-        };
+        let style = {};
+        if (leaf.bold) {
+            style.fontWeight = 'bold';
+        }
+        if (leaf.highlight) {
+            style.backgroundColor = 'linear-gradient(to top, rgba(255, 243, 150, 0.6) 95%, transparent 100%)';
+        }
+        if (leaf.underline) {
+            style.textDecoration = 'underline';
+            style.textUnderlinePosition = 'under';
+        }
 
         return (
-            <span className={style.backgroundColor == true ? 'editor_highlight' : ''}
-                {...attributes}
-                style={style}>
+            <span  {...attributes}
+                style={style}
+                className={`${leaf.highlight ? 'editor_highlight' : ''} ${leaf.underline ? 'editor_underline' : ''}`}>
                 {children}
             </span>
         );
