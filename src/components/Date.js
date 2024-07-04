@@ -59,38 +59,35 @@ function Date_sort() {
         acc[date].push(item);
         return acc;
     }, {});
-
-    const createList = () => {
-        return Object.keys(groupedData).map(date => (
-            <div className='date_box' key={date}>
-                <h2>{date}</h2>
-                {groupedData[date].map((item, i) => (
-                    <div className='date_list' key={i}>
-                        <WriteShowContents i={i} writeListArr={writeListArr} />
-                    </div>
-                ))}
-            </div>
-        ));
-    };
-
     //// list create
 
     return (
         <div className={`content_area date ${writeListActive}`}>
-            {createList()}
+            {Object.keys(groupedData).map(date => (
+                <div key={date}>
+                    <h2>{date}</h2>
+                    <ul>
+                        {groupedData[date].map((item, i) => (
+                            <li className='date_list' key={item.id}>
+                                <WriteShowContents writeListArr={item} />
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            ))}
         </div>
     )
 
-    function WriteShowContents({ i, writeListArr }) {
+    function WriteShowContents({writeListArr }) {
 
-        const [writeContent, setWriteContent] = useState(writeListArr[i]);
+        const [writeContent, setWriteContent] = useState(writeListArr);
         const titleDoc = new DOMParser().parseFromString(writeContent.title, 'text/html');
         const subTitleDoc = new DOMParser().parseFromString(writeContent.subTitle, 'text/html');
         const contentDoc = new DOMParser().parseFromString(writeContent.content, 'text/html');
         const create_date = writeContent.created_at;
 
         return (
-            <Link to={`/components/WriteView/${writeListArr[i].id}`}>
+            <Link to={`/components/WriteView/${writeListArr.id}`}>
                 <ViewEdit titleDoc={titleDoc} subTitleDoc={subTitleDoc} contentDoc={contentDoc}></ViewEdit>
             </Link>
         )

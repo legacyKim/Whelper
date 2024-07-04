@@ -61,8 +61,6 @@ function WriteList() {
     }
 
     useEffect(() => {
-
-        // check web size and attribute height;
         whiteAreaCheck();
 
         const currentScrollArea = writeScrollArea.current;
@@ -97,8 +95,6 @@ function WriteList() {
                         }
                     </div>
                 </div>
-
-
             </div>
         </div>
     )
