@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 
@@ -16,28 +16,88 @@ function WriteList() {
     const writeListState = useSelector((state) => state.WriteData);
     const writeListArr = writeListState.data.write.filter(item => item !== null) || [];
 
+    const [writeArr, setWriteArr] = useState(writeListArr);
+    const [writeReal, setWriteReal] = useState(writeArr);
+
+    // infinite scroll
+    var writeScrollArea = useRef();
+    var writeScrollPos = useRef();
+    var currentY = 0;
+    var previousY = 0;
+    var scrollAmount = 198;
+
+    const whiteAreaCheck = () => {
+        var scY = window.innerHeight;
+        const writeScrollTop = writeScrollArea.current.getBoundingClientRect().top;
+        var writeAreaHeight = (scY - writeScrollTop) / scrollAmount;
+        writeScrollArea.current.style.height = Math.floor(writeAreaHeight) * scrollAmount + 'px';
+    }
+
+    const whiteScrollMove = (e) => {
+
+        currentY = writeScrollArea.current.scrollTop;
+        if (e.deltaY > 0) {
+            currentY += scrollAmount;
+        } else {
+            currentY -= scrollAmount;
+        }
+        writeScrollArea.current.scrollTop = currentY;
+        previousY = currentY;
+
+        var scroll_num = Math.round(currentY / scrollAmount);
+
+        if (0 <= scroll_num && scroll_num < writeArr.length - 5 && 5 < writeArr.length) {
+            writeScrollPos.current.style.top = `${scrollAmount * scroll_num}px`
+
+            var rows = [];
+            for (let i = scroll_num; i < scroll_num + 6; i += 1) {
+                if (writeArr[i] !== undefined) rows.push(writeArr[i])
+            }
+
+            setWriteReal(rows)
+
+        }
+
+    }
+
     useEffect(() => {
-        setTimeout(() => {
-            const memoContentElements = document.querySelectorAll('.WriteDiv');
-            memoContentElements.forEach(element => {
-                element.classList.remove('opacity');
-            });
-        }, 100)
-    }, [writeListArr])
+
+        // check web size and attribute height;
+        whiteAreaCheck();
+
+        const currentScrollArea = writeScrollArea.current;
+        currentScrollArea.addEventListener('wheel', whiteScrollMove);
+
+        var rows = [];
+        for (let i = 0; i < 6; i += 1) {
+            console.log(writeArr[i])
+            if (writeArr[i] !== undefined) rows.push(writeArr[i])
+        }
+        setWriteReal(rows)
+
+        return () => {
+            currentScrollArea.removeEventListener('wheel', whiteScrollMove);
+        };
+    }, [writeArr]);
+    //// infinite scroll
 
     return (
         <div className='common_page'>
             <div className='content_area'>
+                <div className='write_list_scroll' ref={writeScrollArea}>
+                    <div className='write_list_wrap' ref={writeScrollPos}>
+                        {
+                            writeReal.map(function (a, i) {
+                                return (
+                                    <div key={i} className="WriteDiv">
+                                        <WriteShowContents i={i} writeListArr={writeReal} />
+                                    </div>
+                                )
+                            })
+                        }
+                    </div>
+                </div>
 
-                {
-                    writeListArr.map(function (a, i) {
-                        return (
-                            <div key={i} className="WriteDiv opacity">
-                                <WriteShowContents i={i} writeListArr={writeListArr} />
-                            </div>
-                        )
-                    })
-                }
 
             </div>
         </div>

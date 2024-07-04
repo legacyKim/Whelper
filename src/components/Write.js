@@ -352,7 +352,7 @@ function Write() {
                     }
                 }}>
 
-                <div className={`editor_btn active ${toolbarActive ? toolbarActive : ""}`}>
+                <div className={`editor_btn ${toolbarActive ? toolbarActive : ""}`}>
                     <button className='icon-gwallet'
                         onMouseDown={event => {
                             event.preventDefault();
