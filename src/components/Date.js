@@ -64,7 +64,7 @@ function Date_sort() {
     return (
         <div className={`content_area date ${writeListActive}`}>
             {Object.keys(groupedData).map(date => (
-                <div key={date}>
+                <div className='date_box' key={date}>
                     <h2>{date}</h2>
                     <ul>
                         {groupedData[date].map((item, i) => (
