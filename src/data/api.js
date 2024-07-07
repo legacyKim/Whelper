@@ -17,7 +17,7 @@ export const writeListData = createAsyncThunk('writeData/getData', async () => {
 
 export const writeListDataDate = createAsyncThunk('writeData/getData', async () => {
     try {
-        const response = await axios.get(`${API_URL}`);
+        const response = await axios.get(`${API_URL}/api/date`);
         return response.data;
     } catch (error) {
         console.error('Error fetching writeListData:', error);

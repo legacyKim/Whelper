@@ -23,7 +23,7 @@ CORS(app, resources={
 #      r'*': {'origins': 'http://bambueong.net/'}}, supports_credentials=True)
 
 
-@app.route('/', methods=['GET'])
+@app.route('/api/date', methods=['GET'])
 def get_data_WriteList_date():
     results = get_data_from_write()
     writeList = results[0]

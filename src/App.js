@@ -16,6 +16,8 @@ import Routes from './Routes'
 
 function App() {
 
+    const navigate = useNavigate();
+
     var [log_check, setlog] = useState(null);
     const token = localStorage.getItem('access_token');
 
@@ -25,12 +27,21 @@ function App() {
         }
     }, [token]);
 
+    // write 검증
+    const writeNavi = async (e) => {
+        e.preventDefault();
+        const isTokenValid = await token_check(navigate);
+        if (isTokenValid) {
+            navigate('/components/Write');
+        }
+    };
+    //// write 검증
+
     const loggedOut = () => {
         localStorage.removeItem('access_token');
         setlog(null);
     };
 
-    const navigate = useNavigate();
     const [theme, themeChange] = useState('dark');
 
     // about change theme
@@ -124,16 +135,6 @@ function App() {
         searchOn();
     }
     //// about search
-
-    // write 검증
-    const writeNavi = async (e) => {
-        e.preventDefault();
-        const isTokenValid = await token_check(navigate);
-        if (isTokenValid) {
-            navigate('/components/Write');
-        }
-    };
-    //// write 검증
 
     return (
 

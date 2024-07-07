@@ -68,7 +68,6 @@ function WriteList() {
 
         var rows = [];
         for (let i = 0; i < 6; i += 1) {
-            console.log(writeArr[i])
             if (writeArr[i] !== undefined) rows.push(writeArr[i])
         }
         setWriteReal(rows)
