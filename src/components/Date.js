@@ -3,8 +3,6 @@ import { NavLink, useNavigate, Link, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux"
 import { format, subDays, isAfter } from 'date-fns';
 
-import { debounce } from 'lodash';
-
 import 'react-toastify/dist/ReactToastify.css';
 
 import { writeListDataDate } from '../data/api.js';
