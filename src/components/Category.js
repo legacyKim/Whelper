@@ -215,9 +215,9 @@ function Category() {
         const titleDoc = new DOMParser().parseFromString(cateFilterRes[i].title, 'text/html');
         const subTitleDoc = new DOMParser().parseFromString(cateFilterRes[i].subTitle, 'text/html');
         const contentDoc = new DOMParser().parseFromString(cateFilterRes[i].content, 'text/html');
-        const keywordsParse = JSON.parse(writeListArr[i].keywords)
+        const keywordsParse = JSON.parse(cateFilterRes[i].keywords)
 
-        const index = writeListArr[i].id - 1;
+        const index = cateFilterRes[i].id;
 
         return (
             <div className='write_list'>

@@ -40,7 +40,6 @@ function Date_sort() {
     }).sort((a, b) => new Date(a.updated_at) - new Date(b.updated_at)) || [];
 
     const [writeListActive, setWriteListActive] = useState();
-
     useRouteChange((location) => {
         if (location.pathname === '/') {
             setWriteListActive('active');
@@ -61,24 +60,30 @@ function Date_sort() {
     }, {});
     //// list create
 
+    const isEmpty = Object.keys(groupedData).length === 0;
+
     return (
         <div className={`content_area date ${writeListActive}`}>
-            {Object.keys(groupedData).map(date => (
-                <div key={date}>
-                    <h2>{date}</h2>
-                    <ul>
-                        {groupedData[date].map((item, i) => (
-                            <li className='date_list' key={item.id}>
-                                <WriteShowContents writeListArr={item} />
-                            </li>
-                        ))}
-                    </ul>
-                </div>
-            ))}
+            {isEmpty ? (
+                <strong className='dontWasteYourTime'>어영부영하다가 내 이럴 줄 알았지...</strong>
+            ) : (
+                Object.keys(groupedData).map(date => (
+                    <div className='date_box' key={date}>
+                        <h2>{date}</h2>
+                        <ul className='list'>
+                            {groupedData[date].map((item) => (
+                                <li className='date_list' key={item.id}>
+                                    <WriteShowContents writeListArr={item} />
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                ))
+            )}
         </div>
     )
 
-    function WriteShowContents({writeListArr }) {
+    function WriteShowContents({ writeListArr }) {
 
         const [writeContent, setWriteContent] = useState(writeListArr);
         const titleDoc = new DOMParser().parseFromString(writeContent.title, 'text/html');
