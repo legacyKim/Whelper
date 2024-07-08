@@ -201,12 +201,12 @@ export const bookListDataDelete = createAsyncThunk('bookData/bookDelete', async 
     }
 });
 
-export const userCheck = createAsyncThunk('user', async (data) => {
+export const userCheck = createAsyncThunk('user', async (data, thunkAPI) => {
     try {
-        const response = await axios.post(`${API_URL}/components/Login`, data);
+        const response = await axios.post(`${API_URL}/components/Login`, data, { withCredentials: true });
         return response.data;
     } catch (error) {
-        throw error;
+        return thunkAPI.rejectWithValue(error.response.data);
     }
 });
 
@@ -216,14 +216,22 @@ export const login = createAsyncThunk('user', async (data) => {
         return response.data;
     } catch (error) {
         throw error;
-    } 
+    }
+});
+
+export const checkAuth = createAsyncThunk(async () => {
+    try {
+        const response = await axios.get(`${API_URL}/check-auth`, { withCredentials: true });
+        return response.data
+    } catch (error) {
+        console.error('Auth check error', error);
+    }
 });
 
 export const logout = createAsyncThunk('user', async (data) => {
     try {
-        const response = await axios.get(`${API_URL}/logout`, data);
-        return response.data;
+        const response = await axios.post(`${API_URL}/logout`, {}, { withCredentials: true });
     } catch (error) {
-        throw error;
+        console.error('Logout error', error);
     }
 });

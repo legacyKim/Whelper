@@ -13,19 +13,25 @@ import Date from './components/Date.js'
 
 import './css/style.css';
 import Routes from './Routes'
+import { logout, checkAuth } from './data/api.js'
 
 function App() {
 
     const navigate = useNavigate();
-
-    var [log_check, setlog] = useState(null);
-    const token = localStorage.getItem('access_token');
+    const dispatch = useDispatch();
+    const [isAuth, setAuth] = useState(false);
 
     useEffect(() => {
-        if (token) {
-            setlog(token);
-        }
-    }, [token]);
+        const fetchData = async () => {
+            const result = await dispatch(checkAuth());
+            if (result.payload) {
+                setAuth(true);
+            } else {
+                setAuth(false);
+            }
+        };
+        fetchData();
+    }, [dispatch]);
 
     // write 검증
     const writeNavi = async (e) => {
@@ -37,9 +43,10 @@ function App() {
     };
     //// write 검증
 
-    const loggedOut = () => {
-        localStorage.removeItem('access_token');
-        setlog(null);
+    const loggedOut = async () => {
+        dispatch(logout())
+        setAuth(false);
+        navigate('/login');
     };
 
     const [theme, themeChange] = useState('dark');
@@ -174,7 +181,7 @@ function App() {
                             <div className='tooltip'><span>Work</span></div>
                         </NavLink></li>
 
-                        {token === null ? (
+                        {isAuth === false ? (
                             <li className='btn'><NavLink to={`/components/Login`} className='icon-login' onClick={() => { navigate('/components/Login') }}>
                                 <div className='tooltip'><span>Log-In</span></div>
                             </NavLink></li>

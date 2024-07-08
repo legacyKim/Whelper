@@ -1,6 +1,6 @@
 import os
 from flask import Flask, request, jsonify, session, make_response
-from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
+from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity, set_access_cookies, unset_jwt_cookies
 from flask_cors import CORS
 from db_connector import get_data_from_write, get_data_from_memo
 from db_operator import post_data_to_write, update_data_from_write, delete_data_from_write, post_data_to_cate, post_data_from_memo, update_data_from_memo, delete_data_from_memo, post_data_from_memoAnno, update_data_from_memoAnno, delete_data_from_memoAnno, post_data_from_book, delete_data_from_book, post_data_from_pwd
@@ -251,7 +251,9 @@ def post_data_login():
             session['user_authority'] = result['authority']
 
             access_token = create_access_token(identity=result['username'])
-            return jsonify(access_token=access_token, info=result)
+            response = jsonify({'info': result})
+            set_access_cookies(response, access_token)
+            return response
 
         else:
             return jsonify({'message': 'Invalid username or password'}), 401
@@ -265,6 +267,12 @@ def post_data_login():
 def protected():
     current_user = get_jwt_identity()
     return jsonify(logged_in_as=current_user), 200
+
+
+@app.route('/check-auth', methods=['GET'])
+@jwt_required()
+def check_auth():
+    return jsonify(authenticated=True), 200
 
 
 @app.route('/login', methods=['GET'])
@@ -281,6 +289,7 @@ def logout():
     session.pop('user_authority', None)
 
     response = make_response(jsonify({'message': 'Logout successful'}))
+    unset_jwt_cookies(response)
     response.set_cookie('user_id', '', expires=0)
 
     return jsonify({'success': True}), 200

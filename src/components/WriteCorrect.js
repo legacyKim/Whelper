@@ -8,6 +8,7 @@ import { createEditor, Editor, Text, Element as SlateElement, Node, } from 'slat
 import { Slate, Editable, withReact } from 'slate-react'
 import escapeHtml from 'escape-html'
 
+import { token_check } from '../data/token_check.js'
 import { useParams, Link, useNavigate } from 'react-router-dom';
 
 // slate editor
