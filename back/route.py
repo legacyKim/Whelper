@@ -18,6 +18,7 @@ app.config['JWT_TOKEN_LOCATION'] = ['cookies']
 app.config['JWT_ACCESS_COOKIE_NAME'] = 'access_token_cookie'
 app.config['JWT_COOKIE_SECURE'] = False  # 개발 환경에서는 False, 프로덕션에서는 True
 app.config['JWT_COOKIE_CSRF_PROTECT'] = False  # 필요에 따라 True로 설정
+# app.config['JWT_ACCESS_COOKIE_PATH'] = '/'
 app.config['JWT_CSRF_CHECK_FORM'] = False  # 필요에 따라 True로 설정
 jwt = JWTManager(app)
 
