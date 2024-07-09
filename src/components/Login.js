@@ -1,7 +1,7 @@
-import { React, useEffect, useState, useRef } from 'react';
+import { React, useEffect, useState, useRef, useContext } from 'react';
 import { useDispatch, useSelector } from "react-redux"
 import { useNavigate, Link, NavLink } from "react-router-dom";
-
+import MyContext from '../context'
 import { userCheck } from '../data/api.js'
 
 function Login() {
@@ -9,6 +9,8 @@ function Login() {
     // login
     const navigate = useNavigate();
     const dispatch = useDispatch();
+
+    const { setAuth } = useContext(MyContext);
 
     const username = useRef();
     const userPassword = useRef();
@@ -19,6 +21,7 @@ function Login() {
         const result = await dispatch(userCheck({ username_v, userpassword_v }));
 
         if (!result.payload.message) {
+            setAuth(true);
             navigate('/');
         } else {
             username.current.value = '';

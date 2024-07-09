@@ -13,25 +13,13 @@ import Date from './components/Date.js'
 
 import './css/style.css';
 import Routes from './Routes'
-import { logout, checkAuth } from './data/api.js'
+import { logout } from './data/api.js'
 
 function App() {
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const [isAuth, setAuth] = useState(false);
-
-    useEffect(() => {
-        const fetchData = async () => {
-            const result = await dispatch(checkAuth());
-            if (result.payload !== null) {
-                setAuth(true);
-            } else {
-                setAuth(false);
-            }
-        };
-        fetchData();
-    }, []);
 
     const loggedOut = async () => {
         const result = await dispatch(logout());
@@ -144,7 +132,7 @@ function App() {
 
     return (
 
-        <MyContext.Provider value={{ searchArr, setSearchArr, scrollPosition, setScrollPosition }}>
+        <MyContext.Provider value={{ searchArr, setSearchArr, scrollPosition, setScrollPosition, isAuth, setAuth }}>
             <div id='app' className={`App ${theme}`}>
 
                 <ToastContainer />

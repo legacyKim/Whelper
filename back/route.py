@@ -274,12 +274,6 @@ def protected():
     return jsonify(logged_in_as=current_user), 200
 
 
-@app.route('/check-auth', methods=['GET'])
-@jwt_required()
-def check_auth():
-    return jsonify(authenticated=True), 200
-
-
 @app.route('/login', methods=['GET'])
 def login():
     if 'username' in session:
