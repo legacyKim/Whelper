@@ -24,14 +24,19 @@ function App() {
     useEffect(() => {
         const fetchData = async () => {
             const result = await dispatch(checkAuth());
-            if (result.payload) {
+            if (result.payload !== null) {
                 setAuth(true);
             } else {
                 setAuth(false);
             }
         };
         fetchData();
-    }, [dispatch]);
+    }, []);
+
+    const loggedOut = async () => {
+        const result = await dispatch(logout());
+        setAuth(false);
+    };
 
     // write 검증
     const writeNavi = async (e) => {
@@ -42,12 +47,6 @@ function App() {
         }
     };
     //// write 검증
-
-    const loggedOut = async () => {
-        dispatch(logout())
-        setAuth(false);
-        navigate('/login');
-    };
 
     const [theme, themeChange] = useState('dark');
 

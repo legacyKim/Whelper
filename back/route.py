@@ -14,6 +14,11 @@ app.config['JWT_SECRET_KEY'] = os.getenv(
     'JWT_SECRET_KEY', 'fallback_secret_key')
 app.config['JWT_ACCESS_TOKEN_EXPIRES'] = int(
     os.getenv('JWT_ACCESS_TOKEN_EXPIRES', 3600))
+app.config['JWT_TOKEN_LOCATION'] = ['cookies']
+app.config['JWT_ACCESS_COOKIE_NAME'] = 'access_token_cookie'
+app.config['JWT_COOKIE_SECURE'] = False  # 개발 환경에서는 False, 프로덕션에서는 True
+app.config['JWT_COOKIE_CSRF_PROTECT'] = False  # 필요에 따라 True로 설정
+app.config['JWT_CSRF_CHECK_FORM'] = False  # 필요에 따라 True로 설정
 jwt = JWTManager(app)
 
 CORS(app, resources={
@@ -288,11 +293,12 @@ def logout():
     session.pop('username', None)
     session.pop('user_authority', None)
 
-    response = make_response(jsonify({'message': 'Logout successful'}))
+    response = make_response(
+        jsonify({'message': 'Logout successful', 'success': True}))
     unset_jwt_cookies(response)
     response.set_cookie('user_id', '', expires=0)
 
-    return jsonify({'success': True}), 200
+    return response
 
 
 if __name__ == '__main__':

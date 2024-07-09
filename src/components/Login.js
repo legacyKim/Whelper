@@ -18,9 +18,11 @@ function Login() {
         const userpassword_v = userPassword.current.value;
         const result = await dispatch(userCheck({ username_v, userpassword_v }));
 
-        if (result.payload) {
+        if (!result.payload.message) {
             navigate('/');
         } else {
+            username.current.value = '';
+            userPassword.current.value = '';
             alert('아이디 또는 비밀번호가 틀렸습니다.');
         }
     };
