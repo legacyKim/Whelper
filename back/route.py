@@ -16,17 +16,17 @@ app.config['JWT_ACCESS_TOKEN_EXPIRES'] = int(
     os.getenv('JWT_ACCESS_TOKEN_EXPIRES', 3600))
 app.config['JWT_TOKEN_LOCATION'] = ['cookies']
 app.config['JWT_ACCESS_COOKIE_NAME'] = 'access_token_cookie'
-app.config['JWT_COOKIE_SECURE'] = False  # 개발 환경에서는 False, 프로덕션에서는 True
-app.config['JWT_COOKIE_CSRF_PROTECT'] = False  # 필요에 따라 True로 설정
+app.config['JWT_COOKIE_SECURE'] = True  # 개발 환경에서는 False, 프로덕션에서는 True
+app.config['JWT_COOKIE_CSRF_PROTECT'] = True  # 필요에 따라 True로 설정
 # app.config['JWT_ACCESS_COOKIE_PATH'] = '/'
-app.config['JWT_CSRF_CHECK_FORM'] = False  # 필요에 따라 True로 설정
+app.config['JWT_CSRF_CHECK_FORM'] = True  # 필요에 따라 True로 설정
 jwt = JWTManager(app)
 
-CORS(app, resources={
-     r'*': {'origins': 'http://localhost:3000'}}, supports_credentials=True)
-
 # CORS(app, resources={
-#      r'*': {'origins': 'http://bambueong.net/'}}, supports_credentials=True)
+#      r'*': {'origins': 'http://localhost:3000'}}, supports_credentials=True)
+
+CORS(app, resources={
+     r'*': {'origins': 'https://bambueong.net/'}}, supports_credentials=True)
 
 
 @app.route('/api/date', methods=['GET'])
