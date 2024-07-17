@@ -17,8 +17,9 @@ import { logout } from './data/api.js'
 
 function App() {
 
-    const navigate = useNavigate();
     const dispatch = useDispatch();
+    const navigate = useNavigate();
+
     const [isAuth, setAuth] = useState(false);
 
     const loggedOut = async () => {

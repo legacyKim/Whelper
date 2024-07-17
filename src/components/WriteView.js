@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { syncWriteListData, syncWriteListDataUpdate } from '../data/reducers.js';
@@ -8,12 +8,16 @@ import { useParams } from 'react-router-dom';
 
 import ViewEdit from './SlateView.js'
 
+import { token_check } from '../data/token_check.js'
+
 function WriteView() {
 
     const writeListState = useSelector((state) => state.WriteData);
     let { id } = useParams();
 
     const dispatch = useDispatch();
+    const navigate = useNavigate();
+
     useEffect(() => {
         dispatch(syncWriteListData());
         dispatch(syncWriteListDataUpdate());
@@ -30,12 +34,12 @@ function WriteView() {
 
     const [writeContent, setWriteContent] = useState(() => writeListCheck(id));
 
-    const titleDoc = (writeContent !== undefined ) ? new DOMParser().parseFromString(writeContent.title, 'text/html') : null;
-    const subTitleDoc = (writeContent !== undefined ) ? new DOMParser().parseFromString(writeContent.subTitle, 'text/html') : null;
-    const contentDoc = (writeContent !== undefined ) ? new DOMParser().parseFromString(writeContent.content, 'text/html') : null;
+    const titleDoc = (writeContent !== undefined) ? new DOMParser().parseFromString(writeContent.title, 'text/html') : null;
+    const subTitleDoc = (writeContent !== undefined) ? new DOMParser().parseFromString(writeContent.subTitle, 'text/html') : null;
+    const contentDoc = (writeContent !== undefined) ? new DOMParser().parseFromString(writeContent.content, 'text/html') : null;
 
     const lsKeywords = JSON.parse(localStorage.getItem('view_keywords')) || [];
-    const keywordsParse = (writeContent !== undefined ) ? JSON.parse(writeContent.keywords) : lsKeywords;
+    const keywordsParse = (writeContent !== undefined) ? JSON.parse(writeContent.keywords) : lsKeywords;
 
     localStorage.setItem('view_keywords', JSON.stringify(keywordsParse));
 
@@ -48,8 +52,23 @@ function WriteView() {
         }, 100)
     }, [writeListArr])
 
-    const delWriteList = () => {
-        dispatch(writeListDataDel(writeContent.id))
+    const delWriteList = async (e) => {
+        e.preventDefault();
+        const isTokenValid = await token_check(navigate);
+
+        if (isTokenValid) {
+            dispatch(writeListDataDel(writeContent.id))
+            navigate('/components/WriteList');
+        }
+    }
+
+    const writeNavi = async (e) => {
+        e.preventDefault();
+        const isTokenValid = await token_check(navigate);
+
+        if (isTokenValid) {
+            navigate(`/components/WriteCorrect/${writeContent.id}`)
+        }
     }
 
     return (
@@ -68,8 +87,8 @@ function WriteView() {
                         </div>
                     </div>
                     <div className='page_btn'>
-                        <Link className='icon-trash' onClick={delWriteList} to={`/components/WriteList`}></Link>
-                        <Link className='icon-edit-alt' to={`/components/WriteCorrect/${writeContent.id}`}></Link>
+                        <Link className='icon-trash' onClick={delWriteList}></Link>
+                        <Link className='icon-edit-alt' onClick={writeNavi}></Link>
                     </div>
                 </div>
             </div>

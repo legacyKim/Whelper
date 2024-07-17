@@ -10,9 +10,11 @@ import { token_check } from '../data/token_check.js'
 
 function Memo() {
 
+    const { isAuth } = useContext(MyContext);
+
     const navigate = useNavigate();
-  
     const dispatch = useDispatch();
+    
     useEffect(() => {
         dispatch(memoListData());
 

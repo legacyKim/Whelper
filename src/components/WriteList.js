@@ -1,14 +1,18 @@
 import React, { useState, useMemo, useRef, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 
 import { useSelector, useDispatch } from "react-redux"
 import { writeListData } from '../data/api.js';
 import ViewEdit from './SlateView.js'
 
+import { token_check } from '../data/token_check.js'
+
 function WriteList() {
 
     const dispatch = useDispatch();
+    const navigate = useNavigate();
+
     useEffect(() => {
         dispatch(writeListData())
     }, [dispatch]);
@@ -112,11 +116,20 @@ function WriteList() {
             day: '2-digit'
         });
 
+        const writeNavi = async (e) => {
+            e.preventDefault();
+            const isTokenValid = await token_check(navigate);
+    
+            if (isTokenValid) {
+                navigate(`/components/WriteCorrect/${writeListArr[i].id}`);
+            }
+        };
+
         return (
 
             <div>
                 <div className='write_btn'>
-                    <Link className='icon-edit-alt' to={`/components/WriteCorrect/${writeListArr[i].id}`}></Link>
+                    <Link className='icon-edit-alt' onClick={writeNavi}></Link>
                 </div>
                 <div className='write_list'>
                     <Link to={`/components/WriteView/${writeListArr[i].id}`}>
