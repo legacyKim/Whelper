@@ -41,7 +41,7 @@ class Memo(Base_memo):
     memoComment = Column(String(1255))
     memoSource = Column(String(255))
     memoAuthor = Column(String(255))
-    memoAnnotation = Column(String(1255))
+    memoAnnotation = Column(Text)
 
 
 class Book(Base_memo):
