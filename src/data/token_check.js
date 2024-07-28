@@ -1,5 +1,5 @@
-const API_URL = 'http://localhost:5000';
-// const API_URL = 'https://bambueong.net';
+// const API_URL = 'http://localhost:5000';
+const API_URL = 'https://bambueong.net';
 
 export const token_check = async (navigate) => {
 

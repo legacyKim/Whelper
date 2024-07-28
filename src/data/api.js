@@ -1,13 +1,13 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
-const API_URL = 'http://localhost:5000';
-// const API_URL = 'https://bambueong.net';
+// const API_URL = 'http://localhost:5000';
+const API_URL = 'https://bambueong.net';
 
 // get write data
 export const writeListData = createAsyncThunk('writeData/getData', async () => {
     try {
-        const response = await axios.get(`${API_URL}/components/WriteList`);
+        const response = await axios.get(`${API_URL}/api/WriteList`);
         return response.data;
     } catch (error) {
         console.error('Error fetching writeListData:', error);
@@ -28,7 +28,7 @@ export const writeListDataDate = createAsyncThunk('writeData/getData', async () 
 // post write data
 export const writeListDataPost = createAsyncThunk('writeData/newData', async (newData) => {
     try {
-        const response = await axios.post(`${API_URL}/components/Write`, newData);
+        const response = await axios.post(`${API_URL}/api/Write`, newData);
         return response.data;
     } catch (error) {
         throw error;
@@ -38,7 +38,7 @@ export const writeListDataPost = createAsyncThunk('writeData/newData', async (ne
 // update write data
 export const writeListDataUpdate = createAsyncThunk('writeData/updateData', async (newData) => {
     try {
-        const response = await axios.post(`${API_URL}/components/WriteCorrect`, newData);
+        const response = await axios.post(`${API_URL}/api/WriteCorrect`, newData);
         return response.data;
     } catch (error) {
         throw error;
@@ -49,7 +49,7 @@ export const writeListDataUpdate = createAsyncThunk('writeData/updateData', asyn
 export const writeListData_search = createAsyncThunk('writeData/getData',
     async () => {
         try {
-            const response = await axios.get(`${API_URL}/components/Search`);
+            const response = await axios.get(`${API_URL}/api/Search`);
             return response.data;
         } catch (error) {
             console.error('Error fetching writeListData:', error);
@@ -60,7 +60,7 @@ export const writeListData_search = createAsyncThunk('writeData/getData',
 
 export const writeListDataDel = createAsyncThunk('writeData/deleteWrite', async (id) => {
     try {
-        const response = await axios.delete(`${API_URL}/components/WriteView/${id}`);
+        const response = await axios.delete(`${API_URL}/api/WriteView/${id}`);
         return response.data;
     } catch (error) {
         throw error;
@@ -71,7 +71,7 @@ export const writeListDataDel = createAsyncThunk('writeData/deleteWrite', async 
 export const cateListData = createAsyncThunk('cateData/getCate',
     async () => {
         try {
-            const response = await axios.get(`${API_URL}/components/WriteList`);
+            const response = await axios.get(`${API_URL}/api/WriteList`);
             return response.data;
         } catch (error) {
             console.error('Error fetching cateListData:', error);
@@ -83,7 +83,7 @@ export const cateListData = createAsyncThunk('cateData/getCate',
 export const cateListData_cate = createAsyncThunk('cateData/getCate',
     async () => {
         try {
-            const response = await axios.get(`${API_URL}/components/Category`);
+            const response = await axios.get(`${API_URL}/api/Category`);
             return response.data;
         } catch (error) {
             console.error('Error fetching cateListData:', error);
@@ -94,7 +94,7 @@ export const cateListData_cate = createAsyncThunk('cateData/getCate',
 
 export const cateListDataPost = createAsyncThunk('writeData/newData', async (newData) => {
     try {
-        const response = await axios.post(`${API_URL}/components/Category`, newData);
+        const response = await axios.post(`${API_URL}/api/Category`, newData);
         return response.data;
     } catch (error) {
         throw error;
@@ -105,7 +105,7 @@ export const cateListDataPost = createAsyncThunk('writeData/newData', async (new
 export const memoListData = createAsyncThunk('memoData/getMemo',
     async () => {
         try {
-            const response = await axios.get(`${API_URL}/components/Memo`);
+            const response = await axios.get(`${API_URL}/api/Memo`);
             return response.data;
         } catch (error) {
             console.error('Error fetching memoListData:', error);
@@ -116,7 +116,7 @@ export const memoListData = createAsyncThunk('memoData/getMemo',
 
 export const memoListDataPost = createAsyncThunk('memoData/postMemo', async (newData) => {
     try {
-        const response = await axios.post(`${API_URL}/components/Memo`, newData);
+        const response = await axios.post(`${API_URL}/api/Memo`, newData);
         return response.data;
     } catch (error) {
         throw error;
@@ -126,7 +126,7 @@ export const memoListDataPost = createAsyncThunk('memoData/postMemo', async (new
 // post memo data
 export const memoListDataUpdate = createAsyncThunk('memoData/updateMemo', async (newData) => {
     try {
-        const response = await axios.post(`${API_URL}/components/Memo/update`, newData);
+        const response = await axios.post(`${API_URL}/api/Memo/update`, newData);
         return response.data;
     } catch (error) {
         throw error;
@@ -135,7 +135,7 @@ export const memoListDataUpdate = createAsyncThunk('memoData/updateMemo', async 
 
 export const memoListDataDelete = createAsyncThunk('memoData/deleteMemo', async (memo_id) => {
     try {
-        const response = await axios.delete(`${API_URL}/components/Memo/${memo_id}`);
+        const response = await axios.delete(`${API_URL}/api/Memo/${memo_id}`);
         return response.data;
     } catch (error) {
         throw error;
@@ -145,7 +145,7 @@ export const memoListDataDelete = createAsyncThunk('memoData/deleteMemo', async 
 // post memo Anno data
 export const memoListAnnoPost = createAsyncThunk('memoData/annoPost', async (newData) => {
     try {
-        const response = await axios.post(`${API_URL}/components/Memo/anno`, newData);
+        const response = await axios.post(`${API_URL}/api/Memo/anno`, newData);
         return response.data;
     } catch (error) {
         throw error;
@@ -154,7 +154,7 @@ export const memoListAnnoPost = createAsyncThunk('memoData/annoPost', async (new
 
 export const memoListAnnoUpdate = createAsyncThunk('memoData/annoUpdate', async (newData) => {
     try {
-        const response = await axios.post(`${API_URL}/components/Memo/updateAnno`, newData);
+        const response = await axios.post(`${API_URL}/api/Memo/updateAnno`, newData);
         return response.data;
     } catch (error) {
         throw error;
@@ -163,7 +163,7 @@ export const memoListAnnoUpdate = createAsyncThunk('memoData/annoUpdate', async 
 
 export const memoListAnnoDelete = createAsyncThunk('memoData/annoDelete', async (data) => {
     try {
-        const response = await axios.delete(`${API_URL}/components/Memo/${data.id}/${data.corrAnnotationKeys}`);
+        const response = await axios.delete(`${API_URL}/api/Memo/${data.id}/${data.corrAnnotationKeys}`);
         return response.data;
     } catch (error) {
         throw error;
@@ -174,7 +174,7 @@ export const memoListAnnoDelete = createAsyncThunk('memoData/annoDelete', async 
 export const bookListData = createAsyncThunk('bookData/getBook',
     async () => {
         try {
-            const response = await axios.get(`${API_URL}/components/Memo`);
+            const response = await axios.get(`${API_URL}/api/Memo`);
             return response.data;
         } catch (error) {
             console.error('Error fetching bookListData:', error);
@@ -185,7 +185,7 @@ export const bookListData = createAsyncThunk('bookData/getBook',
 
 export const bookListDataPost = createAsyncThunk('bookData/bookPost', async (newData) => {
     try {
-        const response = await axios.post(`${API_URL}/components/Memo/book`, newData);
+        const response = await axios.post(`${API_URL}/api/Memo/book`, newData);
         return response.data;
     } catch (error) {
         throw error;
@@ -194,7 +194,7 @@ export const bookListDataPost = createAsyncThunk('bookData/bookPost', async (new
 
 export const bookListDataDelete = createAsyncThunk('bookData/bookDelete', async (data) => {
     try {
-        const response = await axios.delete(`${API_URL}/components/Memo/${data.memoSource}`);
+        const response = await axios.delete(`${API_URL}/api/Memo/${data.memoSource}`);
         return response.data;
     } catch (error) {
         throw error;
@@ -203,7 +203,7 @@ export const bookListDataDelete = createAsyncThunk('bookData/bookDelete', async 
 
 export const userCheck = createAsyncThunk('user', async (data, thunkAPI) => {
     try {
-        const response = await axios.post(`${API_URL}/components/Login`, data, { withCredentials: true });
+        const response = await axios.post(`${API_URL}/api/Login`, data, { withCredentials: true });
         return response.data;
     } catch (error) {
         return thunkAPI.rejectWithValue(error.response.data);

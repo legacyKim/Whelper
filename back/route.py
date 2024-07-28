@@ -22,11 +22,11 @@ app.config['JWT_COOKIE_CSRF_PROTECT'] = True  # 필요에 따라 True로 설정
 app.config['JWT_CSRF_CHECK_FORM'] = True  # 필요에 따라 True로 설정
 jwt = JWTManager(app)
 
-CORS(app, resources={
-     r'*': {'origins': 'http://localhost:3000'}}, supports_credentials=True)
-
 # CORS(app, resources={
-#      r'*': {'origins': 'https://bambueong.net/'}}, supports_credentials=True)
+#      r'*': {'origins': 'http://localhost:3000'}}, supports_credentials=True)
+
+CORS(app, resources={
+     r'*': {'origins': 'https://bambueong.net/'}}, supports_credentials=True)
 
 
 @app.route('/api/date', methods=['GET'])
@@ -42,7 +42,7 @@ def get_data_WriteList_date():
         return jsonify({'error': 'Invalid JSON data'}), 500
 
 
-@app.route('/components/WriteList', methods=['GET'])
+@app.route('/api/WriteList', methods=['GET'])
 def get_data_WriteList():
     results = get_data_from_write()
     writeList, cateList = results[0], results[1]
@@ -55,7 +55,7 @@ def get_data_WriteList():
         return jsonify({'error': 'Invalid JSON data'}), 500
 
 
-@app.route('/components/Write', methods=['POST'])
+@app.route('/api/Write', methods=['POST'])
 def post_data_WriteList():
     try:
         data = request.get_json()
@@ -66,7 +66,7 @@ def post_data_WriteList():
         return jsonify({'error': 'Error handling write post request'}), 500
 
 
-@app.route('/components/WriteCorrect', methods=['POST'])
+@app.route('/api/WriteCorrect', methods=['POST'])
 def update_data_WriteList():
     try:
         data = request.get_json()
@@ -79,7 +79,7 @@ def update_data_WriteList():
         return jsonify({'error': 'Error handling write post request'}), 500
 
 
-@app.route('/components/Search', methods=['GET'])
+@app.route('/api/Search', methods=['GET'])
 def get_data_to_Search():
     results = get_data_from_write()
     writeList, cateList = results[0], results[1]
@@ -92,7 +92,7 @@ def get_data_to_Search():
         return jsonify({'error': 'Invalid JSON data'}), 500
 
 
-@app.route('/components/Category', methods=['GET'])
+@app.route('/api/Category', methods=['GET'])
 def get_data_to_cate():
     results = get_data_from_write()
     writeList, cateList = results[0], results[1]
@@ -105,7 +105,7 @@ def get_data_to_cate():
         return jsonify({'error': 'Invalid JSON data'}), 500
 
 
-@app.route('/components/Category', methods=['POST'])
+@app.route('/api/Category', methods=['POST'])
 def post_data_cate():
     try:
         data = request.get_json()
@@ -116,7 +116,7 @@ def post_data_cate():
         return jsonify({'error': 'Error handling write post request'}), 500
 
 
-@app.route('/components/WriteCorrect/cate', methods=['POST'])
+@app.route('/api/WriteCorrect/cate', methods=['POST'])
 def post_data_cate_in_correct():
     try:
         data = request.get_json()
@@ -127,7 +127,7 @@ def post_data_cate_in_correct():
         return jsonify({'error': 'Error handling write post request'}), 500
 
 
-@app.route('/components/WriteView/<int:id>', methods=['DELETE'])
+@app.route('/api/WriteView/<int:id>', methods=['DELETE'])
 def delete_data_WriteList(id):
     try:
         result = delete_data_from_write(id)
@@ -138,7 +138,7 @@ def delete_data_WriteList(id):
 
 
 # @app.route('/')
-@app.route('/components/Memo', methods=['GET'])
+@app.route('/api/Memo', methods=['GET'])
 def get_data_memo():
     results = get_data_from_memo()
     memoList, bookList = results[0], results[1]
@@ -151,7 +151,7 @@ def get_data_memo():
         return jsonify({'error': 'Invalid JSON data'}), 500
 
 
-@app.route('/components/Memo', methods=['POST'])
+@app.route('/api/Memo', methods=['POST'])
 def post_data_memo():
     try:
         data = request.get_json()
@@ -166,7 +166,7 @@ def post_data_memo():
         return jsonify({'error': 'Error handling memo post request'}), 500
 
 
-@app.route('/components/Memo/update', methods=['POST'])
+@app.route('/api/Memo/update', methods=['POST'])
 def update_data_memo():
     try:
         data = request.get_json()
@@ -179,7 +179,7 @@ def update_data_memo():
         return jsonify({'error': 'Error handling write post request'}), 500
 
 
-@app.route('/components/Memo/<int:id>', methods=['DELETE'])
+@app.route('/api/Memo/<int:id>', methods=['DELETE'])
 def delete_data_Memo(id):
     try:
         result = delete_data_from_memo(id)
@@ -189,7 +189,7 @@ def delete_data_Memo(id):
         return jsonify({'error': 'Error handling delete request'}), 500
 
 
-@app.route('/components/Memo/anno', methods=['POST'])
+@app.route('/api/Memo/anno', methods=['POST'])
 def post_data_memoAnno():
     try:
         data = request.get_json()
@@ -201,7 +201,7 @@ def post_data_memoAnno():
         return jsonify({'error': 'Error handling memo post request'}), 500
 
 
-@app.route('/components/Memo/updateAnno', methods=['POST'])
+@app.route('/api/Memo/updateAnno', methods=['POST'])
 def update_data_memoAnno():
     try:
         data = request.get_json()
@@ -213,7 +213,7 @@ def update_data_memoAnno():
         return jsonify({'error': 'Error handling memo post request'}), 500
 
 
-@app.route('/components/Memo/<int:id>/<int:corrAnnotationKeys>', methods=['DELETE'])
+@app.route('/api/Memo/<int:id>/<int:corrAnnotationKeys>', methods=['DELETE'])
 def delete_data_memoAnno(id, corrAnnotationKeys):
     try:
         result = delete_data_from_memoAnno(id, corrAnnotationKeys)
@@ -224,7 +224,7 @@ def delete_data_memoAnno(id, corrAnnotationKeys):
         return jsonify({'error': 'Error handling delete request'}), 500
 
 
-@app.route('/components/Memo/book', methods=['POST'])
+@app.route('/api/Memo/book', methods=['POST'])
 def post_data_book():
     try:
         data = request.get_json()
@@ -236,7 +236,7 @@ def post_data_book():
         return jsonify({'error': 'Error handling memo post request'}), 500
 
 
-@app.route('/components/Memo/<memoSource>', methods=['DELETE'])
+@app.route('/api/Memo/<memoSource>', methods=['DELETE'])
 def delete_data_book(memoSource):
     try:
         result = delete_data_from_book(memoSource)
@@ -246,7 +246,7 @@ def delete_data_book(memoSource):
         return jsonify({'error': 'Error handling delete request'}), 500
 
 
-@app.route('/components/Login', methods=['POST'])
+@app.route('/api/Login', methods=['POST'])
 def post_data_login():
     try:
         data = request.get_json()

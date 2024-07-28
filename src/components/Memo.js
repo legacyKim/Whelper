@@ -410,7 +410,6 @@ function Memo() {
         for (let i = 0; i < 6; i += 1) {
             if (memoArr[i] !== undefined) rows.push(memoArr[i])
         }
-        setMemoReal(rows)
 
         return () => {
             currentScrollArea.removeEventListener('wheel', memoScrollMove);

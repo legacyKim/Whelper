@@ -119,7 +119,7 @@ function WriteList() {
         const writeNavi = async (e) => {
             e.preventDefault();
             const isTokenValid = await token_check(navigate);
-    
+
             if (isTokenValid) {
                 navigate(`/components/WriteCorrect/${writeListArr[i].id}`);
             }

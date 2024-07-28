@@ -159,7 +159,7 @@ button i { transition: all 0.3s ease-in-out; }
 .memo_content:nth-child(4n) { margin-right: 0; } 
 .memo_content_box { background: var(--box-color); border-radius: 4px; padding: 15px 11px; min-height: 99.2px; } 
 .memo_content_box>p { display: -webkit-box; -webkit-line-clamp: 2; /* 라인 수 */
- -webkit-box-orient: vertical; text-overflow: ellipsis; overflow: hidden; font-size:14px; font-weight: 700; line-height: 1.6; color: var(--font-color); white-space:pre-wrap; border: none; cursor: pointer; min-height: 45px; margin-bottom: 6px; } 
+ -webkit-box-orient: vertical; text-overflow: ellipsis; overflow: hidden; font-size:14px; font-weight: 500; line-height: 1.6; color: var(--font-color); white-space:pre-wrap; border: none; cursor: pointer; min-height: 45px; margin-bottom: 6px; } 
 .memo_content_btn_box { display: flex; justify-content: space-between; align-items: center; } 
 .memo_content_btn_box button { font-size: 13px; font-weight: 700; line-height: 1.6; color: var(--font-color); transition: all 0.3s ease-in-out; margin-right: 4px; min-height: 20.8px; } 
 .memo_content_btn_box span { font-size: 12px; font-weight: 700; line-height: 1.4; color: var(--font-color); transition: all 0.3s ease-in-out; margin-right: 4px; opacity: 0.78; } 
@@ -190,11 +190,11 @@ button i { transition: all 0.3s ease-in-out; }
 .memo_content_pos.active { opacity:1; z-index: 99999; } 
 .memoDetail_content_pos { position: absolute; top: 14%; left: 50%; display: block; transform: translateX(-50%); width: 80%; border-radius: 10px; padding: 24px 0; max-height: 76%; padding-right: 8px; } 
 .memoDetail_content_pos>div { margin-bottom: 24px; } 
-.memoDetail_content_pos>div>p { position: relative; display: block; font-size: 15px; font-weight: 700; line-height: 1.6; letter-spacing: -1px; color: var(--font-color); white-space: pre-line; } 
+.memoDetail_content_pos>div>p { position: relative; display: block; font-size: 15px; font-weight: 500; line-height: 1.6; letter-spacing: -1px; color: var(--font-color); white-space: pre-line; } 
 .memoDetail_content_info { display: block; margin-bottom: 16px; } 
 .memoDetail_content_info>li { position:relative; display:flex; justify-content:flex-start; align-items: center; } 
-.memoDetail_content_info>li>span { font-size : 15px; font-weight: 700; line-height: 1.6; color: var(--font-color); margin-right:24px; } 
-.memoDetail_content_info>li>strong { position: relative; font-size: 15px; font-weight: 700; line-height: 1.6; color: var(--font-color); padding-right: 12px; opacity: 0.78; min-width: 100px; } 
+.memoDetail_content_info>li>span { font-size : 15px; font-weight: 500; line-height: 1.6; color: var(--font-color); margin-right:24px; } 
+.memoDetail_content_info>li>strong { position: relative; font-size: 15px; font-weight: 500; line-height: 1.6; color: var(--font-color); padding-right: 12px; opacity: 0.78; min-width: 100px; } 
 
 .memo_comment_box { overflow-y: auto; max-height: 50vw; } 
 .memoDetail_btn { position:absolute; top: 0; right: 0; display:flex; justify-content: flex-end; align-items: center; } 
@@ -310,7 +310,7 @@ button i { transition: all 0.3s ease-in-out; }
 .date_list .view_common { padding: 16px 12px 12px 16px; border-radius: 8px 4px 4px 4px; } 
 
 .date_list .view_common .title { margin-bottom: 0; max-height: 26px; } 
-.date_list .view_common .title span { font-size: 18px; font-weight: 600; line-height: 1.4; } 
+.date_list .view_common .title span { font-size: 18px; font-weight: 500; line-height: 1.4; } 
 .date_list .view_common .subtitle { margin-bottom: 0px; } 
 .date_list .view_common .subtitle span { font-size: 13px; color: rgba(255, 255, 255, 0.78); } 
 
@@ -376,7 +376,7 @@ button i { transition: all 0.3s ease-in-out; }
 .cate_list li span.active { color: var(--main-color); } 
 .cate_list li span:hover { color: var(--hover-color); } 
 
-.cate_box { position: relative; display: block; margin-left: 160px; } 
+.cate_box { position: relative; display: block; margin-left: 176px; } 
 
 .cate_request { position: relative; display: flex; justify-content: flex-start; align-items: center; flex-wrap: wrap; margin-bottom: 8px; } 
 .cate_request>span { position: relative; /*opacity: 0; */ display: block; margin-right: 8px; margin-bottom: 8px; font-size: 14px; font-weight: 700; line-height: 1.4; color: var(--font-color); cursor: pointer; transition: all 0.3s ease-in-out; } 
