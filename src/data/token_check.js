@@ -14,7 +14,6 @@ export const token_check = async (navigate) => {
             credentials: 'include'
         });
 
-
         if (!response.ok) {
             throw new Error('토큰 검증에 실패했습니다.');
         }

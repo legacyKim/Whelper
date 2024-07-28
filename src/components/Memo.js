@@ -38,6 +38,10 @@ function Memo() {
     const [memoArr, setMemoArr] = useState(memoListArr);
     const [memoReal, setMemoReal] = useState(memoArr);
 
+    useEffect(()=>{
+        setMemoArr(memoListArr)
+    }, [memoListState])
+
     // alert
     const showToast = () => {
         toast('안녕하세요!', {
@@ -339,7 +343,7 @@ function Memo() {
     useEffect(() => {
         newBook.current.value = null;
         newAuthor.current.value = null;
-    }, [bookListArr])
+    }, [bookListArr]);
     //// memo reset
 
     // book name check
@@ -392,7 +396,7 @@ function Memo() {
                 if (memoArr[i] !== undefined) rows.push(memoArr[i])
             }
 
-            setMemoReal(rows)
+            setMemoReal(rows);
 
         }
 
@@ -400,7 +404,6 @@ function Memo() {
 
     useEffect(() => {
 
-        // check web size and attribute height;
         memoAreaCheck();
 
         const currentScrollArea = memoScrollArea.current;
@@ -408,9 +411,10 @@ function Memo() {
 
         var rows = [];
         for (let i = 0; i < 6; i += 1) {
-            if (memoArr[i] !== undefined) rows.push(memoArr[i])
+            if (memoArr[i] !== undefined) rows.push(memoArr[i]);
         }
-
+        setMemoReal(rows)
+        
         return () => {
             currentScrollArea.removeEventListener('wheel', memoScrollMove);
         };

@@ -23,6 +23,10 @@ function WriteList() {
     const [writeArr, setWriteArr] = useState(writeListArr);
     const [writeReal, setWriteReal] = useState(writeArr);
 
+    useEffect(()=>{
+        setWriteArr(writeListArr)
+    }, [writeListState])
+
     // infinite scroll
     var writeScrollArea = useRef();
     var writeScrollPos = useRef();

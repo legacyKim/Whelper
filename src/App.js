@@ -22,6 +22,21 @@ function App() {
 
     const [isAuth, setAuth] = useState(false);
 
+    useEffect(() => {
+        const checkAuth = () => {
+            const cookieName = 'csrf_access_token';
+            const cookies = document.cookie.split(';');
+            const hasCookie = cookies.some(cookie => {
+                const trimmedCookie = cookie.trim();
+                return trimmedCookie.startsWith(`${cookieName}=`);
+            });
+            if (hasCookie) setAuth(true);
+        };
+
+        checkAuth();
+    }, [isAuth]);
+
+
     const loggedOut = async () => {
         const result = await dispatch(logout());
         setAuth(false);
