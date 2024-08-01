@@ -73,7 +73,7 @@ const CustomEditor = {
         }
     },
 
-    toggleAnnotaion(editor) {
+    toggleAnnotation(editor) {
         const isActive = CustomEditor.isAnnotation(editor);
         if (isActive) {
             Editor.removeMark(editor, 'annotation');
@@ -101,7 +101,7 @@ const serialize = nodes => {
             } else if (node.quote) {
                 string = `<span class="editor_quote">${string}</span>`
             } else if (node.annotation) {
-                string = `<span class="editor_annotation">${string}</span>`
+                string = `<a href="javascript:void(0)" class="editor_annotation">${string}</a>`
             }
             return string;
         }
@@ -118,7 +118,7 @@ const serialize = nodes => {
             case 'quote':
                 return `<span class="editor_quote">${children}</span>`;
             case 'annotation':
-                return `<span class="editor_annotation">${children}</span>`;
+                return `<a href="javascript:void(0)" class="editor_annotation">${children}</a>`;
             case 'paragraph':
                 return `<p>${children}</p>`;
             default:
@@ -155,10 +155,10 @@ function Write() {
     //// category popup
 
     // slate text editor
-    const [titleEditor] = useState(() => withReact(createEditor()))
-    const [subTitleEditor] = useState(() => withReact(createEditor()))
-    const [editor] = useState(() => withReact(createEditor()))
-    const [annoEditor] = useState(() => withReact(createEditor()))
+    const [titleEditor] = useState(() => withReact(createEditor()));
+    const [subTitleEditor] = useState(() => withReact(createEditor()));
+    const [editor] = useState(() => withReact(createEditor()));
+    const [annoEditor] = useState(() => withReact(createEditor()));
 
     const writeTitleLocal = localStorage.getItem('writeTitle');
     const writeSubTitleLocal = localStorage.getItem('writeSubTitle');
@@ -203,11 +203,11 @@ function Write() {
             case 'quote':
                 return <span {...attributes} className='editor_quote'>{children}</span>
             case 'annotation':
-                return <span {...attributes} className='editor_annotation'>{children}</span>
+                return <span {...attributes} className='editor_anno'>{children}</span>
             default:
                 return <p {...attributes}>{children}</p>;
         }
-    }, [])
+    }, []);
 
     const renderLeaf = useCallback(({ attributes, children, leaf }) => {
 
@@ -222,11 +222,14 @@ function Write() {
             style.textDecoration = 'underline';
             style.textUnderlinePosition = 'under';
         }
+        if(leaf.annotation) {
+            console.log('anno');
+        }
 
         return (
             <span  {...attributes}
                 style={style}
-                className={`${leaf.highlight ? 'editor_highlight' : ''} ${leaf.underline ? 'editor_underline' : ''}`}>
+                className={`${leaf.highlight ? 'editor_highlight' : ''} ${leaf.underline ? 'editor_underline' : ''} ${leaf.annotation ? 'editor_anno' : ''}`}>
                 {children}
             </span>
         );
@@ -384,7 +387,7 @@ function Write() {
                     <button className='icon-list-bullet'
                         onMouseDown={event => {
                             event.preventDefault()
-                            CustomEditor.toggleAnnotaion(editor)
+                            CustomEditor.toggleAnnotation(editor)
                             toolbarClose();
                         }}>
                     </button>

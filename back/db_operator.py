@@ -34,6 +34,14 @@ class Category(Base_write):
     category = Column(String(255))
 
 
+class Annotation(Base_write):
+    __tablename__ = 'tb_Anno'
+
+    id = Column(Integer, primary_key=True)
+    writeNum = Column(String(255))
+    Anno = Column(Text)
+
+
 class Memo(Base_memo):
     __tablename__ = 'tb_memo'
 
