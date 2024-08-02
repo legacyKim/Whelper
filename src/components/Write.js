@@ -29,12 +29,12 @@ const CustomEditor = {
 
     isQuote(editor) {
         const marks = Editor.marks(editor)
-        return marks ? marks.isQuote === true : false
+        return marks ? marks.quote === true : false
     },
 
     isAnnotation(editor) {
         const marks = Editor.marks(editor)
-        return marks ? marks.isAnnotation === true : false
+        return marks ? marks.annotation === true : false
     },
 
     toggleBoldMark(editor) {
@@ -101,7 +101,7 @@ const serialize = nodes => {
             } else if (node.quote) {
                 string = `<span class="editor_quote">${string}</span>`
             } else if (node.annotation) {
-                string = `<a href="javascript:void(0)" class="editor_annotation">${string}</a>`
+                string = `<span class="editor_anno">${string}<button></button></span>`
             }
             return string;
         }
@@ -118,13 +118,12 @@ const serialize = nodes => {
             case 'quote':
                 return `<span class="editor_quote">${children}</span>`;
             case 'annotation':
-                return `<a href="javascript:void(0)" class="editor_annotation">${children}</a>`;
+                return `<span class="editor_anno">${children}<button></button></span>`;
             case 'paragraph':
                 return `<p>${children}</p>`;
             default:
                 return children;
         }
-
 
     }).join('');
 
@@ -192,26 +191,28 @@ function Write() {
     }, []);
     //// initial value....
 
+    const [annotations, setAnnotations] = useState({});
+
+    const addAnnotation = (id, number) => {
+        setAnnotations(prev => ({
+            ...prev,
+            [id]: number
+        }));
+    };
+
     const renderElement = useCallback(({ attributes, children, element }) => {
         switch (element.type) {
-            case 'bold':
-                return <strong {...attributes} style={{ fontWeight: 'bold' }}>{children}</strong>
-            case 'underline':
-                return <span {...attributes} className='editor_underline' style={{ textDecoration: 'underline', textUnderlinePosition: 'from-font' }}>{children}</span>
-            case 'highlight':
-                return <span {...attributes} className='editor_highlight'>{children}</span>
-            case 'quote':
-                return <span {...attributes} className='editor_quote'>{children}</span>
-            case 'annotation':
-                return <span {...attributes} className='editor_anno'>{children}</span>
-            default:
+            case 'paragraph':
                 return <p {...attributes}>{children}</p>;
+            default:
+                return <div {...attributes}>{children}</div>;
         }
     }, []);
 
     const renderLeaf = useCallback(({ attributes, children, leaf }) => {
 
         let style = {};
+
         if (leaf.bold) {
             style.fontWeight = 'bold';
         }
@@ -222,14 +223,21 @@ function Write() {
             style.textDecoration = 'underline';
             style.textUnderlinePosition = 'under';
         }
-        if(leaf.annotation) {
-            console.log('anno');
+        if (leaf.annotation) {
+            const annotationId = Math.random().toString(36).substr(2, 9); // or use another unique identifier
+            const number = Math.floor(Math.random() * 100); // Example: random number for demo
+            addAnnotation(annotationId, number);
+
+            style = {
+                ...style,
+                '--anno-num': `"${number}"`
+            };
         }
 
         return (
             <span  {...attributes}
                 style={style}
-                className={`${leaf.highlight ? 'editor_highlight' : ''} ${leaf.underline ? 'editor_underline' : ''} ${leaf.annotation ? 'editor_anno' : ''}`}>
+                className={`${leaf.highlight ? 'editor_highlight' : ''}${leaf.underline ? 'editor_underline' : ''}${leaf.annotation ? 'editor_anno' : ''}`}>
                 {children}
             </span>
         );
