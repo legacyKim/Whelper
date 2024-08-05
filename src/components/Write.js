@@ -101,7 +101,7 @@ const serialize = nodes => {
             } else if (node.quote) {
                 string = `<span class="editor_quote">${string}</span>`
             } else if (node.annotation) {
-                string = `<a href="javascript:void(0)" class="editor_annotation">${string}</a>`
+                string = `<span class="editor_anno">${string}</span>`
             }
             return string;
         }
@@ -118,7 +118,7 @@ const serialize = nodes => {
             case 'quote':
                 return `<span class="editor_quote">${children}</span>`;
             case 'annotation':
-                return `<a href="javascript:void(0)" class="editor_annotation">${children}</a>`;
+                return `<span class="editor_anno">${children}</span>`;
             case 'paragraph':
                 return `<p>${children}</p>`;
             default:
@@ -222,20 +222,53 @@ function Write() {
             style.textDecoration = 'underline';
             style.textUnderlinePosition = 'under';
         }
-        if(leaf.annotation) {
-            console.log('anno');
-        }
 
         return (
             <span  {...attributes}
                 style={style}
-                className={`${leaf.highlight ? 'editor_highlight' : ''} ${leaf.underline ? 'editor_underline' : ''} ${leaf.annotation ? 'editor_anno' : ''}`}>
+                className={`${leaf.highlight ? 'editor_highlight' : ''}${leaf.underline ? 'editor_underline' : ''}${leaf.annotation ? 'editor_anno' : ''}`}>
                 {children}
             </span>
         );
 
     }, []);
     //// slate text editor
+
+    // anno save
+    var newAnnoComment = useRef(null);
+
+    const [annoAddActive, setAnnoAddActive] = useState('');
+    useEffect(() => {
+        if (annoAddActive === 'active') {
+            setAnnoAddActive('active')
+        } else {
+            setAnnoAddActive('');
+        }
+    }, [annoAddActive]);
+
+    const annoAddClose = () => {
+        setAnnoAddActive('');
+    }
+
+    const annoSaveBtn = () => {
+        console.log('저장');
+    }
+    //// anno save
+
+    // 1. 데이터베이스에서 "주석" 관련 데이터를 가져온다.
+    // - mysql 에서 주석 순번을 어떻게 정할 것인가?
+
+    // 2. 주석 순번
+    // 3. 주석에 대한 설명을 넣을 테이터 처리
+    // 4. 주석 설명 기입을 취소할 경우 주석 해제
+
+    // 5. 주석 삭제 시 mysql 순번에서의 문제.
+    // - 삭제 시 id 값의 비는 경우 발생할 듯?
+
+
+    // ** 주석 클릭시 UI
+    // - id 값으로 처리하지 말고 페이지 내에 주석의 갯수에 따라 번호를 매기는 걸로
+
 
     const [keywordArr, setKeywordArr] = useState([]);
 
@@ -387,8 +420,9 @@ function Write() {
                     <button className='icon-list-bullet'
                         onMouseDown={event => {
                             event.preventDefault()
-                            CustomEditor.toggleAnnotation(editor)
+                            CustomEditor.toggleAnnotation(editor);
                             toolbarClose();
+                            setAnnoAddActive('active');
                         }}>
                     </button>
                 </div>
@@ -429,6 +463,7 @@ function Write() {
             </Slate>
 
             <div className='page_btn'>
+                <button className='icon-list-bullet'></button>
                 <button className='icon-ok-circled write_btn_save' onClick={() => { popupClick(); }}></button>
             </div>
 
@@ -451,6 +486,17 @@ function Write() {
                     <Link to={`/components/WriteView/${recentId}`} className='icon-ok-circled write_btn_save' onClick={() => { WriteSaveBtn(); }}></Link>
                 </div>
             </div>
+
+            <div className={`memo_add anno_add ${annoAddActive ? annoAddActive : ""}`}>
+                <textarea className='scroll' placeholder='newAnnoComment' ref={newAnnoComment}></textarea>
+
+                <div className='memo_btn flex-end'>
+                    <button className='icon-ok' onClick={annoSaveBtn}></button>
+                    <button className='icon-cancel' onClick={annoAddClose}></button>
+                </div>
+            </div>
+
+            <AnnoList /> 
         </div>
     )
 
@@ -471,6 +517,39 @@ function Write() {
             <span className={`${cateActive ? "active" : ""}`} onClick={cateClick}>{category}</span>
         )
 
+    }
+
+    function AnnoList() {
+        return (
+            <div className="annotation_list">
+                <ul className="annoList">
+                    <li>
+                        <span className="num">
+                            1)
+                        </span>
+                        <p className="anno_content">
+                            주석이 적힐 곳이다.
+                        </p>
+                    </li>
+                    <li>
+                        <span className="num">
+                            2)
+                        </span>
+                        <p className="anno_content">
+                            주석이 적힐 곳으로 디자인이 필요하다.
+                        </p>
+                    </li>
+                    <li>
+                        <span className="num">
+                            3)
+                        </span>
+                        <p className="anno_content">
+                            예시로 3개 정도만 해놓자.
+                        </p>
+                    </li>
+                </ul>
+            </div>
+        )
     }
 
 }

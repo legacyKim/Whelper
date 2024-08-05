@@ -23,7 +23,7 @@ const deserialize = (el, markAttributes = {}) => {
                 nodeAttributes.underline = true;
             } else if (el.classList.contains('editor_quote')) {
                 nodeAttributes.quote = true;
-            } else if (el.classList.contains('editor_annotation')) {
+            } else if (el.classList.contains('editor_anno')) {
                 nodeAttributes.annotation = true;
             }
             break;
@@ -78,7 +78,7 @@ const ViewEdit = ({ titleDoc, subTitleDoc, contentDoc }) => {
             case 'quote':
                 return <span {...attributes} className='editor_quote'>{children}</span>
             case 'annotation':
-                return <span {...attributes} className='editor_annotation'>{children}</span>
+                return <span {...attributes} className='editor_anno'>{children}</span>
             default:
                 return <p {...attributes}>{children}</p>;
         }
@@ -101,7 +101,7 @@ const ViewEdit = ({ titleDoc, subTitleDoc, contentDoc }) => {
         return (
             <span  {...attributes}
                 style={style}
-                className={`${leaf.highlight ? 'editor_highlight' : ''} ${leaf.underline ? 'editor_underline' : ''}`}>
+                className={`${leaf.highlight ? 'editor_highlight' : ''}${leaf.underline ? 'editor_underline' : ''}${leaf.annotation ? 'editor_anno' : ''}`}>
                 {children}
             </span>
         );
