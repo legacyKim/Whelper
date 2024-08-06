@@ -236,8 +236,7 @@ function Write() {
     //// slate text editor
 
     // anno save
-    var newAnnoComment = useRef(null);
-
+    const [annoContent, setAnnoContent] = useState('')
     const [annoAddActive, setAnnoAddActive] = useState('');
     useEffect(() => {
         if (annoAddActive === 'active') {
@@ -247,12 +246,13 @@ function Write() {
         }
     }, [annoAddActive]);
 
-    const annoAddClose = () => {
-        setAnnoAddActive('');
-    }
+    const [annoArr, setAnnoArr] = useState([]);
+    localStorage.setItem('annoContent', annoArr)
 
     const annoSaveBtn = () => {
-        console.log('저장');
+        setAnnoArr(prevAnnoArr => [...prevAnnoArr, annoContent]);
+        setAnnoContent('')
+        setAnnoTextboxActive('')
     }
     //// anno save
 
@@ -265,7 +265,6 @@ function Write() {
 
     // 5. 주석 삭제 시 mysql 순번에서의 문제.
     // - 삭제 시 id 값의 비는 경우 발생할 듯?
-
 
     // ** 주석 클릭시 UI
     // - id 값으로 처리하지 말고 페이지 내에 주석의 갯수에 따라 번호를 매기는 걸로
@@ -324,9 +323,15 @@ function Write() {
 
     // toolbar
     const [toolbarActive, setToolbarActive] = useState(false);
+    const [annoTextboxActive, setAnnoTextboxActive] = useState(false);
+    const [onlyAnno, setOnlyAnno] = useState(false);
+
     const toolbarOpen = (e) => {
         e.preventDefault();
+
         setToolbarActive('active');
+        setOnlyAnno('active');
+        setAnnoTextboxActive('');
 
         const mouseX = e.clientX;
         const mouseY = e.clientY;
@@ -343,6 +348,19 @@ function Write() {
         setToolbarActive('');
     }
     //// toolbar
+
+    const annoTextboxOpen = (e) => {
+        e.preventDefault();
+        setAnnoTextboxActive('active');
+    };
+
+    const annoTextboxClose = (e) => {
+        setAnnoTextboxActive('');
+    }
+
+    const onlyAnnoClose = () => {
+        setOnlyAnno('');
+    }
 
     return (
         <div className='Write'>
@@ -390,7 +408,7 @@ function Write() {
                 }}>
 
                 <div className={`editor_btn ${toolbarActive ? toolbarActive : ""}`}>
-                    <div className='editor_btn_list'>
+                    <div className={`editor_btn_list ${onlyAnno ? onlyAnno : ""}`}>
                         <button className='icon-gwallet'
                             onMouseDown={event => {
                                 event.preventDefault();
@@ -423,18 +441,25 @@ function Write() {
                             onMouseDown={event => {
                                 event.preventDefault()
                                 CustomEditor.toggleAnnotation(editor);
-                                toolbarClose();
-                                setAnnoAddActive('active');
+
+                                var test;
+                                if (test) {
+                                    annoTextboxOpen(event);
+                                    onlyAnnoClose();
+                                }
+
                             }}>
                         </button>
                     </div>
-                    
-                    <div className={`anno_add ${annoAddActive ? annoAddActive : ""}`}>
-                        <textarea className='scroll' placeholder='newAnnoComment' ref={newAnnoComment}></textarea>
+                    <div className={`anno_add ${annoTextboxActive ? annoTextboxActive : ""}`}>
+                        <textarea className='scroll' placeholder='newAnnoComment'
+                            value={annoContent}
+                            onChange={e => setAnnoContent(e.target.value)}>
+                        </textarea>
 
                         <div className='anno_add_btn flex-end'>
                             <button className='icon-ok' onClick={annoSaveBtn}></button>
-                            <button className='icon-cancel' onClick={annoAddClose}></button>
+                            <button className='icon-cancel' onClick={annoTextboxClose}></button>
                         </div>
                     </div>
                 </div>
@@ -498,7 +523,7 @@ function Write() {
                 </div>
             </div>
 
-            <AnnoList />
+            <AnnoList annoArr={annoArr} />
         </div>
     )
 
@@ -524,7 +549,7 @@ function CateListFac({ i, keywordArr, cateListArr, setKeywordArr }) {
 
 }
 
-function AnnoList() {
+function AnnoList({ annoArr }) {
 
     const [annoBtn, setAnnoBtn] = useState();
     const annoBtnActive = () => {
@@ -541,30 +566,23 @@ function AnnoList() {
                 <i className='icon-list-bullet'></i>
             </button>
             <ul className="annoList scroll">
-                <li>
-                    <span className="num">
-                        1)
-                    </span>
-                    <p className="anno_content">
-                        주석이 적힐 곳이다.
-                    </p>
-                </li>
-                <li>
-                    <span className="num">
-                        2)
-                    </span>
-                    <p className="anno_content">
-                        주석이 적힐 곳으로 디자인이 필요하다.주석이 적힐 곳으로 디자인이 필요하다.주석이 적힐 곳으로 디자인이 필요하다.주석이 적힐 곳으로 디자인이 필요하다.주석이 적힐 곳으로 디자인이 필요하다.
-                    </p>
-                </li>
-                <li>
-                    <span className="num">
-                        3)
-                    </span>
-                    <p className="anno_content">
-                        예시로 3개 정도만 해놓자.
-                    </p>
-                </li>
+
+                {
+                    annoArr.map(function (a, i) {
+                        return (
+                            <li>
+                                <span className="num">
+                                    {i+1} )
+                                </span>
+                                <p className="anno_content">
+                                    {annoArr[i]}
+                                </p>
+                            </li>
+                        )
+
+                    })
+                }
+
             </ul>
         </div>
     )
