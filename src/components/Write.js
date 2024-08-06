@@ -73,12 +73,15 @@ const CustomEditor = {
         }
     },
 
-    toggleAnnotation(editor) {
+    toggleAnnotation(editor, annoTextboxOpen, onlyAnnoClose, toolbarClose) {
         const isActive = CustomEditor.isAnnotation(editor);
         if (isActive) {
             Editor.removeMark(editor, 'annotation');
+            toolbarClose();
         } else {
             Editor.addMark(editor, 'annotation', true);
+            annoTextboxOpen();
+            onlyAnnoClose();
         }
     },
 
@@ -350,7 +353,6 @@ function Write() {
     //// toolbar
 
     const annoTextboxOpen = (e) => {
-        e.preventDefault();
         setAnnoTextboxActive('active');
     };
 
@@ -440,14 +442,7 @@ function Write() {
                         <button className='icon-list-bullet'
                             onMouseDown={event => {
                                 event.preventDefault()
-                                CustomEditor.toggleAnnotation(editor);
-
-                                var test;
-                                if (test) {
-                                    annoTextboxOpen(event);
-                                    onlyAnnoClose();
-                                }
-
+                                CustomEditor.toggleAnnotation(editor, annoTextboxOpen, onlyAnnoClose, toolbarClose);
                             }}>
                         </button>
                     </div>
@@ -572,7 +567,7 @@ function AnnoList({ annoArr }) {
                         return (
                             <li>
                                 <span className="num">
-                                    {i+1} )
+                                    {i + 1} )
                                 </span>
                                 <p className="anno_content">
                                     {annoArr[i]}
