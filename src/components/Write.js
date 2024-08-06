@@ -101,7 +101,7 @@ const serialize = nodes => {
             } else if (node.quote) {
                 string = `<span class="editor_quote">${string}</span>`
             } else if (node.annotation) {
-                string = `<span class="editor_anno">${string}<button></button></span>`
+                string = `<span class="editor_anno">${string}</span>`
             }
             return string;
         }
@@ -118,7 +118,7 @@ const serialize = nodes => {
             case 'quote':
                 return `<span class="editor_quote">${children}</span>`;
             case 'annotation':
-                return `<span class="editor_anno">${children}<button></button></span>`;
+                return `<span class="editor_anno">${children}</span>`;
             case 'paragraph':
                 return `<p>${children}</p>`;
             default:
@@ -223,16 +223,6 @@ function Write() {
             style.textDecoration = 'underline';
             style.textUnderlinePosition = 'under';
         }
-        if (leaf.annotation) {
-            const annotationId = Math.random().toString(36).substr(2, 9); // or use another unique identifier
-            const number = Math.floor(Math.random() * 100); // Example: random number for demo
-            addAnnotation(annotationId, number);
-
-            style = {
-                ...style,
-                '--anno-num': `"${number}"`
-            };
-        }
 
         return (
             <span  {...attributes}
@@ -244,6 +234,42 @@ function Write() {
 
     }, []);
     //// slate text editor
+
+    // anno save
+    var newAnnoComment = useRef(null);
+
+    const [annoAddActive, setAnnoAddActive] = useState('');
+    useEffect(() => {
+        if (annoAddActive === 'active') {
+            setAnnoAddActive('active')
+        } else {
+            setAnnoAddActive('');
+        }
+    }, [annoAddActive]);
+
+    const annoAddClose = () => {
+        setAnnoAddActive('');
+    }
+
+    const annoSaveBtn = () => {
+        console.log('저장');
+    }
+    //// anno save
+
+    // 1. 데이터베이스에서 "주석" 관련 데이터를 가져온다.
+    // - mysql 에서 주석 순번을 어떻게 정할 것인가?
+
+    // 2. 주석 순번
+    // 3. 주석에 대한 설명을 넣을 테이터 처리
+    // 4. 주석 설명 기입을 취소할 경우 주석 해제
+
+    // 5. 주석 삭제 시 mysql 순번에서의 문제.
+    // - 삭제 시 id 값의 비는 경우 발생할 듯?
+
+
+    // ** 주석 클릭시 UI
+    // - id 값으로 처리하지 말고 페이지 내에 주석의 갯수에 따라 번호를 매기는 걸로
+
 
     const [keywordArr, setKeywordArr] = useState([]);
 
@@ -364,41 +390,53 @@ function Write() {
                 }}>
 
                 <div className={`editor_btn ${toolbarActive ? toolbarActive : ""}`}>
-                    <button className='icon-gwallet'
-                        onMouseDown={event => {
-                            event.preventDefault();
-                            CustomEditor.toggleHighlight(editor);
-                            toolbarClose();
-                        }}>
-                    </button>
-                    <button className='icon-bold'
-                        onMouseDown={event => {
-                            event.preventDefault()
-                            CustomEditor.toggleBoldMark(editor)
-                            toolbarClose();
-                        }}>
-                    </button>
-                    <button className='icon-underline'
-                        onMouseDown={event => {
-                            event.preventDefault()
-                            CustomEditor.toggleUnderline(editor)
-                            toolbarClose();
-                        }}>
-                    </button>
-                    <button className='icon-quote'
-                        onMouseDown={event => {
-                            event.preventDefault()
-                            CustomEditor.toggleQuote(editor)
-                            toolbarClose();
-                        }}>
-                    </button>
-                    <button className='icon-list-bullet'
-                        onMouseDown={event => {
-                            event.preventDefault()
-                            CustomEditor.toggleAnnotation(editor)
-                            toolbarClose();
-                        }}>
-                    </button>
+                    <div className='editor_btn_list'>
+                        <button className='icon-gwallet'
+                            onMouseDown={event => {
+                                event.preventDefault();
+                                CustomEditor.toggleHighlight(editor);
+                                toolbarClose();
+                            }}>
+                        </button>
+                        <button className='icon-bold'
+                            onMouseDown={event => {
+                                event.preventDefault()
+                                CustomEditor.toggleBoldMark(editor)
+                                toolbarClose();
+                            }}>
+                        </button>
+                        <button className='icon-underline'
+                            onMouseDown={event => {
+                                event.preventDefault()
+                                CustomEditor.toggleUnderline(editor)
+                                toolbarClose();
+                            }}>
+                        </button>
+                        <button className='icon-quote'
+                            onMouseDown={event => {
+                                event.preventDefault()
+                                CustomEditor.toggleQuote(editor)
+                                toolbarClose();
+                            }}>
+                        </button>
+                        <button className='icon-list-bullet'
+                            onMouseDown={event => {
+                                event.preventDefault()
+                                CustomEditor.toggleAnnotation(editor);
+                                toolbarClose();
+                                setAnnoAddActive('active');
+                            }}>
+                        </button>
+                    </div>
+                    
+                    <div className={`anno_add ${annoAddActive ? annoAddActive : ""}`}>
+                        <textarea className='scroll' placeholder='newAnnoComment' ref={newAnnoComment}></textarea>
+
+                        <div className='anno_add_btn flex-end'>
+                            <button className='icon-ok' onClick={annoSaveBtn}></button>
+                            <button className='icon-cancel' onClick={annoAddClose}></button>
+                        </div>
+                    </div>
                 </div>
 
                 <Editable className='write_content scroll' onContextMenu={toolbarOpen} onClick={toolbarClose}
@@ -447,7 +485,7 @@ function Write() {
                         cateListArr.map(function (a, i) {
                             return (
                                 <li key={i}>
-                                    <CateListFac i={i} keywordArr={keywordArr} setKeywordArr={setKeywordArr}></CateListFac>
+                                    <CateListFac i={i} cateListArr={cateListArr} keywordArr={keywordArr} setKeywordArr={setKeywordArr}></CateListFac>
                                 </li>
                             )
                         })
@@ -459,28 +497,77 @@ function Write() {
                     <Link to={`/components/WriteView/${recentId}`} className='icon-ok-circled write_btn_save' onClick={() => { WriteSaveBtn(); }}></Link>
                 </div>
             </div>
+
+            <AnnoList />
         </div>
     )
 
-    function CateListFac({ i, keywordArr, setKeywordArr }) {
+}
 
-        const category = cateListArr[i].category
-        const [cateActive, setCateActive] = useState(keywordArr.includes(category));
-        const cateClick = () => {
-            setKeywordArr((prevKeywordArr) =>
-                keywordArr.includes(category)
-                    ? prevKeywordArr.filter((item) => item !== category)
-                    : [...prevKeywordArr, category]
-            );
-            setCateActive((prevCateActive) => !prevCateActive);
-        };
+function CateListFac({ i, keywordArr, cateListArr, setKeywordArr }) {
 
-        return (
-            <span className={`${cateActive ? "active" : ""}`} onClick={cateClick}>{category}</span>
-        )
+    const category = cateListArr[i].category
+    const [cateActive, setCateActive] = useState(keywordArr.includes(category));
 
+    const cateClick = () => {
+        setKeywordArr((prevKeywordArr) =>
+            keywordArr.includes(category)
+                ? prevKeywordArr.filter((item) => item !== category)
+                : [...prevKeywordArr, category]
+        );
+        setCateActive((prevCateActive) => !prevCateActive);
+    };
+
+    return (
+        <span className={`${cateActive ? "active" : ""}`} onClick={cateClick}>{category}</span>
+    )
+
+}
+
+function AnnoList() {
+
+    const [annoBtn, setAnnoBtn] = useState();
+    const annoBtnActive = () => {
+        if (annoBtn === true) {
+            setAnnoBtn(false);
+        } else {
+            setAnnoBtn(true);
+        }
     }
 
+    return (
+        <div className={`annotation_list ${annoBtn === true ? 'active' : ''}`}>
+            <button className="annotation_btn" onClick={annoBtnActive}>
+                <i className='icon-list-bullet'></i>
+            </button>
+            <ul className="annoList scroll">
+                <li>
+                    <span className="num">
+                        1)
+                    </span>
+                    <p className="anno_content">
+                        주석이 적힐 곳이다.
+                    </p>
+                </li>
+                <li>
+                    <span className="num">
+                        2)
+                    </span>
+                    <p className="anno_content">
+                        주석이 적힐 곳으로 디자인이 필요하다.주석이 적힐 곳으로 디자인이 필요하다.주석이 적힐 곳으로 디자인이 필요하다.주석이 적힐 곳으로 디자인이 필요하다.주석이 적힐 곳으로 디자인이 필요하다.
+                    </p>
+                </li>
+                <li>
+                    <span className="num">
+                        3)
+                    </span>
+                    <p className="anno_content">
+                        예시로 3개 정도만 해놓자.
+                    </p>
+                </li>
+            </ul>
+        </div>
+    )
 }
 
 export default Write;
