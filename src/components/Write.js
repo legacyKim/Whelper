@@ -37,6 +37,11 @@ const CustomEditor = {
         return marks ? marks.annotation === true : false
     },
 
+    isLatestAnno(editor) {
+        const marks = Editor.marks(editor)
+        return marks ? marks.latestAnno === true : false
+    },
+
     toggleBoldMark(editor) {
         const isActive = CustomEditor.isBoldMarkActive(editor)
         if (isActive) {
@@ -80,6 +85,7 @@ const CustomEditor = {
             toolbarClose();
         } else {
             Editor.addMark(editor, 'annotation', true);
+            Editor.addMark(editor, 'latestAnno', true);
             annoTextboxOpen();
             onlyAnnoClose();
         }
@@ -217,10 +223,11 @@ function Write() {
             style.textUnderlinePosition = 'under';
         }
 
+
         return (
             <span  {...attributes}
                 style={style}
-                className={`${leaf.highlight ? ' editor_highlight' : ''}${leaf.underline ? ' editor_underline' : ''}${leaf.annotation ? ' editor_anno' : ''}`}>
+                className={`${leaf.highlight ? ' editor_highlight' : ''}${leaf.underline ? ' editor_underline' : ''}${leaf.annotation ? ' editor_anno' : ''}${leaf.latestAnno ? ' latest_anno' : ''}`}>
                 {children}
             </span>
         );
@@ -229,7 +236,9 @@ function Write() {
     //// slate text editor
 
     // anno save
+    const [annoArr, setAnnoArr] = useState([]);
     const [annoContent, setAnnoContent] = useState('')
+
     const [annoAddActive, setAnnoAddActive] = useState('');
     useEffect(() => {
         if (annoAddActive === 'active') {
@@ -239,14 +248,36 @@ function Write() {
         }
     }, [annoAddActive]);
 
-    const [annoArr, setAnnoArr] = useState([]);
+    const anno_numbering = () => {
+
+        const anno_num = document.querySelectorAll('.editor_anno');
+        let latest_index = -1;
+        anno_num.forEach((element, index) => {
+            element.style.setProperty('--anno-num', `'${index + 1})'`);
+
+            if (element.classList.contains('latest_anno')) {
+                latest_index = index;
+                element.classList.remove('latest_anno');
+            }
+        });
+
+        if (latest_index !== -1) {
+            setAnnoArr(prevAnnoArr => {
+
+                const updatedAnnoArr = prevAnnoArr.map(anno => 
+                    anno.index >= latest_index ? { ...anno, index: anno.index + 1 } : anno
+                );
+
+                const newAnno = { index: latest_index, content: annoContent };
+                const newAnnoArr = [...updatedAnnoArr, newAnno];
+                newAnnoArr.sort((a, b) => a.index - b.index); // 인덱스 순으로 정렬
+                localStorage.setItem('annoContent', JSON.stringify(newAnnoArr));
+                return newAnnoArr;
+            });
+        }
+    };
 
     const annoSaveBtn = () => {
-        setAnnoArr(prevAnnoArr => {
-            const newAnnoArr = [...prevAnnoArr, annoContent];
-            localStorage.setItem('annoContent', JSON.stringify(newAnnoArr));
-            return newAnnoArr;
-        });
 
         anno_numbering();
         setAnnoContent('');
@@ -254,13 +285,9 @@ function Write() {
 
     }
 
-    function anno_numbering() {
-        const anno_num = document.querySelectorAll('.editor_anno');
-        anno_num.forEach((element, index) => {
-            element.style.setProperty('--anno-num', `'${index})'`);
-        });
-    }
-    anno_numbering()
+    useEffect(() => {
+        anno_numbering();
+    }, []);
 
     //// anno save
 
@@ -276,7 +303,6 @@ function Write() {
 
     // ** 주석 클릭시 UI
     // - id 값으로 처리하지 말고 페이지 내에 주석의 갯수에 따라 번호를 매기는 걸로
-
 
     const [keywordArr, setKeywordArr] = useState([]);
 
@@ -362,12 +388,11 @@ function Write() {
     };
 
     const annoTextboxClose = (e) => {
-
         if (annoContent === '') {
             Editor.removeMark(editor, 'annotation');
+            Editor.removeMark(editor, 'latestAnno');
         }
         setAnnoTextboxActive('');
-
     }
 
     const onlyAnnoClose = () => {
@@ -494,7 +519,7 @@ function Write() {
                                 break
                             }
 
-                            case 'a': {
+                            case 'n': {
                                 event.preventDefault();
                                 CustomEditor.toggleAnnotation(editor);
                                 break
@@ -559,6 +584,8 @@ function AnnoList({ annoArr }) {
 
     const annoArrList = localStorage.getItem('annoContent') === null ? annoArr : JSON.parse(localStorage.getItem('annoContent'));
 
+    console.log(annoArrList)
+
     const [annoBtn, setAnnoBtn] = useState();
     const annoBtnActive = () => {
         if (annoBtn === true) {
@@ -583,7 +610,7 @@ function AnnoList({ annoArr }) {
                                     {i + 1} )
                                 </span>
                                 <p className="anno_content">
-                                    {annoArrList[i]}
+                                    {annoArrList[i].content}
                                 </p>
                             </li>
                         )

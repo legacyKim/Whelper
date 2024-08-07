@@ -43,10 +43,13 @@ function App() {
     };
 
     // write 검증
+    const [writeOnDateOff, setWriteOnDateOff] = useState(true);
+
     const writeNavi = async (e) => {
         e.preventDefault();
         const isTokenValid = await token_check(navigate);
         if (isTokenValid) {
+            setWriteOnDateOff(false)
             navigate('/components/Write');
         }
     };
@@ -152,7 +155,7 @@ function App() {
             <div id='app' className={`App ${theme}`}>
 
                 <ToastContainer />
-                <Date></Date>
+                {writeOnDateOff && <Date />}
 
                 <div className={`header ${scrollPosition > 0 ? "active" : ""}`}>
                     <div className='logo'>
