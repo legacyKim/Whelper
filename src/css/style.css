@@ -276,7 +276,7 @@ button i { transition: all 0.3s ease-in-out; }
 
 .editor_anno span { cursor: pointer; } 
 .editor_anno span:hover { color: var(--hover-color) !important; } 
-.editor_anno span::after { content: var(--anno-num, '(1)'); position: relative; display: inline-block; font-size: 11px; font-weight: 400; line-height: 1.2; top: -4px; margin: 0 2px; } 
+.editor_anno span::after { content: var(--anno-num); position: relative; display: inline-block; font-size: 11px; font-weight: 400; line-height: 1.2; top: -4px; margin: 0 2px; } 
 
 /* main memo textarea */
 .Main_memo_textarea { position: relative; display: block; } 
@@ -403,7 +403,7 @@ button i { transition: all 0.3s ease-in-out; }
 
 .annotation_list .annoList { display: flex; flex-direction: column; align-items: flex-start; overflow-y: auto; height: 65vh; } 
 .annotation_list .annoList li { display: flex; justify-content: flex-start; align-items: flex-start; margin-bottom: 8px; } 
-.annotation_list .annoList li span { margin-right: 4px; margin-top: 4px; font-size: 12px; font-weight: 400; min-width: 13px; } 
+.annotation_list .annoList li span { margin-right: 4px; margin-top: 5px; font-size: 12px; font-weight: 400; min-width: 13px; } 
 .annotation_list .annoList li p { font-size: 13px; font-weight: 400; line-height: 1.6; } 
 .annotation_list .annoList li:last-child { margin-bottom: 0; } 
 

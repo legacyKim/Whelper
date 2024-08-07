@@ -160,7 +160,6 @@ function Write() {
     const [titleEditor] = useState(() => withReact(createEditor()));
     const [subTitleEditor] = useState(() => withReact(createEditor()));
     const [editor] = useState(() => withReact(createEditor()));
-    const [annoEditor] = useState(() => withReact(createEditor()));
 
     const writeTitleLocal = localStorage.getItem('writeTitle');
     const writeSubTitleLocal = localStorage.getItem('writeSubTitle');
@@ -194,15 +193,6 @@ function Write() {
     }, []);
     //// initial value....
 
-    const [annotations, setAnnotations] = useState({});
-
-    const addAnnotation = (id, number) => {
-        setAnnotations(prev => ({
-            ...prev,
-            [id]: number
-        }));
-    };
-
     const renderElement = useCallback(({ attributes, children, element }) => {
         switch (element.type) {
             case 'paragraph':
@@ -230,7 +220,7 @@ function Write() {
         return (
             <span  {...attributes}
                 style={style}
-                className={`${leaf.highlight ? 'editor_highlight' : ''}${leaf.underline ? 'editor_underline' : ''}${leaf.annotation ? 'editor_anno' : ''}`}>
+                className={`${leaf.highlight ? ' editor_highlight' : ''}${leaf.underline ? ' editor_underline' : ''}${leaf.annotation ? ' editor_anno' : ''}`}>
                 {children}
             </span>
         );
@@ -250,13 +240,28 @@ function Write() {
     }, [annoAddActive]);
 
     const [annoArr, setAnnoArr] = useState([]);
-    localStorage.setItem('annoContent', annoArr)
 
     const annoSaveBtn = () => {
-        setAnnoArr(prevAnnoArr => [...prevAnnoArr, annoContent]);
-        setAnnoContent('')
-        setAnnoTextboxActive('')
+        setAnnoArr(prevAnnoArr => {
+            const newAnnoArr = [...prevAnnoArr, annoContent];
+            localStorage.setItem('annoContent', JSON.stringify(newAnnoArr));
+            return newAnnoArr;
+        });
+
+        anno_numbering();
+        setAnnoContent('');
+        setAnnoTextboxActive('');
+
     }
+
+    function anno_numbering() {
+        const anno_num = document.querySelectorAll('.editor_anno');
+        anno_num.forEach((element, index) => {
+            element.style.setProperty('--anno-num', `'${index})'`);
+        });
+    }
+    anno_numbering()
+
     //// anno save
 
     // 1. 데이터베이스에서 "주석" 관련 데이터를 가져온다.
@@ -357,7 +362,12 @@ function Write() {
     };
 
     const annoTextboxClose = (e) => {
+
+        if (annoContent === '') {
+            Editor.removeMark(editor, 'annotation');
+        }
         setAnnoTextboxActive('');
+
     }
 
     const onlyAnnoClose = () => {
@@ -365,6 +375,7 @@ function Write() {
     }
 
     return (
+
         <div className='Write'>
 
             <Slate
@@ -546,6 +557,8 @@ function CateListFac({ i, keywordArr, cateListArr, setKeywordArr }) {
 
 function AnnoList({ annoArr }) {
 
+    const annoArrList = localStorage.getItem('annoContent') === null ? annoArr : JSON.parse(localStorage.getItem('annoContent'));
+
     const [annoBtn, setAnnoBtn] = useState();
     const annoBtnActive = () => {
         if (annoBtn === true) {
@@ -563,14 +576,14 @@ function AnnoList({ annoArr }) {
             <ul className="annoList scroll">
 
                 {
-                    annoArr.map(function (a, i) {
+                    annoArrList.map(function (a, i) {
                         return (
-                            <li>
+                            <li key={i}>
                                 <span className="num">
                                     {i + 1} )
                                 </span>
                                 <p className="anno_content">
-                                    {annoArr[i]}
+                                    {annoArrList[i]}
                                 </p>
                             </li>
                         )
