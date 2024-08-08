@@ -223,7 +223,6 @@ function Write() {
             style.textUnderlinePosition = 'under';
         }
 
-
         return (
             <span  {...attributes}
                 style={style}
@@ -236,6 +235,7 @@ function Write() {
     //// slate text editor
 
     // anno save
+    // 렌더링 시 로컬스토리지에 내용이 있다면 들고오기.
     const [annoArr, setAnnoArr] = useState([]);
     const [annoContent, setAnnoContent] = useState('')
 
@@ -261,25 +261,27 @@ function Write() {
             }
         });
 
-        if (latest_index !== -1) {
-            setAnnoArr(prevAnnoArr => {
-
-                const updatedAnnoArr = prevAnnoArr.map(anno => 
-                    anno.index >= latest_index ? { ...anno, index: anno.index + 1 } : anno
-                );
-
-                const newAnno = { index: latest_index, content: annoContent };
-                const newAnnoArr = [...updatedAnnoArr, newAnno];
-                newAnnoArr.sort((a, b) => a.index - b.index); // 인덱스 순으로 정렬
-                localStorage.setItem('annoContent', JSON.stringify(newAnnoArr));
-                return newAnnoArr;
-            });
-        }
+        return latest_index;
     };
 
     const annoSaveBtn = () => {
 
-        anno_numbering();
+        const latestNum = anno_numbering();
+
+        if (latestNum !== -1) {
+            setAnnoArr(prevAnnoArr => {
+
+                const updatedAnnoArr = prevAnnoArr.map(anno => 
+                    anno.index >= latestNum ? { ...anno, index: anno.index + 1 } : anno
+                );
+
+                const newAnno = { index: latestNum, content: annoContent };
+                const newAnnoArr = [...updatedAnnoArr, newAnno];
+                newAnnoArr.sort((a, b) => a.index - b.index);
+                localStorage.setItem('annoContent', JSON.stringify(newAnnoArr));
+                return newAnnoArr;
+            });
+        }
         setAnnoContent('');
         setAnnoTextboxActive('');
 
@@ -349,6 +351,7 @@ function Write() {
         setEdSubTitle(contentPlaceholder);
         setEditorValue(contentPlaceholder);
 
+        localStorage.removeItem('annoContent');
     };
 
     // save and keep the last num of id
@@ -470,14 +473,14 @@ function Write() {
                         </button>
                         <button className='icon-quote'
                             onMouseDown={event => {
-                                event.preventDefault()
+                                event.preventDefault();
                                 CustomEditor.toggleQuote(editor)
                                 toolbarClose();
                             }}>
                         </button>
                         <button className='icon-list-bullet'
                             onMouseDown={event => {
-                                event.preventDefault()
+                                event.preventDefault();
                                 CustomEditor.toggleAnnotation(editor, annoTextboxOpen, onlyAnnoClose, toolbarClose);
                             }}>
                         </button>
@@ -583,8 +586,6 @@ function CateListFac({ i, keywordArr, cateListArr, setKeywordArr }) {
 function AnnoList({ annoArr }) {
 
     const annoArrList = localStorage.getItem('annoContent') === null ? annoArr : JSON.parse(localStorage.getItem('annoContent'));
-
-    console.log(annoArrList)
 
     const [annoBtn, setAnnoBtn] = useState();
     const annoBtnActive = () => {
