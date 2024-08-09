@@ -236,8 +236,11 @@ function Write() {
 
     // anno save
     // 렌더링 시 로컬스토리지에 내용이 있다면 들고오기.
+
+    const [annoArrFrist, setAnnoArrFirst] = useState(localStorage.getItem('annoContent') === null ? annoArr : JSON.parse(localStorage.getItem('annoContent')));
     const [annoArr, setAnnoArr] = useState([]);
     const [annoContent, setAnnoContent] = useState('')
+    const [annoLengthState, setAnnoLengthState] = useState();
 
     const [annoAddActive, setAnnoAddActive] = useState('');
     useEffect(() => {
@@ -251,8 +254,12 @@ function Write() {
     const anno_numbering = () => {
 
         const anno_num = document.querySelectorAll('.editor_anno');
+        const anno_length = anno_num.length;
+
         let latest_index = -1;
         anno_num.forEach((element, index) => {
+
+            element.setAttribute('anno-data-num', `${index}`)
             element.style.setProperty('--anno-num', `'${index + 1})'`);
 
             if (element.classList.contains('latest_anno')) {
@@ -261,17 +268,20 @@ function Write() {
             }
         });
 
-        return latest_index;
+        return [latest_index, anno_length];
     };
 
     const annoSaveBtn = () => {
 
-        const latestNum = anno_numbering();
+        const anno_number_arr = anno_numbering();
+        const latestNum = anno_number_arr[0];
+        const annoLength = anno_number_arr[1];
+        console.log(annoLength, " 추가시 주석 길이")
 
         if (latestNum !== -1) {
             setAnnoArr(prevAnnoArr => {
 
-                const updatedAnnoArr = prevAnnoArr.map(anno => 
+                const updatedAnnoArr = prevAnnoArr.map(anno =>
                     anno.index >= latestNum ? { ...anno, index: anno.index + 1 } : anno
                 );
 
@@ -284,13 +294,14 @@ function Write() {
         }
         setAnnoContent('');
         setAnnoTextboxActive('');
-
+        setAnnoLengthState(annoLength)
     }
+
+    console.log(annoArr)
 
     useEffect(() => {
         anno_numbering();
     }, []);
-
     //// anno save
 
     // 1. 데이터베이스에서 "주석" 관련 데이터를 가져온다.
@@ -445,6 +456,23 @@ function Write() {
                     )
                     if (isAstChange) {
                         setEditorValue(value)
+
+                        var annoLengthCheck = document.querySelectorAll('.editor_anno');
+                        console.log(annoLengthCheck.length)
+                        console.log(annoLengthState)
+                        if (annoLengthCheck.length < annoLengthState) {
+
+                            const currentAnnoNums = Array.from(annoLengthCheck).map(
+                                (element) => element.getAttribute('anno-data-num')
+                            );
+
+                            const updatedAnnoArr = annoArr.filter((anno) =>
+                                currentAnnoNums.includes(anno.index.toString())
+                            );
+
+                            setAnnoArr(updatedAnnoArr);
+                            setAnnoLengthState(annoLengthCheck.length);
+                        }
                     }
                 }}>
 
@@ -585,7 +613,7 @@ function CateListFac({ i, keywordArr, cateListArr, setKeywordArr }) {
 
 function AnnoList({ annoArr }) {
 
-    const annoArrList = localStorage.getItem('annoContent') === null ? annoArr : JSON.parse(localStorage.getItem('annoContent'));
+    const annoArrList = annoArr;
 
     const [annoBtn, setAnnoBtn] = useState();
     const annoBtnActive = () => {

@@ -44,7 +44,6 @@ function App() {
 
     // write 검증
     const [writeOnDateOff, setWriteOnDateOff] = useState(true);
-
     const writeNavi = async (e) => {
         e.preventDefault();
         const isTokenValid = await token_check(navigate);
