@@ -235,10 +235,9 @@ function Write() {
     //// slate text editor
 
     // anno save
-    // 렌더링 시 로컬스토리지에 내용이 있다면 들고오기.
+    const [annoArrLs, setAnnoArrLs] = useState(JSON.parse(localStorage.getItem('annoContent')));
+    const [annoArr, setAnnoArr] = useState(annoArrLs !== null ? annoArrLs : []);
 
-    const [annoArrFrist, setAnnoArrFirst] = useState(localStorage.getItem('annoContent') === null ? annoArr : JSON.parse(localStorage.getItem('annoContent')));
-    const [annoArr, setAnnoArr] = useState([]);
     const [annoContent, setAnnoContent] = useState('')
     const [annoLengthState, setAnnoLengthState] = useState();
 
@@ -285,6 +284,8 @@ function Write() {
                     anno.index >= latestNum ? { ...anno, index: anno.index + 1 } : anno
                 );
 
+                // 인덱싱 문제
+
                 const newAnno = { index: latestNum, content: annoContent };
                 const newAnnoArr = [...updatedAnnoArr, newAnno];
                 newAnnoArr.sort((a, b) => a.index - b.index);
@@ -296,8 +297,6 @@ function Write() {
         setAnnoTextboxActive('');
         setAnnoLengthState(annoLength)
     }
-
-    console.log(annoArr)
 
     useEffect(() => {
         anno_numbering();
@@ -458,8 +457,6 @@ function Write() {
                         setEditorValue(value)
 
                         var annoLengthCheck = document.querySelectorAll('.editor_anno');
-                        console.log(annoLengthCheck.length)
-                        console.log(annoLengthState)
                         if (annoLengthCheck.length < annoLengthState) {
 
                             const currentAnnoNums = Array.from(annoLengthCheck).map(
@@ -470,6 +467,7 @@ function Write() {
                                 currentAnnoNums.includes(anno.index.toString())
                             );
 
+                            anno_numbering();
                             setAnnoArr(updatedAnnoArr);
                             setAnnoLengthState(annoLengthCheck.length);
                         }
