@@ -395,6 +395,13 @@ function Write() {
     };
 
     const toolbarClose = (e) => {
+        
+        const anno_num = document.querySelectorAll('.editor_anno');
+        anno_num.forEach((element, index) => {
+            if (!element.getAttribute('anno-data-num')) {
+                element.classList.remove('editor_anno');
+            }
+        });
         setToolbarActive('');
     }
     //// toolbar
