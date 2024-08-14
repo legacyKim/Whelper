@@ -6,7 +6,7 @@ import { syncWriteListData } from "../data/reducers"
 import { writeListData, writeListDataPost, cateListData } from '../data/api.js';
 
 import { createEditor, Editor, Transforms, Text, Element as SlateElement, Node } from 'slate';
-import { Slate, Editable, withReact } from 'slate-react'
+import { Slate, Editable, withReact, ReactEditor } from 'slate-react'
 import escapeHtml from 'escape-html'
 
 // slate editor
@@ -35,11 +35,6 @@ const CustomEditor = {
     isAnnotation(editor) {
         const marks = Editor.marks(editor)
         return marks ? marks.annotation === true : false
-    },
-
-    isLatestAnno(editor) {
-        const marks = Editor.marks(editor)
-        return marks ? marks.latestAnno === true : false
     },
 
     toggleBoldMark(editor) {
@@ -80,15 +75,9 @@ const CustomEditor = {
 
     toggleAnnotation(editor, annoTextboxOpen, onlyAnnoClose, toolbarClose) {
         const isActive = CustomEditor.isAnnotation(editor);
-        if (isActive) {
-            Editor.removeMark(editor, 'annotation');
-            toolbarClose();
-        } else {
-            Editor.addMark(editor, 'annotation', true);
-            Editor.addMark(editor, 'latestAnno', true);
-            annoTextboxOpen();
-            onlyAnnoClose();
-        }
+        Editor.addMark(editor, 'annotation', true);
+        annoTextboxOpen();
+        onlyAnnoClose();
     },
 
 }
@@ -209,40 +198,45 @@ function Write() {
     }, []);
 
     const renderLeaf = useCallback(({ attributes, children, leaf }) => {
-
         let style = {};
+        let classNames = '';
+
+        console.log(leaf)
 
         if (leaf.bold) {
             style.fontWeight = 'bold';
         }
         if (leaf.highlight) {
             style.backgroundColor = 'linear-gradient(to top, rgba(255, 243, 150, 0.6) 95%, transparent 100%)';
+            classNames += ' editor_highlight';
         }
         if (leaf.underline) {
             style.textDecoration = 'underline';
             style.textUnderlinePosition = 'under';
+            classNames += ' editor_underline';
+        }
+        if (leaf.annotation) {
+            classNames += ' editor_anno editing';
+        }
+        if (leaf.quote) {
+            classNames += ' editor_quote';
         }
 
         return (
-            <span  {...attributes}
-                style={style}
-                className={`${leaf.highlight ? ' editor_highlight' : ''}${leaf.underline ? ' editor_underline' : ''}${leaf.annotation ? ' editor_anno' : ''}${leaf.latestAnno ? ' latest_anno' : ''}`}>
+            <span {...attributes} style={style} className={classNames.trim()}>
                 {children}
             </span>
         );
-
     }, []);
+
     //// slate text editor
 
     // anno save
     const [annoArrLs, setAnnoArrLs] = useState(JSON.parse(localStorage.getItem('annoContent')));
-    console.log(annoArrLs);
-
     const [annoArr, setAnnoArr] = useState(annoArrLs !== null ? annoArrLs : []);
-    console.log(annoArr)
 
     const [annoContent, setAnnoContent] = useState('')
-    const [annoLengthState, setAnnoLengthState] = useState(annoArrLs.length);
+    const [annoLengthState, setAnnoLengthState] = useState(annoArrLs !== null ? annoArrLs.length : 0);
 
     const [annoAddActive, setAnnoAddActive] = useState('');
     useEffect(() => {
@@ -261,12 +255,12 @@ function Write() {
         let latest_index = -1;
         anno_num.forEach((element, index) => {
 
-            element.setAttribute('anno-data-num', `${index}`)
+            element.setAttribute('anno-data-num', `${index + 1}`)
             element.style.setProperty('--anno-num', `'${index + 1})'`);
 
-            if (element.classList.contains('latest_anno')) {
+            if (element.classList.contains('editing')) {
                 latest_index = index;
-                element.classList.remove('latest_anno');
+                if (annoContent !== '') element.classList.remove('editing');
             }
         });
 
@@ -278,7 +272,6 @@ function Write() {
         const anno_number_arr = anno_numbering();
         const latestNum = anno_number_arr[0];
         const annoLength = anno_number_arr[1];
-        console.log(annoLength, " 추가시 주석 길이")
 
         if (latestNum !== -1) {
             setAnnoArr(prevAnnoArr => {
@@ -286,8 +279,6 @@ function Write() {
                 const updatedAnnoArr = prevAnnoArr.map(anno =>
                     anno.index >= latestNum ? { ...anno, index: anno.index + 1 } : anno
                 );
-
-                // 인덱싱 문제
 
                 const newAnno = { index: latestNum, content: annoContent };
                 const newAnnoArr = [...updatedAnnoArr, newAnno];
@@ -395,13 +386,7 @@ function Write() {
     };
 
     const toolbarClose = (e) => {
-        
-        const anno_num = document.querySelectorAll('.editor_anno');
-        anno_num.forEach((element, index) => {
-            if (!element.getAttribute('anno-data-num')) {
-                element.classList.remove('editor_anno');
-            }
-        });
+        anno_numbering();
         setToolbarActive('');
     }
     //// toolbar
@@ -410,12 +395,32 @@ function Write() {
         setAnnoTextboxActive('active');
     };
 
+    const editorRef = useRef(null);
     const annoTextboxClose = (e) => {
         if (annoContent === '') {
             Editor.removeMark(editor, 'annotation');
-            Editor.removeMark(editor, 'latestAnno');
+            annoRemove();
         }
         setAnnoTextboxActive('');
+    }
+
+    const annoRemove = (e) => {
+        const { selection } = editor;
+        if (!selection) {
+            return;
+        }
+
+        const [currentNode] = Editor.node(editor, selection);
+        const element = ReactEditor.toDOMNode(editor, currentNode);
+
+        if (element) {
+            element.childNodes.forEach(child => {
+                if (child.nodeType === 1) {
+                    child.removeAttribute('anno-data-num');
+                    child.style.removeProperty('--anno-num');
+                }
+            });
+        }
     }
 
     const onlyAnnoClose = () => {
@@ -470,15 +475,15 @@ function Write() {
                         setEditorValue(value)
 
                         var annoLengthCheck = document.querySelectorAll('.editor_anno');
-                        console.log(annoLengthCheck.length)
-                        console.log(annoLengthState)
+
+                        console.log(annoLengthCheck.length);
+                        console.log(annoLengthState);
+
                         if (annoLengthCheck.length < annoLengthState) {
 
                             const currentAnnoNums = Array.from(annoLengthCheck).map(
                                 (element) => element.getAttribute('anno-data-num')
                             );
-                            
-                            console.log(currentAnnoNums)
 
                             const updatedAnnoArr = annoArr.filter((anno) =>
                                 currentAnnoNums.includes(anno.index.toString())
@@ -546,10 +551,11 @@ function Write() {
                 <Editable className='write_content scroll' onContextMenu={toolbarOpen} onClick={toolbarClose}
                     placeholder="작은 것들도 허투로 생각하지 말지어다. 큰 것들도 최초에는 작았다."
                     editor={editor}
+                    ref={editorRef}
                     renderElement={renderElement}
                     renderLeaf={renderLeaf}
                     onKeyDown={event => {
-                        toolbarClose()
+
                         if (!event.ctrlKey) {
                             return
                         }
@@ -564,12 +570,6 @@ function Write() {
                             case 'h': {
                                 event.preventDefault();
                                 CustomEditor.toggleHighlight(editor);
-                                break
-                            }
-
-                            case 'n': {
-                                event.preventDefault();
-                                CustomEditor.toggleAnnotation(editor);
                                 break
                             }
 
