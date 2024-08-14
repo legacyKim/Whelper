@@ -234,6 +234,7 @@ function Write() {
     // anno save
     const [annoArrLs, setAnnoArrLs] = useState(JSON.parse(localStorage.getItem('annoContent')));
     const [annoArr, setAnnoArr] = useState(annoArrLs !== null ? annoArrLs : []);
+    console.log(annoArr, "아니 뭐여 대체")
 
     const [annoContent, setAnnoContent] = useState('')
     const [annoLengthState, setAnnoLengthState] = useState(annoArrLs !== null ? annoArrLs.length : 0);
@@ -258,10 +259,9 @@ function Write() {
             element.setAttribute('anno-data-num', `${index + 1}`)
             element.style.setProperty('--anno-num', `'${index + 1})'`);
 
-            if (element.classList.contains('editing')) {
-                latest_index = index;
-                if (annoContent !== '') element.classList.remove('editing');
-            }
+            latest_index = index;
+            if (annoContent !== '') element.classList.remove('editing');
+
         });
 
         return [latest_index, anno_length];
@@ -631,6 +631,7 @@ function CateListFac({ i, keywordArr, cateListArr, setKeywordArr }) {
 function AnnoList({ annoArr }) {
 
     const annoArrList = annoArr;
+    console.log(annoArrList)
 
     const [annoBtn, setAnnoBtn] = useState();
     const annoBtnActive = () => {
@@ -653,8 +654,8 @@ function AnnoList({ annoArr }) {
                         return (
                             <li key={i}>
                                 <span className="num">
-                                    {i + 1} )
-                                </span>
+                                    {annoArrList[i].index + 1})
+                                 </span>
                                 <p className="anno_content">
                                     {annoArrList[i].content}
                                 </p>
