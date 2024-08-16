@@ -73,7 +73,7 @@ const CustomEditor = {
         }
     },
 
-    toggleAnnotation(editor, annoTextboxOpen, onlyAnnoClose, toolbarClose) {
+    toggleAnnotation(editor, annoTextboxOpen, onlyAnnoClose) {
         const isActive = CustomEditor.isAnnotation(editor);
         Editor.addMark(editor, 'annotation', true);
         annoTextboxOpen();
@@ -201,8 +201,6 @@ function Write() {
         let style = {};
         let classNames = '';
 
-        console.log(leaf)
-
         if (leaf.bold) {
             style.fontWeight = 'bold';
         }
@@ -216,7 +214,11 @@ function Write() {
             classNames += ' editor_underline';
         }
         if (leaf.annotation) {
-            classNames += ' editor_anno editing';
+            const anno_num = document.querySelectorAll('.editor_anno');
+            anno_num.forEach((element, index) => {
+                element.classList.remove('latest');
+            })
+            classNames += ' editor_anno editing latest';
         }
         if (leaf.quote) {
             classNames += ' editor_quote';
@@ -228,13 +230,13 @@ function Write() {
             </span>
         );
     }, []);
-
     //// slate text editor
 
     // anno save
+    const [annoBtn, setAnnoBtn] = useState();
+
     const [annoArrLs, setAnnoArrLs] = useState(JSON.parse(localStorage.getItem('annoContent')));
     const [annoArr, setAnnoArr] = useState(annoArrLs !== null ? annoArrLs : []);
-    console.log(annoArr, "아니 뭐여 대체")
 
     const [annoContent, setAnnoContent] = useState('')
     const [annoLengthState, setAnnoLengthState] = useState(annoArrLs !== null ? annoArrLs.length : 0);
@@ -259,37 +261,26 @@ function Write() {
             element.setAttribute('anno-data-num', `${index + 1}`)
             element.style.setProperty('--anno-num', `'${index + 1})'`);
 
-            latest_index = index;
-            if (annoContent !== '') element.classList.remove('editing');
+            if (element.classList.contains('latest')) {
+                latest_index = index + 1;
+            }
 
+            if (annoContent !== '') {
+                element.classList.remove('editing');
+                latest_index = index;
+            }
+
+            element.addEventListener('click', () => {
+                setAnnoBtn(true);
+            });
         });
 
         return [latest_index, anno_length];
     };
 
     const annoSaveBtn = () => {
-
-        const anno_number_arr = anno_numbering();
-        const latestNum = anno_number_arr[0];
-        const annoLength = anno_number_arr[1];
-
-        if (latestNum !== -1) {
-            setAnnoArr(prevAnnoArr => {
-
-                const updatedAnnoArr = prevAnnoArr.map(anno =>
-                    anno.index >= latestNum ? { ...anno, index: anno.index + 1 } : anno
-                );
-
-                const newAnno = { index: latestNum, content: annoContent };
-                const newAnnoArr = [...updatedAnnoArr, newAnno];
-                newAnnoArr.sort((a, b) => a.index - b.index);
-                localStorage.setItem('annoContent', JSON.stringify(newAnnoArr));
-                return newAnnoArr;
-            });
-        }
+        toolbarClose();
         setAnnoContent('');
-        setAnnoTextboxActive('');
-        setAnnoLengthState(annoLength)
     }
 
     useEffect(() => {
@@ -370,9 +361,15 @@ function Write() {
     const toolbarOpen = (e) => {
         e.preventDefault();
 
-        setToolbarActive('active');
-        setOnlyAnno('active');
-        setAnnoTextboxActive('');
+        if (e.target.parentNode.classList.contains('editing')) {
+            setToolbarActive('active');
+            setOnlyAnno('');
+            setAnnoTextboxActive('editing');
+        } else {
+            setToolbarActive('active');
+            setOnlyAnno('active');
+            setAnnoTextboxActive('');
+        }
 
         const mouseX = e.clientX;
         const mouseY = e.clientY;
@@ -386,7 +383,41 @@ function Write() {
     };
 
     const toolbarClose = (e) => {
-        anno_numbering();
+
+        if (annoTextboxActive === 'active') {
+            // if (e.target.parentNode.classList.contains('editing') && annoContent !== '') {
+            //     toolbarOpen(e);
+            // } else {
+            const anno_number_arr = anno_numbering();
+            const latestNum = anno_number_arr[0];
+            const annoLength = anno_number_arr[1];
+
+            if (latestNum !== -1) {
+
+                // 수정하는 코드
+
+                setAnnoArr(prevAnnoArr => {
+
+                    const updatedAnnoArr = prevAnnoArr.map(anno =>
+                        anno.index >= latestNum
+                            ? { ...anno, index: anno.index + 1 }
+                            : { ...anno, index: anno.index }
+                    );
+
+                    const newAnno = { index: latestNum, content: annoContent };
+                    const newAnnoArr = [...updatedAnnoArr, newAnno];
+                    newAnnoArr.sort((a, b) => a.index - b.index);
+                    localStorage.setItem('annoContent', JSON.stringify(newAnnoArr));
+
+                    return newAnnoArr;
+                });
+
+            }
+            setAnnoLengthState(annoLength)
+
+            // }
+        }
+        setAnnoTextboxActive('')
         setToolbarActive('');
     }
     //// toolbar
@@ -395,7 +426,6 @@ function Write() {
         setAnnoTextboxActive('active');
     };
 
-    const editorRef = useRef(null);
     const annoTextboxClose = (e) => {
         if (annoContent === '') {
             Editor.removeMark(editor, 'annotation');
@@ -475,19 +505,25 @@ function Write() {
                         setEditorValue(value)
 
                         var annoLengthCheck = document.querySelectorAll('.editor_anno');
-
-                        console.log(annoLengthCheck.length);
-                        console.log(annoLengthState);
-
                         if (annoLengthCheck.length < annoLengthState) {
 
                             const currentAnnoNums = Array.from(annoLengthCheck).map(
                                 (element) => element.getAttribute('anno-data-num')
-                            );
+                            ).map(Number);
 
-                            const updatedAnnoArr = annoArr.filter((anno) =>
-                                currentAnnoNums.includes(anno.index.toString())
-                            );
+                            const deletedAnnoNums = annoArr
+                                .map(anno => anno.index)
+                                .filter(index => !currentAnnoNums.includes(index));
+
+                            const deletedNum = deletedAnnoNums[0];
+
+                            const updatedAnnoArr = annoArr
+                                .filter(anno => currentAnnoNums.includes(anno.index))
+                                .map(anno =>
+                                    anno.index > deletedNum
+                                        ? { ...anno, index: anno.index - 1 }
+                                        : anno
+                                );
 
                             localStorage.setItem('annoContent', JSON.stringify(updatedAnnoArr));
 
@@ -531,7 +567,7 @@ function Write() {
                         <button className='icon-list-bullet'
                             onMouseDown={event => {
                                 event.preventDefault();
-                                CustomEditor.toggleAnnotation(editor, annoTextboxOpen, onlyAnnoClose, toolbarClose);
+                                CustomEditor.toggleAnnotation(editor, annoTextboxOpen, onlyAnnoClose);
                             }}>
                         </button>
                     </div>
@@ -551,7 +587,6 @@ function Write() {
                 <Editable className='write_content scroll' onContextMenu={toolbarOpen} onClick={toolbarClose}
                     placeholder="작은 것들도 허투로 생각하지 말지어다. 큰 것들도 최초에는 작았다."
                     editor={editor}
-                    ref={editorRef}
                     renderElement={renderElement}
                     renderLeaf={renderLeaf}
                     onKeyDown={event => {
@@ -602,7 +637,7 @@ function Write() {
                 </div>
             </div>
 
-            <AnnoList annoArr={annoArr} />
+            <AnnoList annoArr={annoArr} annoBtn={annoBtn} setAnnoBtn={setAnnoBtn} />
         </div>
     )
 
@@ -628,12 +663,10 @@ function CateListFac({ i, keywordArr, cateListArr, setKeywordArr }) {
 
 }
 
-function AnnoList({ annoArr }) {
+function AnnoList({ annoArr, annoBtn, setAnnoBtn }) {
 
     const annoArrList = annoArr;
-    console.log(annoArrList)
 
-    const [annoBtn, setAnnoBtn] = useState();
     const annoBtnActive = () => {
         if (annoBtn === true) {
             setAnnoBtn(false);
@@ -654,8 +687,8 @@ function AnnoList({ annoArr }) {
                         return (
                             <li key={i}>
                                 <span className="num">
-                                    {annoArrList[i].index + 1})
-                                 </span>
+                                    {annoArrList[i].index})
+                                </span>
                                 <p className="anno_content">
                                     {annoArrList[i].content}
                                 </p>
