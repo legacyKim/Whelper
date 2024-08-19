@@ -78,7 +78,6 @@ const CustomEditor = {
 
         if (isActive) {
             Editor.removeMark(editor, 'annotation');
-            console.log('이리로 값이 들어옴.')
             annoRemove();
         } else {
             Editor.addMark(editor, 'annotation', true);
@@ -222,7 +221,7 @@ function Write() {
             anno_num.forEach((element, index) => {
                 element.classList.remove('latest');
             });
-            classNames += ' editor_anno latest';
+            classNames += ' editor_anno';
         }
         if (leaf.quote) {
             classNames += ' editor_quote';
@@ -284,6 +283,23 @@ function Write() {
     };
 
     const annoSaveBtn = () => {
+        const { selection } = editor;
+        if (!selection) {
+            return;
+        }
+
+        const [currentNode] = Editor.node(editor, selection);
+        const element = ReactEditor.toDOMNode(editor, currentNode);
+
+        console.log(element, ' slate 라 ele 를 못 잡나?')
+        if (element) {
+            console.log(element, " 조건문 내로 안 들어온다~")
+            element.childNodes.forEach(child => {
+                if (child.nodeType === 1) {
+                    child.classList.add('latest');
+                }
+            });
+        }
         toolbarClose();
     }
 
@@ -430,7 +446,6 @@ function Write() {
         const [currentNode] = Editor.node(editor, selection);
         const element = ReactEditor.toDOMNode(editor, currentNode);
 
-
         if (element) {
             element.childNodes.forEach(child => {
                 if (child.nodeType === 1) {
@@ -438,7 +453,6 @@ function Write() {
                         child.removeAttribute('anno-data-num');
                     }
 
-                    // '--anno-num' 커스텀 스타일 속성 제거
                     const annoNumStyle = child.style.getPropertyValue('--anno-num');
                     if (annoNumStyle) {
                         child.style.removeProperty('--anno-num');
