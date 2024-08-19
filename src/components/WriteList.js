@@ -32,7 +32,7 @@ function WriteList() {
     var writeScrollPos = useRef();
     var currentY = 0;
     var previousY = 0;
-    var scrollAmount = 187;
+    var scrollAmount = 186.4;
 
     const whiteAreaCheck = () => {
         var scY = window.innerHeight;

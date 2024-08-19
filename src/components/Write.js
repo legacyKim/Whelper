@@ -73,11 +73,19 @@ const CustomEditor = {
         }
     },
 
-    toggleAnnotation(editor, annoTextboxOpen, onlyAnnoClose) {
+    toggleAnnotation(editor, annoTextboxOpen, onlyAnnoClose, annoRemove) {
         const isActive = CustomEditor.isAnnotation(editor);
-        Editor.addMark(editor, 'annotation', true);
-        annoTextboxOpen();
-        onlyAnnoClose();
+
+        if (isActive) {
+            Editor.removeMark(editor, 'annotation');
+            console.log('이리로 값이 들어옴.')
+            annoRemove();
+        } else {
+            Editor.addMark(editor, 'annotation', true);
+            annoTextboxOpen();
+            onlyAnnoClose();
+        }
+
     },
 
 }
@@ -181,11 +189,6 @@ function Write() {
         const parsedContent = writeContentLocal !== null ? JSON.parse(writeContentLocal) : contentPlaceholder;
         return parsedContent;
     }, []);
-
-    const annoValue = useMemo(() => {
-        const parsedContent = writeContentLocal !== null ? JSON.parse(writeContentLocal) : contentPlaceholder;
-        return parsedContent;
-    }, []);
     //// initial value....
 
     const renderElement = useCallback(({ attributes, children, element }) => {
@@ -198,10 +201,9 @@ function Write() {
     }, []);
 
     const renderLeaf = useCallback(({ attributes, children, leaf }) => {
+
         let style = {};
         let classNames = '';
-
-        console.log(leaf, "Leaf :: 컴포넌트 리렌더링 시 latest 가 안 붇는 문제");
 
         if (leaf.bold) {
             style.fontWeight = 'bold';
@@ -219,7 +221,7 @@ function Write() {
             const anno_num = document.querySelectorAll('.editor_anno');
             anno_num.forEach((element, index) => {
                 element.classList.remove('latest');
-            })
+            });
             classNames += ' editor_anno latest';
         }
         if (leaf.quote) {
@@ -258,7 +260,7 @@ function Write() {
         const anno_num = document.querySelectorAll('.editor_anno');
         const anno_length = anno_num.length;
 
-        let latest_index = -1;
+        var latest_index;
         anno_num.forEach((element, index) => {
 
             element.setAttribute('anno-data-num', `${index + 1}`)
@@ -266,22 +268,16 @@ function Write() {
 
             if (element.classList.contains('latest')) {
                 latest_index = index + 1;
-                console.log(latest_index);
-
-                // 컴포넌트 리렌더링 시 이리로 값이 안 들어오는 문제...
-                return latest_index
             }
 
-            if (annoContent !== '') { 
-                latest_index = index;
+            if (!element.dataset.eventRegistered) {
+                element.addEventListener('click', (e) => {
+                    setAnnoBtn(true);
+                    setAnnoClick(Number(element.getAttribute('anno-data-num')));
+                });
+                element.dataset.eventRegistered = true;
             }
 
-            element.addEventListener('click', (e) => {
-                setAnnoBtn(true);
-                setAnnoClick(Number(element.getAttribute('anno-data-num')))
-            });
-
-            console.log(latest_index, "값이 뭐가 들어오는거야?")
         });
 
         return [latest_index, anno_length];
@@ -289,11 +285,9 @@ function Write() {
 
     const annoSaveBtn = () => {
         toolbarClose();
-        setAnnoContent('');
     }
 
     useEffect(() => {
-        console.log('test');
         anno_numbering();
     }, []);
     //// anno save
@@ -319,9 +313,6 @@ function Write() {
 
     const [edSubTitle, setEdSubTitle] = useState(subTitleValue);
     localStorage.setItem('writeSubTitle', JSON.stringify(edSubTitle));
-
-    const [edAnno, setEdAnno] = useState(annoValue);
-    localStorage.setItem('writeAnno', JSON.stringify(edAnno));
 
     const [editorValue, setEditorValue] = useState(contentValue);
     localStorage.setItem('writeContent', JSON.stringify(editorValue));
@@ -391,36 +382,27 @@ function Write() {
         if (annoTextboxActive === 'active') {
 
             const anno_number_arr = anno_numbering();
-
-            console.log(anno_number_arr)
-
             const latestNum = anno_number_arr[0];
             const annoLength = anno_number_arr[1];
 
-            console.log(latestNum, " latestNum")
+            setAnnoArr(prevAnnoArr => {
 
-            if (latestNum !== -1) {
+                const updatedAnnoArr = prevAnnoArr.map(anno =>
+                    anno.index >= latestNum
+                        ? { ...anno, index: anno.index + 1 }
+                        : { ...anno, index: anno.index }
+                );
 
-                setAnnoArr(prevAnnoArr => {
+                const newAnno = { index: latestNum, content: annoContent };
+                const newAnnoArr = [...updatedAnnoArr, newAnno];
+                newAnnoArr.sort((a, b) => a.index - b.index);
+                localStorage.setItem('annoContent', JSON.stringify(newAnnoArr));
 
-                    const updatedAnnoArr = prevAnnoArr.map(anno =>
-                        anno.index >= latestNum
-                            ? { ...anno, index: anno.index + 1 }
-                            : { ...anno, index: anno.index }
-                    );
+                return newAnnoArr;
+            });
 
-                    const newAnno = { index: latestNum, content: annoContent };
-                    const newAnnoArr = [...updatedAnnoArr, newAnno];
-                    newAnnoArr.sort((a, b) => a.index - b.index);
-                    localStorage.setItem('annoContent', JSON.stringify(newAnnoArr));
-
-                    return newAnnoArr;
-                });
-
-            }
             setAnnoLengthState(annoLength)
-
-            // }
+            setAnnoContent('')
         }
         setAnnoTextboxActive('')
         setToolbarActive('');
@@ -445,19 +427,22 @@ function Write() {
             return;
         }
 
-        console.log(selection);
-
         const [currentNode] = Editor.node(editor, selection);
-        console.log(currentNode);
-        
         const element = ReactEditor.toDOMNode(editor, currentNode);
-        console.log(element);
+
 
         if (element) {
             element.childNodes.forEach(child => {
                 if (child.nodeType === 1) {
-                    child.removeAttribute('anno-data-num');
-                    child.style.removeProperty('--anno-num');
+                    if (child.hasAttribute('anno-data-num')) {
+                        child.removeAttribute('anno-data-num');
+                    }
+
+                    // '--anno-num' 커스텀 스타일 속성 제거
+                    const annoNumStyle = child.style.getPropertyValue('--anno-num');
+                    if (annoNumStyle) {
+                        child.style.removeProperty('--anno-num');
+                    }
                 }
             });
         }
@@ -574,7 +559,7 @@ function Write() {
                         <button className='icon-list-bullet'
                             onMouseDown={event => {
                                 event.preventDefault();
-                                CustomEditor.toggleAnnotation(editor, annoTextboxOpen, onlyAnnoClose);
+                                CustomEditor.toggleAnnotation(editor, annoTextboxOpen, onlyAnnoClose, annoRemove);
                             }}>
                         </button>
                     </div>
@@ -614,7 +599,6 @@ function Write() {
                                 CustomEditor.toggleHighlight(editor);
                                 break
                             }
-
                         }
                     }}
                 />
@@ -673,6 +657,7 @@ function CateListFac({ i, keywordArr, cateListArr, setKeywordArr }) {
 function AnnoList({ annoArr, annoBtn, setAnnoBtn, annoClick }) {
 
     const annoArrList = annoArr;
+
     console.log(annoArrList)
 
     const annoBtnActive = () => {
