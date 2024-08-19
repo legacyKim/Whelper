@@ -405,9 +405,16 @@ button i { transition: all 0.3s ease-in-out; }
 
 .annotation_list .annoList { display: flex; flex-direction: column; align-items: flex-start; overflow-y: auto; height: 65vh; } 
 .annotation_list .annoList li { display: flex; justify-content: flex-start; align-items: flex-start; margin-bottom: 8px; } 
-.annotation_list .annoList li span { margin-right: 4px; margin-top: 5px; font-size: 12px; font-weight: 400; min-width: 13px; } 
+.annotation_list .annoList li span { margin-right: 4px; margin-top: 4px; font-size: 12px; font-weight: 400; min-width: 13px; } 
 .annotation_list .annoList li p { font-size: 13px; font-weight: 400; line-height: 1.6; } 
 .annotation_list .annoList li:last-child { margin-bottom: 0; } 
+
+.annotation_list .annoList li.active span, .annotation_list .annoList li.active p { color: var(--hover-color); animation: annoClick 0.5s 1 forwards; } 
+
+@keyframes annoClick { 
+ 0% { opacity: 0; } 
+ 100% { opacity: 1; } 
+ }
 
 .anno_add { position: absolute; top: 0; left: 0; display: none; max-width: 300px; min-width: 300px; height: 64px; border-radius: 4px; background: var(--box-color); } 
 .anno_add.active { display: block; } 

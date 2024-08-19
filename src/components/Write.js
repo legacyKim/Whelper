@@ -201,6 +201,8 @@ function Write() {
         let style = {};
         let classNames = '';
 
+        console.log(leaf, "Leaf :: 컴포넌트 리렌더링 시 latest 가 안 붇는 문제");
+
         if (leaf.bold) {
             style.fontWeight = 'bold';
         }
@@ -218,7 +220,7 @@ function Write() {
             anno_num.forEach((element, index) => {
                 element.classList.remove('latest');
             })
-            classNames += ' editor_anno editing latest';
+            classNames += ' editor_anno latest';
         }
         if (leaf.quote) {
             classNames += ' editor_quote';
@@ -234,6 +236,7 @@ function Write() {
 
     // anno save
     const [annoBtn, setAnnoBtn] = useState();
+    const [annoClick, setAnnoClick] = useState();
 
     const [annoArrLs, setAnnoArrLs] = useState(JSON.parse(localStorage.getItem('annoContent')));
     const [annoArr, setAnnoArr] = useState(annoArrLs !== null ? annoArrLs : []);
@@ -263,16 +266,22 @@ function Write() {
 
             if (element.classList.contains('latest')) {
                 latest_index = index + 1;
+                console.log(latest_index);
+
+                // 컴포넌트 리렌더링 시 이리로 값이 안 들어오는 문제...
+                return latest_index
             }
 
-            if (annoContent !== '') {
-                element.classList.remove('editing');
+            if (annoContent !== '') { 
                 latest_index = index;
             }
 
-            element.addEventListener('click', () => {
+            element.addEventListener('click', (e) => {
                 setAnnoBtn(true);
+                setAnnoClick(Number(element.getAttribute('anno-data-num')))
             });
+
+            console.log(latest_index, "값이 뭐가 들어오는거야?")
         });
 
         return [latest_index, anno_length];
@@ -284,6 +293,7 @@ function Write() {
     }
 
     useEffect(() => {
+        console.log('test');
         anno_numbering();
     }, []);
     //// anno save
@@ -361,15 +371,9 @@ function Write() {
     const toolbarOpen = (e) => {
         e.preventDefault();
 
-        if (e.target.parentNode.classList.contains('editing')) {
-            setToolbarActive('active');
-            setOnlyAnno('');
-            setAnnoTextboxActive('editing');
-        } else {
-            setToolbarActive('active');
-            setOnlyAnno('active');
-            setAnnoTextboxActive('');
-        }
+        setToolbarActive('active');
+        setOnlyAnno('active');
+        setAnnoTextboxActive('');
 
         const mouseX = e.clientX;
         const mouseY = e.clientY;
@@ -385,16 +389,17 @@ function Write() {
     const toolbarClose = (e) => {
 
         if (annoTextboxActive === 'active') {
-            // if (e.target.parentNode.classList.contains('editing') && annoContent !== '') {
-            //     toolbarOpen(e);
-            // } else {
+
             const anno_number_arr = anno_numbering();
+
+            console.log(anno_number_arr)
+
             const latestNum = anno_number_arr[0];
             const annoLength = anno_number_arr[1];
 
-            if (latestNum !== -1) {
+            console.log(latestNum, " latestNum")
 
-                // 수정하는 코드
+            if (latestNum !== -1) {
 
                 setAnnoArr(prevAnnoArr => {
 
@@ -440,8 +445,13 @@ function Write() {
             return;
         }
 
+        console.log(selection);
+
         const [currentNode] = Editor.node(editor, selection);
+        console.log(currentNode);
+        
         const element = ReactEditor.toDOMNode(editor, currentNode);
+        console.log(element);
 
         if (element) {
             element.childNodes.forEach(child => {
@@ -456,9 +466,6 @@ function Write() {
     const onlyAnnoClose = () => {
         setOnlyAnno('');
     }
-
-    // 1. open 이 아니라 바로 save 되도록
-    // 2. 클릭시 내용을 추후에 추가할 수 있도록 처리
 
     return (
 
@@ -637,7 +644,7 @@ function Write() {
                 </div>
             </div>
 
-            <AnnoList annoArr={annoArr} annoBtn={annoBtn} setAnnoBtn={setAnnoBtn} />
+            <AnnoList annoArr={annoArr} annoBtn={annoBtn} setAnnoBtn={setAnnoBtn} annoClick={annoClick} setAnnoClick={setAnnoClick} />
         </div>
     )
 
@@ -663,9 +670,10 @@ function CateListFac({ i, keywordArr, cateListArr, setKeywordArr }) {
 
 }
 
-function AnnoList({ annoArr, annoBtn, setAnnoBtn }) {
+function AnnoList({ annoArr, annoBtn, setAnnoBtn, annoClick }) {
 
     const annoArrList = annoArr;
+    console.log(annoArrList)
 
     const annoBtnActive = () => {
         if (annoBtn === true) {
@@ -674,6 +682,15 @@ function AnnoList({ annoArr, annoBtn, setAnnoBtn }) {
             setAnnoBtn(true);
         }
     }
+
+    useEffect(() => {
+        document.querySelectorAll('.annoList li').forEach((ele, index) => {
+            ele.classList.remove('active');
+            if (annoClick === index + 1) {
+                ele.classList.add('active')
+            }
+        })
+    }, [annoClick])
 
     return (
         <div className={`annotation_list ${annoBtn === true ? 'active' : ''}`}>
