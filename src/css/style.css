@@ -278,8 +278,6 @@ button i { transition: all 0.3s ease-in-out; }
 .editor_anno span:hover { color: var(--hover-color) !important; } 
 .editor_anno span::after { content: var(--anno-num); position: relative; display: inline-block; font-size: 11px; font-weight: 400; line-height: 1.2; top: -4px; margin: 0 2px; } 
 
-.editing { z-index: 99999; } 
-
 /* main memo textarea */
 .Main_memo_textarea { position: relative; display: block; } 
 .Main_memo_textarea>textarea { width: 100%; padding: 12px; border: 1px solid rgba(255, 255, 255, 0.4); color: #333; resize: none; margin-bottom: 16px; } 

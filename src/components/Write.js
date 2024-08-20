@@ -77,7 +77,6 @@ const CustomEditor = {
         const isActive = CustomEditor.isAnnotation(editor);
 
         if (isActive) {
-            Editor.removeMark(editor, 'annotation');
             annoRemove();
         } else {
             Editor.addMark(editor, 'annotation', true);
@@ -269,8 +268,9 @@ function Write() {
                 latest_index = index + 1;
             }
 
-            if (!element.dataset.eventRegistered) {
+            if (element.dataset.eventRegistered !== true) {
                 element.addEventListener('click', (e) => {
+                    e.preventDefault()
                     setAnnoBtn(true);
                     setAnnoClick(Number(element.getAttribute('anno-data-num')));
                 });
@@ -283,22 +283,48 @@ function Write() {
     };
 
     const annoSaveBtn = () => {
-        const { selection } = editor;
-        if (!selection) {
-            return;
-        }
 
-        const [currentNode] = Editor.node(editor, selection);
-        const element = ReactEditor.toDOMNode(editor, currentNode);
+        if (annoContent !== '') {
 
-        console.log(element, ' slate 라 ele 를 못 잡나?')
-        if (element) {
-            console.log(element, " 조건문 내로 안 들어온다~")
-            element.childNodes.forEach(child => {
-                if (child.nodeType === 1) {
-                    child.classList.add('latest');
-                }
+            const { selection } = editor;
+            if (!selection) {
+                return;
+            }
+
+            const [currentNode] = Editor.node(editor, selection);
+            const element = ReactEditor.toDOMNode(editor, currentNode);
+
+            if (element) {
+                element.childNodes.forEach(child => {
+                    if (child.nodeType === 1) {
+                        child.classList.add('latest');
+                        child.classList.remove('editing');
+                    }
+                });
+            }
+
+            const anno_number_arr = anno_numbering();
+            const latestNum = anno_number_arr[0];
+            const annoLength = anno_number_arr[1];
+
+            setAnnoArr(prevAnnoArr => {
+
+                const updatedAnnoArr = prevAnnoArr.map(anno =>
+                    anno.index >= latestNum
+                        ? { ...anno, index: anno.index + 1 }
+                        : { ...anno, index: anno.index }
+                );
+
+                const newAnno = { index: latestNum, content: annoContent };
+                const newAnnoArr = [...updatedAnnoArr, newAnno];
+                newAnnoArr.sort((a, b) => a.index - b.index);
+                localStorage.setItem('annoContent', JSON.stringify(newAnnoArr));
+
+                return newAnnoArr;
             });
+
+            setAnnoLengthState(annoLength)
+            setAnnoContent('')
         }
         toolbarClose();
     }
@@ -306,6 +332,11 @@ function Write() {
     useEffect(() => {
         anno_numbering();
     }, []);
+
+    useEffect(()=> {
+        console.log('editing 클래스 제거');
+        console.log('editing 클래스가 있을 경우 다른 작업');
+    }, [annoArr])
     //// anno save
 
     // 1. 데이터베이스에서 "주석" 관련 데이터를 가져온다.
@@ -395,31 +426,27 @@ function Write() {
 
     const toolbarClose = (e) => {
 
-        if (annoTextboxActive === 'active') {
+        if (annoTextboxActive === '') {
+            const { selection } = editor;
+            if (!selection) {
+                return;
+            }
 
-            const anno_number_arr = anno_numbering();
-            const latestNum = anno_number_arr[0];
-            const annoLength = anno_number_arr[1];
+            const [currentNode] = Editor.node(editor, selection);
+            const element = ReactEditor.toDOMNode(editor, currentNode);
+            console.log(element)
 
-            setAnnoArr(prevAnnoArr => {
-
-                const updatedAnnoArr = prevAnnoArr.map(anno =>
-                    anno.index >= latestNum
-                        ? { ...anno, index: anno.index + 1 }
-                        : { ...anno, index: anno.index }
-                );
-
-                const newAnno = { index: latestNum, content: annoContent };
-                const newAnnoArr = [...updatedAnnoArr, newAnno];
-                newAnnoArr.sort((a, b) => a.index - b.index);
-                localStorage.setItem('annoContent', JSON.stringify(newAnnoArr));
-
-                return newAnnoArr;
-            });
-
-            setAnnoLengthState(annoLength)
-            setAnnoContent('')
+            if (element) {
+                element.childNodes.forEach(child => {
+                    console.log(child.classList.contains('editor_anno'));
+                    if (child.classList.contains('editor_anno')) {
+                        console.log('test')
+                        child.classList.add('editing');
+                    }
+                });
+            }
         }
+
         setAnnoTextboxActive('')
         setToolbarActive('');
     }
@@ -430,14 +457,13 @@ function Write() {
     };
 
     const annoTextboxClose = (e) => {
-        if (annoContent === '') {
-            Editor.removeMark(editor, 'annotation');
-            annoRemove();
-        }
+        annoRemove();
         setAnnoTextboxActive('');
     }
 
     const annoRemove = (e) => {
+        Editor.removeMark(editor, 'annotation');
+
         const { selection } = editor;
         if (!selection) {
             return;
@@ -457,6 +483,8 @@ function Write() {
                     if (annoNumStyle) {
                         child.style.removeProperty('--anno-num');
                     }
+
+                    child.dataset.eventRegistered = false;
                 }
             });
         }
