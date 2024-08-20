@@ -282,49 +282,54 @@ function Write() {
         return [latest_index, anno_length];
     };
 
-    const annoSaveBtn = () => {
+    const anno_set = () => {
 
-        if (annoContent !== '') {
+        const anno_number_arr = anno_numbering();
+        const latestNum = anno_number_arr[0];
+        const annoLength = anno_number_arr[1];
 
-            const { selection } = editor;
-            if (!selection) {
-                return;
-            }
+        setAnnoArr(prevAnnoArr => {
 
-            const [currentNode] = Editor.node(editor, selection);
-            const element = ReactEditor.toDOMNode(editor, currentNode);
+            const updatedAnnoArr = prevAnnoArr.map(anno =>
+                anno.index >= latestNum
+                    ? { ...anno, index: anno.index + 1 }
+                    : { ...anno, index: anno.index }
+            );
 
-            if (element) {
-                element.childNodes.forEach(child => {
-                    if (child.nodeType === 1) {
-                        child.classList.add('latest');
-                        child.classList.remove('editing');
-                    }
-                });
-            }
+            const newAnno = { index: latestNum, content: annoContent };
+            const newAnnoArr = [...updatedAnnoArr, newAnno];
+            newAnnoArr.sort((a, b) => a.index - b.index);
+            localStorage.setItem('annoContent', JSON.stringify(newAnnoArr));
 
-            const anno_number_arr = anno_numbering();
-            const latestNum = anno_number_arr[0];
-            const annoLength = anno_number_arr[1];
+            return newAnnoArr;
+        });
+        setAnnoLengthState(annoLength)
+    }
 
-            setAnnoArr(prevAnnoArr => {
+    const anno_selection = () => {
 
-                const updatedAnnoArr = prevAnnoArr.map(anno =>
-                    anno.index >= latestNum
-                        ? { ...anno, index: anno.index + 1 }
-                        : { ...anno, index: anno.index }
-                );
+        const { selection } = editor;
+        if (!selection) {
+            return;
+        }
 
-                const newAnno = { index: latestNum, content: annoContent };
-                const newAnnoArr = [...updatedAnnoArr, newAnno];
-                newAnnoArr.sort((a, b) => a.index - b.index);
-                localStorage.setItem('annoContent', JSON.stringify(newAnnoArr));
+        const [currentNode] = Editor.node(editor, selection);
+        const element = ReactEditor.toDOMNode(editor, currentNode);
 
-                return newAnnoArr;
+        if (element) {
+            element.childNodes.forEach(child => {
+                if (child.classList.contains('editor_anno')) {
+                    child.classList.add('latest');
+                }
             });
+        }
 
-            setAnnoLengthState(annoLength)
-            setAnnoContent('')
+        anno_set();
+    }
+
+    const annoSaveBtn = () => {
+        if (annoContent !== '') {
+            anno_selection();
         }
         toolbarClose();
     }
@@ -332,25 +337,7 @@ function Write() {
     useEffect(() => {
         anno_numbering();
     }, []);
-
-    useEffect(()=> {
-        console.log('editing 클래스 제거');
-        console.log('editing 클래스가 있을 경우 다른 작업');
-    }, [annoArr])
     //// anno save
-
-    // 1. 데이터베이스에서 "주석" 관련 데이터를 가져온다.
-    // - mysql 에서 주석 순번을 어떻게 정할 것인가?
-
-    // 2. 주석 순번
-    // 3. 주석에 대한 설명을 넣을 테이터 처리
-    // 4. 주석 설명 기입을 취소할 경우 주석 해제
-
-    // 5. 주석 삭제 시 mysql 순번에서의 문제.
-    // - 삭제 시 id 값의 비는 경우 발생할 듯?
-
-    // ** 주석 클릭시 UI
-    // - id 값으로 처리하지 말고 페이지 내에 주석의 갯수에 따라 번호를 매기는 걸로
 
     const [keywordArr, setKeywordArr] = useState([]);
 
@@ -426,33 +413,18 @@ function Write() {
 
     const toolbarClose = (e) => {
 
-        if (annoTextboxActive === '') {
-            const { selection } = editor;
-            if (!selection) {
-                return;
-            }
-
-            const [currentNode] = Editor.node(editor, selection);
-            const element = ReactEditor.toDOMNode(editor, currentNode);
-            console.log(element)
-
-            if (element) {
-                element.childNodes.forEach(child => {
-                    console.log(child.classList.contains('editor_anno'));
-                    if (child.classList.contains('editor_anno')) {
-                        console.log('test')
-                        child.classList.add('editing');
-                    }
-                });
-            }
+        if (annoTextboxActive === 'active' && annoContent === '') {
+            anno_selection();
         }
 
+        setAnnoContent('')
         setAnnoTextboxActive('')
         setToolbarActive('');
     }
     //// toolbar
 
     const annoTextboxOpen = (e) => {
+
         setAnnoTextboxActive('active');
     };
 
@@ -461,7 +433,7 @@ function Write() {
         setAnnoTextboxActive('');
     }
 
-    const annoRemove = (e) => {
+    const annoRemove = () => {
         Editor.removeMark(editor, 'annotation');
 
         const { selection } = editor;
