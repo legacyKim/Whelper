@@ -39,7 +39,7 @@ class Annotation(Base_write):
 
     id = Column(Integer, primary_key=True)
     writeNum = Column(String(255))
-    Anno = Column(Text)
+    anno = Column(Text)
 
 
 class Memo(Base_memo):
@@ -100,11 +100,21 @@ def post_data_to_write(data):
         data['created_at'] = now
         data['updated_at'] = now
 
+        anno_data = data.pop('anno', None)
+ 
         with Session_write() as session:
-            print(**data)
             write_instance = Write(**data)
             session.add(write_instance)
             session.commit()
+
+            last_write_id = write_instance.id
+            if anno_data:
+                annotation_instance = Annotation(
+                    writeNum=last_write_id,
+                    anno=anno_data
+                )
+                session.add(annotation_instance)
+                session.commit()
 
     except Exception as e:
         print(f"Error adding data: {e}")

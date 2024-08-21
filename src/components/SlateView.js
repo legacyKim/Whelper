@@ -67,41 +67,44 @@ const ViewEdit = ({ titleDoc, subTitleDoc, contentDoc }) => {
     localStorage.setItem('view_content', JSON.stringify(contentValue));
 
     const renderElement = useCallback(({ attributes, children, element }) => {
-
         switch (element.type) {
-            case 'bold':
-                return <strong {...attributes} style={{ fontWeight: 'bold' }}>{children}</strong>
-            case 'underline':
-                return <span {...attributes} style={{ textDecoration: 'underline', textUnderlinePosition: 'from-font' }} className='editor_underline' >{children}</span>
-            case 'highlight':
-                return <span {...attributes} className='editor_highlight'>{children}</span>
-            case 'quote':
-                return <span {...attributes} className='editor_quote'>{children}</span>
-            case 'annotation':
-                return <span {...attributes} className='editor_anno'>{children}</span>
-            default:
+            case 'paragraph':
                 return <p {...attributes}>{children}</p>;
+            default:
+                return <div {...attributes}>{children}</div>;
         }
-    }, [])
+    }, []);
 
     const renderLeaf = useCallback(({ attributes, children, leaf }) => {
 
         let style = {};
+        let classNames = '';
+
         if (leaf.bold) {
             style.fontWeight = 'bold';
         }
         if (leaf.highlight) {
             style.backgroundColor = 'linear-gradient(to top, rgba(255, 243, 150, 0.6) 95%, transparent 100%)';
+            classNames += ' editor_highlight';
         }
         if (leaf.underline) {
             style.textDecoration = 'underline';
             style.textUnderlinePosition = 'under';
+            classNames += ' editor_underline';
+        }
+        if (leaf.annotation) {
+            const anno_num = document.querySelectorAll('.editor_anno');
+            anno_num.forEach((element, index) => {
+                element.classList.remove('latest');
+            });
+            classNames += ' editor_anno';
+        }
+        if (leaf.quote) {
+            classNames += ' editor_quote';
         }
 
         return (
-            <span  {...attributes}
-                style={style}
-                className={`${leaf.highlight ? 'editor_highlight' : ''}${leaf.underline ? 'editor_underline' : ''}${leaf.annotation ? 'editor_anno' : ''}`}>
+            <span {...attributes} style={style} className={classNames.trim()}>
                 {children}
             </span>
         );
@@ -121,7 +124,6 @@ const ViewEdit = ({ titleDoc, subTitleDoc, contentDoc }) => {
             <Slate editor={editor} initialValue={contentValue}>
                 <Editable className="content" renderElement={renderElement} renderLeaf={renderLeaf} readOnly />
             </Slate>
-
         </div>
     )
 

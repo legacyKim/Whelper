@@ -13,6 +13,7 @@ import { token_check } from '../data/token_check.js'
 function WriteView() {
 
     const writeListState = useSelector((state) => state.WriteData);
+
     let { id } = useParams();
 
     const dispatch = useDispatch();
@@ -62,6 +63,43 @@ function WriteView() {
         }
     }
 
+    const [annoBtn, setAnnoBtn] = useState();
+    const [annoClick, setAnnoClick] = useState();
+
+    const [annoArr] = useState([])
+
+    const anno_numbering = () => {
+
+        const anno_num = document.querySelectorAll('.editor_anno');
+        const anno_length = anno_num.length;
+
+        var latest_index;
+        anno_num.forEach((element, index) => {
+
+            element.setAttribute('anno-data-num', `${index + 1}`)
+            element.style.setProperty('--anno-num', `'${index + 1})'`);
+
+            if (element.dataset.eventRegistered !== true) {
+                element.addEventListener('click', (e) => {
+                    e.preventDefault()
+                    setAnnoBtn(true);
+                    setAnnoClick(Number(element.getAttribute('anno-data-num')));
+                });
+                element.dataset.eventRegistered = true;
+            }
+
+        });
+
+        return [latest_index, anno_length];
+    };
+
+    useEffect(() => {
+        anno_numbering();
+        document.querySelectorAll('.editor_anno').forEach((ele) => {
+            ele.classList.add('editing');
+        })
+    }, []);
+
     const writeNavi = async (e) => {
         e.preventDefault();
         const isTokenValid = await token_check(navigate);
@@ -86,6 +124,9 @@ function WriteView() {
                             ))}
                         </div>
                     </div>
+
+                    <AnnoList annoArr={annoArr} annoBtn={annoBtn} setAnnoBtn={setAnnoBtn} annoClick={annoClick} setAnnoClick={setAnnoClick} />
+
                     <div className='page_btn'>
                         <Link className='icon-trash' onClick={delWriteList}></Link>
                         <Link className='icon-edit-alt' onClick={writeNavi}></Link>
@@ -100,5 +141,55 @@ function WriteView() {
     }
 
 }
+
+function AnnoList({ annoArr, annoBtn, setAnnoBtn, annoClick }) {
+
+    const annoArrList = annoArr;
+
+    const annoBtnActive = () => {
+        if (annoBtn === true) {
+            setAnnoBtn(false);
+        } else {
+            setAnnoBtn(true);
+        }
+    }
+
+    useEffect(() => {
+        document.querySelectorAll('.annoList li').forEach((ele, index) => {
+            ele.classList.remove('active');
+            if (annoClick === index + 1) {
+                ele.classList.add('active')
+            }
+        })
+    }, [annoClick])
+
+    return (
+        <div className={`annotation_list ${annoBtn === true ? 'active' : ''}`}>
+            <button className="annotation_btn" onClick={annoBtnActive}>
+                <i className='icon-list-bullet'></i>
+            </button>
+            <ul className="annoList scroll">
+
+                {
+                    annoArrList.map(function (a, i) {
+                        return (
+                            <li key={i}>
+                                <span className="num">
+                                    {annoArrList[i].index})
+                                </span>
+                                <p className="anno_content">
+                                    {annoArrList[i].content}
+                                </p>
+                            </li>
+                        )
+
+                    })
+                }
+
+            </ul>
+        </div>
+    )
+}
+
 
 export default WriteView;

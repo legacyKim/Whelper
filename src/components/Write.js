@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { Link } from 'react-router-dom';
 
 import { syncWriteListData } from "../data/reducers"
-import { writeListData, writeListDataPost, annoListDataPost, cateListData } from '../data/api.js';
+import { writeListData, writeListDataPost, cateListData } from '../data/api.js';
 
 import { createEditor, Editor, Transforms, Text, Element as SlateElement, Node } from 'slate';
 import { Slate, Editable, withReact, ReactEditor } from 'slate-react'
@@ -381,8 +381,6 @@ function Write() {
         localStorage.removeItem('annoContent');
         const annoString = JSON.stringify(annoArr);
         const anno = annoString;
-
-        console.log(anno)
 
         dispatch(syncWriteListData({ id, title, subTitle, content, keywords, updated_at, created_at, anno }));
         dispatch(writeListDataPost({ title, subTitle, content, keywords, anno }));
