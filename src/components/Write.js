@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { Link } from 'react-router-dom';
 
 import { syncWriteListData } from "../data/reducers"
-import { writeListData, writeListDataPost, cateListData } from '../data/api.js';
+import { writeListData, writeListDataPost, annoListDataPost, cateListData } from '../data/api.js';
 
 import { createEditor, Editor, Transforms, Text, Element as SlateElement, Node } from 'slate';
 import { Slate, Editable, withReact, ReactEditor } from 'slate-react'
@@ -105,7 +105,7 @@ const serialize = nodes => {
             } else if (node.quote) {
                 string = `<span class="editor_quote">${string}</span>`
             } else if (node.annotation) {
-                string = `<span class="editor_anno">${string}</span>`
+                string = `<span class="editor_anno editing">${string}</span>`
             }
             return string;
         }
@@ -122,7 +122,7 @@ const serialize = nodes => {
             case 'quote':
                 return `<span class="editor_quote">${children}</span>`;
             case 'annotation':
-                return `<span class="editor_anno">${children}</span>`;
+                return `<span class="editor_anno editing">${children}</span>`;
             case 'paragraph':
                 return `<p>${children}</p>`;
             default:
@@ -320,11 +320,12 @@ function Write() {
             element.childNodes.forEach(child => {
                 if (child.classList.contains('editor_anno')) {
                     child.classList.add('latest');
+                    child.classList.add('editing');
                 }
             });
         }
-
         anno_set();
+
     }
 
     const annoSaveBtn = () => {
@@ -336,6 +337,9 @@ function Write() {
 
     useEffect(() => {
         anno_numbering();
+        document.querySelectorAll('.editor_anno').forEach((ele) => {
+            ele.classList.add('editing');
+        })
     }, []);
     //// anno save
 
@@ -374,12 +378,19 @@ function Write() {
         const updated_at = currentTime;
         const created_at = currentTime;
 
-        dispatch(syncWriteListData({ id, title, subTitle, content, keywords, updated_at, created_at }));
-        dispatch(writeListDataPost({ title, subTitle, content, keywords }));
+        localStorage.removeItem('annoContent');
+        const annoString = JSON.stringify(annoArr);
+        const anno = annoString;
+
+        console.log(anno)
+
+        dispatch(syncWriteListData({ id, title, subTitle, content, keywords, updated_at, created_at, anno }));
+        dispatch(writeListDataPost({ title, subTitle, content, keywords, anno }));
 
         setEdTitle(contentPlaceholder);
         setEdSubTitle(contentPlaceholder);
         setEditorValue(contentPlaceholder);
+        setAnnoArr([]);
 
         localStorage.removeItem('annoContent');
     };
@@ -414,7 +425,16 @@ function Write() {
     const toolbarClose = (e) => {
 
         if (annoTextboxActive === 'active' && annoContent === '') {
-            anno_selection();
+            document.querySelectorAll('.editor_anno').forEach((ele) => {
+                if (!ele.classList.contains('editing')) {
+                    const slatePath = ReactEditor.findPath(editor, ReactEditor.toSlateNode(editor, ele));
+
+                    Transforms.select(editor, slatePath);
+                    Editor.removeMark(editor, 'annotation');
+
+                    ele.classList.remove('editor_anno');
+                }
+            });
         }
 
         setAnnoContent('')
@@ -424,7 +444,6 @@ function Write() {
     //// toolbar
 
     const annoTextboxOpen = (e) => {
-
         setAnnoTextboxActive('active');
     };
 
@@ -671,8 +690,6 @@ function CateListFac({ i, keywordArr, cateListArr, setKeywordArr }) {
 function AnnoList({ annoArr, annoBtn, setAnnoBtn, annoClick }) {
 
     const annoArrList = annoArr;
-
-    console.log(annoArrList)
 
     const annoBtnActive = () => {
         if (annoBtn === true) {

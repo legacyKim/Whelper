@@ -101,9 +101,11 @@ def post_data_to_write(data):
         data['updated_at'] = now
 
         with Session_write() as session:
+            print(**data)
             write_instance = Write(**data)
             session.add(write_instance)
             session.commit()
+
     except Exception as e:
         print(f"Error adding data: {e}")
 
