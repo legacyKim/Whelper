@@ -22,6 +22,7 @@ class Write(Base_write):
     subTitle = Column(String(255))
     content = Column(Text)
     keywords = Column(String(255))
+    anno = Column(Text)
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow,
                         onupdate=datetime.utcnow)
@@ -32,14 +33,6 @@ class Category(Base_write):
 
     id = Column(Integer, primary_key=True)
     category = Column(String(255))
-
-
-class Annotation(Base_write):
-    __tablename__ = 'tb_Anno'
-
-    id = Column(Integer, primary_key=True)
-    writeNum = Column(String(255))
-    anno = Column(Text)
 
 
 class Memo(Base_memo):
@@ -100,21 +93,10 @@ def post_data_to_write(data):
         data['created_at'] = now
         data['updated_at'] = now
 
-        anno_data = data.pop('anno', None)
- 
         with Session_write() as session:
             write_instance = Write(**data)
             session.add(write_instance)
             session.commit()
-
-            last_write_id = write_instance.id
-            if anno_data:
-                annotation_instance = Annotation(
-                    writeNum=last_write_id,
-                    anno=anno_data
-                )
-                session.add(annotation_instance)
-                session.commit()
 
     except Exception as e:
         print(f"Error adding data: {e}")

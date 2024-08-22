@@ -76,8 +76,7 @@ def get_data_from_write():
     conn = get_db_connection(0)
 
     queries = ["SELECT * FROM tb_write;",
-               "SELECT * FROM tb_cate;",
-               "SELECT * FROM tb_Anno"]
+               "SELECT * FROM tb_cate;"]
     results = excute_query_get_data(queries, conn)
 
     return results[0], results[1]

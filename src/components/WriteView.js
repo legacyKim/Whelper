@@ -66,7 +66,7 @@ function WriteView() {
     const [annoBtn, setAnnoBtn] = useState();
     const [annoClick, setAnnoClick] = useState();
 
-    const [annoArr] = useState([])
+    const [annoArr] = useState((writeContent.anno !== null) ? JSON.parse(writeContent.anno) : [])
 
     const anno_numbering = () => {
 

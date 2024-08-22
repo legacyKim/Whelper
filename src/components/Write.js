@@ -9,6 +9,8 @@ import { createEditor, Editor, Transforms, Text, Element as SlateElement, Node }
 import { Slate, Editable, withReact, ReactEditor } from 'slate-react'
 import escapeHtml from 'escape-html'
 
+import AnnoList from './Anno.js'
+
 // slate editor
 const CustomEditor = {
 
@@ -331,6 +333,7 @@ function Write() {
     const annoSaveBtn = () => {
         if (annoContent !== '') {
             anno_selection();
+            setAnnoBtn(true)
         }
         toolbarClose();
     }
@@ -382,7 +385,7 @@ function Write() {
         const annoString = JSON.stringify(annoArr);
         const anno = annoString;
 
-        dispatch(syncWriteListData({ id, title, subTitle, content, keywords, updated_at, created_at, anno }));
+        dispatch(syncWriteListData({ id, title, subTitle, content, keywords, anno, updated_at, created_at }));
         dispatch(writeListDataPost({ title, subTitle, content, keywords, anno }));
 
         setEdTitle(contentPlaceholder);
@@ -660,6 +663,7 @@ function Write() {
             </div>
 
             <AnnoList annoArr={annoArr} annoBtn={annoBtn} setAnnoBtn={setAnnoBtn} annoClick={annoClick} setAnnoClick={setAnnoClick} />
+            
         </div>
     )
 
@@ -683,55 +687,6 @@ function CateListFac({ i, keywordArr, cateListArr, setKeywordArr }) {
         <span className={`${cateActive ? "active" : ""}`} onClick={cateClick}>{category}</span>
     )
 
-}
-
-function AnnoList({ annoArr, annoBtn, setAnnoBtn, annoClick }) {
-
-    const annoArrList = annoArr;
-
-    const annoBtnActive = () => {
-        if (annoBtn === true) {
-            setAnnoBtn(false);
-        } else {
-            setAnnoBtn(true);
-        }
-    }
-
-    useEffect(() => {
-        document.querySelectorAll('.annoList li').forEach((ele, index) => {
-            ele.classList.remove('active');
-            if (annoClick === index + 1) {
-                ele.classList.add('active')
-            }
-        })
-    }, [annoClick])
-
-    return (
-        <div className={`annotation_list ${annoBtn === true ? 'active' : ''}`}>
-            <button className="annotation_btn" onClick={annoBtnActive}>
-                <i className='icon-list-bullet'></i>
-            </button>
-            <ul className="annoList scroll">
-
-                {
-                    annoArrList.map(function (a, i) {
-                        return (
-                            <li key={i}>
-                                <span className="num">
-                                    {annoArrList[i].index})
-                                </span>
-                                <p className="anno_content">
-                                    {annoArrList[i].content}
-                                </p>
-                            </li>
-                        )
-
-                    })
-                }
-
-            </ul>
-        </div>
-    )
 }
 
 export default Write;

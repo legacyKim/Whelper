@@ -11,6 +11,8 @@ import escapeHtml from 'escape-html'
 import { token_check } from '../data/token_check.js'
 import { useParams, Link, useNavigate } from 'react-router-dom';
 
+import AnnoList from './Anno.js'
+
 // slate editor
 const CustomEditor = {
 
@@ -221,7 +223,7 @@ function WriteCorrect() {
 
     const [writeContent, setWriteContent] = useState(() => writeListCheck(id));
 
-    const titleDoc = new DOMParser().parseFromString(writeContent.title,'text/html');
+    const titleDoc = new DOMParser().parseFromString(writeContent.title, 'text/html');
     const subTitleDoc = new DOMParser().parseFromString(writeContent.subTitle, 'text/html');
     const contentDoc = new DOMParser().parseFromString(writeContent.content, 'text/html');
     const keywordsParse = (writeContent !== undefined) ? JSON.parse(writeContent.keywords) : [];
@@ -338,6 +340,14 @@ function WriteCorrect() {
     }
     //// toolbar
 
+    // anno
+    const [annoBtn, setAnnoBtn] = useState();
+    const [annoClick, setAnnoClick] = useState();
+
+    const [annoArrLs, setAnnoArrLs] = useState();
+    const [annoArr] = useState((writeContent.anno !== null) ? JSON.parse(writeContent.anno) : [])
+    // anno
+
     return (
         <div className='Write'>
 
@@ -386,7 +396,7 @@ function WriteCorrect() {
                 }}>
 
                 <div className={`editor_btn ${toolbarActive ? toolbarActive : ""}`}>
-                <button className='icon-gwallet'
+                    <button className='icon-gwallet'
                         onMouseDown={event => {
                             event.preventDefault();
                             CustomEditor.toggleHighlight(editor);
@@ -463,6 +473,8 @@ function WriteCorrect() {
                 <button className='icon-ok-circled write_btn_save' onClick={() => { popupClick(); }}></button>
             </div>
 
+            <AnnoList annoArr={annoArr} annoBtn={annoBtn} setAnnoBtn={setAnnoBtn} annoClick={annoClick} setAnnoClick={setAnnoClick} />
+
             {/* category popup */}
             <div className={`popup ${popupActive ? popupActive : ""}`}>
                 <div className='popup_cate'>
@@ -470,7 +482,7 @@ function WriteCorrect() {
                         cateListArr.map(function (a, i) {
                             return (
                                 <div key={i}>
-                                    <CateListFac i={i} keywordArr={keywordArr} setKeywordArr={setKeywordArr}></CateListFac>
+                                    <CateListFac i={i} cateListArr={cateListArr} keywordArr={keywordArr} setKeywordArr={setKeywordArr}></CateListFac>
                                 </div>
                             )
                         })
@@ -484,25 +496,25 @@ function WriteCorrect() {
         </div>
     )
 
-    function CateListFac({ i, keywordArr, setKeywordArr }) {
+}
 
-        const category = cateListArr[i].category
-        const [cateActive, setCateActive] = useState(keywordArr.includes(category));
-        const cateClick = () => {
-            setKeywordArr((prevKeywordArr) =>
-                keywordArr.includes(category)
-                    ? prevKeywordArr.filter((item) => item !== category)
-                    : [...prevKeywordArr, category]
-            );
+function CateListFac({ i, cateListArr, keywordArr, setKeywordArr }) {
 
-            setCateActive((prevCateActive) => !prevCateActive);
-        };
+    const category = cateListArr[i].category
+    const [cateActive, setCateActive] = useState(keywordArr.includes(category));
+    const cateClick = () => {
+        setKeywordArr((prevKeywordArr) =>
+            keywordArr.includes(category)
+                ? prevKeywordArr.filter((item) => item !== category)
+                : [...prevKeywordArr, category]
+        );
 
-        return (
-            <span className={`${cateActive ? "active" : ""}`} onClick={cateClick}>{category}</span>
-        )
+        setCateActive((prevCateActive) => !prevCateActive);
+    };
 
-    }
+    return (
+        <span className={`${cateActive ? "active" : ""}`} onClick={cateClick}>{category}</span>
+    )
 
 }
 
