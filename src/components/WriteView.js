@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 import { useSelector, useDispatch } from 'react-redux';
@@ -6,6 +6,8 @@ import { syncWriteListData, syncWriteListDataUpdate } from '../data/reducers.js'
 import { writeListDataDel } from '../data/api.js'
 import { useParams } from 'react-router-dom';
 
+import MyContext from '../context'
+import AnnoList from './Anno.js'
 import ViewEdit from './SlateView.js'
 
 import { token_check } from '../data/token_check.js'
@@ -63,9 +65,7 @@ function WriteView() {
         }
     }
 
-    const [annoBtn, setAnnoBtn] = useState();
-    const [annoClick, setAnnoClick] = useState();
-
+    const { annoBtn, setAnnoBtn, annoClick, setAnnoClick } = useContext(MyContext);
     const [annoArr] = useState((writeContent.anno !== null) ? JSON.parse(writeContent.anno) : [])
 
     const anno_numbering = () => {
@@ -141,55 +141,5 @@ function WriteView() {
     }
 
 }
-
-function AnnoList({ annoArr, annoBtn, setAnnoBtn, annoClick }) {
-
-    const annoArrList = annoArr;
-
-    const annoBtnActive = () => {
-        if (annoBtn === true) {
-            setAnnoBtn(false);
-        } else {
-            setAnnoBtn(true);
-        }
-    }
-
-    useEffect(() => {
-        document.querySelectorAll('.annoList li').forEach((ele, index) => {
-            ele.classList.remove('active');
-            if (annoClick === index + 1) {
-                ele.classList.add('active')
-            }
-        })
-    }, [annoClick])
-
-    return (
-        <div className={`annotation_list ${annoBtn === true ? 'active' : ''}`}>
-            <button className="annotation_btn" onClick={annoBtnActive}>
-                <i className='icon-list-bullet'></i>
-            </button>
-            <ul className="annoList scroll">
-
-                {
-                    annoArrList.map(function (a, i) {
-                        return (
-                            <li key={i}>
-                                <span className="num">
-                                    {annoArrList[i].index})
-                                </span>
-                                <p className="anno_content">
-                                    {annoArrList[i].content}
-                                </p>
-                            </li>
-                        )
-
-                    })
-                }
-
-            </ul>
-        </div>
-    )
-}
-
 
 export default WriteView;

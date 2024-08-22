@@ -1,4 +1,4 @@
-import React, { useRef, useState, useMemo, useCallback, useEffect } from 'react';
+import React, { useRef, useState, useMemo, useCallback, useEffect, useContext } from 'react';
 import { useDispatch, useSelector } from "react-redux"
 import { Link } from 'react-router-dom';
 
@@ -9,6 +9,7 @@ import { createEditor, Editor, Transforms, Text, Element as SlateElement, Node }
 import { Slate, Editable, withReact, ReactEditor } from 'slate-react'
 import escapeHtml from 'escape-html'
 
+import MyContext from '../context'
 import AnnoList from './Anno.js'
 
 // slate editor
@@ -237,8 +238,7 @@ function Write() {
     //// slate text editor
 
     // anno save
-    const [annoBtn, setAnnoBtn] = useState();
-    const [annoClick, setAnnoClick] = useState();
+    const { annoBtn, setAnnoBtn, annoClick, setAnnoClick } = useContext(MyContext);
 
     const [annoArrLs, setAnnoArrLs] = useState(JSON.parse(localStorage.getItem('annoContent')));
     const [annoArr, setAnnoArr] = useState(annoArrLs !== null ? annoArrLs : []);
@@ -663,7 +663,7 @@ function Write() {
             </div>
 
             <AnnoList annoArr={annoArr} annoBtn={annoBtn} setAnnoBtn={setAnnoBtn} annoClick={annoClick} setAnnoClick={setAnnoClick} />
-            
+
         </div>
     )
 

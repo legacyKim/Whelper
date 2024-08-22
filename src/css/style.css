@@ -409,10 +409,8 @@ button i { transition: all 0.3s ease-in-out; }
 
 .annotation_list .annoList li.active span, .annotation_list .annoList li.active p { color: var(--hover-color); animation: annoClick 0.5s 1 forwards; } 
 
-.anno_btn_list { display: flex; justify-content: flex-start; align-items: center; } 
-.anno_btn_list button {
-    
-}
+.anno_btn_list { position: absolute; display: flex; justify-content: flex-start; align-items: center; } 
+.anno_btn_list button { }
 
 @keyframes annoClick { 
  0% { opacity: 0; } 

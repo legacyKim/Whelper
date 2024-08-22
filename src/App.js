@@ -148,9 +148,14 @@ function App() {
     }
     //// about search
 
+    // anno ui
+    const [annoBtn, setAnnoBtn] = useState();
+    const [annoClick, setAnnoClick] = useState();
+    //// anno ui
+
     return (
 
-        <MyContext.Provider value={{ searchArr, setSearchArr, scrollPosition, setScrollPosition, isAuth, setAuth }}>
+        <MyContext.Provider value={{ searchArr, setSearchArr, scrollPosition, setScrollPosition, isAuth, setAuth, annoBtn, setAnnoBtn, annoClick, setAnnoClick }}>
             <div id='app' className={`App ${theme}`}>
 
                 <ToastContainer />
