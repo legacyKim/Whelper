@@ -81,7 +81,7 @@ const ViewEdit = ({ titleDoc, subTitleDoc, contentDoc }) => {
         let classNames = '';
 
         if (leaf.bold) {
-            style.fontWeight = 'bold';
+            classNames = 'bold';
         }
         if (leaf.highlight) {
             style.backgroundColor = 'linear-gradient(to top, rgba(255, 243, 150, 0.6) 95%, transparent 100%)';

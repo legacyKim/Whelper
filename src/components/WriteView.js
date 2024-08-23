@@ -56,6 +56,7 @@ function WriteView() {
     }, [writeListArr])
 
     const delWriteList = async (e) => {
+
         e.preventDefault();
         const isTokenValid = await token_check(navigate);
 
@@ -66,7 +67,7 @@ function WriteView() {
     }
 
     const { annoBtn, setAnnoBtn, annoClick, setAnnoClick } = useContext(MyContext);
-    const [annoArr] = useState((writeContent.anno !== null) ? JSON.parse(writeContent.anno) : [])
+    const [annoArr] = useState((writeContent !== undefined) ? JSON.parse(writeContent.anno) : [])
 
     const anno_numbering = () => {
 
@@ -103,9 +104,8 @@ function WriteView() {
     const writeNavi = async (e) => {
         e.preventDefault();
         const isTokenValid = await token_check(navigate);
-
         if (isTokenValid) {
-            navigate(`/components/WriteCorrect/${writeContent.id}`)
+            navigate(`/components/WriteCorrect/${writeContent !== undefined ? writeContent.id : localStorage.getItem('writeCorrectId')}`)
         }
     }
 

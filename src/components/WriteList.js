@@ -14,7 +14,7 @@ function WriteList() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        dispatch(writeListData())
+        dispatch(writeListData());
     }, [dispatch]);
 
     const writeListState = useSelector((state) => state.WriteData);

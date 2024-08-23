@@ -7,6 +7,7 @@ import { Route, Routes, useLocation } from "react-router-dom";
 import history from './history.ts'
 
 // import App from './App.js'
+import Home from './components/Home.js'
 import Login from './components/Login.js'
 
 import Memo from './components/Memo.js'
@@ -34,7 +35,7 @@ function Menu() {
                 <CSSTransition key={location.key} classNames="fade" timeout={300}>
                     <Routes location={location} history={history}>
 
-                        <Route exact path="/" />
+                        <Route exact path="/" element={<Home />} />
 
                         {/* <Route path="/components/Slate" element={<Slate />} /> */}
                         <Route path="/components/Login" element={<Login />} />

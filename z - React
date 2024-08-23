@@ -142,3 +142,6 @@
     ** 수정사항
     1. annotation 데이터 베이스 관련 작업
     2. 스크롤링 작업 및 정렬
+
+    3. annoClick 초기화 시킬까?
+    4. WriteCorrect 페이지에서 새로고침 시킬 시 API 요청하기? // 아니면 CORRECT 스토리지 하나 팔까?

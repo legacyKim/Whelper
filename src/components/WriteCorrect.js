@@ -1,17 +1,20 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useContext } from 'react';
 import { useDispatch, useSelector } from "react-redux"
-
-import { syncWriteListData, syncWriteListDataUpdate } from "../data/reducers.js"
-import { cateListData, writeListDataUpdate } from '../data/api.js';
-
-import { createEditor, Editor, Text, Element as SlateElement, Node, } from 'slate';
-import { Slate, Editable, withReact } from 'slate-react'
-import escapeHtml from 'escape-html'
-
-import { token_check } from '../data/token_check.js'
 import { useParams, Link, useNavigate } from 'react-router-dom';
 
+import { syncWriteListData, syncWriteListDataUpdate } from "../data/reducers"
+import { cateListData, writeListDataUpdate } from '../data/api.js';
+
+import { createEditor, Editor, Text, Transforms, Element as SlateElement, Node, } from 'slate';
+import { Slate, Editable, withReact, ReactEditor } from 'slate-react'
+import escapeHtml from 'escape-html'
+
+
+import MyContext from '../context'
 import AnnoList from './Anno.js'
+
+import useAnno from './hook/useAnno.js';
+
 
 // slate editor
 const CustomEditor = {
@@ -33,12 +36,12 @@ const CustomEditor = {
 
     isQuote(editor) {
         const marks = Editor.marks(editor)
-        return marks ? marks.isQuote === true : false
+        return marks ? marks.quote === true : false
     },
 
     isAnnotation(editor) {
         const marks = Editor.marks(editor)
-        return marks ? marks.isAnnotation === true : false
+        return marks ? marks.annotation === true : false
     },
 
     toggleBoldMark(editor) {
@@ -77,13 +80,17 @@ const CustomEditor = {
         }
     },
 
-    toggleAnnotaion(editor) {
+    toggleAnnotation(editor, annoTextboxOpen, onlyAnnoClose, annoRemove) {
         const isActive = CustomEditor.isAnnotation(editor);
+
         if (isActive) {
-            Editor.removeMark(editor, 'annotation');
+            annoRemove();
         } else {
             Editor.addMark(editor, 'annotation', true);
+            annoTextboxOpen();
+            onlyAnnoClose();
         }
+
     },
 
 }
@@ -105,7 +112,7 @@ const serialize = nodes => {
             } else if (node.quote) {
                 string = `<span class="editor_quote">${string}</span>`
             } else if (node.annotation) {
-                string = `<span class="editor_annotation">${string}</span>`
+                string = `<span class="editor_anno editing">${string}</span>`
             }
             return string;
         }
@@ -122,7 +129,7 @@ const serialize = nodes => {
             case 'quote':
                 return `<span class="editor_quote">${children}</span>`;
             case 'annotation':
-                return `<span class="editor_annotation">${children}</span>`;
+                return `<span class="editor_anno editing">${children}</span>`;
             case 'paragraph':
                 return `<p>${children}</p>`;
             default:
@@ -155,7 +162,7 @@ const deserialize = (el, markAttributes = {}) => {
                 nodeAttributes.underline = true;
             } else if (el.classList.contains('editor_quote')) {
                 nodeAttributes.quote = true;
-            } else if (el.classList.contains('editor_annotation')) {
+            } else if (el.classList.contains('editor_anno')) {
                 nodeAttributes.annotation = true;
             }
             break;
@@ -184,28 +191,31 @@ const deserialize = (el, markAttributes = {}) => {
 function WriteCorrect() {
 
     let { id } = useParams();
+    localStorage.setItem('writeCorrectId', id);
 
     const navigate = useNavigate();
 
     const dispatch = useDispatch();
     useEffect(() => {
-        dispatch(syncWriteListData());
         dispatch(cateListData());
+        dispatch(syncWriteListData());
     }, [dispatch]);
 
     const writeListState = useSelector((state) => state.WriteData);
     const cateListState = useSelector((state) => state.cateData);
 
     const writeListArr = writeListState.data.write || [];
+    
     const writeListCheck = (id) => {
         for (var i = 0; i < writeListArr.length; i++) {
-            if (writeListArr[i].id === Number(id)) {
+            if (writeListArr[i].id === Number(id ? id : localStorage.getItem('writeCorrectId'))) {
                 return writeListArr[i];
             }
         }
     };
     const cateListArr = cateListState.data.cate || [];
 
+    // category popup
     const [popupActive, popupActiveStyle] = useState(false);
     const popupClick = () => {
         popupActiveStyle(!popupActive);
@@ -219,7 +229,6 @@ function WriteCorrect() {
     const [titleEditor] = useState(() => withReact(createEditor()))
     const [subTitleEditor] = useState(() => withReact(createEditor()))
     const [editor] = useState(() => withReact(createEditor()))
-    const [annoEditor] = useState(() => withReact(createEditor()))
 
     const [writeContent, setWriteContent] = useState(() => writeListCheck(id));
 
@@ -242,39 +251,43 @@ function WriteCorrect() {
 
     const renderElement = useCallback(({ attributes, children, element }) => {
         switch (element.type) {
-            case 'bold':
-                return <strong {...attributes} style={{ fontWeight: 'bold' }}>{children}</strong>
-            case 'underline':
-                return <span {...attributes} className='editor_underline' style={{ textDecoration: 'underline', textUnderlinePosition: 'from-font' }}>{children}</span>
-            case 'highlight':
-                return <span {...attributes} className='editor_highlight'>{children}</span>
-            case 'quote':
-                return <span {...attributes} className='editor_quote'>{children}</span>
-            case 'annotation':
-                return <span {...attributes} className='editor_annotation'>{children}</span>
-            default:
+            case 'paragraph':
                 return <p {...attributes}>{children}</p>;
+            default:
+                return <div {...attributes}>{children}</div>;
         }
-    }, [])
+    }, []);
 
     const renderLeaf = useCallback(({ attributes, children, leaf }) => {
 
         let style = {};
+        let classNames = '';
+
         if (leaf.bold) {
-            style.fontWeight = 'bold';
+            classNames = 'bold';
         }
         if (leaf.highlight) {
             style.backgroundColor = 'linear-gradient(to top, rgba(255, 243, 150, 0.6) 95%, transparent 100%)';
+            classNames += ' editor_highlight';
         }
         if (leaf.underline) {
             style.textDecoration = 'underline';
             style.textUnderlinePosition = 'under';
+            classNames += ' editor_underline';
+        }
+        if (leaf.annotation) {
+            const anno_num = document.querySelectorAll('.editor_anno');
+            anno_num.forEach((element, index) => {
+                element.classList.remove('latest');
+            });
+            classNames += ' editor_anno';
+        }
+        if (leaf.quote) {
+            classNames += ' editor_quote';
         }
 
         return (
-            <span  {...attributes}
-                style={style}
-                className={`${leaf.highlight ? 'editor_highlight' : ''} ${leaf.underline ? 'editor_underline' : ''}`}>
+            <span {...attributes} style={style} className={classNames.trim()}>
                 {children}
             </span>
         );
@@ -282,15 +295,24 @@ function WriteCorrect() {
     }, []);
     //// slate text editor
 
-    const [keywordArr, setKeywordArr] = useState(keywordsParse);
+    // anno save
+    const { annoBtn, setAnnoBtn, annoClick, setAnnoClick } = useContext(MyContext);
+    const [annoArr, setAnnoArr] = useState((writeContent.anno !== null) ? JSON.parse(writeContent.anno) : [])
+
+    const [annoContent, setAnnoContent] = useState('');
+    const [annoLengthState, setAnnoLengthState] = useState(writeContent.anno !== null ? writeContent.anno.length : 0);
+
+    const [annoAddActive, setAnnoAddActive] = useState('');
+    //// anno save
 
     // content and local storage change
+    const [keywordArr, setKeywordArr] = useState(keywordsParse);
     const [edTitle, setEdTitle] = useState(titleValue);
     const [edSubTitle, setEdSubTitle] = useState(subTitleValue);
-    const [edAnno, setEdAnno] = useState(contentValue);
     const [editorValue, setEditorValue] = useState(contentValue);
     //// content and local storage change
 
+    // write Correct
     const WriteCorrectBtn = () => {
 
         const id = writeContent.id;
@@ -309,20 +331,30 @@ function WriteCorrect() {
         const now = new Date();
         const update_time = new Date(now.getTime() + (9 * 60 * 60 * 1000)).toISOString();
 
-        dispatch(syncWriteListDataUpdate({ id, title, subTitle, content, keywords, update_time }));
-        dispatch(writeListDataUpdate({ id, title, subTitle, content, keywords, update_time }))
+        const annoString = JSON.stringify(annoArr);
+        const anno = annoString;
+
+        dispatch(syncWriteListDataUpdate({ id, title, subTitle, content, keywords, anno, update_time }));
+        dispatch(writeListDataUpdate({ id, title, subTitle, content, keywords, update_time, anno }))
 
         setEdTitle(contentPlaceholder);
         setEdSubTitle(contentPlaceholder);
         setEditorValue(contentPlaceholder);
+        setAnnoArr([]);
 
     };
 
     // toolbar
     const [toolbarActive, setToolbarActive] = useState(false);
+    const [annoTextboxActive, setAnnoTextboxActive] = useState(false);
+    const [onlyAnno, setOnlyAnno] = useState(false);
+
     const toolbarOpen = (e) => {
         e.preventDefault();
+
         setToolbarActive('active');
+        setOnlyAnno('active');
+        setAnnoTextboxActive('');
 
         const mouseX = e.clientX;
         const mouseY = e.clientY;
@@ -334,19 +366,17 @@ function WriteCorrect() {
             editorBtnPos.style.left = mouseX + 'px';
         }
     };
-
-    const toolbarClose = (e) => {
-        setToolbarActive('');
-    }
     //// toolbar
 
-    // anno
-    const [annoBtn, setAnnoBtn] = useState();
-    const [annoClick, setAnnoClick] = useState();
-
-    const [annoArrLs, setAnnoArrLs] = useState();
-    const [annoArr] = useState((writeContent.anno !== null) ? JSON.parse(writeContent.anno) : [])
-    // anno
+    const { annoSaveBtn, anno_numbering, annoRemove, toolbarClose, annoTextboxOpen, annoTextboxClose, onlyAnnoClose } = useAnno(
+        editor,
+        annoContent, setAnnoContent,
+        setAnnoBtn, setAnnoClick, setAnnoArr, setAnnoLengthState,
+        annoAddActive, setAnnoAddActive,
+        annoTextboxActive, setAnnoTextboxActive,
+        toolbarActive, setToolbarActive,
+        onlyAnno, setOnlyAnno
+    );
 
     return (
         <div className='Write'>
@@ -362,9 +392,7 @@ function WriteCorrect() {
                         setEdTitle(value)
                     }
                 }}>
-                <Editable className='write_title'
-                    placeholder="Title"
-                    editor={titleEditor} />
+                <Editable className='write_title' placeholder="Title" editor={titleEditor} />
             </Slate>
 
             <Slate
@@ -392,45 +420,83 @@ function WriteCorrect() {
                     )
                     if (isAstChange) {
                         setEditorValue(value)
+
+                        var annoLengthCheck = document.querySelectorAll('.editor_anno');
+                        if (annoLengthCheck.length < annoLengthState) {
+
+                            const currentAnnoNums = Array.from(annoLengthCheck).map(
+                                (element) => element.getAttribute('anno-data-num')
+                            ).map(Number);
+
+                            const deletedAnnoNums = annoArr
+                                .map(anno => anno.index)
+                                .filter(index => !currentAnnoNums.includes(index));
+
+                            const deletedNum = deletedAnnoNums[0];
+
+                            const updatedAnnoArr = annoArr
+                                .filter(anno => currentAnnoNums.includes(anno.index))
+                                .map(anno =>
+                                    anno.index > deletedNum
+                                        ? { ...anno, index: anno.index - 1 }
+                                        : anno
+                                );
+
+                            anno_numbering();
+                            setAnnoArr(updatedAnnoArr);
+                            setAnnoLengthState(annoLengthCheck.length);
+                        }
                     }
                 }}>
 
                 <div className={`editor_btn ${toolbarActive ? toolbarActive : ""}`}>
-                    <button className='icon-gwallet'
-                        onMouseDown={event => {
-                            event.preventDefault();
-                            CustomEditor.toggleHighlight(editor);
-                            toolbarClose();
-                        }}>
-                    </button>
-                    <button className='icon-bold'
-                        onMouseDown={event => {
-                            event.preventDefault()
-                            CustomEditor.toggleBoldMark(editor)
-                            toolbarClose();
-                        }}>
-                    </button>
-                    <button className='icon-underline'
-                        onMouseDown={event => {
-                            event.preventDefault()
-                            CustomEditor.toggleUnderline(editor)
-                            toolbarClose();
-                        }}>
-                    </button>
-                    <button className='icon-quote'
-                        onMouseDown={event => {
-                            event.preventDefault()
-                            CustomEditor.toggleQuote(editor)
-                            toolbarClose();
-                        }}>
-                    </button>
-                    <button className='icon-list-bullet'
-                        onMouseDown={event => {
-                            event.preventDefault()
-                            CustomEditor.toggleAnnotaion(editor)
-                            toolbarClose();
-                        }}>
-                    </button>
+                    <div className={`editor_btn_list ${onlyAnno ? onlyAnno : ""}`}>
+                        <button className='icon-gwallet'
+                            onMouseDown={event => {
+                                event.preventDefault();
+                                CustomEditor.toggleHighlight(editor);
+                                toolbarClose();
+                            }}>
+                        </button>
+                        <button className='icon-bold'
+                            onMouseDown={event => {
+                                event.preventDefault()
+                                CustomEditor.toggleBoldMark(editor)
+                                toolbarClose();
+                            }}>
+                        </button>
+                        <button className='icon-underline'
+                            onMouseDown={event => {
+                                event.preventDefault()
+                                CustomEditor.toggleUnderline(editor)
+                                toolbarClose();
+                            }}>
+                        </button>
+                        <button className='icon-quote'
+                            onMouseDown={event => {
+                                event.preventDefault();
+                                CustomEditor.toggleQuote(editor)
+                                toolbarClose();
+                            }}>
+                        </button>
+                        <button className='icon-list-bullet'
+                            onMouseDown={event => {
+                                event.preventDefault();
+                                CustomEditor.toggleAnnotation(editor, annoTextboxOpen, onlyAnnoClose, annoRemove);
+                            }}>
+                        </button>
+                    </div>
+                    <div className={`anno_add ${annoTextboxActive ? annoTextboxActive : ""}`}>
+                        <textarea className='scroll' placeholder='newAnnoComment'
+                            value={annoContent}
+                            onChange={e => setAnnoContent(e.target.value)}>
+                        </textarea>
+
+                        <div className='anno_add_btn flex-end'>
+                            <button className='icon-ok' onClick={annoSaveBtn}></button>
+                            <button className='icon-cancel' onClick={annoTextboxClose}></button>
+                        </div>
+                    </div>
                 </div>
 
                 <Editable className='write_content scroll' onContextMenu={toolbarOpen} onClick={toolbarClose}
@@ -439,7 +505,7 @@ function WriteCorrect() {
                     renderElement={renderElement}
                     renderLeaf={renderLeaf}
                     onKeyDown={event => {
-                        toolbarClose()
+
                         if (!event.ctrlKey) {
                             return
                         }
@@ -456,13 +522,6 @@ function WriteCorrect() {
                                 CustomEditor.toggleHighlight(editor);
                                 break
                             }
-
-                            case 'a': {
-                                event.preventDefault();
-                                CustomEditor.toggleAnnotation(editor);
-                                break
-                            }
-
                         }
                     }}
                 />
@@ -508,7 +567,6 @@ function CateListFac({ i, cateListArr, keywordArr, setKeywordArr }) {
                 ? prevKeywordArr.filter((item) => item !== category)
                 : [...prevKeywordArr, category]
         );
-
         setCateActive((prevCateActive) => !prevCateActive);
     };
 

@@ -9,8 +9,6 @@ import { token_check } from './data/token_check.js'
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-import Date from './components/Date.js'
-
 import './css/style.css';
 import Routes from './Routes'
 import { logout } from './data/api.js'
@@ -36,27 +34,23 @@ function App() {
         checkAuth();
     }, [isAuth]);
 
-
     const loggedOut = async () => {
         const result = await dispatch(logout());
         setAuth(false);
     };
 
     // write 검증
-    const [writeOnDateOff, setWriteOnDateOff] = useState(true);
     const writeNavi = async (e) => {
         e.preventDefault();
         const isTokenValid = await token_check(navigate);
         if (isTokenValid) {
-            setWriteOnDateOff(false)
             navigate('/components/Write');
         }
     };
     //// write 검증
 
-    const [theme, themeChange] = useState('dark');
-
     // about change theme
+    const [theme, themeChange] = useState('dark');
     const themeChangeBtn = () => {
         if (theme === 'dark') {
             themeChange('light');
@@ -159,7 +153,6 @@ function App() {
             <div id='app' className={`App ${theme}`}>
 
                 <ToastContainer />
-                {writeOnDateOff && <Date />}
 
                 <div className={`header ${scrollPosition > 0 ? "active" : ""}`}>
                     <div className='logo'>
