@@ -42,8 +42,7 @@ def get_data_WriteList_date():
         return jsonify({'error': 'Invalid JSON data'}), 500
 
 
-@app.route('/api/WriteList', methods=['GET'])
-def get_data_WriteList():
+def process_write_data():
     results = get_data_from_write()
     writeList, cateList = results[0], results[1]
 
@@ -53,6 +52,18 @@ def get_data_WriteList():
     except json.decoder.JSONDecodeError as e:
         print(f"JSON Decode Error: {e}")
         return jsonify({'error': 'Invalid JSON data'}), 500
+
+@app.route('/api/WriteList', methods=['GET'])
+def get_data_WriteList():
+    return process_write_data()
+
+@app.route('/api/WriteCorrect', methods=['GET'])
+def get_data_WriteCorrect():
+    return process_write_data()
+
+@app.route('/api/WriteView', methods=['GET'])
+def get_data_WriteView():
+    return process_write_data()
 
 
 @app.route('/api/Write', methods=['POST'])

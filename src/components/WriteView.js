@@ -9,14 +9,17 @@ import { useParams } from 'react-router-dom';
 import MyContext from '../context'
 import AnnoList from './Anno.js'
 import ViewEdit from './SlateView.js'
+import { writeListDataView } from '../data/api.js';
 
 import { token_check } from '../data/token_check.js'
 
 function WriteView() {
 
     const writeListState = useSelector((state) => state.WriteData);
+    var writeListArr = writeListState.data.write || [];
 
     let { id } = useParams();
+    localStorage.setItem('writeId', id);
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -26,8 +29,17 @@ function WriteView() {
         dispatch(syncWriteListDataUpdate());
     }, [dispatch]);
 
-    const writeListArr = writeListState.data.write || [];
-    const writeListCheck = (id) => {
+    useEffect(() => {
+        if (writeListState.data.write.length === 0) {
+            const refresh = async () => {
+                const refresh_data = await dispatch(writeListDataView());
+                setWriteContent(writeListCheck(refresh_data.payload.write, localStorage.getItem('writeId')));
+            }
+            refresh();
+        }
+    }, []);
+
+    const writeListCheck = (writeListArr, id) => {
         for (var i = 0; i < writeListArr.length; i++) {
             if (writeListArr[i].id === Number(id)) {
                 return writeListArr[i];
@@ -35,7 +47,7 @@ function WriteView() {
         }
     };
 
-    const [writeContent, setWriteContent] = useState(() => writeListCheck(id));
+    const [writeContent, setWriteContent] = useState(writeListCheck(writeListArr, id));
 
     const titleDoc = (writeContent !== undefined) ? new DOMParser().parseFromString(writeContent.title, 'text/html') : null;
     const subTitleDoc = (writeContent !== undefined) ? new DOMParser().parseFromString(writeContent.subTitle, 'text/html') : null;
@@ -43,8 +55,16 @@ function WriteView() {
 
     const lsKeywords = JSON.parse(localStorage.getItem('view_keywords')) || [];
     const keywordsParse = (writeContent !== undefined) ? JSON.parse(writeContent.keywords) : lsKeywords;
-
     localStorage.setItem('view_keywords', JSON.stringify(keywordsParse));
+
+    const [annoArr, setAnnoArr] = useState((writeContent !== undefined) ? JSON.parse(writeContent.anno) : []);
+
+    useEffect(() => {
+        if (writeContent !== undefined) {
+            const parsedAnno = JSON.parse(writeContent.anno);
+            setAnnoArr(parsedAnno);
+        }
+    }, [writeContent]);
 
     useEffect((id) => {
         setTimeout(() => {
@@ -52,8 +72,8 @@ function WriteView() {
             memoContentElements.forEach(element => {
                 element.classList.remove('opacity');
             });
-        }, 100)
-    }, [writeListArr])
+        }, 100);
+    }, [writeListArr]);
 
     const delWriteList = async (e) => {
 
@@ -61,13 +81,12 @@ function WriteView() {
         const isTokenValid = await token_check(navigate);
 
         if (isTokenValid) {
-            dispatch(writeListDataDel(writeContent.id))
+            dispatch(writeListDataDel(writeContent.id));
             navigate('/components/WriteList');
         }
     }
 
     const { annoBtn, setAnnoBtn, annoClick, setAnnoClick } = useContext(MyContext);
-    const [annoArr] = useState((writeContent !== undefined) ? JSON.parse(writeContent.anno) : [])
 
     const anno_numbering = () => {
 
@@ -98,14 +117,14 @@ function WriteView() {
         anno_numbering();
         document.querySelectorAll('.editor_anno').forEach((ele) => {
             ele.classList.add('editing');
-        })
+        });
     }, []);
 
     const writeNavi = async (e) => {
         e.preventDefault();
         const isTokenValid = await token_check(navigate);
         if (isTokenValid) {
-            navigate(`/components/WriteCorrect/${writeContent !== undefined ? writeContent.id : localStorage.getItem('writeCorrectId')}`)
+            navigate(`/components/WriteCorrect/${writeContent !== undefined ? writeContent.id : localStorage.getItem('writeId')}`)
         }
     }
 

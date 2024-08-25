@@ -9,12 +9,10 @@ import { createEditor, Editor, Text, Transforms, Element as SlateElement, Node, 
 import { Slate, Editable, withReact, ReactEditor } from 'slate-react'
 import escapeHtml from 'escape-html'
 
-
 import MyContext from '../context'
 import AnnoList from './Anno.js'
 
 import useAnno from './hook/useAnno.js';
-
 
 // slate editor
 const CustomEditor = {
@@ -191,7 +189,7 @@ const deserialize = (el, markAttributes = {}) => {
 function WriteCorrect() {
 
     let { id } = useParams();
-    localStorage.setItem('writeCorrectId', id);
+    localStorage.setItem('writeId', id);
 
     const navigate = useNavigate();
 
@@ -205,7 +203,7 @@ function WriteCorrect() {
     const cateListState = useSelector((state) => state.cateData);
 
     const writeListArr = writeListState.data.write || [];
-    
+
     const writeListCheck = (id) => {
         for (var i = 0; i < writeListArr.length; i++) {
             if (writeListArr[i].id === Number(id ? id : localStorage.getItem('writeCorrectId'))) {
@@ -228,18 +226,19 @@ function WriteCorrect() {
 
     const [titleEditor] = useState(() => withReact(createEditor()))
     const [subTitleEditor] = useState(() => withReact(createEditor()))
-    const [editor] = useState(() => withReact(createEditor()))
+    const [editor] = useState(() => withReact(createEditor()));
 
-    const [writeContent, setWriteContent] = useState(() => writeListCheck(id));
+    const [writeContent, setWriteContent] = useState(writeListCheck(id));
 
-    const titleDoc = new DOMParser().parseFromString(writeContent.title, 'text/html');
-    const subTitleDoc = new DOMParser().parseFromString(writeContent.subTitle, 'text/html');
-    const contentDoc = new DOMParser().parseFromString(writeContent.content, 'text/html');
+    const correctTitleLs = localStorage.getItem('correctTitle');
+    const correctSubtitleLs = localStorage.getItem('correctSubTitle');
+    const correctContentLs = localStorage.getItem('correctContent');
+    const correctAnnoLs = localStorage.getItem('correctAnno');
+
+    const titleValue = (writeContent !== undefined) ? deserialize(new DOMParser().parseFromString(writeContent.title, 'text/html').body) : JSON.parse(correctTitleLs);
+    const subTitleValue = (writeContent !== undefined) ? deserialize(new DOMParser().parseFromString(writeContent.subTitle, 'text/html').body) : JSON.parse(correctSubtitleLs);
+    const contentValue = (writeContent !== undefined) ? deserialize(new DOMParser().parseFromString(writeContent.content, 'text/html').body) : JSON.parse(correctContentLs);
     const keywordsParse = (writeContent !== undefined) ? JSON.parse(writeContent.keywords) : [];
-
-    const titleValue = deserialize(titleDoc.body);
-    const subTitleValue = deserialize(subTitleDoc.body);
-    const contentValue = deserialize(contentDoc.body);
 
     const contentPlaceholder = [
         {
@@ -297,10 +296,10 @@ function WriteCorrect() {
 
     // anno save
     const { annoBtn, setAnnoBtn, annoClick, setAnnoClick } = useContext(MyContext);
-    const [annoArr, setAnnoArr] = useState((writeContent.anno !== null) ? JSON.parse(writeContent.anno) : [])
+    const [annoArr, setAnnoArr] = useState((writeContent !== undefined) ? JSON.parse(writeContent.anno) : JSON.parse(correctAnnoLs));
 
     const [annoContent, setAnnoContent] = useState('');
-    const [annoLengthState, setAnnoLengthState] = useState(writeContent.anno !== null ? writeContent.anno.length : 0);
+    const [annoLengthState, setAnnoLengthState] = useState(writeContent !== undefined ? writeContent.anno.length : JSON.parse(correctAnnoLs).length);
 
     const [annoAddActive, setAnnoAddActive] = useState('');
     //// anno save
@@ -310,6 +309,11 @@ function WriteCorrect() {
     const [edTitle, setEdTitle] = useState(titleValue);
     const [edSubTitle, setEdSubTitle] = useState(subTitleValue);
     const [editorValue, setEditorValue] = useState(contentValue);
+
+    localStorage.setItem('correctTitle', JSON.stringify(edTitle));
+    localStorage.setItem('correctSubTitle', JSON.stringify(edSubTitle));
+    localStorage.setItem('correctContent', JSON.stringify(editorValue));
+    localStorage.setItem('correctAnno', JSON.stringify(annoArr));
     //// content and local storage change
 
     // write Correct
@@ -389,7 +393,7 @@ function WriteCorrect() {
                         op => 'set_selection' !== op.type
                     )
                     if (isAstChange) {
-                        setEdTitle(value)
+                        setEdTitle(value);
                     }
                 }}>
                 <Editable className='write_title' placeholder="Title" editor={titleEditor} />
@@ -528,7 +532,7 @@ function WriteCorrect() {
             </Slate>
 
             <div className='page_btn'>
-                <Link to={`/components/WriteView/${writeContent.id}`} onClick={() => { navigate(`/components/WriteView/${writeContent.id}`) }} className='icon-reply'></Link>
+                <Link to={`/components/WriteView/${writeContent !== undefined ? writeContent.id : localStorage.getItem('writeId')}`} onClick={() => { navigate(`/components/WriteView/${writeContent !== undefined ? writeContent.id : localStorage.getItem('writeId')}`) }} className='icon-reply'></Link>
                 <button className='icon-ok-circled write_btn_save' onClick={() => { popupClick(); }}></button>
             </div>
 
@@ -549,7 +553,7 @@ function WriteCorrect() {
                 </div>
                 <div className='page_btn'>
                     <button className="write_btn_back icon-reply" onClick={popupClick}></button>
-                    <Link className='icon-ok-circled write_btn_save' to={`/components/WriteView/${writeContent.id}`} onClick={() => { navigate(`/components/WriteView/${writeContent.id}`); WriteCorrectBtn(); }}></Link>
+                    <Link className='icon-ok-circled write_btn_save' to={`/components/WriteView/${writeContent !== undefined ? writeContent.id : localStorage.getItem('writeId')}`} onClick={() => { navigate(`/components/WriteView/${writeContent !== undefined ? writeContent.id : localStorage.getItem('writeId')}`); WriteCorrectBtn(); }}></Link>
                 </div>
             </div>
         </div>

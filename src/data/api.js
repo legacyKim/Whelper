@@ -15,6 +15,26 @@ export const writeListData = createAsyncThunk('writeData/getData', async () => {
     }
 });
 
+export const writeListDataView = createAsyncThunk('writeData/getData', async () => {
+    try {
+        const response = await axios.get(`${API_URL}/api/WriteView`);
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching writeListData:', error);
+        throw error;
+    }
+});
+
+export const writeListDataCorrect = createAsyncThunk('writeData/getData', async () => {
+    try {
+        const response = await axios.get(`${API_URL}/api/WriteCorrect`);
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching writeListData:', error);
+        throw error;
+    }
+});
+
 export const writeListDataDate = createAsyncThunk('writeData/getData', async () => {
     try {
         const response = await axios.get(`${API_URL}/api/date`);
