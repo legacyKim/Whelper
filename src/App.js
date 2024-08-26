@@ -143,13 +143,37 @@ function App() {
     //// about search
 
     // anno ui
-    const [annoBtn, setAnnoBtn] = useState();
+    const [annoListBtn, setAnnoListBtn] = useState(false);
     const [annoClick, setAnnoClick] = useState();
     //// anno ui
 
+    // default right click, copy
+    useEffect(() => {
+        if (isAuth === false) {
+            const handleKeyDown = (event) => {
+                if (event.ctrlKey && event.key.toLowerCase() === 'c') {
+                    event.preventDefault();
+                }
+            };
+
+            const onClickRight = (event) => {
+                event.preventDefault();
+            }
+
+            document.addEventListener('keydown', handleKeyDown);
+            document.addEventListener('contextmenu', onClickRight);
+
+            return () => {
+                document.removeEventListener('keydown', handleKeyDown);
+                document.removeEventListener('contextmenu', onClickRight);
+            };
+        }
+    }, [isAuth])
+    //// default right click, copy
+
     return (
 
-        <MyContext.Provider value={{ searchArr, setSearchArr, scrollPosition, setScrollPosition, isAuth, setAuth, annoBtn, setAnnoBtn, annoClick, setAnnoClick }}>
+        <MyContext.Provider value={{ searchArr, setSearchArr, scrollPosition, setScrollPosition, isAuth, setAuth, annoListBtn, setAnnoListBtn, annoClick, setAnnoClick }}>
             <div id='app' className={`App ${theme}`}>
 
                 <ToastContainer />

@@ -58,13 +58,8 @@ function WriteView() {
     localStorage.setItem('view_keywords', JSON.stringify(keywordsParse));
 
     const [annoArr, setAnnoArr] = useState((writeContent !== undefined) ? JSON.parse(writeContent.anno) : []);
-
-    useEffect(() => {
-        if (writeContent !== undefined) {
-            const parsedAnno = JSON.parse(writeContent.anno);
-            setAnnoArr(parsedAnno);
-        }
-    }, [writeContent]);
+    console.log(writeContent);
+    console.log(annoArr);
 
     useEffect((id) => {
         setTimeout(() => {
@@ -86,7 +81,7 @@ function WriteView() {
         }
     }
 
-    const { annoBtn, setAnnoBtn, annoClick, setAnnoClick } = useContext(MyContext);
+    const { annoListBtn, setAnnoListBtn, annoClick, setAnnoClick } = useContext(MyContext);
 
     const anno_numbering = () => {
 
@@ -102,7 +97,7 @@ function WriteView() {
             if (element.dataset.eventRegistered !== true) {
                 element.addEventListener('click', (e) => {
                     e.preventDefault()
-                    setAnnoBtn(true);
+                    setAnnoListBtn(true);
                     setAnnoClick(Number(element.getAttribute('anno-data-num')));
                 });
                 element.dataset.eventRegistered = true;
@@ -128,6 +123,15 @@ function WriteView() {
         }
     }
 
+    useEffect(() => {
+        if (writeContent !== undefined) {
+            const parsedAnno = JSON.parse(writeContent.anno);
+            setAnnoArr(parsedAnno);
+        }
+    }, [writeContent]);
+
+    const annoCorrectKey = false;
+
     return (
 
         <div className='view_page opacity'>
@@ -144,7 +148,7 @@ function WriteView() {
                         </div>
                     </div>
 
-                    <AnnoList annoArr={annoArr} annoBtn={annoBtn} setAnnoBtn={setAnnoBtn} annoClick={annoClick} setAnnoClick={setAnnoClick} />
+                    <AnnoList annoArr={annoArr} annoListBtn={annoListBtn} setAnnoListBtn={setAnnoListBtn} annoClick={annoClick} setAnnoClick={setAnnoClick} annoCorrectKey={annoCorrectKey} />
 
                     <div className='page_btn'>
                         <Link className='icon-trash' onClick={delWriteList}></Link>

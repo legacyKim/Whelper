@@ -151,3 +151,10 @@
     ** 개발 확인 사항
     1. correct 페이지 내에서 새로고침 시 local Storage 관련 로직 구축
     2. 주석 배열 수정 및 삭제 기능 추가
+
++24. 08. 26. 
+
+    ** 개발 오류 및 추가 사항 확인
+    & Correct 페이지 새로고침 시 localStorage 로 작업해 뒀는데, editor 가 먹질 않는 문제
+    & WriteList, Memo 컴포넌트에 infinite 스크롤이 모바일에서는 오작동, 좀 더 보완 필요
+    & Write, WriteCorrect 컴포넌트 내부에서 동일한 소스 공통 관리 (에디터 버튼, 직렬화 및 역직렬화 코드)

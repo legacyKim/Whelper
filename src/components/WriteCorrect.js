@@ -295,7 +295,7 @@ function WriteCorrect() {
     //// slate text editor
 
     // anno save
-    const { annoBtn, setAnnoBtn, annoClick, setAnnoClick } = useContext(MyContext);
+    const { annoListBtn, setAnnoListBtn, annoClick, setAnnoClick } = useContext(MyContext);
     const [annoArr, setAnnoArr] = useState((writeContent !== undefined) ? JSON.parse(writeContent.anno) : JSON.parse(correctAnnoLs));
 
     const [annoContent, setAnnoContent] = useState('');
@@ -375,12 +375,14 @@ function WriteCorrect() {
     const { annoSaveBtn, anno_numbering, annoRemove, toolbarClose, annoTextboxOpen, annoTextboxClose, onlyAnnoClose } = useAnno(
         editor,
         annoContent, setAnnoContent,
-        setAnnoBtn, setAnnoClick, setAnnoArr, setAnnoLengthState,
+        setAnnoListBtn, setAnnoClick, annoArr, setAnnoArr, setAnnoLengthState,
         annoAddActive, setAnnoAddActive,
         annoTextboxActive, setAnnoTextboxActive,
         toolbarActive, setToolbarActive,
         onlyAnno, setOnlyAnno
     );
+
+    const annoCorrectKey = true;
 
     return (
         <div className='Write'>
@@ -536,7 +538,7 @@ function WriteCorrect() {
                 <button className='icon-ok-circled write_btn_save' onClick={() => { popupClick(); }}></button>
             </div>
 
-            <AnnoList annoArr={annoArr} annoBtn={annoBtn} setAnnoBtn={setAnnoBtn} annoClick={annoClick} setAnnoClick={setAnnoClick} />
+            <AnnoList annoArr={annoArr} setAnnoArr={setAnnoArr} annoListBtn={annoListBtn} setAnnoListBtn={setAnnoListBtn} annoClick={annoClick} setAnnoClick={setAnnoClick} annoCorrectKey={annoCorrectKey} />
 
             {/* category popup */}
             <div className={`popup ${popupActive ? popupActive : ""}`}>

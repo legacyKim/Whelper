@@ -240,7 +240,7 @@ function Write() {
     //// slate text editor
 
     // anno save
-    const { annoBtn, setAnnoBtn, annoClick, setAnnoClick } = useContext(MyContext);
+    const { annoListBtn, setAnnoListBtn, annoClick, setAnnoClick } = useContext(MyContext);
 
     const [annoArrLs, setAnnoArrLs] = useState(JSON.parse(localStorage.getItem('annoContent')));
     const [annoArr, setAnnoArr] = useState(annoArrLs !== null ? annoArrLs : []);
@@ -329,15 +329,17 @@ function Write() {
     };
     //// toolbar
 
-    const { annoSaveBtn, anno_numbering, annoRemove, toolbarClose, annoTextboxOpen, annoTextboxClose, onlyAnnoClose  } = useAnno(
+    const { annoSaveBtn, anno_numbering, annoRemove, toolbarClose, annoTextboxOpen, annoTextboxClose, onlyAnnoClose } = useAnno(
         editor,
         annoContent, setAnnoContent,
-        setAnnoBtn, setAnnoClick, setAnnoArr, setAnnoLengthState,
+        setAnnoListBtn, setAnnoClick, annoArr, setAnnoArr, setAnnoLengthState,
         annoAddActive, setAnnoAddActive,
         annoTextboxActive, setAnnoTextboxActive,
         toolbarActive, setToolbarActive,
         onlyAnno, setOnlyAnno
     );
+
+    const annoCorrectKey = true;
 
     return (
 
@@ -515,7 +517,7 @@ function Write() {
                 </div>
             </div>
 
-            <AnnoList annoArr={annoArr} annoBtn={annoBtn} setAnnoBtn={setAnnoBtn} annoClick={annoClick} setAnnoClick={setAnnoClick} />
+            <AnnoList annoArr={annoArr} setAnnoArr={setAnnoArr} annoListBtn={annoListBtn} setAnnoListBtn={setAnnoListBtn} annoClick={annoClick} setAnnoClick={setAnnoClick} annoCorrectKey={annoCorrectKey} />
 
         </div>
     )

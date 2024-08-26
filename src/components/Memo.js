@@ -14,7 +14,7 @@ function Memo() {
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    
+
     useEffect(() => {
         dispatch(memoListData());
 
@@ -38,7 +38,7 @@ function Memo() {
     const [memoArr, setMemoArr] = useState(memoListArr);
     const [memoReal, setMemoReal] = useState(memoArr);
 
-    useEffect(()=>{
+    useEffect(() => {
         setMemoArr(memoListArr)
     }, [memoListState])
 
@@ -414,7 +414,7 @@ function Memo() {
             if (memoArr[i] !== undefined) rows.push(memoArr[i]);
         }
         setMemoReal(rows)
-        
+
         return () => {
             currentScrollArea.removeEventListener('wheel', memoScrollMove);
         };
@@ -479,7 +479,7 @@ function Memo() {
 
     // memo anno add
     var newMemoAnno = useRef();
-    const memoAnnoBtn = async (memo) => {
+    const memoannoListBtn = async (memo) => {
         const isTokenValid = await token_check(navigate);
         if (isTokenValid) {
 
@@ -722,7 +722,7 @@ function Memo() {
 
                 <div className={`memo_anno_common ${memoAnnoActive ? 'active' : ''}`}>
                     <textarea className='memo_anno_textarea' placeholder="memo_annotation" ref={newMemoAnno} onChange={annoTextareaChange}></textarea>
-                    <button className='icon-ok' onClick={() => memoAnnoBtn(memo)}></button>
+                    <button className='icon-ok' onClick={() => memoannoListBtn(memo)}></button>
                     <button className='icon-cancel' onClick={() => {
                         setMemoAnnoActive('')
                         setTextAreaHeight(null);

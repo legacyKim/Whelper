@@ -5,7 +5,7 @@ import { ReactEditor } from 'slate-react'
 const useAnno = (
     editor,
     annoContent, setAnnoContent,
-    setAnnoBtn, setAnnoClick, setAnnoArr, setAnnoLengthState,
+    setAnnoListBtn, setAnnoClick, annoArr, setAnnoArr, setAnnoLengthState,
     annoAddActive, setAnnoAddActive,
     annoTextboxActive, setAnnoTextboxActive,
     toolbarActive, setToolbarActive,
@@ -37,7 +37,7 @@ const useAnno = (
             if (!element.dataset.eventRegistered) {
                 element.addEventListener('click', (e) => {
                     e.preventDefault();
-                    setAnnoBtn(true);
+                    setAnnoListBtn(true);
                     setAnnoClick(Number(element.getAttribute('anno-data-num')));
                 });
                 element.dataset.eventRegistered = true;
@@ -92,7 +92,7 @@ const useAnno = (
     const annoSaveBtn = () => {
         if (annoContent !== '') {
             anno_selection();
-            setAnnoBtn(true);
+            setAnnoListBtn(true);
         }
         toolbarClose();
     };
@@ -167,7 +167,7 @@ const useAnno = (
         setOnlyAnno('');
     }
 
-    return { annoSaveBtn, anno_numbering, annoRemove, toolbarClose, annoTextboxOpen, annoTextboxClose, onlyAnnoClose };
+    return { annoSaveBtn, anno_numbering, annoRemove, toolbarClose, annoTextboxOpen, annoTextboxClose, onlyAnnoClose, annoArr };
 };
 
 export default useAnno;
