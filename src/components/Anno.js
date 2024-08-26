@@ -1,6 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { NavLink, useNavigate, Link, useLocation } from "react-router-dom";
 
 function AnnoList({ annoArr, setAnnoArr, annoListBtn, setAnnoListBtn, annoClick, annoCorrectKey }) {
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         setAnnoListBtn(false);
@@ -137,6 +140,14 @@ function AnnoList({ annoArr, setAnnoArr, annoListBtn, setAnnoListBtn, annoClick,
         annoListCorrect.current.style.height = annoListCorrect.current.scrollHeight + 'px';
     }
 
+    const annoLink = (e) => {
+        if (annoCorrectKey === false) {
+            navigate('/components/AnnoLink');
+        } else {
+            e.preventDefault();
+        }
+    }
+
     return (
 
         <div className={`annotation_list ${annoListBtn === true ? 'active' : ''} `}>
@@ -149,12 +160,14 @@ function AnnoList({ annoArr, setAnnoArr, annoListBtn, setAnnoListBtn, annoClick,
                     annoArr.map(function (a, i) {
                         return (
                             <li key={i}>
-                                <span className="num">
-                                    {annoArr[i].index})
-                                </span>
-                                <p className="anno_content">
-                                    {annoArr[i].content}
-                                </p>
+                                <Link onClick={(e)=>{annoLink(e)}}>
+                                    <span className="num">
+                                        {annoArr[i].index})
+                                    </span>
+                                    <p className="anno_content">
+                                        {annoArr[i].content}
+                                    </p>
+                                </Link>
                             </li>
                         )
 
