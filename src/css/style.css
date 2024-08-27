@@ -441,7 +441,7 @@ button i { transition: all 0.3s ease-in-out; }
 .anno_add textarea { background-color: transparent; width: 100%; height: 100%; border: 0; border-radius: 6px; resize: none; font-size: 12px; font-weight: 100; line-height: 1.3; } 
 .anno_add_btn { position: absolute; top: 0; right: -26px; display: flex; flex-direction: column; align-items: center; } 
 
-.annolink_wrap { position: relative; display: flex; flex-direction: column; flex-wrap: wrap; height: calc(100vh - 138px); overflow-x: auto; } 
+.annolink_wrap { position: relative; display: flex; flex-direction: column; flex-wrap: wrap; height: calc(100vh - 138px); overflow-x: auto; place-self: flex-start; } 
 .annolink_wrap::-webkit-scrollbar { display: none; } 
 .annolink_wrap div.annolink:first-child .title { margin-top: 0; } 
 
