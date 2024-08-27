@@ -58,8 +58,6 @@ function WriteView() {
     localStorage.setItem('view_keywords', JSON.stringify(keywordsParse));
 
     const [annoArr, setAnnoArr] = useState((writeContent !== undefined) ? JSON.parse(writeContent.anno) : []);
-    console.log(writeContent);
-    console.log(annoArr);
 
     useEffect((id) => {
         setTimeout(() => {

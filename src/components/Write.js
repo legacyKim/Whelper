@@ -242,7 +242,7 @@ function Write() {
     // anno save
     const { annoListBtn, setAnnoListBtn, annoClick, setAnnoClick } = useContext(MyContext);
 
-    const [annoArrLs, setAnnoArrLs] = useState(JSON.parse(localStorage.getItem('annoContent')));
+    const [annoArrLs, setAnnoArrLs] = useState(JSON.parse(localStorage.getItem('writeAnno')));
     const [annoArr, setAnnoArr] = useState(annoArrLs !== null ? annoArrLs : []);
 
     const [annoContent, setAnnoContent] = useState('')
@@ -286,7 +286,7 @@ function Write() {
         const updated_at = currentTime;
         const created_at = currentTime;
 
-        localStorage.removeItem('annoContent');
+        localStorage.removeItem('writeAnno');
         const annoString = JSON.stringify(annoArr);
         const anno = annoString;
 
@@ -298,7 +298,6 @@ function Write() {
         setEditorValue(contentPlaceholder);
         setAnnoArr([]);
 
-        localStorage.removeItem('annoContent');
     };
 
     // save and keep the last num of id
@@ -340,6 +339,10 @@ function Write() {
     );
 
     const annoCorrectKey = true;
+
+    useEffect(()=>{
+        localStorage.setItem('writeAnno', JSON.stringify(annoArr));
+    }, [annoArr])
 
     return (
 
@@ -406,7 +409,7 @@ function Write() {
                                         : anno
                                 );
 
-                            localStorage.setItem('annoContent', JSON.stringify(updatedAnnoArr));
+                            localStorage.setItem('writeAnno', JSON.stringify(updatedAnnoArr));
 
                             anno_numbering();
                             setAnnoArr(updatedAnnoArr);

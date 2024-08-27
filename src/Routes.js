@@ -16,6 +16,7 @@ import Write from './components/Write.js'
 import WriteList from './components/WriteList.js'
 import WriteView from './components/WriteView.js'
 import WriteCorrect from './components/WriteCorrect.js'
+import AnnoLink from './components/AnnoLink.js'
 
 import Book from './components/Book.js'
 import Category from './components/Category.js'
@@ -47,6 +48,7 @@ function Menu() {
 
                         <Route path="/components/Category" element={<Category />} />
                         <Route path="/components/Category/:writeListKeyword" element={<Category />} />
+                        <Route path="/components/AnnoLink" element={<AnnoLink />} />
 
                         <Route path="/components/Search/:searchInputValue" element={<Search />} />
 

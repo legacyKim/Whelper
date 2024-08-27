@@ -195,6 +195,10 @@ function App() {
                         </NavLink></li>
                         {/* <li className='btn'><NavLink to="/components/Book" className='icon-book-1' onClick={() => { navigate('/components/Book') }}></NavLink></li> */}
 
+                        <li className='btn'><NavLink to={`/components/AnnoLink`} className='icon-flow-split' onClick={() => { navigate('/components/AnnoLink') }}>
+                            <div className='tooltip'><span>Annotation</span></div>
+                        </NavLink></li>
+
                         <li className='btn'><NavLink to={`/components/Category`} className='icon-bookmark' onClick={() => { navigate('/components/Category') }}>
                             <div className='tooltip'><span>Category</span></div>
                         </NavLink></li>

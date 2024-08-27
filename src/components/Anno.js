@@ -86,7 +86,8 @@ function AnnoList({ annoArr, setAnnoArr, annoListBtn, setAnnoListBtn, annoClick,
     const annoListCorrect = useRef();
     const [annoCorrectBoxOpen, setAnnoCorrectBoxOpen] = useState(false);
 
-    const annoArrCorrect = () => {
+    const annoArrCorrect = (e) => {
+        e.preventDefault();
 
         annoArrComplete();
         setAnnoBtnActive(false);
@@ -112,19 +113,29 @@ function AnnoList({ annoArr, setAnnoArr, annoListBtn, setAnnoListBtn, annoClick,
             updatedArr[annolistIndex].content = annoListCorrect.current.value;
         }
         setAnnoCorrectBoxOpen(false);
+        localStorage.setItem('writeAnno', JSON.stringify(updatedArr));
     }
 
     const annoCorrectCancel = () => {
         annoArrComplete();
+        setAnnoBtnActive(false);
         setAnnoCorrectBoxOpen(false);
         setTextAreaHeight('0')
     }
 
-    const annoArrDelete = () => {
+    const annoArrDelete = (e) => {
+
+        e.preventDefault();
+
         annoArrComplete();
+        setAnnoBtnActive(false);
+        setAnnoCorrectBoxOpen(false);
+
         const updatedArr = annoArr.filter((_, index) => index !== annolistIndex);
         setAnnoArr(updatedArr);
-        setAnnoCorrectBoxOpen(false);
+
+        localStorage.setItem('writeAnno', JSON.stringify(updatedArr));
+
     }
 
     const [textAreaHeight, setTextAreaHeight] = useState();
@@ -150,7 +161,7 @@ function AnnoList({ annoArr, setAnnoArr, annoListBtn, setAnnoListBtn, annoClick,
 
     return (
 
-        <div className={`annotation_list ${annoListBtn === true ? 'active' : ''} `}>
+        <div className={`annotation_list ${annoListBtn === true ? 'active' : ''} `} onClick={()=>{setAnnoBtnActive(false)}}>
             <button className="annotation_btn" onClick={annoListBtnActive}>
                 <i className='icon-list-bullet'></i>
             </button>
@@ -160,7 +171,7 @@ function AnnoList({ annoArr, setAnnoArr, annoListBtn, setAnnoListBtn, annoClick,
                     annoArr.map(function (a, i) {
                         return (
                             <li key={i}>
-                                <Link onClick={(e)=>{annoLink(e)}}>
+                                <Link to={`/components/AnnoLink`} onClick={(e)=>{annoLink(e)}}>
                                     <span className="num">
                                         {annoArr[i].index})
                                     </span>
@@ -178,7 +189,7 @@ function AnnoList({ annoArr, setAnnoArr, annoListBtn, setAnnoListBtn, annoClick,
             <div className='annoWrap'>
                 <div className={`anno_btn_list ${annoBtnActive === true ? 'active' : ''} `}>
                     <button className="icon-vector-pencil" onClick={annoArrCorrect}></button>
-                    <button className="icon-link-1" onClick={annoArrDelete}></button>
+                    <button className="icon-trash" onClick={annoArrDelete}></button>
                 </div>
             </div>
 
