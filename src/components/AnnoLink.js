@@ -107,7 +107,7 @@ function AnnoLink() {
 
         useEffect(() => {
             const annoLinkObj = document.querySelectorAll('.annolink a');
-            for(var i = 0; i < annoLinkObj.length; i++) {
+            for (var i = 0; i < annoLinkObj.length; i++) {
                 annoLinkObj[i].style.setProperty('--anno-link-num', `'${i + 1})'`);
             }
         }, []);
@@ -117,7 +117,7 @@ function AnnoLink() {
 
                 {writeContent.hasOwnProperty('title') && (
                     <Slate editor={titleEditor} initialValue={titleValue}>
-                        <div className="annolink_dot"></div>
+                        <div className="icon-level-down annolink_dot"></div>
                         <Editable className="title" readOnly />
                     </Slate>
                 )}

@@ -8,12 +8,15 @@ import { useParams } from 'react-router-dom';
 
 import MyContext from '../context'
 import AnnoList from './Anno.js'
+
 import ViewEdit from './SlateView.js'
 import { writeListDataView } from '../data/api.js';
 
 import { token_check } from '../data/token_check.js'
 
 function WriteView() {
+
+    const { isAuth } = useContext(MyContext);
 
     const writeListState = useSelector((state) => state.WriteData);
     var writeListArr = writeListState.data.write || [];
@@ -94,7 +97,14 @@ function WriteView() {
 
             if (element.dataset.eventRegistered !== true) {
                 element.addEventListener('click', (e) => {
+
+                    for (var i = 0; i < anno_num.length; i++) {
+                        anno_num[i].classList.remove('active');
+                    }
+
                     e.preventDefault()
+                    element.classList.add('active');
+
                     setAnnoListBtn(true);
                     setAnnoClick(Number(element.getAttribute('anno-data-num')));
                 });
@@ -128,7 +138,7 @@ function WriteView() {
         }
     }, [writeContent]);
 
-    const annoCorrectKey = false;
+    const writeKey = false;
 
     return (
 
@@ -146,12 +156,15 @@ function WriteView() {
                         </div>
                     </div>
 
-                    <AnnoList annoArr={annoArr} annoListBtn={annoListBtn} setAnnoListBtn={setAnnoListBtn} annoClick={annoClick} setAnnoClick={setAnnoClick} annoCorrectKey={annoCorrectKey} />
+                    <AnnoList annoArr={annoArr} annoListBtn={annoListBtn} setAnnoListBtn={setAnnoListBtn} annoClick={annoClick} setAnnoClick={setAnnoClick} writeKey={writeKey} />
 
-                    <div className='page_btn'>
-                        <Link className='icon-trash' onClick={delWriteList}></Link>
-                        <Link className='icon-edit-alt' onClick={writeNavi}></Link>
-                    </div>
+                    {isAuth === true && (
+                        <div className='page_btn'>
+                            <Link className='icon-trash' onClick={delWriteList}></Link>
+                            <Link className='icon-edit-alt' onClick={writeNavi}></Link>
+                        </div>
+                    )}
+
                 </div>
             </div>
         </div>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { NavLink, useNavigate, Link, useLocation } from "react-router-dom";
 
-function AnnoList({ annoArr, setAnnoArr, annoListBtn, setAnnoListBtn, annoClick, annoCorrectKey, setAnnoRemoveNumbering, anno_numbering }) {
+function AnnoList({ annoArr, setAnnoArr, annoListBtn, setAnnoListBtn, annoClick, setAnnoRemoveNumbering, writeKey }) {
 
     const navigate = useNavigate();
 
@@ -23,41 +23,39 @@ function AnnoList({ annoArr, setAnnoArr, annoListBtn, setAnnoListBtn, annoClick,
             if (annoClick === index + 1) {
                 ele.classList.add('active');
             }
-        })
+        });
     }, [annoClick]);
 
     const [annolistIndex, setAnnolistIndex] = useState();
 
     const annoBtn = (e) => {
         e.preventDefault();
-        if (annoCorrectKey === true) {
-            if (e._reactName === 'onContextMenu' && e.target.classList.contains('anno_content')) {
+        if (e._reactName === 'onContextMenu' && e.target.classList.contains('anno_content')) {
 
-                const mouseX = e.clientX;
-                const mouseY = e.clientY;
+            const mouseX = e.clientX;
+            const mouseY = e.clientY;
 
-                const annoList = document.querySelector('.annotation_list');
-                const annoListBtnPos = document.querySelector('.annoWrap');
+            const annoList = document.querySelector('.annotation_list');
+            const annoListBtnPos = document.querySelector('.annoWrap');
 
-                if (annoListBtnPos && annoList) {
-                    const parentRect = annoList.getBoundingClientRect();
+            if (annoListBtnPos && annoList) {
+                const parentRect = annoList.getBoundingClientRect();
 
-                    const relativeX = mouseX - parentRect.left;
-                    const relativeY = mouseY - parentRect.top;
+                const relativeX = mouseX - parentRect.left;
+                const relativeY = mouseY - parentRect.top;
 
-                    annoListBtnPos.style.top = relativeY + 'px';
-                    annoListBtnPos.style.left = relativeX + 'px';
-                }
-
-                const annoListCheck = e.target;
-                const list = annoListCheck.closest('li');
-
-                const annoListItems = Array.from(annoList.querySelectorAll('li'));
-                const annolistIndex = annoListItems.indexOf(list);
-
-                setAnnolistIndex(annolistIndex);
-                setAnnoBtnActive(true);
+                annoListBtnPos.style.top = relativeY + 'px';
+                annoListBtnPos.style.left = relativeX + 'px';
             }
+
+            const annoListCheck = e.target;
+            const list = annoListCheck.closest('li');
+
+            const annoListItems = Array.from(annoList.querySelectorAll('li'));
+            const annolistIndex = annoListItems.indexOf(list);
+
+            setAnnolistIndex(annolistIndex);
+            setAnnoBtnActive(true);
         }
     };
 
@@ -132,14 +130,14 @@ function AnnoList({ annoArr, setAnnoArr, annoListBtn, setAnnoListBtn, annoClick,
         setAnnoCorrectBoxOpen(false);
 
         const updatedArr = annoArr.filter((_, index) => index !== annolistIndex);
-        const newAnnoArr = updatedArr.map((anno) => 
+        const newAnnoArr = updatedArr.map((anno) =>
             anno.index > annolistIndex + 1
                 ? { ...anno, index: anno.index - 1 }
                 : anno
         );
         newAnnoArr.sort((a, b) => a.index - b.index);
         setAnnoArr(newAnnoArr);
-    
+
         localStorage.setItem('writeAnno', JSON.stringify(newAnnoArr));
         setAnnoRemoveNumbering(annolistIndex);
 
@@ -158,13 +156,17 @@ function AnnoList({ annoArr, setAnnoArr, annoListBtn, setAnnoListBtn, annoClick,
         annoListCorrect.current.style.height = annoListCorrect.current.scrollHeight + 'px';
     }
 
-    const annoLink = (e) => {
-        if (annoCorrectKey === false) {
-            navigate('/components/AnnoLink');
-        } else {
-            e.preventDefault();
-        }
+    const annoLinkBtn = () => {
+        navigate(`/components/annoLink`);
     }
+
+    useEffect(()=>{
+        document.querySelectorAll('·annoList_item').forEach((ele, index)=>{
+            ele.addEventListener('click', ()=>{
+                
+            });
+        });
+    }, [])
 
     return (
 
@@ -172,20 +174,23 @@ function AnnoList({ annoArr, setAnnoArr, annoListBtn, setAnnoListBtn, annoClick,
             <button className="annotation_btn" onClick={annoListBtnActive}>
                 <i className='icon-list-bullet'></i>
             </button>
+            <button className="annotation_wide">
+                <i className='icon-resize-horizontal-1'></i>
+            </button>
             <ul className="annoList scroll" onContextMenu={annoBtn}>
 
                 {
                     annoArr.map(function (a, i) {
                         return (
                             <li key={i}>
-                                <Link to={`/components/AnnoLink`} onClick={(e) => { annoLink(e) }}>
+                                <div className="annoList_item">
                                     <span className="num">
                                         {annoArr[i].index})
                                     </span>
                                     <p className="anno_content">
                                         {annoArr[i].content}
                                     </p>
-                                </Link>
+                                </div>
                             </li>
                         )
 
@@ -195,8 +200,16 @@ function AnnoList({ annoArr, setAnnoArr, annoListBtn, setAnnoListBtn, annoClick,
 
             <div className='annoWrap'>
                 <div className={`anno_btn_list ${annoBtnActive === true ? 'active' : ''} `}>
-                    <button className="icon-vector-pencil" onClick={annoArrCorrect}></button>
-                    <button className="icon-trash" onClick={annoArrDelete}></button>
+
+                    {writeKey === true ? (
+                        <div className="anno_btn_wrap">
+                            <button className="icon-vector-pencil" onClick={annoArrCorrect}></button>
+                            <button className="icon-trash" onClick={annoArrDelete}></button>
+                        </div>
+                    ) : (
+                        <button className='icon-link' onClick={annoLinkBtn}></button>
+                    )}
+
                 </div>
             </div>
 

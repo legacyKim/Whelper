@@ -361,66 +361,6 @@ function Memo() {
         }
     }
 
-    // infinite scroll
-    var memoScrollArea = useRef();
-    var memoScrollPos = useRef();
-    var currentY = 0;
-    var previousY = 0;
-    var scrollAmount = 140;
-
-    const memoAreaCheck = () => {
-        var scY = window.innerHeight;
-        const memoScrollTop = memoScrollArea.current.getBoundingClientRect().top;
-        var memoAreaHeight = (scY - memoScrollTop) / scrollAmount;
-        memoScrollArea.current.style.height = Math.floor(memoAreaHeight) * scrollAmount + 'px';
-    }
-
-    const memoScrollMove = (e) => {
-
-        currentY = memoScrollArea.current.scrollTop;
-        if (e.deltaY > 0) {
-            currentY += scrollAmount;
-        } else {
-            currentY -= scrollAmount;
-        }
-        memoScrollArea.current.scrollTop = currentY;
-        previousY = currentY;
-
-        var scroll_num = Math.round(currentY / scrollAmount);
-
-        if (0 <= scroll_num && scroll_num < memoListArr.length - 5 && 5 < memoArr.length) {
-            memoScrollPos.current.style.top = `${scrollAmount * scroll_num}px`
-
-            var rows = [];
-            for (let i = scroll_num; i < scroll_num + 6; i += 1) {
-                if (memoArr[i] !== undefined) rows.push(memoArr[i])
-            }
-
-            setMemoReal(rows);
-
-        }
-
-    }
-
-    useEffect(() => {
-
-        memoAreaCheck();
-
-        const currentScrollArea = memoScrollArea.current;
-        currentScrollArea.addEventListener('wheel', memoScrollMove);
-
-        var rows = [];
-        for (let i = 0; i < 6; i += 1) {
-            if (memoArr[i] !== undefined) rows.push(memoArr[i]);
-        }
-        setMemoReal(rows)
-
-        return () => {
-            currentScrollArea.removeEventListener('wheel', memoScrollMove);
-        };
-    }, [memoArr]);
-    //// infinite scroll
-
     useEffect(() => {
         if (bookLocalStorage === null) {
             setBookTitle("전체")
@@ -431,7 +371,6 @@ function Memo() {
             setMemoArr(memoListArr.filter((item) => item.memoSource === bookTitle));
         }
         setMemoCurrent(null);
-        memoScrollPos.current.style.top = '0px';
     }, [bookTitle]);
 
     useEffect(() => {
@@ -592,7 +531,9 @@ function Memo() {
                             <i className='icon-book'></i>
                             <strong>{bookTitle}</strong>
                             <b onClick={(e) => refreshTitle(e)} className={`icon-cancel ${bookTitle !== '전체' ? 'active' : ''}`}></b>
-                            <b onClick={(e) => deleteBook(e)} className={`icon-trash hover_opacity ${bookTitle !== '전체' ? 'active' : ''}`}></b>
+                            {isAuth === true && (
+                                <b onClick={(e) => deleteBook(e)} className={`icon-trash hover_opacity ${bookTitle !== '전체' ? 'active' : ''}`}></b>
+                            )}
                         </div>
                         <div className={`book_list_box ${bookListActive ? bookListActive : ''}`}>
                             <ul className='scroll'>
@@ -617,20 +558,24 @@ function Memo() {
                             </ul>
                         </div>
                     </div>
-                    <div className={`memo_btn ${scrollPosition > 0 ? "scroll_event" : ""}`}>
-                        <button onClick={memoAddOn} className='icon-pencil-alt'></button>
-                        <button onClick={bookAddOn} className='icon-book-2'></button>
-                    </div>
+                    {isAuth === true && (
+                        <div className={`memo_btn ${scrollPosition > 0 ? "scroll_event" : ""}`}>
+                            <button onClick={memoAddOn} className='icon-pencil-alt'></button>
+                            <button onClick={bookAddOn} className='icon-book-2'></button>
+                        </div>
+                    )}
                 </div>
 
-                <div className='memo_scroll' ref={memoScrollArea}>
-                    <div className={`memo_wrap`} ref={memoScrollPos}>
+                <div className='memo_scroll'>
+                    <div className={`memo_wrap`}>
                         {
                             memoReal.map(function (a, i) {
                                 return (
                                     <div className='memo_content' key={i}>
                                         <div className='memoList_btn'>
-                                            <button className='icon-edit-alt' onClick={() => memoCorrectOn(a)}></button>
+                                            {isAuth === true && (
+                                                <button className='icon-edit-alt' onClick={() => memoCorrectOn(a)}></button>
+                                            )}
                                             {/* <button className='icon-trash' onClick={() => delMemoList(i)}></button> */}
                                         </div>
                                         <div className='memo_content_box'>
@@ -744,29 +689,31 @@ function Memo() {
                 {memo.memoAnnotation !== null && <MemoAnno memo={memo} />}
 
                 <div className='memoDetail_btn'>
-                    <div className='flex'>
-                        <button className='icon-flow-split' onClick={() => {
-                            setMemoAnnoActive('active');
-                            setAnnoCorrectActive('');
-                            setTextAreaHeight(null);
-                        }}></button>
+                    {isAuth === true && (
+                        <div className='flex'>
+                            <button className='icon-flow-split' onClick={() => {
+                                setMemoAnnoActive('active');
+                                setAnnoCorrectActive('');
+                                setTextAreaHeight(null);
+                            }}></button>
 
-                        {memo.id !== undefined && (
-                            <button className='icon-edit-alt'
-                                onClick={() => {
-                                    memoCorrectOn(memoCurrent);
-                                    memoDetailClose();
-                                }}></button>
-                        )}
-                        {memo.id !== undefined && (
-                            <button className='icon-trash'
-                                onClick={() => {
-                                    memoDeleteBtn(memoCurrent)
-                                    memoDetailClose();
-                                }}>
-                            </button>
-                        )}
-                    </div>
+                            {memo.id !== undefined && (
+                                <button className='icon-edit-alt'
+                                    onClick={() => {
+                                        memoCorrectOn(memoCurrent);
+                                        memoDetailClose();
+                                    }}></button>
+                            )}
+                            {memo.id !== undefined && (
+                                <button className='icon-trash'
+                                    onClick={() => {
+                                        memoDeleteBtn(memoCurrent)
+                                        memoDetailClose();
+                                    }}>
+                                </button>
+                            )}
+                        </div>
+                    )}
                     <button className='icon-cancel' onClick={() => {
                         memoDetailClose();
                         setAnnoCorrectActive('');

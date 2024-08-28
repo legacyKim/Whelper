@@ -298,8 +298,6 @@ function WriteCorrect() {
     const { annoListBtn, setAnnoListBtn, annoClick, setAnnoClick } = useContext(MyContext);
     const [annoArr, setAnnoArr] = useState((writeContent !== undefined) ? JSON.parse(writeContent.anno) : JSON.parse(correctAnnoLs));
 
-    console.log(annoArr);
-
     const [annoContent, setAnnoContent] = useState('');
     const [annoLengthState, setAnnoLengthState] = useState(writeContent !== undefined ? writeContent.anno.length : JSON.parse(correctAnnoLs).length);
 
@@ -387,7 +385,7 @@ function WriteCorrect() {
         
     );
 
-    const annoCorrectKey = true;
+    const writeKey = true;
 
     return (
         <div className='Write'>
@@ -434,7 +432,6 @@ function WriteCorrect() {
 
                         var annoLengthCheck = document.querySelectorAll('.editor_anno');
                         setAnnoLengthState(annoLengthCheck.length);
-                      
                     }
                 }}>
 
@@ -521,7 +518,7 @@ function WriteCorrect() {
                 <button className='icon-ok-circled write_btn_save' onClick={() => { popupClick(); }}></button>
             </div>
 
-            <AnnoList annoArr={annoArr} setAnnoArr={setAnnoArr} annoListBtn={annoListBtn} setAnnoListBtn={setAnnoListBtn} annoClick={annoClick} setAnnoClick={setAnnoClick} annoCorrectKey={annoCorrectKey} setAnnoRemoveNumbering={setAnnoRemoveNumbering} anno_numbering={anno_numbering} />
+            <AnnoList annoArr={annoArr} setAnnoArr={setAnnoArr} annoListBtn={annoListBtn} setAnnoListBtn={setAnnoListBtn} annoClick={annoClick} setAnnoClick={setAnnoClick} setAnnoRemoveNumbering={setAnnoRemoveNumbering} writeKey={writeKey} />
 
             {/* category popup */}
             <div className={`popup ${popupActive ? popupActive : ""}`}>

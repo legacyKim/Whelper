@@ -249,6 +249,7 @@ function Write() {
     const [annoLengthState, setAnnoLengthState] = useState(annoArrLs !== null ? annoArrLs.length : 0);
 
     const [annoAddActive, setAnnoAddActive] = useState('');
+    const [annoRemoveNumbering, setAnnoRemoveNumbering] = useState(-1);
     //// anno save
 
     // content and local storage change
@@ -331,18 +332,20 @@ function Write() {
     const { annoSaveBtn, anno_numbering, annoRemove, toolbarClose, annoTextboxOpen, annoTextboxClose, onlyAnnoClose } = useAnno(
         editor,
         annoContent, setAnnoContent,
-        setAnnoListBtn, setAnnoClick, annoArr, setAnnoArr, setAnnoLengthState,
+        setAnnoListBtn, setAnnoClick, annoArr, setAnnoArr, annoLengthState, setAnnoLengthState,
         annoAddActive, setAnnoAddActive,
         annoTextboxActive, setAnnoTextboxActive,
         toolbarActive, setToolbarActive,
-        onlyAnno, setOnlyAnno
+        onlyAnno, setOnlyAnno,
+        annoRemoveNumbering, setAnnoRemoveNumbering,
+
     );
 
-    const annoCorrectKey = true;
-
-    useEffect(()=>{
+    useEffect(() => {
         localStorage.setItem('writeAnno', JSON.stringify(annoArr));
     }, [annoArr])
+
+    const writeKey = true;
 
     return (
 
@@ -389,32 +392,7 @@ function Write() {
                         setEditorValue(value)
 
                         var annoLengthCheck = document.querySelectorAll('.editor_anno');
-                        if (annoLengthCheck.length < annoLengthState) {
-
-                            const currentAnnoNums = Array.from(annoLengthCheck).map(
-                                (element) => element.getAttribute('anno-data-num')
-                            ).map(Number);
-
-                            const deletedAnnoNums = annoArr
-                                .map(anno => anno.index)
-                                .filter(index => !currentAnnoNums.includes(index));
-
-                            const deletedNum = deletedAnnoNums[0];
-
-                            const updatedAnnoArr = annoArr
-                                .filter(anno => currentAnnoNums.includes(anno.index))
-                                .map(anno =>
-                                    anno.index > deletedNum
-                                        ? { ...anno, index: anno.index - 1 }
-                                        : anno
-                                );
-
-                            localStorage.setItem('writeAnno', JSON.stringify(updatedAnnoArr));
-
-                            anno_numbering();
-                            setAnnoArr(updatedAnnoArr);
-                            setAnnoLengthState(annoLengthCheck.length);
-                        }
+                        setAnnoLengthState(annoLengthCheck.length);
                     }
                 }}>
 
@@ -520,7 +498,7 @@ function Write() {
                 </div>
             </div>
 
-            <AnnoList annoArr={annoArr} setAnnoArr={setAnnoArr} annoListBtn={annoListBtn} setAnnoListBtn={setAnnoListBtn} annoClick={annoClick} setAnnoClick={setAnnoClick} annoCorrectKey={annoCorrectKey} />
+            <AnnoList annoArr={annoArr} setAnnoArr={setAnnoArr} annoListBtn={annoListBtn} setAnnoListBtn={setAnnoListBtn} annoClick={annoClick} setAnnoClick={setAnnoClick} setAnnoRemoveNumbering={setAnnoRemoveNumbering} writeKey={writeKey} />
 
         </div>
     )

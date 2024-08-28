@@ -28,6 +28,7 @@ const useAnno = (
 
         var latest_index;
         anno_num.forEach((element, index) => {
+            
             element.setAttribute('anno-data-num', `${index + 1}`);
             element.style.setProperty('--anno-num', `'${index + 1})'`);
 
@@ -38,6 +39,8 @@ const useAnno = (
             if (!element.dataset.eventRegistered) {
                 element.addEventListener('click', (e) => {
                     e.preventDefault();
+                    element.classList.remove('active');
+
                     setAnnoListBtn(true);
                     setAnnoClick(Number(element.getAttribute('anno-data-num')));
                 });
