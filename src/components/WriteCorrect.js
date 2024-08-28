@@ -298,10 +298,13 @@ function WriteCorrect() {
     const { annoListBtn, setAnnoListBtn, annoClick, setAnnoClick } = useContext(MyContext);
     const [annoArr, setAnnoArr] = useState((writeContent !== undefined) ? JSON.parse(writeContent.anno) : JSON.parse(correctAnnoLs));
 
+    console.log(annoArr);
+
     const [annoContent, setAnnoContent] = useState('');
     const [annoLengthState, setAnnoLengthState] = useState(writeContent !== undefined ? writeContent.anno.length : JSON.parse(correctAnnoLs).length);
 
     const [annoAddActive, setAnnoAddActive] = useState('');
+    const [annoRemoveNumbering, setAnnoRemoveNumbering] = useState(-1);
     //// anno save
 
     // content and local storage change
@@ -375,11 +378,13 @@ function WriteCorrect() {
     const { annoSaveBtn, anno_numbering, annoRemove, toolbarClose, annoTextboxOpen, annoTextboxClose, onlyAnnoClose } = useAnno(
         editor,
         annoContent, setAnnoContent,
-        setAnnoListBtn, setAnnoClick, annoArr, setAnnoArr, setAnnoLengthState,
+        setAnnoListBtn, setAnnoClick, annoArr, setAnnoArr, annoLengthState, setAnnoLengthState,
         annoAddActive, setAnnoAddActive,
         annoTextboxActive, setAnnoTextboxActive,
         toolbarActive, setToolbarActive,
-        onlyAnno, setOnlyAnno
+        onlyAnno, setOnlyAnno,
+        annoRemoveNumbering, setAnnoRemoveNumbering,
+        
     );
 
     const annoCorrectKey = true;
@@ -428,30 +433,8 @@ function WriteCorrect() {
                         setEditorValue(value)
 
                         var annoLengthCheck = document.querySelectorAll('.editor_anno');
-                        if (annoLengthCheck.length < annoLengthState) {
-
-                            const currentAnnoNums = Array.from(annoLengthCheck).map(
-                                (element) => element.getAttribute('anno-data-num')
-                            ).map(Number);
-
-                            const deletedAnnoNums = annoArr
-                                .map(anno => anno.index)
-                                .filter(index => !currentAnnoNums.includes(index));
-
-                            const deletedNum = deletedAnnoNums[0];
-
-                            const updatedAnnoArr = annoArr
-                                .filter(anno => currentAnnoNums.includes(anno.index))
-                                .map(anno =>
-                                    anno.index > deletedNum
-                                        ? { ...anno, index: anno.index - 1 }
-                                        : anno
-                                );
-
-                            anno_numbering();
-                            setAnnoArr(updatedAnnoArr);
-                            setAnnoLengthState(annoLengthCheck.length);
-                        }
+                        setAnnoLengthState(annoLengthCheck.length);
+                      
                     }
                 }}>
 
@@ -538,7 +521,7 @@ function WriteCorrect() {
                 <button className='icon-ok-circled write_btn_save' onClick={() => { popupClick(); }}></button>
             </div>
 
-            <AnnoList annoArr={annoArr} setAnnoArr={setAnnoArr} annoListBtn={annoListBtn} setAnnoListBtn={setAnnoListBtn} annoClick={annoClick} setAnnoClick={setAnnoClick} annoCorrectKey={annoCorrectKey} />
+            <AnnoList annoArr={annoArr} setAnnoArr={setAnnoArr} annoListBtn={annoListBtn} setAnnoListBtn={setAnnoListBtn} annoClick={annoClick} setAnnoClick={setAnnoClick} annoCorrectKey={annoCorrectKey} setAnnoRemoveNumbering={setAnnoRemoveNumbering} anno_numbering={anno_numbering} />
 
             {/* category popup */}
             <div className={`popup ${popupActive ? popupActive : ""}`}>

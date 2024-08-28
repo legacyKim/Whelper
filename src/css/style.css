@@ -408,7 +408,7 @@ button i { transition: all 0.3s ease-in-out; }
 .annotation_list .annoList li a { display: flex; justify-content: flex-start; align-items: flex-start; transition: all 0.3s ease-in-out; width: 100%; } 
 .annotation_list .annoList li a:hover span, .annotation_list .annoList li a:hover p { color: var(--hover-v2-color); } 
 .annotation_list .annoList li.correct { } 
-.annotation_list .annoList li a span { margin-top: 4px; font-size: 12px; font-weight: 400; min-width: 13px; } 
+.annotation_list .annoList li a span { margin-top: 3px; font-size: 12px; font-weight: 400; min-width: 13px; } 
 .annotation_list .annoList li a p { font-size: 13px; font-weight: 400; line-height: 1.6; white-space: pre-line; margin-left: 4px; } 
 .annotation_list .annoList li:last-child { margin-bottom: 0; } 
 
@@ -450,6 +450,6 @@ button i { transition: all 0.3s ease-in-out; }
 .annolink .annolink_dot { min-width: 4px; height: 4px; border-radius: 50%; background-color: var(--main-color); margin-top: 5px; margin-right: 6px; } 
 .annolink .title { font-size: 13px; font-weight: 400; line-height: 1.4; color: var(--font-color); margin-bottom: 12px; } 
 .annolink a { display: flex; justify-content: flex-start; align-items: baseline; margin-bottom: 6px; } 
-.annolink a::before { content: var(--anno-link-num); font-size: 12px; font-size: 13px; font-weight: 400; line-height: 1.4; color: var(--font-color); margin-right: 4px; min-width: 18px; } 
+.annolink a::before { content: var(--anno-link-num); font-size: 10px; font-weight: 400; line-height: 1.4; color: var(--font-color); margin-right: 4px; min-width: 18px; position: relative; top: -2px; } 
 .annolink a span { font-size: 13px; font-weight: 400; line-height: 1.4; color: var(--font-color); margin-right: 8px; } 
 .annolink a:hover span { color: var(--hover-color); } 

@@ -5,11 +5,12 @@ import { ReactEditor } from 'slate-react'
 const useAnno = (
     editor,
     annoContent, setAnnoContent,
-    setAnnoListBtn, setAnnoClick, annoArr, setAnnoArr, setAnnoLengthState,
+    setAnnoListBtn, setAnnoClick, annoArr, setAnnoArr, annoLengthState, setAnnoLengthState,
     annoAddActive, setAnnoAddActive,
     annoTextboxActive, setAnnoTextboxActive,
     toolbarActive, setToolbarActive,
-    onlyAnno, setOnlyAnno
+    onlyAnno, setOnlyAnno,
+    annoRemoveNumbering, setAnnoRemoveNumbering,
 ) => {
 
     useEffect(() => {
@@ -104,6 +105,35 @@ const useAnno = (
         });
     }, []);
 
+    useEffect(() => {
+        const annoElements = document.querySelectorAll('.editor_anno');
+
+        if (annoRemoveNumbering > -1) {
+            annoElements.forEach((element) => {
+                if (Number(element.getAttribute('anno-data-num')) === annoRemoveNumbering + 1) {
+
+                    element.classList.remove('editor_anno');
+                    element.classList.remove('editing');
+
+                    element.dataset.eventRegistered = false;
+
+                    element.removeAttribute('anno-data-num');
+                    const annoNumStyle = element.style.getPropertyValue('--anno-num');
+                    if (annoNumStyle) {
+                        element.style.removeProperty('--anno-num');
+                    }
+
+                    // 인식이 가능한가?
+                    Editor.removeMark(editor, 'annotation', { at: element });
+
+                }
+            });
+        }
+        anno_numbering();
+        setAnnoRemoveNumbering(-1);
+
+    }, [annoRemoveNumbering]);
+
     const annoRemove = () => {
 
         Editor.removeMark(editor, 'annotation');
@@ -132,7 +162,33 @@ const useAnno = (
                 }
             });
         }
+
+        anno_numbering();
     }
+
+    useEffect(() => {
+        var annoLengthCheck = document.querySelectorAll('.editor_anno');
+        const currentAnnoNums = Array.from(annoLengthCheck).map(
+            (element) => element.getAttribute('anno-data-num')
+        ).map(Number);
+
+        const deletedAnnoNums = annoArr
+            .map(anno => anno.index)
+            .filter(index => !currentAnnoNums.includes(index));
+
+        const deletedNum = deletedAnnoNums[0];
+
+        const updatedAnnoArr = annoArr
+            .filter(anno => currentAnnoNums.includes(anno.index))
+            .map(anno =>
+                anno.index > deletedNum
+                    ? { ...anno, index: anno.index - 1 }
+                    : anno
+            );
+
+        anno_numbering();
+        setAnnoArr(updatedAnnoArr);
+    }, [annoLengthState])
 
     const toolbarClose = (e) => {
 

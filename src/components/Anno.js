@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { NavLink, useNavigate, Link, useLocation } from "react-router-dom";
 
-function AnnoList({ annoArr, setAnnoArr, annoListBtn, setAnnoListBtn, annoClick, annoCorrectKey }) {
+function AnnoList({ annoArr, setAnnoArr, annoListBtn, setAnnoListBtn, annoClick, annoCorrectKey, setAnnoRemoveNumbering, anno_numbering }) {
 
     const navigate = useNavigate();
 
@@ -26,7 +26,7 @@ function AnnoList({ annoArr, setAnnoArr, annoListBtn, setAnnoListBtn, annoClick,
         })
     }, [annoClick]);
 
-    const [annolistIndex, setAnnolistIndex] = useState();;
+    const [annolistIndex, setAnnolistIndex] = useState();
 
     const annoBtn = (e) => {
         e.preventDefault();
@@ -132,9 +132,16 @@ function AnnoList({ annoArr, setAnnoArr, annoListBtn, setAnnoListBtn, annoClick,
         setAnnoCorrectBoxOpen(false);
 
         const updatedArr = annoArr.filter((_, index) => index !== annolistIndex);
-        setAnnoArr(updatedArr);
-
-        localStorage.setItem('writeAnno', JSON.stringify(updatedArr));
+        const newAnnoArr = updatedArr.map((anno) => 
+            anno.index > annolistIndex + 1
+                ? { ...anno, index: anno.index - 1 }
+                : anno
+        );
+        newAnnoArr.sort((a, b) => a.index - b.index);
+        setAnnoArr(newAnnoArr);
+    
+        localStorage.setItem('writeAnno', JSON.stringify(newAnnoArr));
+        setAnnoRemoveNumbering(annolistIndex);
 
     }
 
@@ -161,7 +168,7 @@ function AnnoList({ annoArr, setAnnoArr, annoListBtn, setAnnoListBtn, annoClick,
 
     return (
 
-        <div className={`annotation_list ${annoListBtn === true ? 'active' : ''} `} onClick={()=>{setAnnoBtnActive(false)}}>
+        <div className={`annotation_list ${annoListBtn === true ? 'active' : ''} `} onClick={() => { setAnnoBtnActive(false) }}>
             <button className="annotation_btn" onClick={annoListBtnActive}>
                 <i className='icon-list-bullet'></i>
             </button>
@@ -171,7 +178,7 @@ function AnnoList({ annoArr, setAnnoArr, annoListBtn, setAnnoListBtn, annoClick,
                     annoArr.map(function (a, i) {
                         return (
                             <li key={i}>
-                                <Link to={`/components/AnnoLink`} onClick={(e)=>{annoLink(e)}}>
+                                <Link to={`/components/AnnoLink`} onClick={(e) => { annoLink(e) }}>
                                     <span className="num">
                                         {annoArr[i].index})
                                     </span>
