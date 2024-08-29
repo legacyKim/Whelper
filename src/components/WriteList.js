@@ -24,7 +24,6 @@ function WriteList() {
     const writeListArr = writeListState.data.write.filter(item => item !== null) || [];
 
     const [writeArr, setWriteArr] = useState(writeListArr);
-    const [writeReal, setWriteReal] = useState(writeArr);
 
     useEffect(() => {
         setWriteArr(writeListArr)
@@ -36,10 +35,10 @@ function WriteList() {
                 <div className='write_list_scroll'>
                     <div className='write_list_wrap'>
                         {
-                            writeReal.map(function (a, i) {
+                            writeArr.map(function (a, i) {
                                 return (
                                     <div key={i} className="WriteDiv">
-                                        <WriteShowContents i={i} writeListArr={writeReal} />
+                                        <WriteShowContents i={i} writeListArr={writeArr} />
                                     </div>
                                 )
                             })

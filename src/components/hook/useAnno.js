@@ -11,6 +11,8 @@ const useAnno = (
     toolbarActive, setToolbarActive,
     onlyAnno, setOnlyAnno,
     annoRemoveNumbering, setAnnoRemoveNumbering,
+    annoTextBox, setAnnoTextBox,
+    annoAddWrite
 ) => {
 
     useEffect(() => {
@@ -28,7 +30,7 @@ const useAnno = (
 
         var latest_index;
         anno_num.forEach((element, index) => {
-            
+
             element.setAttribute('anno-data-num', `${index + 1}`);
             element.style.setProperty('--anno-num', `'${index + 1})'`);
 
@@ -195,7 +197,7 @@ const useAnno = (
 
     const toolbarClose = (e) => {
 
-        if (annoTextboxActive === 'active' && annoContent === '') {
+        if (annoTextboxActive === 'active') {
             document.querySelectorAll('.editor_anno').forEach((ele) => {
                 if (!ele.classList.contains('editing')) {
                     const slatePath = ReactEditor.findPath(editor, ReactEditor.toSlateNode(editor, ele));
@@ -226,7 +228,18 @@ const useAnno = (
         setOnlyAnno('');
     }
 
-    return { annoSaveBtn, anno_numbering, annoRemove, toolbarClose, annoTextboxOpen, annoTextboxClose, onlyAnnoClose, annoArr };
+    const annoTextBoxChange = (e) => {
+        annoAddWrite.current.style.height = 'auto';
+        annoAddWrite.current.style.height = annoAddWrite.current.scrollHeight + 'px';
+    }
+
+    useEffect(() => {
+        if (annoTextBox !== undefined) {
+            annoAddWrite.current.style.height = annoTextBox + 'px';
+        }
+    }, [annoTextBox]);
+
+    return { annoSaveBtn, anno_numbering, annoRemove, toolbarClose, annoTextboxOpen, annoTextboxClose, onlyAnnoClose, annoTextBoxChange };
 };
 
 export default useAnno;

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { NavLink, useNavigate, Link, useLocation } from "react-router-dom";
 
-function AnnoList({ annoArr, setAnnoArr, annoListBtn, setAnnoListBtn, annoClick, setAnnoRemoveNumbering, writeKey }) {
+function AnnoList({ id, annoArr, setAnnoArr, annoListBtn, setAnnoListBtn, annoClick, setAnnoClick, setAnnoRemoveNumbering, annoString, setAnnoString, writeKey }) {
 
     const navigate = useNavigate();
 
@@ -54,6 +54,7 @@ function AnnoList({ annoArr, setAnnoArr, annoListBtn, setAnnoListBtn, annoClick,
             const annoListItems = Array.from(annoList.querySelectorAll('li'));
             const annolistIndex = annoListItems.indexOf(list);
 
+            setAnnoString(e.target.innerHTML);
             setAnnolistIndex(annolistIndex);
             setAnnoBtnActive(true);
         }
@@ -144,7 +145,6 @@ function AnnoList({ annoArr, setAnnoArr, annoListBtn, setAnnoListBtn, annoClick,
     }
 
     const [textAreaHeight, setTextAreaHeight] = useState();
-
     useEffect(() => {
         if (textAreaHeight !== undefined) {
             annoListCorrect.current.style.height = textAreaHeight + 'px';
@@ -157,16 +157,60 @@ function AnnoList({ annoArr, setAnnoArr, annoListBtn, setAnnoListBtn, annoClick,
     }
 
     const annoLinkBtn = () => {
-        navigate(`/components/annoLink`);
+        if (Number(id) !== 99999) {
+            navigate(`/components/annoLink`);
+        }
     }
 
-    useEffect(()=>{
-        document.querySelectorAll('·annoList_item').forEach((ele, index)=>{
-            ele.addEventListener('click', ()=>{
-                
+    useEffect(() => {
+        document.querySelectorAll('.anno_content').forEach((ele, index) => {
+            ele.addEventListener('click', () => {
+                setAnnoClick(index + 1);
+            });
+            ele.addEventListener('contextmenu', () => {
+                setAnnoClick(index + 1);
             });
         });
-    }, [])
+    }, []);
+
+    useEffect(() => {
+        document.querySelectorAll('.anno_content').forEach((ele, index) => {
+            ele.closest('li').classList.remove('active');
+            if (annoString === ele.innerHTML) {
+                ele.closest('li').classList.add('active');
+                setAnnoClick(index+1);
+            }
+        });
+    }, [annoString])
+
+    // annoList Wide adjust
+    const annoListArea = document.querySelector('.annotation_list');
+    let x = 0;
+    const [annoListWidth, setAnnoListWidth] = useState(266);
+
+    const mouseDownHandler = function (e) {
+
+        x = e.clientX;
+
+        document.addEventListener('mousemove', mouseMoveHandler);
+        document.addEventListener('mouseup', mouseUpHandler);
+    };
+
+    const mouseMoveHandler = function (e) {
+        const dx = e.clientX - x;
+        const newAnnoListWidth = annoListWidth - dx;
+
+        annoListArea.style.minWidth = `${newAnnoListWidth}px`;
+        annoListArea.style.maxWidth = `${newAnnoListWidth}px`;
+        annoListArea.style.right = `-${newAnnoListWidth}px`;
+    };
+
+    const mouseUpHandler = function () {
+        setAnnoListWidth(annoListArea.getBoundingClientRect().width);
+        document.removeEventListener('mousemove', mouseMoveHandler);
+        document.removeEventListener('mouseup', mouseUpHandler);
+    };
+    //// annoList Wide adjust
 
     return (
 
@@ -174,9 +218,12 @@ function AnnoList({ annoArr, setAnnoArr, annoListBtn, setAnnoListBtn, annoClick,
             <button className="annotation_btn" onClick={annoListBtnActive}>
                 <i className='icon-list-bullet'></i>
             </button>
-            <button className="annotation_wide">
-                <i className='icon-resize-horizontal-1'></i>
-            </button>
+            {annoListBtn === true && (
+                <button className="annotation_wide" id='annoWideBtn' onMouseDown={mouseDownHandler}>
+                    <i className='icon-resize-horizontal'></i>
+                </button>
+            )}
+
             <ul className="annoList scroll" onContextMenu={annoBtn}>
 
                 {

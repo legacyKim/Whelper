@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useContext } from 'react';
+import React, { useRef, useState, useEffect, useCallback, useContext } from 'react';
 import { useDispatch, useSelector } from "react-redux"
 import { useParams, Link, useNavigate } from 'react-router-dom';
 
@@ -372,8 +372,9 @@ function WriteCorrect() {
         }
     };
     //// toolbar
-
-    const { annoSaveBtn, anno_numbering, annoRemove, toolbarClose, annoTextboxOpen, annoTextboxClose, onlyAnnoClose } = useAnno(
+    const annoAddWrite = useRef();
+    const [annoTextBox, setAnnoTextBox,] = useState();
+    const { annoSaveBtn, anno_numbering, annoRemove, toolbarClose, annoTextboxOpen, annoTextboxClose, onlyAnnoClose, annoTextBoxChange } = useAnno(
         editor,
         annoContent, setAnnoContent,
         setAnnoListBtn, setAnnoClick, annoArr, setAnnoArr, annoLengthState, setAnnoLengthState,
@@ -382,8 +383,10 @@ function WriteCorrect() {
         toolbarActive, setToolbarActive,
         onlyAnno, setOnlyAnno,
         annoRemoveNumbering, setAnnoRemoveNumbering,
-        
+        annoTextBox, setAnnoTextBox,
+        annoAddWrite
     );
+
 
     const writeKey = true;
 
@@ -473,9 +476,12 @@ function WriteCorrect() {
                         </button>
                     </div>
                     <div className={`anno_add ${annoTextboxActive ? annoTextboxActive : ""}`}>
-                        <textarea className='scroll' placeholder='newAnnoComment'
+                        <textarea ref={annoAddWrite} placeholder='newAnnoComment'
                             value={annoContent}
-                            onChange={e => setAnnoContent(e.target.value)}>
+                            onChange={e => {
+                                setAnnoContent(e.target.value)
+                                annoTextBoxChange();
+                            }}>
                         </textarea>
 
                         <div className='anno_add_btn flex-end'>

@@ -145,6 +145,7 @@ function App() {
     // anno ui
     const [annoListBtn, setAnnoListBtn] = useState(false);
     const [annoClick, setAnnoClick] = useState();
+    const [annoString, setAnnoString] = useState();
     //// anno ui
 
     // default right click, copy
@@ -173,7 +174,7 @@ function App() {
 
     return (
 
-        <MyContext.Provider value={{ searchArr, setSearchArr, scrollPosition, setScrollPosition, isAuth, setAuth, annoListBtn, setAnnoListBtn, annoClick, setAnnoClick }}>
+        <MyContext.Provider value={{ searchArr, setSearchArr, scrollPosition, setScrollPosition, isAuth, setAuth, annoListBtn, setAnnoListBtn, annoClick, setAnnoClick, annoString, setAnnoString }}>
             <div id='app' className={`App ${theme}`}>
 
                 <ToastContainer />

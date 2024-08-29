@@ -36,7 +36,6 @@ function Memo() {
     const bookListArr = bookListState.data.book || [];
 
     const [memoArr, setMemoArr] = useState(memoListArr);
-    const [memoReal, setMemoReal] = useState(memoArr);
 
     useEffect(() => {
         setMemoArr(memoListArr)
@@ -231,19 +230,16 @@ function Memo() {
                 dispatch(syncBookListDataAdd({ memoSource, memoAuthor }));
                 dispatch(bookListDataPost({ memoSource, memoAuthor }));
             } else {
-                for (const key in memoListArr) {
-                    const item = memoListArr[key];
-                    if (item.memoSource !== memoSource) {
-                        dispatch(syncBookListDataAdd({ memoSource, memoAuthor }));
-                        dispatch(bookListDataPost({ memoSource, memoAuthor }));
-                        break;
-                    } else {
-                        break;
-                    }
+                const sourceExists = memoListArr.some((ele) => ele.memoSource === memoSource);
+                console.log(sourceExists);
+                if (!sourceExists) {
+                    dispatch(syncBookListDataAdd({ memoSource, memoAuthor }));
+                    dispatch(bookListDataPost({ memoSource, memoAuthor }));
                 }
             }
 
             setMemoCurrent(null);
+
         }
 
     };
@@ -319,6 +315,17 @@ function Memo() {
             dispatch(syncMemoListDataUpdate({ id, memoSource, memoAuthor, memoComment, memoAnnotation }));
             dispatch(memoListDataUpdate({ id, memoSource, memoAuthor, memoComment }));
 
+            if (memoListArr.length === 0) {
+                dispatch(syncBookListDataAdd({ memoSource, memoAuthor }));
+                dispatch(bookListDataPost({ memoSource, memoAuthor }));
+            } else {
+                const sourceExists = memoListArr.some((ele) => ele.memoSource === memoSource);
+                if (!sourceExists) {
+                    dispatch(syncBookListDataAdd({ memoSource, memoAuthor }));
+                    dispatch(bookListDataPost({ memoSource, memoAuthor }));
+                }
+            }
+
             setMemoCurrent({ id, memoSource, memoAuthor, memoComment, memoAnnotation });
 
             setMemoCorrectActive('');
@@ -375,11 +382,12 @@ function Memo() {
 
     useEffect(() => {
         newMemoComment.current.value = null;
-        setMemoArr(memoListArr)
+        // setMemoArr(memoListArr)
 
         if (memoRecord !== 'active') {
             newMemoSource.current.value = null;
             newMemoAuthor.current.value = null;
+            memoAddClose();
         }
 
         if (bookLocalStorage === null) {
@@ -525,11 +533,11 @@ function Memo() {
 
         <div className='common_page'>
             <div className='content_area reverse'>
-                <div className='book_list_pos'>
+                <div className={`book_list_pos ${isAuth === true ? 'auth' : ''}`}>
                     <div className='book_list'>
                         <div className={`book_list_current ${scrollPosition > 0 ? "scroll_event" : ""}`} onClick={bookListOn}>
                             <i className='icon-book'></i>
-                            <strong>{bookTitle}</strong>
+                            <strong className={`${bookListActive ? bookListActive : ''}`}>{bookTitle}</strong>
                             <b onClick={(e) => refreshTitle(e)} className={`icon-cancel ${bookTitle !== '전체' ? 'active' : ''}`}></b>
                             {isAuth === true && (
                                 <b onClick={(e) => deleteBook(e)} className={`icon-trash hover_opacity ${bookTitle !== '전체' ? 'active' : ''}`}></b>
@@ -566,10 +574,10 @@ function Memo() {
                     )}
                 </div>
 
-                <div className='memo_scroll'>
+                <div className={`memo_scroll ${isAuth === true ? 'auth' : ''}`}>
                     <div className={`memo_wrap`}>
                         {
-                            memoReal.map(function (a, i) {
+                            memoArr.map(function (a, i) {
                                 return (
                                     <div className='memo_content' key={i}>
                                         <div className='memoList_btn'>
@@ -579,10 +587,10 @@ function Memo() {
                                             {/* <button className='icon-trash' onClick={() => delMemoList(i)}></button> */}
                                         </div>
                                         <div className='memo_content_box'>
-                                            <p className='font_text' onClick={() => memoDetailOn(a)}>{memoReal[i].memoComment}</p>
+                                            <p className='font_text' onClick={() => memoDetailOn(a)}>{memoArr[i].memoComment}</p>
                                             <div className='memo_content_btn_box'>
-                                                <button onClick={() => bookFilter(i)}>{memoReal[i].memoSource}</button>
-                                                <span>{memoReal[i].memoAuthor}</span>
+                                                <button onClick={() => bookFilter(i)}>{memoArr[i].memoSource}</button>
+                                                <span>{memoArr[i].memoAuthor}</span>
                                             </div>
                                         </div>
                                     </div>

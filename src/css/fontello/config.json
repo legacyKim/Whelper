@@ -357,13 +357,13 @@
     {
       "uid": "815503841e980c848f55e0271deacead",
       "css": "link-2",
-      "code": 59438,
+      "code": 9873,
       "src": "entypo"
     },
     {
       "uid": "44b9e75612c5fad5505edd70d071651f",
       "css": "attach",
-      "code": 59439,
+      "code": 59160,
       "src": "entypo"
     },
     {
@@ -387,7 +387,7 @@
     {
       "uid": "41d534223ef447a01af3e2f629ec70eb",
       "css": "leaf",
-      "code": 59443,
+      "code": 57416,
       "src": "entypo"
     },
     {
@@ -513,25 +513,25 @@
     {
       "uid": "3db5347bd219f3bce6025780f5d9ef45",
       "css": "tag",
-      "code": 59429,
+      "code": 59259,
       "src": "fontawesome"
     },
     {
       "uid": "a3f89e106175a5c5c4e9738870b12e55",
       "css": "tags",
-      "code": 59430,
+      "code": 10067,
       "src": "fontawesome"
     },
     {
       "uid": "57a0ac800df728aad61a7cf9e12f5fef",
       "css": "flag",
-      "code": 59431,
+      "code": 59168,
       "src": "fontawesome"
     },
     {
       "uid": "0d6ab6194c0eddda2b8c9cedf2ab248e",
       "css": "attach-1",
-      "code": 59432,
+      "code": 10002,
       "src": "fontawesome"
     },
     {
@@ -543,7 +543,7 @@
     {
       "uid": "bf882b30900da12fca090d9796bc3030",
       "css": "mail",
-      "code": 59433,
+      "code": 10078,
       "src": "fontawesome"
     },
     {
@@ -578,14 +578,14 @@
     },
     {
       "uid": "38575a803c4da31ce20d77e1e1236bcb",
-      "css": "paper-plane",
+      "css": "paper-plane-1",
       "code": 61912,
       "src": "fontawesome"
     },
     {
       "uid": "19e7b342a5e6bd0cd86de6d6208486a4",
-      "css": "leaf",
-      "code": 59434,
+      "css": "leaf-1",
+      "code": 10150,
       "src": "fontawesome"
     },
     {
@@ -597,7 +597,7 @@
     {
       "uid": "875ab0f6d417223f6ec76ff7f0a4baed",
       "css": "tag-1",
-      "code": 59437,
+      "code": 57457,
       "src": "entypo"
     },
     {
@@ -609,13 +609,13 @@
     {
       "uid": "9bdc80f58999873c5a8079ad2d7f4143",
       "css": "cup",
-      "code": 59441,
+      "code": 3715,
       "src": "entypo"
     },
     {
       "uid": "2626e3a1bbcd90e45849af3b58a1d594",
       "css": "trash-1",
-      "code": 59442,
+      "code": 59291,
       "src": "entypo"
     },
     {
@@ -639,7 +639,7 @@
     {
       "uid": "3c73d058e4589b65a8d959c0fc8f153d",
       "css": "resize-horizontal-1",
-      "code": 59446,
+      "code": 951057,
       "src": "fontawesome"
     }
   ]

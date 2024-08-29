@@ -328,8 +328,9 @@ function Write() {
         }
     };
     //// toolbar
-
-    const { annoSaveBtn, anno_numbering, annoRemove, toolbarClose, annoTextboxOpen, annoTextboxClose, onlyAnnoClose } = useAnno(
+    const annoAddWrite = useRef();
+    const [annoTextBox, setAnnoTextBox] = useState();
+    const { annoSaveBtn, anno_numbering, annoRemove, toolbarClose, annoTextboxOpen, annoTextboxClose, onlyAnnoClose, annoTextBoxChange } = useAnno(
         editor,
         annoContent, setAnnoContent,
         setAnnoListBtn, setAnnoClick, annoArr, setAnnoArr, annoLengthState, setAnnoLengthState,
@@ -338,14 +339,15 @@ function Write() {
         toolbarActive, setToolbarActive,
         onlyAnno, setOnlyAnno,
         annoRemoveNumbering, setAnnoRemoveNumbering,
-
+        annoTextBox, setAnnoTextBox,
+        annoAddWrite
     );
 
+    const writeKey = true;
     useEffect(() => {
         localStorage.setItem('writeAnno', JSON.stringify(annoArr));
     }, [annoArr])
 
-    const writeKey = true;
 
     return (
 
@@ -434,9 +436,12 @@ function Write() {
                         </button>
                     </div>
                     <div className={`anno_add ${annoTextboxActive ? annoTextboxActive : ""}`}>
-                        <textarea className='scroll' placeholder='newAnnoComment'
+                        <textarea ref={annoAddWrite} placeholder='newAnnoComment'
                             value={annoContent}
-                            onChange={e => setAnnoContent(e.target.value)}>
+                            onChange={e => {
+                                setAnnoContent(e.target.value);
+                                annoTextBoxChange();
+                            }}>
                         </textarea>
 
                         <div className='anno_add_btn flex-end'>

@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
+import MyContext from '../context'
+
 import { useSelector, useDispatch } from 'react-redux';
 import { syncWriteListData, syncWriteListDataUpdate } from '../data/reducers.js';
 
@@ -80,6 +82,11 @@ function AnnoLink() {
         setWriteListAnnoArr(newArr);
     }, [writeListArr]);
 
+    const { annoString, setAnnoString } = useContext(MyContext);
+    const annoStringParams = (e) => {
+        setAnnoString(e.target.innerHTML)
+    }
+
     return (
         <div className='common_page'>
             <div className='content_area'>
@@ -108,9 +115,17 @@ function AnnoLink() {
         useEffect(() => {
             const annoLinkObj = document.querySelectorAll('.annolink a');
             for (var i = 0; i < annoLinkObj.length; i++) {
-                annoLinkObj[i].style.setProperty('--anno-link-num', `'${i + 1})'`);
+                annoLinkObj[i].style.setProperty('--anno-link-num', `'${i + 1} )'`);
             }
         }, []);
+
+        useEffect(() => {
+            document.querySelectorAll('.annolink a span').forEach((ele, index) => {
+                if (ele.innerHTML === annoString) {
+                    ele.closest('div').classList.add('active');
+                }
+            })
+        }, [annoString]);
 
         return (
             <div className={`annolink ${writeContent.hasOwnProperty('title') ? 'annolink_title' : ''}`}>
@@ -123,7 +138,7 @@ function AnnoLink() {
                 )}
 
                 {annoContent && (
-                    <Link to={`/components/WriteView/${writeContent.id}`}>
+                    <Link to={`/components/WriteView/${writeContent.id}`} onClick={(e) => annoStringParams(e)}>
                         <span>{annoContent}</span>
                     </Link>
                 )}

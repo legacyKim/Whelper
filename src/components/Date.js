@@ -68,7 +68,7 @@ function Date_sort() {
                 Object.keys(groupedData).map(date => (
                     <div className='date_box' key={date}>
                         <h2>{date}</h2>
-                        <ul className='list'>
+                        <ul className='data_list_wrap'>
                             {groupedData[date].map((item) => (
                                 <li className='date_list' key={item.id}>
                                     <WriteShowContents writeListArr={item} />

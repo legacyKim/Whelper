@@ -16,7 +16,7 @@ import { token_check } from '../data/token_check.js'
 
 function WriteView() {
 
-    const { isAuth } = useContext(MyContext);
+    const { isAuth, annoString, setAnnoString } = useContext(MyContext);
 
     const writeListState = useSelector((state) => state.WriteData);
     var writeListArr = writeListState.data.write || [];
@@ -138,6 +138,15 @@ function WriteView() {
         }
     }, [writeContent]);
 
+    useEffect(() => {
+        document.querySelectorAll('.editor_anno').forEach((ele, index) => {
+            ele.classList.remove('active');
+            if (index === annoClick - 1) {
+                ele.classList.add('active');
+            }
+        });
+    }, [annoClick]);
+
     const writeKey = false;
 
     return (
@@ -156,7 +165,7 @@ function WriteView() {
                         </div>
                     </div>
 
-                    <AnnoList annoArr={annoArr} annoListBtn={annoListBtn} setAnnoListBtn={setAnnoListBtn} annoClick={annoClick} setAnnoClick={setAnnoClick} writeKey={writeKey} />
+                    <AnnoList id={id} annoArr={annoArr} annoListBtn={annoListBtn} setAnnoListBtn={setAnnoListBtn} annoClick={annoClick} setAnnoClick={setAnnoClick} annoString={annoString} setAnnoString={setAnnoString} writeKey={writeKey} />
 
                     {isAuth === true && (
                         <div className='page_btn'>
