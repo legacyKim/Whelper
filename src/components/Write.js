@@ -5,14 +5,15 @@ import { Link } from 'react-router-dom';
 import { syncWriteListData } from "../data/reducers"
 import { writeListData, writeListDataPost, cateListData } from '../data/api.js';
 
-import { createEditor, Editor, Transforms, Text, Element as SlateElement, Node } from 'slate';
-import { Slate, Editable, withReact, ReactEditor } from 'slate-react'
-import escapeHtml from 'escape-html'
+import { createEditor, Editor, Element as SlateElement } from 'slate';
+import { Slate, Editable, withReact } from 'slate-react'
 
 import MyContext from '../context'
 import AnnoList from './Anno.js'
 
 import useAnno from './hook/useAnno.js';
+import serialize from './hook/serialize.js';
+import useSlateRender from './hook/useSlateRender.js'
 
 // slate editor
 const CustomEditor = {
@@ -94,51 +95,6 @@ const CustomEditor = {
 }
 //// slate editor
 
-// serial, deserial
-const serialize = nodes => {
-
-    return nodes.map(node => {
-
-        if (Text.isText(node)) {
-            let string = escapeHtml(node.text);
-            if (node.bold) {
-                string = `<strong>${string}</strong>`;
-            } else if (node.highlight) {
-                string = `<span class="editor_highlight">${string}</span>`;
-            } else if (node.underline) {
-                string = `<span class="editor_underline">${string}</span>`
-            } else if (node.quote) {
-                string = `<span class="editor_quote">${string}</span>`
-            } else if (node.annotation) {
-                string = `<span class="editor_anno editing">${string}</span>`
-            }
-            return string;
-        }
-
-        const children = serialize(node.children);
-
-        switch (node.type) {
-            case 'bold':
-                return `<strong>${children}</strong>`;
-            case 'underline':
-                return `<span class="editor_underline">${children}</span>`;
-            case 'highlight':
-                return `<span class="editor_highlight">${children}</span>`;
-            case 'quote':
-                return `<span class="editor_quote">${children}</span>`;
-            case 'annotation':
-                return `<span class="editor_anno editing">${children}</span>`;
-            case 'paragraph':
-                return `<p>${children}</p>`;
-            default:
-                return children;
-        }
-
-    }).join('');
-
-};
-//// serial, deserial
-
 function Write() {
 
     const dispatch = useDispatch();
@@ -194,53 +150,10 @@ function Write() {
     }, []);
     //// initial value....
 
-    const renderElement = useCallback(({ attributes, children, element }) => {
-        switch (element.type) {
-            case 'paragraph':
-                return <p {...attributes}>{children}</p>;
-            default:
-                return <div {...attributes}>{children}</div>;
-        }
-    }, []);
-
-    const renderLeaf = useCallback(({ attributes, children, leaf }) => {
-
-        let style = {};
-        let classNames = '';
-
-        if (leaf.bold) {
-            classNames = 'bold';
-        }
-        if (leaf.highlight) {
-            style.backgroundColor = 'linear-gradient(to top, rgba(255, 243, 150, 0.6) 95%, transparent 100%)';
-            classNames += ' editor_highlight';
-        }
-        if (leaf.underline) {
-            style.textDecoration = 'underline';
-            style.textUnderlinePosition = 'under';
-            classNames += ' editor_underline';
-        }
-        if (leaf.annotation) {
-            const anno_num = document.querySelectorAll('.editor_anno');
-            anno_num.forEach((element, index) => {
-                element.classList.remove('latest');
-            });
-            classNames += ' editor_anno';
-        }
-        if (leaf.quote) {
-            classNames += ' editor_quote';
-        }
-
-        return (
-            <span {...attributes} style={style} className={classNames.trim()}>
-                {children}
-            </span>
-        );
-    }, []);
-    //// slate text editor
+    const { renderElement, renderLeaf } = useSlateRender();
 
     // anno save
-    const { annoListBtn, setAnnoListBtn, annoClick, setAnnoClick } = useContext(MyContext);
+    const { annoListBtn, setAnnoListBtn, annoClick, setAnnoClick, annoString, setAnnoString } = useContext(MyContext);
 
     const [annoArrLs, setAnnoArrLs] = useState(JSON.parse(localStorage.getItem('writeAnno')));
     const [annoArr, setAnnoArr] = useState(annoArrLs !== null ? annoArrLs : []);
@@ -256,12 +169,11 @@ function Write() {
     const [keywordArr, setKeywordArr] = useState([]);
 
     const [edTitle, setEdTitle] = useState(titleValue);
-    localStorage.setItem('writeTitle', JSON.stringify(edTitle));
-
     const [edSubTitle, setEdSubTitle] = useState(subTitleValue);
-    localStorage.setItem('writeSubTitle', JSON.stringify(edSubTitle));
-
     const [editorValue, setEditorValue] = useState(contentValue);
+    
+    localStorage.setItem('writeTitle', JSON.stringify(edTitle));
+    localStorage.setItem('writeSubTitle', JSON.stringify(edSubTitle));
     localStorage.setItem('writeContent', JSON.stringify(editorValue));
     //// content and local storage change
 
@@ -328,6 +240,7 @@ function Write() {
         }
     };
     //// toolbar
+
     const annoAddWrite = useRef();
     const [annoTextBox, setAnnoTextBox] = useState();
     const { annoSaveBtn, anno_numbering, annoRemove, toolbarClose, annoTextboxOpen, annoTextboxClose, onlyAnnoClose, annoTextBoxChange } = useAnno(
@@ -482,6 +395,8 @@ function Write() {
             <div className='page_btn'>
                 <button className='icon-ok-circled write_btn_save' onClick={() => { popupClick(); }}></button>
             </div>
+            
+            <AnnoList annoArr={annoArr} setAnnoArr={setAnnoArr} annoListBtn={annoListBtn} setAnnoListBtn={setAnnoListBtn} annoClick={annoClick} setAnnoClick={setAnnoClick} setAnnoRemoveNumbering={setAnnoRemoveNumbering} annoString={annoString} setAnnoString={setAnnoString} writeKey={writeKey} />
 
             {/* category popup */}
             <div className={`popup ${popupActive ? popupActive : ""}`}>
@@ -502,9 +417,6 @@ function Write() {
                     <Link to={`/components/WriteView/${recentId}`} className='icon-ok-circled write_btn_save' onClick={() => { WriteSaveBtn(); }}></Link>
                 </div>
             </div>
-
-            <AnnoList annoArr={annoArr} setAnnoArr={setAnnoArr} annoListBtn={annoListBtn} setAnnoListBtn={setAnnoListBtn} annoClick={annoClick} setAnnoClick={setAnnoClick} setAnnoRemoveNumbering={setAnnoRemoveNumbering} writeKey={writeKey} />
-
         </div>
     )
 

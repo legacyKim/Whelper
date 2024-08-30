@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { NavLink, useNavigate, Link, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function AnnoList({ id, annoArr, setAnnoArr, annoListBtn, setAnnoListBtn, annoClick, setAnnoClick, setAnnoRemoveNumbering, annoString, setAnnoString, writeKey }) {
 
@@ -36,16 +36,16 @@ function AnnoList({ id, annoArr, setAnnoArr, annoListBtn, setAnnoListBtn, annoCl
             const mouseY = e.clientY;
 
             const annoList = document.querySelector('.annotation_list');
-            const annoListBtnPos = document.querySelector('.annoWrap');
+            const btnPos = document.querySelector('.btn_wrap_pos');
 
-            if (annoListBtnPos && annoList) {
+            if (btnPos && annoList) {
                 const parentRect = annoList.getBoundingClientRect();
 
                 const relativeX = mouseX - parentRect.left;
                 const relativeY = mouseY - parentRect.top;
 
-                annoListBtnPos.style.top = relativeY + 'px';
-                annoListBtnPos.style.left = relativeX + 'px';
+                btnPos.style.top = relativeY + 'px';
+                btnPos.style.left = relativeX + 'px';
             }
 
             const annoListCheck = e.target;
@@ -178,7 +178,7 @@ function AnnoList({ id, annoArr, setAnnoArr, annoListBtn, setAnnoListBtn, annoCl
             ele.closest('li').classList.remove('active');
             if (annoString === ele.innerHTML) {
                 ele.closest('li').classList.add('active');
-                setAnnoClick(index+1);
+                setAnnoClick(index + 1);
             }
         });
     }, [annoString])
@@ -245,16 +245,18 @@ function AnnoList({ id, annoArr, setAnnoArr, annoListBtn, setAnnoListBtn, annoCl
                 }
             </ul>
 
-            <div className='annoWrap'>
-                <div className={`anno_btn_list ${annoBtnActive === true ? 'active' : ''} `}>
+            <div className='btn_wrap_pos'>
+                <div className={`btn_list ${annoBtnActive === true ? 'active' : ''} `}>
 
                     {writeKey === true ? (
-                        <div className="anno_btn_wrap">
+                        <div className="btn_wrap">
                             <button className="icon-vector-pencil" onClick={annoArrCorrect}></button>
                             <button className="icon-trash" onClick={annoArrDelete}></button>
                         </div>
                     ) : (
-                        <button className='icon-link' onClick={annoLinkBtn}></button>
+                        <div className="btn_wrap">
+                            <button className='icon-link' onClick={annoLinkBtn}></button>
+                        </div>
                     )}
 
                 </div>

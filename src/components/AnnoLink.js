@@ -6,53 +6,10 @@ import MyContext from '../context'
 import { useSelector, useDispatch } from 'react-redux';
 import { syncWriteListData, syncWriteListDataUpdate } from '../data/reducers.js';
 
-import { createEditor, Editor, Transforms, Element } from 'slate';
+import { createEditor } from 'slate';
 import { Slate, Editable, withReact } from 'slate-react'
 
-const deserialize = (el, markAttributes = {}) => {
-
-    if (el.nodeType === 3) {
-        return { text: el.textContent, ...markAttributes };
-    } else if (el.nodeType !== 1) {
-        return null
-    }
-
-    const nodeAttributes = { ...markAttributes }
-
-    switch (el.nodeName) {
-        case 'STRONG':
-            nodeAttributes.bold = true
-            break;
-        case 'SPAN':
-            if (el.classList.contains('editor_highlight')) {
-                nodeAttributes.highlight = true;
-            } else if (el.classList.contains('editor_underline')) {
-                nodeAttributes.underline = true;
-            } else if (el.classList.contains('editor_quote')) {
-                nodeAttributes.quote = true;
-            } else if (el.classList.contains('editor_anno')) {
-                nodeAttributes.annotation = true;
-            }
-            break;
-    }
-
-    const children = Array.from(el.childNodes)
-        .map(node => deserialize(node, { ...nodeAttributes }))
-        .flat()
-
-    if (children.length === 0) {
-        children.push({ text: '', ...nodeAttributes });
-    }
-
-    switch (el.nodeName) {
-        case 'BODY':
-            return children;
-        case 'P':
-            return { type: 'paragraph', children };
-        default:
-            return children;
-    }
-}
+import deserialize from './hook/deserialize.js';
 
 function AnnoLink() {
 
@@ -60,6 +17,7 @@ function AnnoLink() {
     var writeListArr = writeListState.data.write || [];
 
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     useEffect(() => {
         dispatch(syncWriteListData());
@@ -85,19 +43,68 @@ function AnnoLink() {
     const { annoString, setAnnoString } = useContext(MyContext);
     const annoStringParams = (e) => {
         setAnnoString(e.target.innerHTML)
+        navigate(`/components/WriteView/${annoViewId}`)
     }
+
+    const [annoBtnActive, setAnnoBtnActive] = useState();
+    const [annoViewId, setAnnoViewId] = useState();
+
+    // toolbar
+    const annoBtn = (e) => {
+        e.preventDefault();
+        if (e._reactName === 'onContextMenu') {
+
+            const mouseX = e.clientX;
+            const mouseY = e.clientY;
+
+            const annoList = document.querySelector('.annolink_wrap');
+            const btnPos = document.querySelector('.btn_wrap_pos');
+
+            if (btnPos && annoList) {
+                const parentRect = annoList.getBoundingClientRect();
+
+                const relativeX = mouseX - parentRect.left;
+                const relativeY = mouseY - parentRect.top;
+
+                btnPos.style.top = relativeY + 'px';
+                btnPos.style.left = relativeX + 'px';
+            }
+
+            const annoListCheck = e.target;
+            const list = annoListCheck.closest('li');
+
+            console.log(list);
+
+            const annoListItems = Array.from(annoList.querySelectorAll('li'));
+            const annolistIndex = annoListItems.indexOf(list);
+
+            setAnnoViewId(1);
+            setAnnoString(e.target.innerHTML);
+            setAnnoBtnActive(true);
+        }
+    };
+    //// toolbar
+
 
     return (
         <div className='common_page'>
             <div className='content_area'>
-                <ul className="annolink_wrap">
+                <ul className="annolink_wrap" onContextMenu={(e) => annoBtn(e)} >
+
                     {writeListAnnoArr.map((a, i) => (
                         <AnnoLinkShow contentArr={a} key={i} />
                     ))}
+
+                    <div className='btn_wrap_pos'>
+                        <div className={`btn_list ${annoBtnActive === true ? 'active' : ''} `}>
+                            <div className="btn_wrap">
+                                <button className='icon-link' onClick={(e) => annoStringParams(e)}></button>
+                            </div>
+                        </div>
+                    </div>
                 </ul>
             </div>
         </div>
-
     )
 
     function AnnoLinkShow({ contentArr }) {
@@ -113,14 +120,14 @@ function AnnoLink() {
         const annoContent = writeContent.hasOwnProperty('anno') ? writeContent.anno : null;
 
         useEffect(() => {
-            const annoLinkObj = document.querySelectorAll('.annolink a');
+            const annoLinkObj = document.querySelectorAll('.annolink li');
             for (var i = 0; i < annoLinkObj.length; i++) {
                 annoLinkObj[i].style.setProperty('--anno-link-num', `'${i + 1} )'`);
             }
         }, []);
 
         useEffect(() => {
-            document.querySelectorAll('.annolink a span').forEach((ele, index) => {
+            document.querySelectorAll('.annolink li span').forEach((ele, index) => {
                 if (ele.innerHTML === annoString) {
                     ele.closest('div').classList.add('active');
                 }
@@ -128,7 +135,7 @@ function AnnoLink() {
         }, [annoString]);
 
         return (
-            <div className={`annolink ${writeContent.hasOwnProperty('title') ? 'annolink_title' : ''}`}>
+            <ul className={`annolink ${writeContent.hasOwnProperty('title') ? 'annolink_title' : ''}`}>
 
                 {writeContent.hasOwnProperty('title') && (
                     <Slate editor={titleEditor} initialValue={titleValue}>
@@ -138,12 +145,12 @@ function AnnoLink() {
                 )}
 
                 {annoContent && (
-                    <Link to={`/components/WriteView/${writeContent.id}`} onClick={(e) => annoStringParams(e)}>
+                    <li>
                         <span>{annoContent}</span>
-                    </Link>
+                    </li>
                 )}
 
-            </div>
+            </ul>
         );
     }
 }
