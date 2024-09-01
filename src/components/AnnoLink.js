@@ -81,7 +81,6 @@ function AnnoLink() {
     };
     //// toolbar
 
-
     return (
         <div className='common_page'>
             <div className='content_area'>

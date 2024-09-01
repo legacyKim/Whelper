@@ -323,11 +323,13 @@ button i { transition: all 0.3s ease-in-out; }
 
 /* date */
 .date_box { position: relative; display: block; margin-bottom: 24px; } 
-.date_box h2 { position: relative; display: flex; justify-content: flex-start; align-items: center; font-size: 14px; font-weight: 400; line-height: 1.4; color: var(--font-color); text-align: left; padding-bottom: 4px; } 
+.date_box h2 { position: relative; display: flex; justify-content: flex-start; align-items: center; font-size: 14px; font-weight: 400; line-height: 1.4; color: var(--font-color); text-align: left; padding-bottom: 8px; } 
 .date_box h2 i { position: relative; display: block; top: -2px; margin-right: 2px; } 
 .date_box .list { position: relative; display: flex; justify-content: flex-start; align-items: center; } 
 .date_box .list li a { border: 1px solid rgba(255, 255, 255, 0.30); padding-bottom: 0; } 
 .date_box .list li a:hover { box-shadow: 0px 0px 4px 2px var(--shadow-color); } 
+
+.data_list_wrap { margin-left: 16px; } 
 
 .date_list .view_common { padding: 8px 12px; padding-right: 0; margin-bottom: 4px; border-radius: 8px; transition: all 0.3s ease-in-out; } 
 .date_list .view_common:hover { background-color: var(--box-color); } 
@@ -345,7 +347,7 @@ button i { transition: all 0.3s ease-in-out; }
 .search.active { transform: translateX(-480px); } 
 .search_bg { position:absolute; top: 0; left: 0; width: 100%; height: 100%; filter: blur(1.5rem); } 
 .search_box { position: relative; display: flex; flex-direction: column; justify-content: flex-start; align-content: baseline; width: 100%; height: 100%; background: var(--box-color); z-index: 999; transition: all .3s ease-in-out; padding: 24px; } 
-.search_box>button { position: absolute; top: 29px; right: 18px; z-index: 9; font-size: 22px; font-weight: 700; color: var(--font-color); background: transparent; } 
+.search_box>button { position: absolute; top: 32px; right: 18px; z-index: 9; font-size: 18px; font-weight: 700; color: var(--font-color); background: transparent; } 
 .search_box>button:hover { color: var(--main-color); } 
 
 .search_list { padding-top: 12px; display:flex; flex-direction: column-reverse; } 
@@ -355,11 +357,11 @@ button i { transition: all 0.3s ease-in-out; }
 .search_list>li>div>button { font-size: 20px; margin-right: -6px; opacity:0.7; transition: all 0.3s ease-in-out; } 
 .search_list>li>div>button:hover { font-size: 20px; margin-right: -6px; opacity:1; } 
 
-.search_input { position: relative; display: flex; justify-content:flex-start; align-items: center; width: calc(100% - 19px); padding-left: 6px; margin-bottom: 12px; } 
+.search_input { position: relative; display: flex; justify-content:flex-start; align-items: center; width: calc(100% - 12px); padding-left: 6px; margin-bottom: 12px; } 
 .search_input_limit { width:40%; padding-left:0; } 
-.search_input input { padding: 4px 0 5px; font-size: 16px; font-weight: 700; line-height: 1.6; border-radius: 8px; color: var(--font-color); padding-left: 10px; margin-right:4px; width:calc(100% - 38px); background-color: var(--box-color); } 
-.search_toggle input { background: #fff; color: #121517; } 
-.search_input .search_input_btn { display: block; font-size: 21px; border-radius: 50%; transition: all 0.3s ease-in-out; color: var(--font-color); } 
+.search_input input { padding: 4px 0 5px; font-size: 16px; font-weight: 500; line-height: 1.6; border-radius: 8px; color: var(--font-color); padding-left: 10px; margin-right:4px; width:calc(100% - 36px); background-color: var(--box-color); } 
+.search_toggle input { color: var(--font-color); background-color: var(--background-color); } 
+.search_input .search_input_btn { display: block; font-size: 18px; border-radius: 50%; transition: all 0.3s ease-in-out; color: var(--font-color); } 
 .search_input .search_input_btn:hover { color: var(--main-color); } 
 .search_result_list { position:relative; display:block; } 
 .search_result_list>li>div { margin-bottom:12px; padding: 12px; background: var(--box-color); border-radius: 8px; } 
@@ -457,7 +459,7 @@ button i { transition: all 0.3s ease-in-out; }
 .anno_add textarea::-webkit-scrollbar { display: none; } 
 .anno_add_btn { position: absolute; top: 0; right: -26px; display: flex; flex-direction: column; align-items: center; } 
 
-.annolink_wrap { position: relative; display: flex; flex-direction: column; flex-wrap: wrap; height: calc(100vh - 138px); overflow-x: auto; place-self: flex-start; } 
+.annolink_wrap { position: relative; display: flex; flex-direction: column; flex-wrap: wrap; height: calc(100vh - 138px); overflow-x: auto; place-self: flex-start; padding-bottom: 10px; } 
 .annolink_wrap::-webkit-scrollbar { display: none; } 
 .annolink_wrap div.annolink:first-child .title { margin-top: 0; } 
 
