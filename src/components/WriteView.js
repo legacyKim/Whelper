@@ -138,15 +138,6 @@ function WriteView() {
         }
     }, [writeContent]);
 
-    useEffect(() => {
-        document.querySelectorAll('.editor_anno').forEach((ele, index) => {
-            ele.classList.remove('active');
-            if (index === annoClick - 1) {
-                ele.classList.add('active');
-            }
-        });
-    }, [annoClick]);
-
     const writeKey = false;
 
     return (

@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import MyContext from '../context'
 
 import { useSelector, useDispatch } from 'react-redux';
+import { writeListDataAnnoLink } from '../data/api.js';
 import { syncWriteListData, syncWriteListDataUpdate } from '../data/reducers.js';
 
 import { createEditor } from 'slate';
@@ -20,6 +21,7 @@ function AnnoLink() {
     const navigate = useNavigate();
 
     useEffect(() => {
+        dispatch(writeListDataAnnoLink());
         dispatch(syncWriteListData());
         dispatch(syncWriteListDataUpdate());
     }, [dispatch]);
@@ -28,21 +30,22 @@ function AnnoLink() {
     useEffect(() => {
         const newArr = [];
         writeListArr.forEach((ele) => {
-            newArr.push({ title: ele.title });
+            if (ele !== null) {
+                newArr.push({ title: ele.title });
 
-            const parsedAnno = JSON.parse(ele.anno);
-            const annoId = ele.id;
-            parsedAnno.forEach((annoItem) => {
-                newArr.push({ anno: annoItem.content, id: annoId });
-            });
+                const parsedAnno = JSON.parse(ele.anno);
+                const annoId = ele.id;
+                parsedAnno.forEach((annoItem) => {
+                    newArr.push({ anno: annoItem.content, id: annoId });
+                });
+            }
         });
 
         setWriteListAnnoArr(newArr);
     }, [writeListArr]);
 
     const { annoString, setAnnoString } = useContext(MyContext);
-    const annoStringParams = (e) => {
-        setAnnoString(e.target.innerHTML)
+    const annoStringParams = () => {
         navigate(`/components/WriteView/${annoViewId}`)
     }
 
@@ -52,6 +55,7 @@ function AnnoLink() {
     // toolbar
     const annoBtn = (e) => {
         e.preventDefault();
+
         if (e._reactName === 'onContextMenu') {
 
             const mouseX = e.clientX;
@@ -70,15 +74,7 @@ function AnnoLink() {
                 btnPos.style.left = relativeX + 'px';
             }
 
-            const annoListCheck = e.target;
-            const list = annoListCheck.closest('li');
-
-            console.log(list);
-
-            const annoListItems = Array.from(annoList.querySelectorAll('li'));
-            const annolistIndex = annoListItems.indexOf(list);
-
-            setAnnoViewId(1);
+            setAnnoViewId(writeListAnnoArr.find((ele) => ele.anno === e.target.innerHTML)?.id);
             setAnnoString(e.target.innerHTML);
             setAnnoBtnActive(true);
         }
@@ -129,7 +125,7 @@ function AnnoLink() {
         useEffect(() => {
             document.querySelectorAll('.annolink li span').forEach((ele, index) => {
                 if (ele.innerHTML === annoString) {
-                    ele.closest('div').classList.add('active');
+                    ele.closest('li').classList.add('active');
                 }
             })
         }, [annoString]);

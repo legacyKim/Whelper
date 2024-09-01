@@ -24,6 +24,12 @@ function AnnoList({ id, annoArr, setAnnoArr, annoListBtn, setAnnoListBtn, annoCl
                 ele.classList.add('active');
             }
         });
+        document.querySelectorAll('.editor_anno').forEach((ele, index) => {
+            ele.classList.remove('active');
+            if (index === annoClick - 1) {
+                ele.classList.add('active');
+            }
+        });
     }, [annoClick]);
 
     const [annolistIndex, setAnnolistIndex] = useState();

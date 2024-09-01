@@ -242,7 +242,7 @@ function Write() {
     //// toolbar
 
     const annoAddWrite = useRef();
-    const [annoTextBox, setAnnoTextBox] = useState();
+    // const [annoTextBox, setAnnoTextBox] = useState();
     const { annoSaveBtn, anno_numbering, annoRemove, toolbarClose, annoTextboxOpen, annoTextboxClose, onlyAnnoClose, annoTextBoxChange } = useAnno(
         editor,
         annoContent, setAnnoContent,
@@ -252,7 +252,6 @@ function Write() {
         toolbarActive, setToolbarActive,
         onlyAnno, setOnlyAnno,
         annoRemoveNumbering, setAnnoRemoveNumbering,
-        annoTextBox, setAnnoTextBox,
         annoAddWrite
     );
 

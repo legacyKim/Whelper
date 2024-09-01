@@ -11,7 +11,6 @@ const useAnno = (
     toolbarActive, setToolbarActive,
     onlyAnno, setOnlyAnno,
     annoRemoveNumbering, setAnnoRemoveNumbering,
-    annoTextBox, setAnnoTextBox,
     annoAddWrite
 ) => {
 
@@ -213,6 +212,8 @@ const useAnno = (
         setAnnoContent('')
         setAnnoTextboxActive('')
         setToolbarActive('');
+
+        annoAddWrite.current.style.height = '31px';
     }
 
     const annoTextboxOpen = (e) => {
@@ -232,12 +233,6 @@ const useAnno = (
         annoAddWrite.current.style.height = 'auto';
         annoAddWrite.current.style.height = annoAddWrite.current.scrollHeight + 'px';
     }
-
-    useEffect(() => {
-        if (annoTextBox !== undefined) {
-            annoAddWrite.current.style.height = annoTextBox + 'px';
-        }
-    }, [annoTextBox]);
 
     return { annoSaveBtn, anno_numbering, annoRemove, toolbarClose, annoTextboxOpen, annoTextboxClose, onlyAnnoClose, annoTextBoxChange };
 };

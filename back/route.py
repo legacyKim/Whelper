@@ -53,16 +53,24 @@ def process_write_data():
         print(f"JSON Decode Error: {e}")
         return jsonify({'error': 'Invalid JSON data'}), 500
 
+
 @app.route('/api/WriteList', methods=['GET'])
 def get_data_WriteList():
     return process_write_data()
+
 
 @app.route('/api/WriteCorrect', methods=['GET'])
 def get_data_WriteCorrect():
     return process_write_data()
 
+
 @app.route('/api/WriteView', methods=['GET'])
 def get_data_WriteView():
+    return process_write_data()
+
+
+@app.route('/api/AnnoLink', methods=['GET'])
+def get_data_Annolink():
     return process_write_data()
 
 
