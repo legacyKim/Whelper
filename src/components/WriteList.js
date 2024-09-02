@@ -11,7 +11,7 @@ import { token_check } from '../data/token_check.js'
 
 function WriteList() {
 
-    const { isAuth } = useContext(MyContext);
+    const { isAuth, scrollPosition } = useContext(MyContext);
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -26,12 +26,22 @@ function WriteList() {
     const [writeArr, setWriteArr] = useState(writeListArr);
 
     useEffect(() => {
-        setWriteArr(writeListArr)
-    }, [writeListState])
+        setWriteArr(writeListArr);
+    }, [writeListState]);
+
+    useEffect(()=>{
+        if (scrollPosition + document.getElementById('root').offsetHeight === document.querySelector('.content_area_write').offsetHeight) {
+            console.log("api req");
+
+            // 1. api 요청
+            // 2. setWriteArr 업데이트
+            
+        }
+    }, [scrollPosition]);
 
     return (
         <div className='common_page'>
-            <div className='content_area'>
+            <div className='content_area content_area_write'>
                 <div className='write_list_scroll'>
                     <div className='write_list_wrap'>
                         {
