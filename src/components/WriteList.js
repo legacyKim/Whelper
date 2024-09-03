@@ -16,8 +16,12 @@ function WriteList() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
+    const [page, setPage] = useState(1);
+
+    console.log(page);
+
     useEffect(() => {
-        dispatch(writeListData());
+        dispatch(writeListData(page));
     }, [dispatch]);
 
     const writeListState = useSelector((state) => state.WriteData);
@@ -26,18 +30,21 @@ function WriteList() {
     const [writeArr, setWriteArr] = useState(writeListArr);
 
     useEffect(() => {
-        setWriteArr(writeListArr);
-    }, [writeListState]);
+        dispatch(writeListData(page));
+    }, [dispatch, page]);
 
-    useEffect(()=>{
+    useEffect(() => {
         if (scrollPosition + document.getElementById('root').offsetHeight === document.querySelector('.content_area_write').offsetHeight) {
-            console.log("api req");
-
-            // 1. api 요청
-            // 2. setWriteArr 업데이트
-            
+            setPage((prevPage) => prevPage + 1);
         }
     }, [scrollPosition]);
+
+    useEffect(() => {
+        dispatch(writeListData(page)).then(() => {
+            setWriteArr((prevWriteArr) => [...prevWriteArr, ...writeListArr]);
+        });
+    }, [page, dispatch]);
+
 
     return (
         <div className='common_page'>

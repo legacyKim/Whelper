@@ -43,35 +43,67 @@ def get_data_WriteList_date():
 
 
 def process_write_data():
-    results = get_data_from_write()
-    writeList, cateList = results[0], results[1]
+    writeList, cateList = get_data_from_write()
 
     try:
-        data = {'write': json.loads(writeList), 'cate': json.loads(cateList)}
-        return jsonify(data)
+        write_data = json.loads(writeList)
+        cate_data = json.loads(cateList)
+        return write_data, cate_data
     except json.decoder.JSONDecodeError as e:
         print(f"JSON Decode Error: {e}")
         return jsonify({'error': 'Invalid JSON data'}), 500
 
 
+def common_write_data():
+    write_data, cate_data = process_write_data()
+    if write_data is None:
+        return jsonify({'error': 'Invalid JSON data'}), 500
+
+    data = {'write': write_data, 'cate': cate_data}
+    return jsonify(data)
+
+
 @app.route('/api/WriteList', methods=['GET'])
 def get_data_WriteList():
-    return process_write_data()
+
+    write_data, cate_data = process_write_data()
+
+    # 페이지 번호와 페이지당 항목 수를 쿼리 파라미터로 받음
+    page = int(request.args.get('page', 1))
+    limit = int(request.args.get('limit', 5))
+
+    try:
+        start = (page - 1) * limit
+        end = start + limit
+        paginated_write_data = write_data[start:end]
+
+        data = {
+            'write': paginated_write_data,
+            'cate': cate_data,
+            'currentPage': page,
+            'totalPages': (len(write_data) + limit - 1) // limit  # 총 페이지 수 계산
+        }
+
+        return data
+
+    except json.decoder.JSONDecodeError as e:
+        print(f"JSON Decode Error: {e}")
+        return jsonify({'error': 'Invalid JSON data'}), 500
 
 
 @app.route('/api/WriteCorrect', methods=['GET'])
 def get_data_WriteCorrect():
-    return process_write_data()
+    return common_write_data()
 
 
 @app.route('/api/WriteView', methods=['GET'])
 def get_data_WriteView():
-    return process_write_data()
+    return common_write_data()
 
 
 @app.route('/api/AnnoLink', methods=['GET'])
 def get_data_Annolink():
-    return process_write_data()
+    return common_write_data()
 
 
 @app.route('/api/Write', methods=['POST'])
