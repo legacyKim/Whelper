@@ -45,6 +45,7 @@ function WriteList() {
         });
     }, [page, dispatch]);
 
+    // 커밋 테스트
 
     return (
         <div className='common_page'>
