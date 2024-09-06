@@ -1,5 +1,5 @@
 import { createSlice, configureStore } from '@reduxjs/toolkit';
-import { writeListData, writeListDataPost, memoListData, cateListData, bookListData } from './api.js'
+import { writeListData, writeListDataPost, memoListData, cateListData, bookListData, writeListDataDate } from './api.js'
 
 const WriteData = createSlice({
     name: 'WriteData',
@@ -41,7 +41,6 @@ const WriteData = createSlice({
         }).addCase(writeListData.rejected, (state, action) => {
             state.error = action.payload ?? action.error
         })
-
             // post data
             .addCase(writeListDataPost.pending, (state) => {
                 state.loading = true;
@@ -55,6 +54,30 @@ const WriteData = createSlice({
                 state.error = action.payload ?? action.error
             })
 
+    },
+});
+
+const WriteDateData = createSlice({
+    name: 'WriteDateData',
+    initialState: {
+        data: [],
+        loading: false,
+        error: null,
+    },
+    reducers: {
+        syncWriteListDataDate: (state, action) => {
+            state.data = action.payload;
+        }
+    },
+    extraReducers: (builder) => {
+        builder.addCase(writeListDataDate.pending, (state) => {
+            state.loading = true;
+        }).addCase(writeListDataDate.fulfilled, (state, action) => {
+            state.loading = false;
+            state.data = action.payload;
+        }).addCase(writeListDataDate.rejected, (state, action) => {
+            state.error = action.payload ?? action.error;
+        });
     },
 });
 
@@ -153,7 +176,7 @@ const memoData = createSlice({
         }).addCase(memoListData.rejected, (state, action) => {
             state.error = action.payload ?? action.error
         })
-        
+
     },
 })
 
@@ -235,12 +258,14 @@ const bookData = createSlice({
 
 export const { syncWriteListData, syncWriteListDataUpdate } = WriteData.actions;
 export const { syncMemoListDataAdd, syncMemoListDelete, syncMemoListDataUpdate, syncMemoListAnno, syncMemoListAnnoUpdate, syncMemoListAnnoDelete } = memoData.actions;
+export const { syncWriteListDataDate } = WriteDateData.actions;
 export const { cateListDataAdd, syncCateListData } = cateData.actions;
 export const { syncBookListDataAdd, syncBookListDelete } = bookData.actions;
 
 const store = configureStore({
     reducer: {
         WriteData: WriteData.reducer,
+        WriteDateData: WriteDateData.reducer,
         memoData: memoData.reducer,
         cateData: cateData.reducer,
         bookData: bookData.reducer,

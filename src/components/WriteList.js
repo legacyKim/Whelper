@@ -16,36 +16,33 @@ function WriteList() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const [page, setPage] = useState(1);
-
-    console.log(page);
-
-    useEffect(() => {
-        dispatch(writeListData(page));
-    }, [dispatch]);
+    const [page, setPage] = useState(0);
+    const [loading, setLoading] = useState(false);
 
     const writeListState = useSelector((state) => state.WriteData);
-    const writeListArr = writeListState.data.write.filter(item => item !== null) || [];
-
-    const [writeArr, setWriteArr] = useState(writeListArr);
+    const [writeListArr, setWriteListArr] = useState(writeListState.data.write.filter(item => item !== null) || []);
 
     useEffect(() => {
-        dispatch(writeListData(page));
-    }, [dispatch, page]);
-
-    useEffect(() => {
-        if (scrollPosition + document.getElementById('root').offsetHeight === document.querySelector('.content_area_write').offsetHeight) {
-            setPage((prevPage) => prevPage + 1);
+        if (loading === false) {
+            if (scrollPosition + document.getElementById('root').offsetHeight > document.querySelector('.content_area_write').offsetHeight - 100) {
+                setPage((prevPage) => prevPage + 1);
+                setLoading(true);
+            }
         }
     }, [scrollPosition]);
 
     useEffect(() => {
-        dispatch(writeListData(page)).then(() => {
-            setWriteArr((prevWriteArr) => [...prevWriteArr, ...writeListArr]);
-        });
+        const fetchData = async () => {
+            if (page > 0) {
+                const newData = await dispatch(writeListData(page));
+                if (newData) {
+                    setWriteListArr((prevWriteArr) => [...prevWriteArr, ...newData.payload.write]);
+                    setLoading(false);
+                }
+            }
+        };
+        fetchData();
     }, [page, dispatch]);
-
-    // 커밋 테스트 123123
 
     return (
         <div className='common_page'>
@@ -53,10 +50,10 @@ function WriteList() {
                 <div className='write_list_scroll'>
                     <div className='write_list_wrap'>
                         {
-                            writeArr.map(function (a, i) {
+                            writeListArr.map(function (a, i) {
                                 return (
                                     <div key={i} className="WriteDiv">
-                                        <WriteShowContents i={i} writeListArr={writeArr} />
+                                        <WriteShowContents i={i} writeListArr={writeListArr} />
                                     </div>
                                 )
                             })

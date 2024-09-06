@@ -4,7 +4,7 @@ from flask_jwt_extended import JWTManager, create_access_token, jwt_required, ge
 from flask_cors import CORS
 from db_connector import get_data_from_write, get_data_from_memo
 from db_operator import post_data_to_write, update_data_from_write, delete_data_from_write, post_data_to_cate, post_data_from_memo, update_data_from_memo, delete_data_from_memo, post_data_from_memoAnno, update_data_from_memoAnno, delete_data_from_memoAnno, post_data_from_book, delete_data_from_book, post_data_from_pwd
-
+from datetime import datetime, timedelta
 import json
 
 app = Flask(__name__)
@@ -31,11 +31,32 @@ CORS(app, resources={
 
 @app.route('/api/date', methods=['GET'])
 def get_data_WriteList_date():
+
+    print("이시발")
+
     results = get_data_from_write()
-    writeList = results[0]
+    writeList = json.loads(results[0])
+
+    today = datetime.now()
+    seven_days_ago = today - timedelta(days=7)
+
+    filtered_write_data = []
+    for item in writeList:
+        try:
+            updated_at = item.get('updated_at')
+
+            if updated_at:
+                updated_at_date = datetime.strptime(updated_at, '%Y-%m-%dT%H:%M:%S')
+                if updated_at_date >= seven_days_ago:
+                    filtered_write_data.append(item)
+
+        except KeyError as e:
+            print(f"KeyError: {e}")
+        except ValueError as e:
+            print(f"ValueError: {e}")
 
     try:
-        data = {'write': json.loads(writeList)}
+        data = filtered_write_data
         return jsonify(data)
     except json.decoder.JSONDecodeError as e:
         print(f"JSON Decode Error: {e}")
@@ -68,9 +89,8 @@ def get_data_WriteList():
 
     write_data, cate_data = process_write_data()
 
-    # 페이지 번호와 페이지당 항목 수를 쿼리 파라미터로 받음
     page = int(request.args.get('page', 1))
-    limit = int(request.args.get('limit', 5))
+    limit = int(request.args.get('limit', 2))
 
     try:
         start = (page - 1) * limit
