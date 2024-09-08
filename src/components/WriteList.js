@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
-import { useSelector, useDispatch } from "react-redux"
-import { writeListData } from '../data/api.js';
+import { useSelector, useDispatch } from "react-redux";
+import { writeListPageData } from '../data/api.js';
 
-import MyContext from '../context'
-import ViewEdit from './SlateView.js'
+import MyContext from '../context';
+import ViewEdit from './SlateView.js';
 
-import { token_check } from '../data/token_check.js'
+import { token_check } from '../data/token_check.js';
 
 function WriteList() {
 
@@ -17,34 +17,26 @@ function WriteList() {
     const navigate = useNavigate();
 
     const [page, setPage] = useState(1);
+    const [loading, setLoading] = useState(false);
 
-    console.log(page);
-
-    useEffect(() => {
-        dispatch(writeListData(page));
-    }, [dispatch]);
-
-    const writeListState = useSelector((state) => state.WriteData);
-    const writeListArr = writeListState.data.write.filter(item => item !== null) || [];
-
-    const [writeArr, setWriteArr] = useState(writeListArr);
+    const writeListState = useSelector((state) => state.WriteListPageDataOn);
+    const writeListArr = writeListState.data.write || [];
+    const totalPages = writeListState.data.totalPages;
 
     useEffect(() => {
-        dispatch(writeListData(page));
-    }, [dispatch, page]);
-
-    useEffect(() => {
-        if (scrollPosition + document.getElementById('root').offsetHeight === document.querySelector('.content_area_write').offsetHeight) {
-            setPage((prevPage) => prevPage + 1);
+        if (!loading && page <= totalPages) {
+            if (scrollPosition + document.getElementById('root').offsetHeight > document.querySelector('.content_area_write').offsetHeight - 100) {
+                setPage((prevPage) => prevPage + 1);
+                setLoading(true);
+            }
         }
-    }, [scrollPosition]);
+    }, [scrollPosition, loading, totalPages]);
 
     useEffect(() => {
-        dispatch(writeListData(page)).then(() => {
-            setWriteArr((prevWriteArr) => [...prevWriteArr, ...writeListArr]);
-        });
-    }, [page, dispatch]);
-
+        if (totalPages === null || page <= totalPages) {
+            dispatch(writeListPageData(page)).then(() => setLoading(false));
+        }
+    }, [dispatch, page, totalPages]);
 
     return (
         <div className='common_page'>
@@ -52,10 +44,10 @@ function WriteList() {
                 <div className='write_list_scroll'>
                     <div className='write_list_wrap'>
                         {
-                            writeArr.map(function (a, i) {
+                            writeListArr.map(function (a, i) {
                                 return (
                                     <div key={i} className="WriteDiv">
-                                        <WriteShowContents i={i} writeListArr={writeArr} />
+                                        <WriteShowContents i={i} writeListArr={writeListArr} />
                                     </div>
                                 )
                             })

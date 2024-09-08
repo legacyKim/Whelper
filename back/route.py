@@ -63,12 +63,11 @@ def common_write_data():
     return jsonify(data)
 
 
-@app.route('/api/WriteList', methods=['GET'])
+@app.route('/api/WriteListPage', methods=['GET'])
 def get_data_WriteList():
 
     write_data, cate_data = process_write_data()
 
-    # 페이지 번호와 페이지당 항목 수를 쿼리 파라미터로 받음
     page = int(request.args.get('page', 1))
     limit = int(request.args.get('limit', 5))
 
@@ -84,7 +83,9 @@ def get_data_WriteList():
             'totalPages': (len(write_data) + limit - 1) // limit  # 총 페이지 수 계산
         }
 
-        return data
+        print(data)
+
+        return jsonify(data)
 
     except json.decoder.JSONDecodeError as e:
         print(f"JSON Decode Error: {e}")

@@ -7,7 +7,19 @@ const API_URL = 'http://localhost:5000';
 // get write data
 export const writeListData = createAsyncThunk('writeData/getData', async () => {
     try {
-        const response = await axios.get(`${API_URL}/api/WriteList`);
+        const response = await axios.get(`${API_URL}/api/WriteList`)
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching writeListData:', error);
+        throw error;
+    }
+});
+
+export const writeListPageData = createAsyncThunk('writeData/getData', async (page) => {
+    try {
+        const response = await axios.get(`${API_URL}/api/WriteListPage`, {
+            params: { page, limit: 5 }
+        });
         return response.data;
     } catch (error) {
         console.error('Error fetching writeListData:', error);
