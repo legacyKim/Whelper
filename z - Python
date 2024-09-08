@@ -10,6 +10,11 @@
      # Windows에서 가상 환경 활성화
      .\venv\Scripts\activate
 
+     # 가상환경 실행 이전에 해당 명령어 입력
+     Set-ExecutionPolicy RemoteSigned -Scope Process
+    
+     # 관리자 권한으로 실행된 powerShell 에서 아래 명령어 입력시 영구 실행
+     Set-ExecutionPolicy RemoteSigned -Scope CurrentUser 
 
 3. **`pip` 업그레이드 (선택사항):**
    - `pip`를 최신 버전으로 업그레이드할 수 있습니다.

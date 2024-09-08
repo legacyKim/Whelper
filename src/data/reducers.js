@@ -41,7 +41,6 @@ const WriteData = createSlice({
         }).addCase(writeListData.rejected, (state, action) => {
             state.error = action.payload ?? action.error
         })
-
             // post data
             .addCase(writeListDataPost.pending, (state) => {
                 state.loading = true;
@@ -263,6 +262,7 @@ const bookData = createSlice({
 export const { syncWriteListData, syncWriteListDataUpdate } = WriteData.actions;
 export const { syncWriteListPage } = WriteListPageDataOn.actions;
 export const { syncMemoListDataAdd, syncMemoListDelete, syncMemoListDataUpdate, syncMemoListAnno, syncMemoListAnnoUpdate, syncMemoListAnnoDelete } = memoData.actions;
+export const { syncWriteListDataDate } = WriteDateData.actions;
 export const { cateListDataAdd, syncCateListData } = cateData.actions;
 export const { syncBookListDataAdd, syncBookListDelete } = bookData.actions;
 

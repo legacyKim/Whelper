@@ -5,7 +5,7 @@ const API_URL = 'http://localhost:5000';
 // const API_URL = 'https://bambueong.net';
 
 // get write data
-export const writeListData = createAsyncThunk('writeData/getData', async () => {
+export const writeListData = createAsyncThunk('writeData/getData', async (page, { rejectWithValue }) => {
     try {
         const response = await axios.get(`${API_URL}/api/WriteList`)
         return response.data;

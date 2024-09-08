@@ -1,13 +1,13 @@
 import { React, useEffect, useState, useRef } from 'react';
 import { NavLink, useNavigate, Link, useLocation } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux";
 import { format, subDays, isAfter } from 'date-fns';
 
 import 'react-toastify/dist/ReactToastify.css';
 
-import { writeListDataDate } from '../data/api.js';
-import { syncWriteListData } from "../data/reducers"
-import ViewEdit from './SlateView.js'
+import { writeListData } from '../data/api.js';
+import { syncWriteListDataDate } from "../data/reducers";
+import ViewEdit from './SlateView.js';
 
 const useRouteChange = (callback) => {
     const location = useLocation();
@@ -21,21 +21,12 @@ function Date_sort() {
     // writeList date
     const dispatch = useDispatch();
     useEffect(() => {
-        dispatch(writeListDataDate());
-        dispatch(syncWriteListData());
+        dispatch(writeListData());
+        dispatch(syncWriteListDataDate());
     }, [dispatch]);
 
-    const writeListState = useSelector((state) => state.WriteData);
-
-    const today = new Date();
-    const sevenDaysAgo = subDays(today, 7);
-
-    const writeListArr = writeListState.data.write.filter(item => {
-        if (item !== null) {
-            const updatedAt = new Date(item.updated_at);
-            return isAfter(updatedAt, sevenDaysAgo);
-        }
-    }).sort((a, b) => new Date(a.updated_at) - new Date(b.updated_at)) || [];
+    const writeListState = useSelector((state) => state.writeListData);
+    const groupedData = writeListState.filter(item => item !== null) || [];
 
     const [writeListActive, setWriteListActive] = useState();
     useRouteChange((location) => {
@@ -46,17 +37,6 @@ function Date_sort() {
         }
     });
     //// writeList date
-
-    // list create
-    const groupedData = writeListArr.reduce((acc, item) => {
-        const date = format(new Date(item.updated_at), 'yyyy년 MM월 dd일');
-        if (!acc[date]) {
-            acc[date] = [];
-        }
-        acc[date].push(item);
-        return acc;
-    }, {});
-    //// list create
 
     const isEmpty = Object.keys(groupedData).length === 0;
 
@@ -69,7 +49,7 @@ function Date_sort() {
                     <div className='date_box' key={date}>
                         <h2><i className='icon-level-down'></i>{date}</h2>
                         <ul className='data_list_wrap'>
-                            {groupedData[date].map((item) => (
+                            {groupedData.map((item) => (
                                 <li className='date_list' key={item.id}>
                                     <WriteShowContents writeListArr={item} />
                                 </li>
