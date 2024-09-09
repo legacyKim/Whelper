@@ -5,7 +5,7 @@ const API_URL = 'http://localhost:5000';
 // const API_URL = 'https://bambueong.net';
 
 // get write data
-export const writeListData = createAsyncThunk('writeData/getData', async (page, { rejectWithValue }) => {
+export const writeListData = createAsyncThunk('writeData/getData', async () => {
     try {
         const response = await axios.get(`${API_URL}/api/WriteList`)
         return response.data;
@@ -27,6 +27,16 @@ export const writeListPageData = createAsyncThunk('writeData/getData', async (pa
     }
 });
 
+export const writeListDateData = createAsyncThunk('writeData/getData', async () => {
+    try {
+        const response = await axios.get(`${API_URL}/api/date`);
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching writeListData:', error);
+        throw error;
+    }
+});
+
 export const writeListDataView = createAsyncThunk('writeData/getData', async () => {
     try {
         const response = await axios.get(`${API_URL}/api/WriteView`);
@@ -40,16 +50,6 @@ export const writeListDataView = createAsyncThunk('writeData/getData', async () 
 export const writeListDataCorrect = createAsyncThunk('writeData/getData', async () => {
     try {
         const response = await axios.get(`${API_URL}/api/WriteCorrect`);
-        return response.data;
-    } catch (error) {
-        console.error('Error fetching writeListData:', error);
-        throw error;
-    }
-});
-
-export const writeListDataDate = createAsyncThunk('writeData/getData', async () => {
-    try {
-        const response = await axios.get(`${API_URL}/api/date`);
         return response.data;
     } catch (error) {
         console.error('Error fetching writeListData:', error);

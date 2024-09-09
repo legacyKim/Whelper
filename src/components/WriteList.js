@@ -21,6 +21,7 @@ function WriteList() {
 
     const writeListState = useSelector((state) => state.WriteListPageDataOn);
     const writeListArr = writeListState.data.write || [];
+
     const totalPages = writeListState.data.totalPages;
 
     useEffect(() => {

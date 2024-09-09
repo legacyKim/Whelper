@@ -32,8 +32,6 @@ CORS(app, resources={
 @app.route('/api/date', methods=['GET'])
 def get_data_WriteList_date():
 
-    print("이시발")
-
     results = get_data_from_write()
     writeList = json.loads(results[0])
 
@@ -56,8 +54,10 @@ def get_data_WriteList_date():
             print(f"ValueError: {e}")
 
     try:
-        data = filtered_write_data
-        return jsonify(data)
+        data = {
+            'write': filtered_write_data,
+        }
+        return data
     except json.decoder.JSONDecodeError as e:
         print(f"JSON Decode Error: {e}")
         return jsonify({'error': 'Invalid JSON data'}), 500
@@ -85,12 +85,12 @@ def common_write_data():
 
 
 @app.route('/api/WriteListPage', methods=['GET'])
-def get_data_WriteList():
+def get_data_WriteList_page():
 
     write_data, cate_data = process_write_data()
 
     page = int(request.args.get('page', 1))
-    limit = int(request.args.get('limit', 2))
+    limit = int(request.args.get('limit', 5))
 
     try:
         start = (page - 1) * limit
@@ -104,8 +104,6 @@ def get_data_WriteList():
             'totalPages': (len(write_data) + limit - 1) // limit  # 총 페이지 수 계산
         }
 
-        print(data)
-
         return jsonify(data)
 
     except json.decoder.JSONDecodeError as e:
@@ -113,8 +111,8 @@ def get_data_WriteList():
         return jsonify({'error': 'Invalid JSON data'}), 500
 
 
-@app.route('/api/WriteCorrect', methods=['GET'])
-def get_data_WriteCorrect():
+@app.route('/api/WriteList', methods=['GET'])
+def get_data_WriteList():
     return common_write_data()
 
 
