@@ -101,7 +101,7 @@ def get_data_WriteList_page():
             'write': paginated_write_data,
             'cate': cate_data,
             'currentPage': page,
-            'totalPages': (len(write_data) + limit - 1) // limit  # 총 페이지 수 계산
+            'totalPages': (len(write_data) + limit - 1) // limit,
         }
 
         return jsonify(data)
@@ -212,14 +212,28 @@ def delete_data_WriteList(id):
 @app.route('/api/Memo', methods=['GET'])
 def get_data_memo():
     results = get_data_from_memo()
-    memoList, bookList = results[0], results[1]
+    memoList, bookList = json.loads(results[0]), json.loads(results[1])
+
+    page = int(request.args.get('page', 1))
+    limit = int(request.args.get('limit', 5))
 
     try:
-        data = {'memo': json.loads(memoList), 'book': json.loads(bookList)}
+        start = (page - 1) * limit
+        end = start + limit
+        paginated_memo_data = memoList[start:end]
+
+        data = {
+            'memo': paginated_memo_data,
+            'book': bookList,
+            'currentPage': page,
+            'totalPages': (len(memoList) + limit - 1) // limit
+        }
         return jsonify(data)
+
     except json.decoder.JSONDecodeError as e:
         print(f"JSON Decode Error: {e}")
         return jsonify({'error': 'Invalid JSON data'}), 500
+
 
 
 @app.route('/api/Memo', methods=['POST'])

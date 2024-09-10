@@ -10,14 +10,12 @@ import { token_check } from '../data/token_check.js'
 
 function Memo() {
 
-    const { isAuth } = useContext(MyContext);
+    const { isAuth, scrollPosition } = useContext(MyContext);
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
     useEffect(() => {
-        dispatch(memoListData());
-
         dispatch(bookListData());
         dispatch(syncBookListDataAdd());
 
@@ -29,11 +27,57 @@ function Memo() {
         dispatch(syncMemoListAnnoDelete());
     }, [dispatch]);
 
+    const [page, setPage] = useState(1);
+    const [loading, setLoading] = useState(false);
+
     const memoListState = useSelector((state) => state.memoData);
     const bookListState = useSelector((state) => state.bookData);
 
     const memoListArr = memoListState.data.memo || [];
     const bookListArr = bookListState.data.book || [];
+
+    const [totalPages, setTotalPages] = useState(memoListState.data.totalPages);
+
+    useEffect(() => {
+        if (totalPages === null) {
+            dispatch(memoListData(page)).then(() => {
+                setTotalPages(memoListState.data.totalPages)
+            });
+        }
+    }, [scrollPosition]);
+
+    useEffect(() => {
+
+        const rootHeight = document.getElementById('root').offsetHeight;
+        const memoAreaHeight = document.querySelector('.content_area_memo').offsetHeight
+
+        if (memoAreaHeight < rootHeight) {
+            setPage(2);
+        }
+
+        if (page <= totalPages) {
+            if (scrollPosition + rootHeight === memoAreaHeight) {
+                setPage((prevPage) => prevPage + 1);
+            }
+        }
+
+        const memoContent = document.querySelectorAll('.memo_content');
+
+        memoContent.forEach((ele, i) => {
+            if (scrollPosition + rootHeight - ele.offsetHeight * 2 > ele.offsetTop - ele.offsetHeight) {
+                ele.classList.add("anima");
+            } else {
+                ele.classList.remove("anima");
+            }
+        });
+
+    }, [scrollPosition]);
+
+    useEffect(() => {
+        if (page <= totalPages) {
+            dispatch(memoListData(page));
+        }
+    }, [page]);
 
     const [memoArr, setMemoArr] = useState(memoListArr);
 
@@ -206,7 +250,6 @@ function Memo() {
     //// book list
 
     // memo save
-    // const [memo, setMemo] = useState(memoListArr);
 
     var newMemoSource = useRef(null);
     var newMemoAuthor = useRef(null);
@@ -215,7 +258,17 @@ function Memo() {
     const MemoSaveBtn = async () => {
 
         const isTokenValid = await token_check(navigate);
-        if (isTokenValid) {
+
+        if (newMemoComment.current.value === '') {
+            alert('코멘트가 없습니다.');
+            return;
+        } else if (newMemoSource.current.value === '') {
+            alert('저서 정보가 없습니다.');
+            return;
+        } else if (newMemoAuthor.current.value === '') {
+            alert('저자 정보가 없습니다.');
+            return;
+        } else if (isTokenValid) {
 
             var randomId = Math.random().toString(36).substr(2, 9);
             const memoComment = newMemoComment.current.value;
@@ -231,7 +284,6 @@ function Memo() {
                 dispatch(bookListDataPost({ memoSource, memoAuthor }));
             } else {
                 const sourceExists = memoListArr.some((ele) => ele.memoSource === memoSource);
-                console.log(sourceExists);
                 if (!sourceExists) {
                     dispatch(syncBookListDataAdd({ memoSource, memoAuthor }));
                     dispatch(bookListDataPost({ memoSource, memoAuthor }));
@@ -277,9 +329,12 @@ function Memo() {
     // book delete
     const deleteBook = (e) => {
         e.stopPropagation();
+
         localStorage.removeItem('bookTitle');
         setBookTitle('전체');
+
         const memoSource = bookTitle;
+
         dispatch(syncBookListDelete({ memoSource }))
         dispatch(bookListDataDelete({ memoSource: bookTitle }))
     }
@@ -362,8 +417,8 @@ function Memo() {
             setBookTitle("전체")
             localStorage.removeItem('bookTitle');
         } else {
+            // setMemoCurrent(null);
             setBookTitle(bookListArr[i].memoSource);
-            setMemoCurrent(null);
             localStorage.setItem('bookTitle', bookListArr[i].memoSource);
         }
     }
@@ -371,10 +426,8 @@ function Memo() {
     useEffect(() => {
         if (bookLocalStorage === null) {
             setBookTitle("전체")
-            setMemoCurrent(null);
             setMemoArr(memoListArr);
         } else {
-            setMemoCurrent(null);
             setMemoArr(memoListArr.filter((item) => item.memoSource === bookTitle));
         }
         setMemoCurrent(null);
@@ -382,7 +435,6 @@ function Memo() {
 
     useEffect(() => {
         newMemoComment.current.value = null;
-        // setMemoArr(memoListArr)
 
         if (memoRecord !== 'active') {
             newMemoSource.current.value = null;
@@ -398,10 +450,6 @@ function Memo() {
 
     }, [memoListArr]);
     //// book name check
-
-    // context api scroll pos
-    const { scrollPosition } = useContext(MyContext);
-    //// context api scroll pos
 
     const bookFilter = (i) => {
         localStorage.setItem('bookTitle', memoArr[i].memoSource);
@@ -532,7 +580,7 @@ function Memo() {
     return (
 
         <div className='common_page'>
-            <div className='content_area reverse'>
+            <div className='content_area content_area_memo reverse'>
                 <div className={`book_list_pos ${isAuth === true ? 'auth' : ''}`}>
                     <div className='book_list'>
                         <div className={`book_list_current ${scrollPosition > 0 ? "scroll_event" : ""}`} onClick={bookListOn}>
@@ -600,7 +648,6 @@ function Memo() {
                     </div>
                 </div>
 
-
                 {/* memoDetail */}
                 <div className={`memo_content_pos ${memoActive ? memoActive : ""}`}>
                     {memoCurrent !== null && <MemoView memo={memoCurrent} />}
@@ -632,14 +679,16 @@ function Memo() {
                 {/* memoAdd */}
                 <div className={`memo_add ${memoAddActive ? memoAddActive : ""}`}>
                     <textarea className='scroll' placeholder='newMemoComment' ref={newMemoComment}></textarea>
+
+                    <div className='memo_btn flex-end'>
+                        <button className='icon-ok' onClick={MemoSaveBtn}></button>
+                        <button className='icon-cancel' onClick={memoAddClose}></button>
+                    </div>
+
                     <div className='memo_input'>
                         <button className={`icon-pin ${memoRecord ? memoRecord : ""}`} onClick={MemoRecordMode}></button>
                         <input type='text' placeholder='newMemoSource' ref={newMemoSource}></input>
                         <input type='text' placeholder='newMemoAuthor' ref={newMemoAuthor}></input>
-                    </div>
-                    <div className='memo_btn flex-end'>
-                        <button className='icon-ok' onClick={MemoSaveBtn}></button>
-                        <button className='icon-cancel' onClick={memoAddClose}></button>
                     </div>
                 </div>
                 {/* memoAdd */}

@@ -17,27 +17,48 @@ function WriteList() {
     const navigate = useNavigate();
 
     const [page, setPage] = useState(1);
-    const [loading, setLoading] = useState(false);
 
     const writeListState = useSelector((state) => state.WriteListPageDataOn);
     const writeListArr = writeListState.data.write || [];
 
-    const totalPages = writeListState.data.totalPages;
+    const [totalPages, setTotalPages] = useState(writeListState.data.totalPages);
 
     useEffect(() => {
-        if (!loading && page <= totalPages) {
-            if (scrollPosition + document.getElementById('root').offsetHeight > document.querySelector('.content_area_write').offsetHeight - 100) {
+        if (totalPages === null) {
+            dispatch(writeListPageData(page)).then(() => {
+                setTotalPages(writeListState.data.totalPages)
+            });
+        }
+    }, [scrollPosition]);
+
+    useEffect(() => {
+
+        const rootHeight = document.getElementById('root').offsetHeight;
+        const writeAreaHeight = document.querySelector('.content_area_write').offsetHeight;
+
+        if (page <= totalPages) {
+            if (scrollPosition + rootHeight === writeAreaHeight) {
                 setPage((prevPage) => prevPage + 1);
-                setLoading(true);
             }
         }
-    }, [scrollPosition, loading, totalPages]);
+
+        const WriteDiv = document.querySelectorAll('.WriteDiv');
+
+        WriteDiv.forEach((ele, i) => {
+            if (scrollPosition + rootHeight - ele.offsetHeight * 2 > ele.offsetTop - ele.offsetHeight) {
+                ele.classList.add("anima");
+            } else {
+                ele.classList.remove("anima");
+            }
+        });
+
+    }, [scrollPosition]);
 
     useEffect(() => {
-        if (totalPages === null || page <= totalPages) {
-            dispatch(writeListPageData(page)).then(() => setLoading(false));
+        if (page <= totalPages) {
+            dispatch(writeListPageData(page));
         }
-    }, [dispatch, page, totalPages]);
+    }, [page]);
 
     return (
         <div className='common_page'>

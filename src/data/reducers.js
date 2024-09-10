@@ -72,7 +72,7 @@ const WriteListPageDataOn = createSlice({
             state.loading = true;
         }).addCase(writeListPageData.fulfilled, (state, action) => {
             state.loading = false;
-            if (action.payload.write) {
+            if (action.payload.totalPages) {
                 const newWriteData = action.payload.write.filter(newItem =>
                     !state.data.write.some(existingItem => existingItem.id === newItem.id)
                 );
@@ -84,7 +84,7 @@ const WriteListPageDataOn = createSlice({
         })
 
     },
-})
+});
 
 const WriteListDateDataOn = createSlice({
     name: 'WriteListDateDataOn',
@@ -111,7 +111,10 @@ const WriteListDateDataOn = createSlice({
 const memoData = createSlice({
     name: 'memoData',
     initialState: {
-        data: [],
+        data: {
+            memo: [],
+            totalPages: null,
+        },
         loading: false,
         error: null,
     },
@@ -199,7 +202,13 @@ const memoData = createSlice({
             state.loading = true;
         }).addCase(memoListData.fulfilled, (state, action) => {
             state.loading = false;
-            state.data = action.payload
+            if (action.payload.memo) {
+                const newMemoData = action.payload.memo.filter(newItem =>
+                    !state.data.memo.some(existingItem => existingItem.id === newItem.id)
+                );
+                state.data.memo = [...state.data.memo, ...newMemoData];
+                state.data.totalPages = action.payload.totalPages;
+            }
         }).addCase(memoListData.rejected, (state, action) => {
             state.error = action.payload ?? action.error
         })

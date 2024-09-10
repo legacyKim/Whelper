@@ -12,8 +12,8 @@ function Category() {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        dispatch(writeListData())
-        dispatch(cateListData_cate())
+        dispatch(writeListData());
+        dispatch(cateListData_cate());
     }, [dispatch]);
 
     const writeListState = useSelector((state) => state.WriteData);
