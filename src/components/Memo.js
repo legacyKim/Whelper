@@ -10,7 +10,7 @@ import { token_check } from '../data/token_check.js'
 
 function Memo() {
 
-    const { isAuth, scrollPosition } = useContext(MyContext);
+    const { isAuth, scrollPosition, rootHeight } = useContext(MyContext);
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -47,30 +47,13 @@ function Memo() {
     }, [scrollPosition]);
 
     useEffect(() => {
-
-        const rootHeight = document.getElementById('root').offsetHeight;
         const memoAreaHeight = document.querySelector('.content_area_memo').offsetHeight
 
-        if (memoAreaHeight < rootHeight) {
-            setPage(2);
-        }
-
         if (page <= totalPages) {
-            if (scrollPosition + rootHeight === memoAreaHeight) {
+            if (Math.round(scrollPosition + rootHeight) === memoAreaHeight) {
                 setPage((prevPage) => prevPage + 1);
             }
         }
-
-        const memoContent = document.querySelectorAll('.memo_content');
-
-        memoContent.forEach((ele, i) => {
-            if (scrollPosition + rootHeight - ele.offsetHeight * 2 > ele.offsetTop - ele.offsetHeight) {
-                ele.classList.add("anima");
-            } else {
-                ele.classList.remove("anima");
-            }
-        });
-
     }, [scrollPosition]);
 
     useEffect(() => {
@@ -312,16 +295,11 @@ function Memo() {
                 dispatch(syncBookListDataAdd({ memoSource, memoAuthor }))
                 dispatch(bookListDataPost({ memoSource, memoAuthor }));
             } else {
-                for (const key in bookListArr) {
-                    const item = bookListArr[key];
-                    if (item.memoSource !== memoSource) {
-                        dispatch(syncBookListDataAdd({ memoSource, memoAuthor }))
-                        dispatch(bookListDataPost({ memoSource, memoAuthor }));
-                        break;
-                    } else {
-                        break;
-                    }
-                }
+                const sourceExists = bookListArr.some((ele) => ele.memoSource === memoSource);
+                if (!sourceExists) {
+                    dispatch(syncBookListDataAdd({ memoSource, memoAuthor }));
+                    dispatch(bookListDataPost({ memoSource, memoAuthor }));
+                } 
             }
         }
     }
@@ -634,13 +612,9 @@ function Memo() {
                                             )}
                                             {/* <button className='icon-trash' onClick={() => delMemoList(i)}></button> */}
                                         </div>
-                                        <div className='memo_content_box'>
-                                            <p className='font_text' onClick={() => memoDetailOn(a)}>{memoArr[i].memoComment}</p>
-                                            <div className='memo_content_btn_box'>
-                                                <button onClick={() => bookFilter(i)}>{memoArr[i].memoSource}</button>
-                                                <span>{memoArr[i].memoAuthor}</span>
-                                            </div>
-                                        </div>
+
+                                        <MemoContentBox memoArr={memoArr} i={i} a={a} />
+
                                     </div>
                                 )
                             })
@@ -697,6 +671,31 @@ function Memo() {
         </div >
 
     )
+
+    function MemoContentBox({ memoArr, i, a }) {
+
+        useEffect(() => {
+            const memoContent = document.querySelectorAll('.memo_content');
+
+            memoContent.forEach((ele, i) => {
+                if (scrollPosition + rootHeight - ele.offsetHeight * 2 > ele.offsetTop - ele.offsetHeight) {
+                    ele.classList.add("anima");
+                } else {
+                    ele.classList.remove("anima");
+                }
+            });
+        }, [])
+
+        return (
+            <div className='memo_content_box'>
+                <p className='font_text' onClick={() => memoDetailOn(a)}>{memoArr[i].memoComment}</p>
+                <div className='memo_content_btn_box'>
+                    <button onClick={() => bookFilter(i)}>{memoArr[i].memoSource}</button>
+                    <span>{memoArr[i].memoAuthor}</span>
+                </div>
+            </div>
+        )
+    }
 
     function MemoView({ memo }) {
 

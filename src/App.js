@@ -98,6 +98,7 @@ function App() {
 
     // about header scroll
     const [scrollPosition, setScrollPosition] = useState(0);
+    const rootHeight = document.getElementById('root').offsetHeight;
 
     useEffect(() => {
         const updateScroll = debounce(() => {
@@ -174,7 +175,7 @@ function App() {
 
     return (
 
-        <MyContext.Provider value={{ searchArr, setSearchArr, scrollPosition, setScrollPosition, isAuth, setAuth, annoListBtn, setAnnoListBtn, annoClick, setAnnoClick, annoString, setAnnoString }}>
+        <MyContext.Provider value={{ searchArr, setSearchArr, scrollPosition, setScrollPosition, rootHeight, isAuth, setAuth, annoListBtn, setAnnoListBtn, annoClick, setAnnoClick, annoString, setAnnoString }}>
             <div id='app' className={`App ${theme}`}>
 
                 <ToastContainer />

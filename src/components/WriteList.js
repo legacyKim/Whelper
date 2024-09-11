@@ -11,7 +11,7 @@ import { token_check } from '../data/token_check.js';
 
 function WriteList() {
 
-    const { isAuth, scrollPosition } = useContext(MyContext);
+    const { isAuth, scrollPosition, rootHeight } = useContext(MyContext);
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -32,26 +32,12 @@ function WriteList() {
     }, [scrollPosition]);
 
     useEffect(() => {
-
-        const rootHeight = document.getElementById('root').offsetHeight;
         const writeAreaHeight = document.querySelector('.content_area_write').offsetHeight;
-
         if (page <= totalPages) {
-            if (scrollPosition + rootHeight === writeAreaHeight) {
+            if (Math.round(scrollPosition + rootHeight) === writeAreaHeight) {
                 setPage((prevPage) => prevPage + 1);
             }
         }
-
-        const WriteDiv = document.querySelectorAll('.WriteDiv');
-
-        WriteDiv.forEach((ele, i) => {
-            if (scrollPosition + rootHeight - ele.offsetHeight * 2 > ele.offsetTop - ele.offsetHeight) {
-                ele.classList.add("anima");
-            } else {
-                ele.classList.remove("anima");
-            }
-        });
-
     }, [scrollPosition]);
 
     useEffect(() => {
@@ -102,6 +88,18 @@ function WriteList() {
                 navigate(`/components/WriteCorrect/${writeListArr[i].id}`);
             }
         };
+
+        useEffect(() => {
+            const WriteDiv = document.querySelectorAll('.WriteDiv');
+
+            WriteDiv.forEach((ele, i) => {
+                if (scrollPosition + rootHeight - ele.offsetHeight * 2 > ele.offsetTop - ele.offsetHeight) {
+                    ele.classList.add("anima");
+                } else {
+                    ele.classList.remove("anima");
+                }
+            });
+        }, [])
 
         return (
 
