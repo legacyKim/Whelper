@@ -4,6 +4,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from "react-redux";
 import { writeListPageData } from '../data/api.js';
 
+import { debounce } from 'lodash';
+
 import MyContext from '../context';
 import ViewEdit from './SlateView.js';
 
@@ -11,7 +13,7 @@ import { token_check } from '../data/token_check.js';
 
 function WriteList() {
 
-    const { isAuth, scrollPosition, rootHeight } = useContext(MyContext);
+    const { isAuth, rootHeight, wlScrollPosition, setWlScrollPosition} = useContext(MyContext);
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -24,21 +26,31 @@ function WriteList() {
     const [totalPages, setTotalPages] = useState(writeListState.data.totalPages);
 
     useEffect(() => {
+        const updateScroll = debounce(() => {
+            setWlScrollPosition(window.scrollY || document.documentElement.scrollTop);
+        });
+        window.addEventListener('scroll', updateScroll);
+        return () => {
+            window.removeEventListener('scroll', updateScroll);
+        };
+    }, []);
+
+    useEffect(() => {
+
         if (totalPages === null) {
             dispatch(writeListPageData(page)).then(() => {
                 setTotalPages(writeListState.data.totalPages)
             });
         }
-    }, [scrollPosition]);
 
-    useEffect(() => {
         const writeAreaHeight = document.querySelector('.content_area_write').offsetHeight;
+
         if (page <= totalPages) {
-            if (Math.round(scrollPosition + rootHeight) === writeAreaHeight) {
+            if (Math.round(wlScrollPosition + rootHeight) === writeAreaHeight) {
                 setPage((prevPage) => prevPage + 1);
             }
         }
-    }, [scrollPosition]);
+    }, [wlScrollPosition]);
 
     useEffect(() => {
         if (page <= totalPages) {
@@ -93,7 +105,7 @@ function WriteList() {
             const WriteDiv = document.querySelectorAll('.WriteDiv');
 
             WriteDiv.forEach((ele, i) => {
-                if (scrollPosition + rootHeight - ele.offsetHeight * 2 > ele.offsetTop - ele.offsetHeight) {
+                if (wlScrollPosition + rootHeight - ele.offsetHeight * 2 > ele.offsetTop - ele.offsetHeight) {
                     ele.classList.add("anima");
                 } else {
                     ele.classList.remove("anima");

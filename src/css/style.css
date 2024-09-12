@@ -142,7 +142,7 @@ button i { transition: all 0.3s ease-in-out; }
 .book_list_current>b { position: relative; font-size: 14px; display: none; top: 0; } 
 .book_list_current>b.active { display: block; } 
 .book_list_current>b.active:hover { color: var(--main-color); } 
-.book_list_current>strong { position: relative; display: block !important; font-size: 14px; font-weight: 500; line-height: 1.6; color: var(--font-color); transition: all 0.3s ease-in-out; margin: 0 4px; top: -2px; } 
+.book_list_current>strong { position: relative; display: block !important; font-size: 14px; font-weight: 500; line-height: 1.6; color: var(--font-color); transition: all 0.3s ease-in-out; margin: 0 4px; top: -3px; } 
 
 .book_list_current.scroll_event { width: 100%; } 
 .book_list_current.scroll_event>strong { position: absolute; display: none; opacity: 0; top: -6px; left: 23px; border-radius: 4px; white-space: nowrap; border-radius: 4px; box-shadow: 0 0 10px 4px rgba(255, 255, 255, 0.3); padding: 5px 8px 3px; z-index: 9; background-color: var(--box-color); } 
@@ -435,7 +435,7 @@ button i { transition: all 0.3s ease-in-out; }
 
 .annotation_list .annoList li.active span, .annotation_list .annoList li.active p { color: var(--hover-color) !important; animation: annoClick 0.5s 1 forwards; } 
 
-.btn_list { position: absolute; display: none; justify-content: flex-start; align-items: center; border: 1px solid var(--grey-color); padding: 5px 4px 4px; border-radius: 4px; background-color: var(--box-color); } 
+.btn_list { position: absolute; display: none; justify-content: flex-start; align-items: center; border: 1px solid var(--grey-color); padding: 6px 4px 4px; border-radius: 4px; background-color: var(--box-color); } 
 .btn_list.active { display: flex; } 
 .btn_list button { margin-right: 2px; font-size: 13px; } 
 .btn_list>button:last-child { margin-right: 0; } 

@@ -145,10 +145,10 @@ export const cateListDataPost = createAsyncThunk('writeData/newData', async (new
 
 // get memodata
 export const memoListData = createAsyncThunk('memoData/getMemo',
-    async (page) => {
+    async ({page, bookTitle}) => {
         try {
             const response = await axios.get(`${API_URL}/api/Memo`, {
-                params: { page, limit: 5 }
+                params: { page, bookTitle, limit: 5 }
             });
             return response.data;
         } catch (error) {

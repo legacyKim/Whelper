@@ -4,13 +4,15 @@ import { useDispatch, useSelector } from "react-redux"
 import MyContext from '../context'
 import { toast } from 'react-toastify';
 
+import { debounce } from 'lodash';
+
 import { memoListData, memoListDataPost, memoListDataUpdate, memoListDataDelete, memoListAnnoPost, memoListAnnoUpdate, memoListAnnoDelete, bookListData, bookListDataPost, bookListDataDelete } from "../data/api"
-import { syncMemoListDataAdd, syncMemoListDelete, syncMemoListDataUpdate, syncMemoListAnno, syncMemoListAnnoUpdate, syncMemoListAnnoDelete, syncBookListDataAdd, syncBookListDelete } from "../data/reducers.js"
+import { syncMemoListDataAdd, syncMemoListDelete, syncMemoListDataUpdate, syncMemoListAnno, syncMemoListAnnoUpdate, syncMemoListAnnoDelete, resetMemo, syncBookListDataAdd, syncBookListDelete } from "../data/reducers.js"
 import { token_check } from '../data/token_check.js'
 
 function Memo() {
 
-    const { isAuth, scrollPosition, rootHeight } = useContext(MyContext);
+    const { isAuth, rootHeight, MemoScrollPosition, setMemoScrollPosition } = useContext(MyContext);
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -33,32 +35,45 @@ function Memo() {
     const memoListState = useSelector((state) => state.memoData);
     const bookListState = useSelector((state) => state.bookData);
 
+    console.log(memoListState);
+
     const memoListArr = memoListState.data.memo || [];
     const bookListArr = bookListState.data.book || [];
 
     const [totalPages, setTotalPages] = useState(memoListState.data.totalPages);
 
+    const bookLocalStorage = localStorage.getItem('bookTitle');
+    const [bookTitle, setBookTitle] = useState(bookLocalStorage);
+
+    useEffect(() => {  
+        const updateScroll = debounce(() => {
+            setMemoScrollPosition(window.scrollY || document.documentElement.scrollTop);
+        });
+        window.addEventListener('scroll', updateScroll);
+        return () => {
+            window.removeEventListener('scroll', updateScroll);
+        };
+    }, []);
+
     useEffect(() => {
         if (totalPages === null) {
-            dispatch(memoListData(page)).then(() => {
+            dispatch(memoListData({ page, bookTitle })).then(() => {
                 setTotalPages(memoListState.data.totalPages)
             });
         }
-    }, [scrollPosition]);
 
-    useEffect(() => {
         const memoAreaHeight = document.querySelector('.content_area_memo').offsetHeight
 
         if (page <= totalPages) {
-            if (Math.round(scrollPosition + rootHeight) === memoAreaHeight) {
+            if (Math.round(MemoScrollPosition + rootHeight) === memoAreaHeight) {
                 setPage((prevPage) => prevPage + 1);
             }
         }
-    }, [scrollPosition]);
+    }, [MemoScrollPosition]);
 
     useEffect(() => {
         if (page <= totalPages) {
-            dispatch(memoListData(page));
+            dispatch(memoListData({ page, bookTitle }));
         }
     }, [page]);
 
@@ -299,7 +314,7 @@ function Memo() {
                 if (!sourceExists) {
                     dispatch(syncBookListDataAdd({ memoSource, memoAuthor }));
                     dispatch(bookListDataPost({ memoSource, memoAuthor }));
-                } 
+                }
             }
         }
     }
@@ -387,15 +402,11 @@ function Memo() {
     //// memo reset
 
     // book name check
-    const bookLocalStorage = localStorage.getItem('bookTitle');
-    const [bookTitle, setBookTitle] = useState(bookLocalStorage);
-
     const bookChange = (i) => {
         if (i === undefined) {
             setBookTitle("전체")
             localStorage.removeItem('bookTitle');
         } else {
-            // setMemoCurrent(null);
             setBookTitle(bookListArr[i].memoSource);
             localStorage.setItem('bookTitle', bookListArr[i].memoSource);
         }
@@ -404,11 +415,17 @@ function Memo() {
     useEffect(() => {
         if (bookLocalStorage === null) {
             setBookTitle("전체")
-            setMemoArr(memoListArr);
-        } else {
-            setMemoArr(memoListArr.filter((item) => item.memoSource === bookTitle));
         }
         setMemoCurrent(null);
+
+        dispatch(resetMemo());
+
+        console.log(page)
+        console.log(totalPages)
+
+        dispatch(memoListData({ page, bookTitle })).then(()=>{
+            setTotalPages(memoListState.data.totalPages);
+        });
     }, [bookTitle]);
 
     useEffect(() => {
@@ -418,12 +435,6 @@ function Memo() {
             newMemoSource.current.value = null;
             newMemoAuthor.current.value = null;
             memoAddClose();
-        }
-
-        if (bookLocalStorage === null) {
-            setBookTitle("전체");
-        } else {
-            setMemoArr(memoListArr.filter((item) => item.memoSource === bookTitle));
         }
 
     }, [memoListArr]);
@@ -561,7 +572,7 @@ function Memo() {
             <div className='content_area content_area_memo reverse'>
                 <div className={`book_list_pos ${isAuth === true ? 'auth' : ''}`}>
                     <div className='book_list'>
-                        <div className={`book_list_current ${scrollPosition > 0 ? "scroll_event" : ""}`} onClick={bookListOn}>
+                        <div className={`book_list_current ${MemoScrollPosition > 0 ? "scroll_event" : ""}`} onClick={bookListOn}>
                             <i className='icon-book'></i>
                             <strong className={`${bookListActive ? bookListActive : ''}`}>{bookTitle}</strong>
                             <b onClick={(e) => refreshTitle(e)} className={`icon-cancel ${bookTitle !== '전체' ? 'active' : ''}`}></b>
@@ -593,7 +604,7 @@ function Memo() {
                         </div>
                     </div>
                     {isAuth === true && (
-                        <div className={`memo_btn ${scrollPosition > 0 ? "scroll_event" : ""}`}>
+                        <div className={`memo_btn ${MemoScrollPosition > 0 ? "scroll_event" : ""}`}>
                             <button onClick={memoAddOn} className='icon-pencil-alt'></button>
                             <button onClick={bookAddOn} className='icon-book-2'></button>
                         </div>
@@ -678,7 +689,7 @@ function Memo() {
             const memoContent = document.querySelectorAll('.memo_content');
 
             memoContent.forEach((ele, i) => {
-                if (scrollPosition + rootHeight - ele.offsetHeight * 2 > ele.offsetTop - ele.offsetHeight) {
+                if (MemoScrollPosition + rootHeight - ele.offsetHeight * 2 > ele.offsetTop - ele.offsetHeight) {
                     ele.classList.add("anima");
                 } else {
                     ele.classList.remove("anima");

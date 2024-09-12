@@ -98,6 +98,9 @@ function App() {
 
     // about header scroll
     const [scrollPosition, setScrollPosition] = useState(0);
+    const [wlScrollPosition, setWlScrollPosition] = useState(0);
+    const [MemoScrollPosition, setMemoScrollPosition] = useState(0);
+    const [cateScrollPosition, setCateScrollPosition] = useState(0);
     const rootHeight = document.getElementById('root').offsetHeight;
 
     useEffect(() => {
@@ -175,7 +178,11 @@ function App() {
 
     return (
 
-        <MyContext.Provider value={{ searchArr, setSearchArr, scrollPosition, setScrollPosition, rootHeight, isAuth, setAuth, annoListBtn, setAnnoListBtn, annoClick, setAnnoClick, annoString, setAnnoString }}>
+        <MyContext.Provider value={{ searchArr, setSearchArr, 
+        scrollPosition, setScrollPosition, wlScrollPosition, setWlScrollPosition, MemoScrollPosition, setMemoScrollPosition, cateScrollPosition, setCateScrollPosition,
+        rootHeight, 
+        isAuth, setAuth, 
+        annoListBtn, setAnnoListBtn, annoClick, setAnnoClick, annoString, setAnnoString }}>
             <div id='app' className={`App ${theme}`}>
 
                 <ToastContainer />

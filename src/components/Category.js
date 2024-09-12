@@ -1,7 +1,9 @@
 
-import { React, useEffect, useState, useRef } from 'react';
+import { React, useEffect, useState, useRef, useContext } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from "react-redux"
+
+import MyContext from '../context';
 
 import ViewEdit from './SlateView.js'
 import { syncCateListData } from '../data/reducers.js'
@@ -10,6 +12,7 @@ import { writeListData, cateListData_cate, cateListDataPost } from '../data/api.
 function Category() {
 
     const dispatch = useDispatch();
+    const { rootHeight, cateScrollPosition, setCateScrollPosition} = useContext(MyContext);
 
     useEffect(() => {
         dispatch(writeListData());

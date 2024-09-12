@@ -214,19 +214,27 @@ def get_data_memo():
     results = get_data_from_memo()
     memoList, bookList = json.loads(results[0]), json.loads(results[1])
 
+    bookTitle = request.args.get('bookTitle')
+
+    if bookTitle != '전체':
+        filtered_memoList = [memo for memo in memoList if memo.get('memoSource') == bookTitle]
+    else:
+        filtered_memoList = memoList
+
     page = int(request.args.get('page', 1))
     limit = int(request.args.get('limit', 5))
 
     try:
         start = (page - 1) * limit
         end = start + limit
-        paginated_memo_data = memoList[start:end]
+        paginated_memo_data = filtered_memoList[start:end]
 
         data = {
             'memo': paginated_memo_data,
             'book': bookList,
             'currentPage': page,
-            'totalPages': (len(memoList) + limit - 1) // limit
+            'totalPages': (len(memoList) + limit - 1) // limit,
+            'bookTitle': bookTitle
         }
         return jsonify(data)
 
