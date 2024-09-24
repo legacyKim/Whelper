@@ -127,7 +127,6 @@ const useAnno = (
                         element.style.removeProperty('--anno-num');
                     }
 
-                    // 인식이 가능한가?
                     Editor.removeMark(editor, 'annotation', { at: element });
 
                 }

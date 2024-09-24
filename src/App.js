@@ -101,6 +101,7 @@ function App() {
     const [wlScrollPosition, setWlScrollPosition] = useState(0);
     const [MemoScrollPosition, setMemoScrollPosition] = useState(0);
     const [cateScrollPosition, setCateScrollPosition] = useState(0);
+    const [searchScrollPosition, setSearchScrollPosition] = useState(0);
     const rootHeight = document.getElementById('root').offsetHeight;
 
     useEffect(() => {
@@ -179,7 +180,7 @@ function App() {
     return (
 
         <MyContext.Provider value={{ searchArr, setSearchArr, 
-        scrollPosition, setScrollPosition, wlScrollPosition, setWlScrollPosition, MemoScrollPosition, setMemoScrollPosition, cateScrollPosition, setCateScrollPosition,
+        scrollPosition, setScrollPosition, wlScrollPosition, setWlScrollPosition, MemoScrollPosition, setMemoScrollPosition, cateScrollPosition, setCateScrollPosition, searchScrollPosition, setSearchScrollPosition,
         rootHeight, 
         isAuth, setAuth, 
         annoListBtn, setAnnoListBtn, annoClick, setAnnoClick, annoString, setAnnoString }}>

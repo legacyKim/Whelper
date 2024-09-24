@@ -46,7 +46,7 @@ function WriteList() {
         const writeAreaHeight = document.querySelector('.content_area_write').offsetHeight;
 
         if (page <= totalPages) {
-            if (Math.round(wlScrollPosition + rootHeight) === writeAreaHeight) {
+            if (Math.ceil(wlScrollPosition + rootHeight) === writeAreaHeight) {
                 setPage((prevPage) => prevPage + 1);
             }
         }

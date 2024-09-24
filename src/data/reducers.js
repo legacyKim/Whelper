@@ -1,16 +1,18 @@
 import { createSlice, configureStore } from '@reduxjs/toolkit';
-import { writeListData, writeListPageData, writeListDateData, writeListDataPost, memoListData, cateListData, bookListData } from './api.js'
+import { writeListData, writeListPageData, writeListCateData, writeListSearchData, writeListDateData, writeListDataPost, memoListData, cateListData, bookListData } from './api.js'
+
+const writeInitialState = {
+    data: {
+        write: [],
+        totalPages: null,
+    },
+    loading: false,
+    error: null,
+}
 
 const WriteData = createSlice({
     name: 'WriteData',
-    initialState: {
-        data: {
-            cate: [],
-            write: [],
-        },
-        loading: false,
-        error: null,
-    },
+    initialState: writeInitialState,
     reducers: {
         syncWriteListData: (state, action) => {
             if (action.payload !== undefined) {
@@ -59,14 +61,7 @@ const WriteData = createSlice({
 
 const WriteListPageDataOn = createSlice({
     name: 'WriteListPageDataOn',
-    initialState: {
-        data: {
-            write: [],
-            totalPages: null,
-        },
-        loading: false,
-        error: null,
-    },
+    initialState: writeInitialState,
     extraReducers: (builder) => {
         builder.addCase(writeListPageData.pending, (state) => {
             state.loading = true;
@@ -88,23 +83,72 @@ const WriteListPageDataOn = createSlice({
 
 const WriteListDateDataOn = createSlice({
     name: 'WriteListDateDataOn',
-    initialState: {
-        data: {
-            write: [],
-            totalPages: null,
-        },
-        loading: false,
-        error: null,
-    },
+    initialState: writeInitialState,
     extraReducers: (builder) => {
         builder.addCase(writeListDateData.pending, (state) => {
             state.loading = true;
         }).addCase(writeListDateData.fulfilled, (state, action) => {
+            console.log(action.payload)
             state.loading = false;
             state.data = action.payload
         }).addCase(writeListDateData.rejected, (state, action) => {
             state.error = action.payload ?? action.error
         })
+    },
+});
+
+
+const WriteListCateDataOn = createSlice({
+    name: 'WriteListCateDataOn',
+    initialState: writeInitialState,
+    reducers : {
+        resetWriteCate: () => writeInitialState,
+    },
+    extraReducers: (builder) => {
+        builder.addCase(writeListCateData.pending, (state) => {
+            state.loading = true;
+        }).addCase(writeListCateData.fulfilled, (state, action) => {
+            state.loading = false;
+
+            console.log(action.payload.category)
+
+            if (action.payload.totalPages) {
+                const newWriteData = action.payload.write.filter(newItem =>
+                    !state.data.write.some(existingItem => existingItem.id === newItem.id)
+                );
+                state.data.write = [...state.data.write, ...newWriteData];
+                state.data.totalPages = action.payload.totalPages;
+            }
+        }).addCase(writeListCateData.rejected, (state, action) => {
+            state.error = action.payload ?? action.error
+        })
+
+    },
+});
+
+const WriteListSearchDataOn = createSlice({
+    name : 'WriteListSearchDataOn',
+    initialState : writeInitialState,
+    reducers : {
+        resetWriteSearch: () => writeInitialState,
+    },
+    extraReducers: (builder) => {
+        builder.addCase(writeListSearchData.pending, (state) => {
+            state.loading = true;
+        }).addCase(writeListSearchData.fulfilled, (state, action) => {
+            state.loading = false;
+
+            if (action.payload.totalPages) {
+                const newWriteData = action.payload.write.filter(newItem =>
+                    !state.data.write.some(existingItem => existingItem.id === newItem.id)
+                );
+                state.data.write = [...state.data.write, ...newWriteData];
+                state.data.totalPages = action.payload.totalPages;
+            }
+        }).addCase(writeListSearchData.rejected, (state, action) => {
+            state.error = action.payload ?? action.error
+        })
+
     },
 })
 
@@ -207,6 +251,7 @@ const memoData = createSlice({
         builder.addCase(memoListData.pending, (state) => {
             state.loading = true;
         }).addCase(memoListData.fulfilled, (state, action) => {
+            console.log(action.payload)
             state.loading = false;
             if (action.payload.memo) {
                 const newMemoData = action.payload.memo.filter(newItem =>
@@ -220,7 +265,7 @@ const memoData = createSlice({
         })
 
     },
-})
+});
 
 const cateData = createSlice({
     name: 'cateData',
@@ -254,7 +299,7 @@ const cateData = createSlice({
         })
 
     },
-})
+});
 
 const bookData = createSlice({
     name: 'bookData',
@@ -300,6 +345,8 @@ const bookData = createSlice({
 
 export const { syncWriteListData, syncWriteListDataUpdate } = WriteData.actions;
 export const { syncMemoListDataAdd, syncMemoListDelete, syncMemoListDataUpdate, syncMemoListAnno, syncMemoListAnnoUpdate, syncMemoListAnnoDelete, resetMemo } = memoData.actions;
+export const { resetWriteCate } = WriteListCateDataOn.actions;
+export const { resetWriteSearch } = WriteListSearchDataOn.actions;
 export const { cateListDataAdd, syncCateListData } = cateData.actions;
 export const { syncBookListDataAdd, syncBookListDelete } = bookData.actions;
 
@@ -308,6 +355,8 @@ const store = configureStore({
         WriteData: WriteData.reducer,
         WriteListPageDataOn: WriteListPageDataOn.reducer,
         WriteListDateDataOn: WriteListDateDataOn.reducer,
+        WriteListCateDataOn: WriteListCateDataOn.reducer,
+        WriteListSearchDataOn: WriteListSearchDataOn.reducer,
         memoData: memoData.reducer,
         cateData: cateData.reducer,
         bookData: bookData.reducer,

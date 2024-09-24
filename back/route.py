@@ -44,7 +44,8 @@ def get_data_WriteList_date():
             updated_at = item.get('updated_at')
 
             if updated_at:
-                updated_at_date = datetime.strptime(updated_at, '%Y-%m-%dT%H:%M:%S')
+                updated_at_date = datetime.strptime(
+                    updated_at, '%Y-%m-%dT%H:%M:%S')
                 if updated_at_date >= seven_days_ago:
                     filtered_write_data.append(item)
 
@@ -90,7 +91,7 @@ def get_data_WriteList_page():
     write_data, cate_data = process_write_data()
 
     page = int(request.args.get('page', 1))
-    limit = int(request.args.get('limit', 5))
+    limit = int(request.args.get('limit', 10))
 
     try:
         start = (page - 1) * limit
@@ -152,12 +153,36 @@ def update_data_WriteList():
 
 @app.route('/api/Search', methods=['GET'])
 def get_data_to_Search():
+
     results = get_data_from_write()
-    writeList, cateList = results[0], results[1]
+    writeList = json.loads(results[0])
+
+    searchPageInput = request.args.get('searchPageInput')
+    page = int(request.args.get('page', 1))
+    limit = int(request.args.get('limit', 10))
+
+    if searchPageInput:
+        search_terms = searchPageInput.split()
+        filtered_writeList = [
+            write for write in writeList if any(
+                search_term in write.get('content', '') for search_term in search_terms
+            )
+        ]
+    else:
+        filtered_writeList = []
 
     try:
-        data = {'write': json.loads(writeList), 'cate': json.loads(cateList)}
+        start = (page - 1) * limit
+        end = start + limit
+        paginated_write_data = filtered_writeList[start:end]
+
+        data = {
+            'write': paginated_write_data,
+            'currentPage': page,
+            'totalPages': (len(writeList) + limit - 1) // limit,
+        }
         return jsonify(data)
+
     except json.decoder.JSONDecodeError as e:
         print(f"JSON Decode Error: {e}")
         return jsonify({'error': 'Invalid JSON data'}), 500
@@ -208,21 +233,61 @@ def delete_data_WriteList(id):
         return jsonify({'error': 'Error handling delete request'}), 500
 
 
-# @app.route('/')
+@app.route('/api/WriteListCate', methods=['GET'])
+def get_data_write_cate():
+
+    results = get_data_from_write()
+    writeList = json.loads(results[0])
+
+    cateArr = request.args.get('cateArr')
+    page = int(request.args.get('page', 1))
+    limit = int(request.args.get('limit', 10))
+
+    if cateArr != '[]':
+        try:
+            cateArr = json.loads(cateArr)
+        except json.JSONDecodeError:
+            return jsonify({'error': 'Invalid JSON format for cateArr'}), 400
+
+        filtered_writeList = [
+            write for write in writeList if any(
+                cate in write.get('keywords', '') for cate in cateArr
+            )
+        ]
+    else:
+        filtered_writeList = []
+
+    try:
+        start = (page - 1) * limit
+        end = start + limit
+        paginated_write_data = filtered_writeList[start:end]
+
+        data = {
+            'write': paginated_write_data,
+            'currentPage': page,
+            'totalPages': (len(writeList) + limit - 1) // limit,
+        }
+        return jsonify(data)
+
+    except json.decoder.JSONDecodeError as e:
+        print(f"JSON Decode Error: {e}")
+        return jsonify({'error': 'Invalid JSON data'}), 500
+
+
 @app.route('/api/Memo', methods=['GET'])
 def get_data_memo():
     results = get_data_from_memo()
     memoList, bookList = json.loads(results[0]), json.loads(results[1])
 
     bookTitle = request.args.get('bookTitle')
+    page = int(request.args.get('page', 1))
+    limit = int(request.args.get('limit', 10))
 
     if bookTitle != '전체':
-        filtered_memoList = [memo for memo in memoList if memo.get('memoSource') == bookTitle]
+        filtered_memoList = [
+            memo for memo in memoList if memo.get('memoSource') == bookTitle]
     else:
         filtered_memoList = memoList
-
-    page = int(request.args.get('page', 1))
-    limit = int(request.args.get('limit', 5))
 
     try:
         start = (page - 1) * limit
@@ -241,7 +306,6 @@ def get_data_memo():
     except json.decoder.JSONDecodeError as e:
         print(f"JSON Decode Error: {e}")
         return jsonify({'error': 'Invalid JSON data'}), 500
-
 
 
 @app.route('/api/Memo', methods=['POST'])

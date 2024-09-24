@@ -2,21 +2,25 @@
 import { React, useEffect, useState, useRef, useContext } from 'react';
 import { useSelector, useDispatch } from "react-redux"
 import { useParams, Link } from 'react-router-dom';
+
+import { debounce } from 'lodash';
 import MyContext from '../context'
 
 import ViewEdit from './SlateView.js'
-import { writeListData_search } from '../data/api.js';
+import { writeListSearchData } from '../data/api.js';
+import { resetWriteSearch } from "../data/reducers.js"
 
 import deserialize from './hook/deserialize.js';
 
 function Search() {
 
     let { searchInputValue } = useParams();
+
     const [searchFrist, setFirstSearch] = useState(searchInputValue);
     const [searchPageInput, setSearchPageInput] = useState(searchFrist);
 
     // about search
-    const { searchArr, setSearchArr } = useContext(MyContext);
+    const { searchArr, setSearchArr, rootHeight, searchScrollPosition, setSearchScrollPosition } = useContext(MyContext);
 
     const newSearch = useRef();
     let newSearchBtn = () => {
@@ -36,24 +40,57 @@ function Search() {
 
     // about search result filter
     const dispatch = useDispatch();
+    const [page, setPage] = useState(1);
+
+    const writeListState = useSelector((state) => state.WriteListSearchDataOn);
+    const searchFilter = writeListState.data.write || [];
+
+    const [totalPages, setTotalPages] = useState(writeListState.data.totalPages);
+
     useEffect(() => {
-        dispatch(writeListData_search())
-    }, [dispatch]);
+        dispatch(resetWriteSearch());
+        dispatch(writeListSearchData({ page: 1, searchPageInput })).then(() => {
+            setTotalPages(writeListState.data.totalPages);
+            setPage(1);
+        });
+    }, [searchPageInput])
 
-    const writeListState = useSelector((state) => state.WriteData);
-    const writeListArr = writeListState.data.write.filter(item => item !== null) || [];
+    useEffect(() => {
+        const updateScroll = debounce(() => {
+            setSearchScrollPosition(window.scrollY || document.documentElement.scrollTop);
+        });
+        window.addEventListener('scroll', updateScroll);
+        return () => {
+            window.removeEventListener('scroll', updateScroll);
+        };
+    }, []);
 
-    var searchFilter = writeListArr.filter((a) => {
-        const contentDoc = new DOMParser().parseFromString(a.content, 'text/html');
-        const contentValue = deserialize(contentDoc.body);
-        var searchCompare = contentValue !== null ? contentValue[0].children[0].text : '';
-        return searchCompare.includes(searchPageInput);
-    });
+    useEffect(() => {
+        if (totalPages === null) {
+            dispatch(writeListSearchData({ page, searchPageInput })).then(() => {
+                setTotalPages(writeListState.data.totalPages);
+            });
+        }
+
+        const searchAreaHeight = document.querySelector('.content_area_search').offsetHeight
+
+        if (page <= totalPages) {
+            if (Math.ceil(searchScrollPosition + rootHeight) === searchAreaHeight) {
+                setPage((prevPage) => prevPage + 1);
+            }
+        }
+    }, [searchScrollPosition]);
+
+    useEffect(() => {
+        if (page <= totalPages) {
+            dispatch(writeListSearchData({ page, searchPageInput }));
+        }
+    }, [page]);
     //// about search result filter
 
     return (
 
-        <div className='content_area'>
+        <div className='content_area content_area_search'>
             <div className='search_result'>
                 <span className='search_input search_input_limit'>
                     <input type='text' ref={newSearch} value={searchFrist} onInput={(e) => setFirstSearch(e.target.value)}></input>

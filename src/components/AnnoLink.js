@@ -56,7 +56,7 @@ function AnnoLink() {
     const annoBtn = (e) => {
         e.preventDefault();
 
-        if (e._reactName === 'onContextMenu') {
+        if (e._reactName === 'onContextMenu' && e.target.dataset.slateString !== 'true') {
 
             const mouseX = e.clientX;
             const mouseY = e.clientY;

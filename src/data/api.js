@@ -18,7 +18,20 @@ export const writeListData = createAsyncThunk('writeData/getData', async () => {
 export const writeListPageData = createAsyncThunk('writeData/getData', async (page) => {
     try {
         const response = await axios.get(`${API_URL}/api/WriteListPage`, {
-            params: { page, limit: 5 }
+            params: { page, limit: 10 }
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching writeListData:', error);
+        throw error;
+    }
+});
+
+export const writeListCateData = createAsyncThunk('writeData/getData', async ({ page, cateArr }) => {
+    try {
+        console.log(cateArr)
+        const response = await axios.get(`${API_URL}/api/WriteListCate`, {
+            params: { page, cateArr: JSON.stringify(cateArr), limit: 10 }
         });
         return response.data;
     } catch (error) {
@@ -88,10 +101,12 @@ export const writeListDataUpdate = createAsyncThunk('writeData/updateData', asyn
 });
 
 // get write data in search
-export const writeListData_search = createAsyncThunk('writeData/getData',
-    async () => {
+export const writeListSearchData = createAsyncThunk('writeData/getData',
+    async ({ page, searchPageInput }) => {
         try {
-            const response = await axios.get(`${API_URL}/api/Search`);
+            const response = await axios.get(`${API_URL}/api/Search`, {
+                params: { page, searchPageInput, limit: 10 }
+            });
             return response.data;
         } catch (error) {
             console.error('Error fetching writeListData:', error);
@@ -145,10 +160,10 @@ export const cateListDataPost = createAsyncThunk('writeData/newData', async (new
 
 // get memodata
 export const memoListData = createAsyncThunk('memoData/getMemo',
-    async ({page, bookTitle}) => {
+    async ({ page, bookTitle }) => {
         try {
             const response = await axios.get(`${API_URL}/api/Memo`, {
-                params: { page, bookTitle, limit: 5 }
+                params: { page, bookTitle, limit: 10 }
             });
             return response.data;
         } catch (error) {
