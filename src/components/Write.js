@@ -1,19 +1,19 @@
 import React, { useRef, useState, useMemo, useCallback, useEffect, useContext } from 'react';
-import { useDispatch, useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from 'react-router-dom';
 
-import { syncWriteListData } from "../data/reducers"
-import { writeListData, writeListDataPost, cateListData } from '../data/api.js';
+import { syncWriteListData } from "../data/reducers";
+import { writeListDataPost, cateListData } from '../data/api.js';
 
 import { createEditor, Editor, Element as SlateElement } from 'slate';
-import { Slate, Editable, withReact } from 'slate-react'
+import { Slate, Editable, withReact } from 'slate-react';
 
-import MyContext from '../context'
-import AnnoList from './Anno.js'
+import MyContext from '../context';
+import AnnoList from './Anno.js';
 
 import useAnno from './hook/useAnno.js';
 import serialize from './hook/serialize.js';
-import useSlateRender from './hook/useSlateRender.js'
+import useSlateRender from './hook/useSlateRender.js';
 
 // slate editor
 const CustomEditor = {
@@ -99,7 +99,6 @@ function Write() {
 
     const dispatch = useDispatch();
     useEffect(() => {
-        dispatch(writeListData());
         dispatch(cateListData());
     }, [dispatch]);
 
@@ -192,8 +191,8 @@ function Write() {
         const contentString = serialize(editorValue);
         const content = contentString;
 
-        const keywords = JSON.stringify(keywordArr)
-        const id = 99999;
+        const keywords = JSON.stringify(keywordArr);
+        const id = '9999';
 
         const currentTime = new Date().toISOString();
         const updated_at = currentTime;
@@ -214,7 +213,7 @@ function Write() {
     };
 
     // save and keep the last num of id
-    const recentId = 99999;
+    const recentId = '9999';
     //// save content
 
     // toolbar

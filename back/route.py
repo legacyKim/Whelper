@@ -3,7 +3,7 @@ from flask import Flask, request, jsonify, session, make_response
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity, set_access_cookies, unset_jwt_cookies
 from flask_cors import CORS
 from db_connector import get_data_from_write, get_data_from_memo
-from db_operator import post_data_to_write, update_data_from_write, delete_data_from_write, post_data_to_cate, post_data_from_memo, update_data_from_memo, delete_data_from_memo, post_data_from_memoAnno, update_data_from_memoAnno, delete_data_from_memoAnno, post_data_from_book, delete_data_from_book, post_data_from_pwd
+from db_operator import post_data_to_write, update_data_from_write, delete_data_from_write, post_data_to_cate, post_data_from_memo, update_data_from_memo, delete_data_from_memo, post_data_from_memoAnno, update_data_from_memoAnno, delete_data_from_memoAnno, delete_data_from_cate, post_data_from_book, delete_data_from_book, post_data_from_pwd
 from datetime import datetime, timedelta
 import json
 
@@ -22,11 +22,11 @@ app.config['JWT_COOKIE_CSRF_PROTECT'] = True  # 필요에 따라 True로 설정
 app.config['JWT_CSRF_CHECK_FORM'] = True  # 필요에 따라 True로 설정
 jwt = JWTManager(app)
 
-CORS(app, resources={
-     r'*': {'origins': 'http://localhost:3000'}}, supports_credentials=True)
-
 # CORS(app, resources={
-#      r'*': {'origins': 'https://bambueong.net/'}}, supports_credentials=True)
+#      r'*': {'origins': 'http://localhost:3000'}}, supports_credentials=True)
+
+CORS(app, resources={
+     r'*': {'origins': 'https://bambueong.net/'}}, supports_credentials=True)
 
 
 @app.route('/api/date', methods=['GET'])
@@ -76,10 +76,21 @@ def process_write_data():
         return jsonify({'error': 'Invalid JSON data'}), 500
 
 
-def common_write_data():
+def common_write_data(id=None):
     write_data, cate_data = process_write_data()
+
     if write_data is None:
         return jsonify({'error': 'Invalid JSON data'}), 500
+
+    if id is not None:
+        if id == 9999:
+            write_data = write_data[-1]
+            print(write_data)
+        else:
+            matching_data = next(
+                (item for item in write_data if item['id'] == id), None)
+            if matching_data:
+                write_data = matching_data
 
     data = {'write': write_data, 'cate': cate_data}
     return jsonify(data)
@@ -117,9 +128,9 @@ def get_data_WriteList():
     return common_write_data()
 
 
-@app.route('/api/WriteView', methods=['GET'])
-def get_data_WriteView():
-    return common_write_data()
+@app.route('/api/WriteView/<int:id>', methods=['GET'])
+def get_data_WriteView(id):
+    return common_write_data(id)
 
 
 @app.route('/api/AnnoLink', methods=['GET'])
@@ -210,6 +221,20 @@ def post_data_cate():
     except Exception as e:
         print(f"Error: {e}")
         return jsonify({'error': 'Error handling write post request'}), 500
+
+
+@app.route('/api/Category', methods=['DELETE'])
+def delete_data_cate():
+    try:
+        data = request.get_json()
+        category_name = data.get('category')
+        if category_name:
+            delete_data_from_cate(category_name)
+            return jsonify({"message": f"Data with name='{category_name}' deleted successfully"}), 200
+        else:
+            return jsonify({"error": "Category name is required"}), 400
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 
 @app.route('/api/WriteCorrect/cate', methods=['POST'])
@@ -425,7 +450,7 @@ def post_data_login():
         return jsonify({'error': str(e)}), 500
 
 
-@app.route('/protected', methods=['GET'])
+@app.route('/api/protected', methods=['GET'])
 @jwt_required()
 def protected():
     current_user = get_jwt_identity()
@@ -440,7 +465,7 @@ def login():
         return jsonify({'message': 'User not logged in'}), 401
 
 
-@app.route('/logout', methods=['POST'])
+@app.route('/api/logout', methods=['POST'])
 def logout():
     session.pop('username', None)
     session.pop('user_authority', None)

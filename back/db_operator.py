@@ -41,6 +41,7 @@ class Memo(Base_memo):
     id = Column(Integer, primary_key=True, nullable=False, autoincrement=True)
     memoComment = Column(String(1255))
     memoSource = Column(String(255))
+    memoSourcePage = Column(String(255))
     memoAuthor = Column(String(255))
     memoAnnotation = Column(Text)
 
@@ -65,13 +66,13 @@ class User(Base_user):
 config_write, config_memo, config_login = db_config()
 
 engine_write = create_engine(
-    f"mysql://{config_write['user']}:{config_write['password']}@{config_write['host']}/{config_write['database']}", echo=True)
+    f"mysql://{config_write['user']}:{config_write['password']}@{config_write['host']}/{config_write['database']}", echo=True, pool_pre_ping=True)
 
 engine_memo = create_engine(
-    f"mysql://{config_memo['user']}:{config_memo['password']}@{config_memo['host']}/{config_memo['database']}", echo=True)
+    f"mysql://{config_memo['user']}:{config_memo['password']}@{config_memo['host']}/{config_memo['database']}", echo=True, pool_pre_ping=True)
 
 engine_login = create_engine(
-    f"mysql://{config_login['user']}:{config_login['password']}@{config_login['host']}/{config_login['database']}", echo=True)
+    f"mysql://{config_login['user']}:{config_login['password']}@{config_login['host']}/{config_login['database']}", echo=True, pool_pre_ping=True)
 
 
 Session_write = sessionmaker(bind=engine_write)
@@ -130,11 +131,9 @@ def update_data_from_write(data, write_id):
 def delete_data_from_write(write_id):
     try:
         with Session_write() as session:
-            # 삭제할 데이터를 조회합니다.
             write_instance = session.query(
                 Write).filter_by(id=write_id).first()
 
-            # 조회된 데이터가 있을 경우 삭제합니다.
             if write_instance:
                 session.delete(write_instance)
                 session.commit()
@@ -153,6 +152,22 @@ def post_data_to_cate(data):
             session.commit()
     except Exception as e:
         print(f"Error adding data: {e}")
+
+
+def delete_data_from_cate(category_name):
+    try:
+        with Session_write() as session:
+            cate_instance = session.query(
+                Category).filter_by(category=category_name).first()
+
+            if cate_instance:
+                session.delete(cate_instance)
+                session.commit()
+                print(f"Data with name={category_name} deleted successfully")
+            else:
+                print(f"No data found with name={category_name}")
+    except Exception as e:
+        print(f"Error deleting data: {e}")
 
 
 def post_data_from_memo(data):
@@ -193,10 +208,8 @@ def update_data_from_memo(data, memo_id):
 def delete_data_from_memo(memo_id):
     try:
         with Session_memo() as session:
-            # 삭제할 데이터를 조회합니다.
             memo_instance = session.query(Memo).filter_by(id=memo_id).first()
 
-            # 조회된 데이터가 있을 경우 삭제합니다.
             if memo_instance:
                 session.delete(memo_instance)
                 session.commit()

@@ -18,6 +18,15 @@ function App() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
+    const location = useLocation();
+    const prevPathRef = useRef();
+
+    useEffect(() => {
+        prevPathRef.current = location.pathname;
+    }, [location.pathname]);
+
+    const prevPathname = prevPathRef.current;
+
     const [isAuth, setAuth] = useState(false);
 
     useEffect(() => {
@@ -96,24 +105,14 @@ function App() {
     }, [searchActive]);
     //// about search ShowHide
 
-    // about header scroll
+    // about scroll
     const [scrollPosition, setScrollPosition] = useState(0);
     const [wlScrollPosition, setWlScrollPosition] = useState(0);
     const [MemoScrollPosition, setMemoScrollPosition] = useState(0);
     const [cateScrollPosition, setCateScrollPosition] = useState(0);
     const [searchScrollPosition, setSearchScrollPosition] = useState(0);
     const rootHeight = document.getElementById('root').offsetHeight;
-
-    useEffect(() => {
-        const updateScroll = debounce(() => {
-            setScrollPosition(window.scrollY || document.documentElement.scrollTop);
-        });
-        window.addEventListener('scroll', updateScroll);
-        return () => {
-            window.removeEventListener('scroll', updateScroll);
-        };
-    }, []);
-    //// about header scroll
+    //// aboutr scroll
 
     // about search
     const keywordArrLocalString = localStorage.getItem('searchHistory');
@@ -177,20 +176,55 @@ function App() {
     }, [isAuth])
     //// default right click, copy
 
+    const [showHeader, setShowHeader] = useState(false);
+    useEffect((e) => {
+        const updateScrollHeader = debounce(() => {
+            setScrollPosition(window.scrollY || document.documentElement.scrollTop);
+        });
+
+        window.addEventListener('scroll', updateScrollHeader);
+        return () => {
+            window.removeEventListener('scroll', updateScrollHeader);
+        };
+
+    }, []);
+
+    useEffect(() => {
+        const handleMouseOver = (e) => {
+            const header = document.querySelector(".header");
+            const headerHeight = header.clientHeight;
+            if (scrollPosition > headerHeight) {
+                if (e.clientY < headerHeight) {
+                    setShowHeader(true);
+                } else {
+                    setShowHeader(false);
+                }
+            }
+        };
+        document.addEventListener('mouseover', handleMouseOver);
+        return () => {
+            document.removeEventListener('mouseover', handleMouseOver);
+        };
+    }, [scrollPosition])
+
     return (
 
-        <MyContext.Provider value={{ searchArr, setSearchArr, 
-        scrollPosition, setScrollPosition, wlScrollPosition, setWlScrollPosition, MemoScrollPosition, setMemoScrollPosition, cateScrollPosition, setCateScrollPosition, searchScrollPosition, setSearchScrollPosition,
-        rootHeight, 
-        isAuth, setAuth, 
-        annoListBtn, setAnnoListBtn, annoClick, setAnnoClick, annoString, setAnnoString }}>
+        <MyContext.Provider value={{
+            showHeader,
+            searchArr, setSearchArr,
+            wlScrollPosition, setWlScrollPosition, MemoScrollPosition, setMemoScrollPosition, cateScrollPosition, setCateScrollPosition, searchScrollPosition, setSearchScrollPosition,
+            rootHeight,
+            isAuth, setAuth,
+            annoListBtn, setAnnoListBtn, annoClick, setAnnoClick, annoString, setAnnoString,
+            prevPathname
+        }}>
             <div id='app' className={`App ${theme}`}>
 
                 <ToastContainer />
 
-                <div className={`header ${scrollPosition > 0 ? "active" : ""}`}>
+                <div className={`header ${showHeader === true ? "active" : ""}`}>
                     <div className='logo'>
-                        <NavLink to="/" className='icon-github-circled-alt2' onClick={() => { navigate('/') }}></NavLink>
+                        <NavLink to="/" className='bambueong_logo' onClick={() => { navigate('/') }}></NavLink>
                     </div>
                     <ul className='header_btn'>
                         {/* <li className='btn'><NavLink to="/components/Slate" className='icon-vector-pencil' onClick={() => { navigate('/components/Slate') }}></NavLink></li> */}
@@ -258,8 +292,12 @@ function App() {
                         </ol>
                     </div>
                 </div>
+
+                <div className='gotop'>
+                    <button className='icon-'></button>
+                </div>
             </div>
-        </MyContext.Provider>
+        </MyContext.Provider >
     )
 
     function SearchListContents({ i }) {

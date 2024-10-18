@@ -1,20 +1,30 @@
 import { createSlice, configureStore } from '@reduxjs/toolkit';
-import { writeListData, writeListPageData, writeListCateData, writeListSearchData, writeListDateData, writeListDataPost, memoListData, cateListData, bookListData } from './api.js'
+import { writeListData, writeListPageData, writeListCateData, writeListSearchData, writeListDateData, writeListDataAnnoLink, writeListDataPost, memoListData, cateListData, bookListData } from './api.js'
 
-const writeInitialState = {
+const writeInitialState = () => ({
     data: {
         write: [],
         totalPages: null,
     },
     loading: false,
     error: null,
-}
+});
 
-const WriteData = createSlice({
-    name: 'WriteData',
-    initialState: writeInitialState,
+const WriteListView = createSlice({
+    name: 'WriteListView',
+    initialState: writeInitialState(),
     reducers: {
         syncWriteListData: (state, action) => {
+            state.data.write = action.payload;
+        }
+    }
+})
+
+const WriteListPageDataOn = createSlice({
+    name: 'WriteListPageDataOn',
+    initialState: writeInitialState(),
+    reducers: {
+        syncWriteListPageData: (state, action) => {
             if (action.payload !== undefined) {
                 state.data = {
                     ...state.data,
@@ -22,7 +32,7 @@ const WriteData = createSlice({
                 };
             }
         },
-        syncWriteListDataUpdate: (state, action) => {
+        syncWriteListPageDataUpdate: (state, action) => {
             if (action.payload !== undefined) {
                 const updatedWrite = state.data.write.map(item =>
                     item.id === action.payload.id ? action.payload : item
@@ -31,37 +41,6 @@ const WriteData = createSlice({
             }
         },
     },
-
-    extraReducers: (builder) => {
-
-        // get data
-        builder.addCase(writeListData.pending, (state) => {
-            state.loading = true;
-        }).addCase(writeListData.fulfilled, (state, action) => {
-            state.loading = false;
-            state.data = action.payload
-        }).addCase(writeListData.rejected, (state, action) => {
-            state.error = action.payload ?? action.error
-        })
-            // post data
-            .addCase(writeListDataPost.pending, (state) => {
-                state.loading = true;
-            }).addCase(writeListDataPost.fulfilled, (state, action) => {
-                state.loading = false;
-                state.data = {
-                    ...state.data,
-                    write: [...state.data.write, action.payload]
-                };
-            }).addCase(writeListDataPost.rejected, (state, action) => {
-                state.error = action.payload ?? action.error
-            })
-
-    },
-});
-
-const WriteListPageDataOn = createSlice({
-    name: 'WriteListPageDataOn',
-    initialState: writeInitialState,
     extraReducers: (builder) => {
         builder.addCase(writeListPageData.pending, (state) => {
             state.loading = true;
@@ -83,34 +62,57 @@ const WriteListPageDataOn = createSlice({
 
 const WriteListDateDataOn = createSlice({
     name: 'WriteListDateDataOn',
-    initialState: writeInitialState,
+    initialState: writeInitialState(),
     extraReducers: (builder) => {
         builder.addCase(writeListDateData.pending, (state) => {
             state.loading = true;
         }).addCase(writeListDateData.fulfilled, (state, action) => {
-            console.log(action.payload)
             state.loading = false;
-            state.data = action.payload
+            state.data = action.payload;
         }).addCase(writeListDateData.rejected, (state, action) => {
             state.error = action.payload ?? action.error
         })
     },
 });
 
+const WriteListDataAnnoLinkOn = createSlice({
+    name: 'WriteListDataAnnoLinkOn',
+    initialState: writeInitialState(),
+    reducers: {
+        syncWriteListDataAnnoLink: (state, action) => {
+            if (action.payload !== undefined) {
+                state.data = {
+                    ...state.data,
+                    write: [...state.data.write, action.payload],
+                };
+            }
+        },
+    },
+    extraReducers: (builder) => {
+        builder.addCase(writeListDataAnnoLink.pending, (state) => {
+            state.loading = true;
+        }).addCase(writeListDataAnnoLink.fulfilled, (state, action) => {
+            state.loading = false;
+            state.data = action.payload;
+        }).addCase(writeListDataAnnoLink.rejected, (state, action) => {
+            state.error = action.payload ?? action.error
+        })
+    },
+})
 
 const WriteListCateDataOn = createSlice({
     name: 'WriteListCateDataOn',
-    initialState: writeInitialState,
-    reducers : {
-        resetWriteCate: () => writeInitialState,
+    initialState: writeInitialState(),
+    reducers: {
+        resetWriteCate: (state) => {
+            return writeInitialState();
+        },
     },
     extraReducers: (builder) => {
         builder.addCase(writeListCateData.pending, (state) => {
             state.loading = true;
         }).addCase(writeListCateData.fulfilled, (state, action) => {
             state.loading = false;
-
-            console.log(action.payload.category)
 
             if (action.payload.totalPages) {
                 const newWriteData = action.payload.write.filter(newItem =>
@@ -127,10 +129,12 @@ const WriteListCateDataOn = createSlice({
 });
 
 const WriteListSearchDataOn = createSlice({
-    name : 'WriteListSearchDataOn',
-    initialState : writeInitialState,
-    reducers : {
-        resetWriteSearch: () => writeInitialState,
+    name: 'WriteListSearchDataOn',
+    initialState: writeInitialState(),
+    reducers: {
+        resetWriteSearch: (state) => {
+            return writeInitialState();
+        },
     },
     extraReducers: (builder) => {
         builder.addCase(writeListSearchData.pending, (state) => {
@@ -150,7 +154,7 @@ const WriteListSearchDataOn = createSlice({
         })
 
     },
-})
+});
 
 const memoInitialState = {
     data: {
@@ -163,7 +167,7 @@ const memoInitialState = {
 
 const memoData = createSlice({
     name: 'memoData',
-    initialState: memoInitialState, 
+    initialState: memoInitialState,
     reducers: {
 
         syncMemoListDataAdd(state, action) {
@@ -251,7 +255,6 @@ const memoData = createSlice({
         builder.addCase(memoListData.pending, (state) => {
             state.loading = true;
         }).addCase(memoListData.fulfilled, (state, action) => {
-            console.log(action.payload)
             state.loading = false;
             if (action.payload.memo) {
                 const newMemoData = action.payload.memo.filter(newItem =>
@@ -284,6 +287,14 @@ const cateData = createSlice({
                     ...state.data,
                     cate: [...state.data.cate, action.payload],
                 };
+            }
+        },
+        syncCateListDataDel(state, action) {
+            if (action.payload !== undefined) {
+                const deleteCate = state.data.cate.filter(item =>
+                    item.category !== action.payload.category
+                )
+                state.data.cate = deleteCate;
             }
         }
     },
@@ -343,20 +354,24 @@ const bookData = createSlice({
 
 });
 
-export const { syncWriteListData, syncWriteListDataUpdate } = WriteData.actions;
+export const { syncWriteListData } = WriteListView.actions;
 export const { syncMemoListDataAdd, syncMemoListDelete, syncMemoListDataUpdate, syncMemoListAnno, syncMemoListAnnoUpdate, syncMemoListAnnoDelete, resetMemo } = memoData.actions;
+export const { syncWriteListPageData, syncWriteListPageDataUpdate } = WriteListPageDataOn.actions;
+export const { syncWriteListDateData } = WriteListDateDataOn.actions;
 export const { resetWriteCate } = WriteListCateDataOn.actions;
 export const { resetWriteSearch } = WriteListSearchDataOn.actions;
-export const { cateListDataAdd, syncCateListData } = cateData.actions;
+export const { syncWriteListDataAnnoLink } = WriteListDataAnnoLinkOn.actions;
+export const { cateListDataAdd, syncCateListData, syncCateListDataDel } = cateData.actions;
 export const { syncBookListDataAdd, syncBookListDelete } = bookData.actions;
 
 const store = configureStore({
     reducer: {
-        WriteData: WriteData.reducer,
+        WriteListView: WriteListView.reducer,
         WriteListPageDataOn: WriteListPageDataOn.reducer,
         WriteListDateDataOn: WriteListDateDataOn.reducer,
         WriteListCateDataOn: WriteListCateDataOn.reducer,
         WriteListSearchDataOn: WriteListSearchDataOn.reducer,
+        WriteListDataAnnoLinkOn: WriteListDataAnnoLinkOn.reducer,
         memoData: memoData.reducer,
         cateData: cateData.reducer,
         bookData: bookData.reducer,

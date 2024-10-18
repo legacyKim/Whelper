@@ -10,8 +10,6 @@ import ViewEdit from './SlateView.js'
 import { writeListSearchData } from '../data/api.js';
 import { resetWriteSearch } from "../data/reducers.js"
 
-import deserialize from './hook/deserialize.js';
-
 function Search() {
 
     let { searchInputValue } = useParams();

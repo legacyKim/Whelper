@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
 import { useNavigate } from "react-router-dom";
+
 import { useDispatch, useSelector } from "react-redux"
 import MyContext from '../context'
-import { toast } from 'react-toastify';
 
 import { debounce } from 'lodash';
 
@@ -63,7 +63,7 @@ function Memo() {
         const memoAreaHeight = document.querySelector('.content_area_memo').offsetHeight
 
         if (page <= totalPages) {
-            if (Math.ceil(MemoScrollPosition + rootHeight) === memoAreaHeight) {
+            if (Math.ceil(MemoScrollPosition + rootHeight) <= memoAreaHeight) {
                 setPage((prevPage) => prevPage + 1);
             }
         }
@@ -80,16 +80,6 @@ function Memo() {
     useEffect(() => {
         setMemoArr(memoListArr)
     }, [memoListState])
-
-    // alert
-    const showToast = () => {
-        toast('안녕하세요!', {
-            style: {
-                color: '#333',
-                zIndex: '99999',
-            },
-        });
-    };
 
     // book Add
     const [isBookAdd, setIsBookAdd] = useState(false);
@@ -248,6 +238,7 @@ function Memo() {
     // memo save
 
     var newMemoSource = useRef(null);
+    var newMemoSourcePage = useRef(null);
     var newMemoAuthor = useRef(null);
     var newMemoComment = useRef(null);
 
@@ -270,10 +261,11 @@ function Memo() {
             const memoComment = newMemoComment.current.value;
             var memoAuthor = newMemoAuthor.current.value;
             var memoSource = newMemoSource.current.value;
+            var memoSourcePage = newMemoSourcePage.current.value;
             var memoAnnotation = [];
 
-            dispatch(syncMemoListDataAdd({ memoComment, memoAuthor, memoSource, memoAnnotation, randomId }));
-            dispatch(memoListDataPost({ memoComment, memoAuthor, memoSource, memoAnnotation }));
+            dispatch(syncMemoListDataAdd({ memoComment, memoAuthor, memoSource, memoSourcePage, memoAnnotation, randomId }));
+            dispatch(memoListDataPost({ memoComment, memoAuthor, memoSource, memoSourcePage, memoAnnotation }));
 
             if (memoListArr.length === 0) {
                 dispatch(syncBookListDataAdd({ memoSource, memoAuthor }));
@@ -318,32 +310,14 @@ function Memo() {
     }
 
     // book delete
-    const deleteBook = (e) => {
-        e.stopPropagation();
+    const [modalDeleteBook, setModalDeleteBook] = useState(false);
 
-        localStorage.removeItem('bookTitle');
-        setBookTitle('전체');
-
-        const memoSource = bookTitle;
-
-        dispatch(syncBookListDelete({ memoSource }))
-        dispatch(bookListDataDelete({ memoSource: bookTitle }))
-    }
-
-    // memo anno delete
-    const memoDeleteBtn = async (memoCurrent) => {
-        const isTokenValid = await token_check(navigate);
-        if (isTokenValid) {
-            const corrMemoId = memoCurrent.id;
-            dispatch(syncMemoListDelete(corrMemoId));
-            dispatch(memoListDataDelete(corrMemoId));
-            setMemoCurrent(null);
-        }
-    }
-    //// memo Annotation
+    // memo delete
+    const [modalDeleteMemo, setModalDeleteMemo] = useState(false);
 
     // memo correct btn
     var correctMemoSource = useRef();
+    var correctMemoSourcePage = useRef();
     var correctMemoAuthor = useRef();
     var correctMemoComment = useRef();
 
@@ -354,12 +328,13 @@ function Memo() {
 
             const id = a.id
             const memoSource = correctMemoSource.current.value;
+            const memoSourcePage = correctMemoSourcePage.current.value;
             const memoAuthor = correctMemoAuthor.current.value;
             const memoComment = correctMemoComment.current.value;
             const memoAnnotation = a.memoAnnotation;
 
-            dispatch(syncMemoListDataUpdate({ id, memoSource, memoAuthor, memoComment, memoAnnotation }));
-            dispatch(memoListDataUpdate({ id, memoSource, memoAuthor, memoComment }));
+            dispatch(syncMemoListDataUpdate({ id, memoSource, memoSourcePage, memoAuthor, memoComment, memoAnnotation }));
+            dispatch(memoListDataUpdate({ id, memoSource, memoSourcePage, memoAuthor, memoComment }));
 
             if (memoListArr.length === 0) {
                 dispatch(syncBookListDataAdd({ memoSource, memoAuthor }));
@@ -431,6 +406,7 @@ function Memo() {
 
         if (memoRecord !== 'active') {
             newMemoSource.current.value = null;
+            newMemoSourcePage.current.value = null;
             newMemoAuthor.current.value = null;
             memoAddClose();
         }
@@ -575,7 +551,10 @@ function Memo() {
                             <strong className={`${bookListActive ? bookListActive : ''}`}>{bookTitle}</strong>
                             <b onClick={(e) => refreshTitle(e)} className={`icon-cancel ${bookTitle !== '전체' ? 'active' : ''}`}></b>
                             {isAuth === true && (
-                                <b onClick={(e) => deleteBook(e)} className={`icon-trash hover_opacity ${bookTitle !== '전체' ? 'active' : ''}`}></b>
+                                <b onClick={(e) => {
+                                    e.stopPropagation()
+                                    setModalDeleteBook(true);
+                                }} className={`icon-trash hover_opacity ${bookTitle !== '전체' ? 'active' : ''}`}></b>
                             )}
                         </div>
                         <div className={`book_list_box ${bookListActive ? bookListActive : ''}`}>
@@ -671,10 +650,19 @@ function Memo() {
                     <div className='memo_input'>
                         <button className={`icon-pin ${memoRecord ? memoRecord : ""}`} onClick={MemoRecordMode}></button>
                         <input type='text' placeholder='newMemoSource' ref={newMemoSource}></input>
+                        <input type='text' placeholder='newMemoSourcePage' ref={newMemoSourcePage}></input>
                         <input type='text' placeholder='newMemoAuthor' ref={newMemoAuthor}></input>
                     </div>
                 </div>
                 {/* memoAdd */}
+
+                {modalDeleteBook === true && (
+                    <ModalDeleteBook setBookTitle={setBookTitle} setModalDeleteBook={setModalDeleteBook} />
+                )}
+
+                {modalDeleteMemo === true && (
+                    <ModalDeleteMemo setModalDeleteMemo={setModalDeleteMemo} memoCurrent={memoCurrent} />
+                )}
 
             </div>
         </div >
@@ -691,13 +679,18 @@ function Memo() {
                     ele.classList.add("anima");
                 }
             });
-        }, [])
+        }, []);
 
         return (
             <div className='memo_content_box'>
                 <p className='font_text' onClick={() => memoDetailOn(a)}>{memoArr[i].memoComment}</p>
                 <div className='memo_content_btn_box'>
-                    <button onClick={() => bookFilter(i)}>{memoArr[i].memoSource}</button>
+                    <div>
+                        <button onClick={() => bookFilter(i)}>{memoArr[i].memoSource}</button>
+                        {memoArr[i].memoSourcePage !== null && memoArr[i].memoSourcePage !== '' && (
+                            <span>{memoArr[i].memoSourcePage}p</span>
+                        )}
+                    </div>
                     <span>{memoArr[i].memoAuthor}</span>
                 </div>
             </div>
@@ -713,11 +706,14 @@ function Memo() {
 
         return (
 
-            <div className='memoDetail_content_pos scroll'>
+            <div className='memoDetail_content_pos'>
                 <ul className='memoDetail_content_info'>
                     <li>
                         <strong>출처</strong>
                         <span className=''>{memo.memoSource}</span>
+                        {memo.memoSourcePage !== null && memo.memoSourcePage !== '' && (
+                            <span className=''>{memo.memoSourcePage}p</span>
+                        )}
                     </li>
                     <li>
                         <strong>저자</strong>
@@ -770,7 +766,7 @@ function Memo() {
                             {memo.id !== undefined && (
                                 <button className='icon-trash'
                                     onClick={() => {
-                                        memoDeleteBtn(memoCurrent)
+                                        setModalDeleteMemo(true)
                                         memoDetailClose();
                                     }}>
                                 </button>
@@ -836,6 +832,10 @@ function Memo() {
                         <input type="text" placeholder="correctMemoSource" className="memo_source" defaultValue={memo.memoSource} ref={correctMemoSource}></input>
                     </li>
                     <li>
+                        <strong>쪽수</strong>
+                        <input type="text" placeholder="correctMemoSourcePage" className="memo_source" defaultValue={memo.memoSourcePage} ref={correctMemoSourcePage}></input>
+                    </li>
+                    <li>
                         <strong>저자</strong>
                         <input type="text" placeholder="correctMemoSource" className="memo_source" defaultValue={memo.memoAuthor} ref={correctMemoAuthor}></input>
                     </li>
@@ -849,6 +849,59 @@ function Memo() {
                             memoCorrectClose();
                         }}></button>
                     <button className='icon-cancel' onClick={memoCorrectClose}></button>
+                </div>
+            </div>
+        )
+    }
+
+    function ModalDeleteMemo({ memoCurrent }) {
+
+        const deleteMemoInModal = async (memoCurrent) => {
+            const isTokenValid = await token_check(navigate);
+            if (isTokenValid) {
+                const corrMemoId = memoCurrent.id;
+                dispatch(syncMemoListDelete(corrMemoId));
+                dispatch(memoListDataDelete(corrMemoId));
+                setMemoCurrent(null);
+            }
+            setModalDeleteMemo(false);
+        }
+
+        return (
+            <div className="modal">
+                <div className="modal_box">
+                    <span>메모를 삭제하시겠습니까?</span>
+                    <div className="btn_wrap">
+                        <button onClick={() => setModalDeleteMemo(false)}>취소</button>
+                        <button onClick={() => deleteMemoInModal(memoCurrent)}>삭제</button>
+                    </div>
+                </div>
+            </div>
+        )
+    }
+
+    function ModalDeleteBook({ setBookTitle, setModalDeleteBook }) {
+
+        const deleteBookInModal = () => {
+            localStorage.removeItem('bookTitle');
+            setBookTitle('전체');
+
+            const memoSource = bookTitle;
+
+            dispatch(syncBookListDelete({ memoSource }));
+            dispatch(bookListDataDelete({ memoSource: bookTitle }));
+
+            setModalDeleteBook(false);
+        }
+
+        return (
+            <div className="modal">
+                <div className="modal_box">
+                    <span>저서를 삭제하시겠습니까?</span>
+                    <div className="btn_wrap">
+                        <button onClick={() => setModalDeleteBook(false)} className='cancel'>취소</button>
+                        <button onClick={deleteBookInModal}>삭제</button>
+                    </div>
                 </div>
             </div>
         )

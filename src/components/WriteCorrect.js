@@ -2,7 +2,8 @@ import React, { useRef, useState, useEffect, useCallback, useContext } from 'rea
 import { useDispatch, useSelector } from "react-redux"
 import { useParams, Link, useNavigate } from 'react-router-dom';
 
-import { syncWriteListData, syncWriteListDataUpdate } from "../data/reducers"
+// import { syncWriteListData, syncWriteListDataUpdate, syncWriteListPageDataUpdate } from "../data/reducers"
+import { syncWriteListPageDataUpdate, syncWriteListPageData } from "../data/reducers"
 import { cateListData, writeListDataUpdate } from '../data/api.js';
 
 import { createEditor, Editor, Element as SlateElement } from 'slate';
@@ -107,10 +108,10 @@ function WriteCorrect() {
     const dispatch = useDispatch();
     useEffect(() => {
         dispatch(cateListData());
-        dispatch(syncWriteListData());
+        dispatch(syncWriteListPageData());
     }, [dispatch]);
 
-    const writeListState = useSelector((state) => state.WriteData);
+    const writeListState = useSelector((state) => state.WriteListPageDataOn);
     const cateListState = useSelector((state) => state.cateData);
 
     const writeListArr = writeListState.data.write || [];
@@ -206,7 +207,8 @@ function WriteCorrect() {
         const annoString = JSON.stringify(annoArr);
         const anno = annoString;
 
-        dispatch(syncWriteListDataUpdate({ id, title, subTitle, content, keywords, anno, update_time }));
+        // dispatch(syncWriteListDataUpdate({ id, title, subTitle, content, keywords, anno, update_time }));
+        dispatch(syncWriteListPageDataUpdate({ id, title, subTitle, content, keywords, anno, update_time }));
         dispatch(writeListDataUpdate({ id, title, subTitle, content, keywords, update_time, anno }))
 
         setEdTitle(contentPlaceholder);
@@ -257,7 +259,7 @@ function WriteCorrect() {
     const writeKey = true;
 
     return (
-        <div className='Write'>
+        <div className='Write ofX-hidden'>
 
             <Slate
                 editor={titleEditor}

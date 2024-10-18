@@ -1,13 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
+
 import { TransitionGroup, CSSTransition } from "react-transition-group";
 
 import axios from 'axios';
+import MyContext from './context'
 
 import { Route, Routes, useLocation } from "react-router-dom";
 import history from './history.ts'
 
 // import App from './App.js'
-import Home from './components/Home.js'
+import Date from './components/Date.js'
 import Login from './components/Login.js'
 
 import Memo from './components/Memo.js'
@@ -26,17 +28,18 @@ import Work from './components/Work.js'
 
 function Menu() {
 
+    const { showHeader } = useContext(MyContext);
     const location = useLocation();
 
     return (
 
-        <div className='menuWrap'>
+        <div className={`menuWrap ${showHeader === true ? "active" : ""}`}>
 
             <TransitionGroup component={null}>
                 <CSSTransition key={location.key} classNames="fade" timeout={300}>
                     <Routes location={location} history={history}>
 
-                        <Route exact path="/" element={<Home />} />
+                        <Route exact path="/" element={<Date />} />
 
                         {/* <Route path="/components/Slate" element={<Slate />} /> */}
                         <Route path="/components/Login" element={<Login />} />

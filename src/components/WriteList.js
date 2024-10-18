@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 import { useSelector, useDispatch } from "react-redux";
+import { syncWriteListPageData } from '../data/reducers.js'
 import { writeListPageData } from '../data/api.js';
 
 import { debounce } from 'lodash';
@@ -13,10 +14,14 @@ import { token_check } from '../data/token_check.js';
 
 function WriteList() {
 
-    const { isAuth, rootHeight, wlScrollPosition, setWlScrollPosition} = useContext(MyContext);
+    const { isAuth, rootHeight, wlScrollPosition, setWlScrollPosition } = useContext(MyContext);
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
+
+    useEffect(() => {
+        dispatch(syncWriteListPageData())
+    }, [dispatch])
 
     const [page, setPage] = useState(1);
 
@@ -46,7 +51,7 @@ function WriteList() {
         const writeAreaHeight = document.querySelector('.content_area_write').offsetHeight;
 
         if (page <= totalPages) {
-            if (Math.ceil(wlScrollPosition + rootHeight) === writeAreaHeight) {
+            if (Math.ceil(wlScrollPosition + rootHeight) <= writeAreaHeight) {
                 setPage((prevPage) => prevPage + 1);
             }
         }
@@ -107,11 +112,9 @@ function WriteList() {
             WriteDiv.forEach((ele, i) => {
                 if (wlScrollPosition + rootHeight - ele.offsetHeight * 2 > ele.offsetTop - ele.offsetHeight) {
                     ele.classList.add("anima");
-                } else {
-                    ele.classList.remove("anima");
                 }
             });
-        }, [])
+        }, []);
 
         return (
 
@@ -123,7 +126,7 @@ function WriteList() {
                 )}
 
                 <div className='write_list'>
-                    <Link to={`/components/WriteView/${writeListArr[i].id}`}>
+                    <Link to={`/components/WriteView/${writeContent.id}`}>
                         <ViewEdit titleDoc={titleDoc} subTitleDoc={subTitleDoc} contentDoc={contentDoc}></ViewEdit>
                     </Link>
                     <div className='write_keyword'>

@@ -1,10 +1,10 @@
-const API_URL = 'http://localhost:5000';
-// const API_URL = 'https://bambueong.net';
+// const API_URL = 'http://localhost:5000';
+const API_URL = 'https://bambueong.net';
 
 export const token_check = async (navigate) => {
 
     try {
-        const response = await fetch(`${API_URL}/protected`, {
+        const response = await fetch(`${API_URL}/api/protected`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

@@ -1,8 +1,8 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
-const API_URL = 'http://localhost:5000';
-// const API_URL = 'https://bambueong.net';
+// const API_URL = 'http://localhost:5000';
+const API_URL = 'https://bambueong.net';
 
 // get write data
 export const writeListData = createAsyncThunk('writeData/getData', async () => {
@@ -29,7 +29,6 @@ export const writeListPageData = createAsyncThunk('writeData/getData', async (pa
 
 export const writeListCateData = createAsyncThunk('writeData/getData', async ({ page, cateArr }) => {
     try {
-        console.log(cateArr)
         const response = await axios.get(`${API_URL}/api/WriteListCate`, {
             params: { page, cateArr: JSON.stringify(cateArr), limit: 10 }
         });
@@ -40,7 +39,7 @@ export const writeListCateData = createAsyncThunk('writeData/getData', async ({ 
     }
 });
 
-export const writeListDateData = createAsyncThunk('writeData/getData', async () => {
+export const writeListDateData = createAsyncThunk('writeData/getDateData', async () => {
     try {
         const response = await axios.get(`${API_URL}/api/date`);
         return response.data;
@@ -50,9 +49,9 @@ export const writeListDateData = createAsyncThunk('writeData/getData', async () 
     }
 });
 
-export const writeListDataView = createAsyncThunk('writeData/getData', async () => {
+export const writeListDataView = createAsyncThunk('writeData/getData', async (id) => {
     try {
-        const response = await axios.get(`${API_URL}/api/WriteView`);
+        const response = await axios.get(`${API_URL}/api/WriteView/${id}`);
         return response.data;
     } catch (error) {
         console.error('Error fetching writeListData:', error);
@@ -70,7 +69,7 @@ export const writeListDataCorrect = createAsyncThunk('writeData/getData', async 
     }
 });
 
-export const writeListDataAnnoLink = createAsyncThunk('writeData/getData', async () => {
+export const writeListDataAnnoLink = createAsyncThunk('writeData/getAnno', async () => {
     try {
         const response = await axios.get(`${API_URL}/api/AnnoLink`);
         return response.data;
@@ -149,9 +148,18 @@ export const cateListData_cate = createAsyncThunk('cateData/getCate',
     },
 );
 
-export const cateListDataPost = createAsyncThunk('writeData/newData', async (newData) => {
+export const cateListDataPost = createAsyncThunk('cateData/newCate', async (newData) => {
     try {
         const response = await axios.post(`${API_URL}/api/Category`, newData);
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
+});
+
+export const cateListDataDelete = createAsyncThunk('cateData/cateDelete', async (category) => {
+    try {
+        const response = await axios.delete(`${API_URL}/api/Category`, { data: category });
         return response.data;
     } catch (error) {
         throw error;
@@ -280,7 +288,7 @@ export const login = createAsyncThunk('user', async (data) => {
 
 export const logout = createAsyncThunk('user/logout', async (data) => {
     try {
-        const response = await axios.post(`${API_URL}/logout`, {}, { withCredentials: true });
+        const response = await axios.post(`${API_URL}/api/logout`, {}, { withCredentials: true });
     } catch (error) {
         console.error('Logout error', error);
     }

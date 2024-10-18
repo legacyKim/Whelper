@@ -1,7 +1,10 @@
-import { React, useEffect, useState, useRef } from 'react';
-import { NavLink, useNavigate, Link, useLocation } from "react-router-dom";
+import { React, useEffect, useState, useContext } from 'react';
+
+import { Link, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { format, subDays, isAfter, compareDesc  } from 'date-fns';
+
+import { debounce } from 'lodash';
+import { format, compareDesc } from 'date-fns';
 
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -24,8 +27,8 @@ function Date_sort() {
         dispatch(writeListDateData());
     }, [dispatch]);
 
-    const writeListState = useSelector((state) => state.WriteListDateDataOn);
-    const groupedData = writeListState.data.write.filter(item => item !== null) || [];
+    const writeListStateDate = useSelector((state) => state.WriteListDateDataOn);
+    const groupedData = Array.isArray(writeListStateDate.data.write) === true ? writeListStateDate.data.write.filter(item => item !== null) : [];
 
     useRouteChange((location) => {
         if (location.pathname === '/') {
@@ -53,6 +56,36 @@ function Date_sort() {
 
     const isEmpty = Object.keys(groupedByDate).length === 0;
 
+    const rootHeight = document.getElementById('root').offsetHeight;
+    const [scrollPosition, setScrollPosition] = useState(0);
+
+    useEffect((e) => {
+        const updateScrollDate = debounce(() => {
+            setScrollPosition(window.scrollY || document.documentElement.scrollTop);
+        });
+
+        window.addEventListener('scroll', updateScrollDate);
+        return () => {
+            window.removeEventListener('scroll', updateScrollDate);
+        };
+
+    }, []);
+
+    function dataListScroll() {
+        const dateList = document.querySelectorAll('.date_list');
+
+        dateList.forEach((ele, i) => {
+            if (scrollPosition + rootHeight - ele.offsetHeight * 2 > ele.offsetTop - ele.offsetHeight) {
+                ele.classList.add("anima");
+            }
+        });
+    }
+    dataListScroll();
+
+    useEffect(() => {
+        dataListScroll();
+    }, [scrollPosition])
+
     return (
         <div className={`content_area date ${writeListActive}`}>
             {isEmpty ? (
@@ -78,6 +111,7 @@ function Date_sort() {
 function WriteShowContents({ writeListArr }) {
 
     const [writeContent, setWriteContent] = useState(writeListArr);
+
     const titleDoc = new DOMParser().parseFromString(writeContent.title, 'text/html');
     const subTitleDoc = new DOMParser().parseFromString(writeContent.subTitle, 'text/html');
     const contentDoc = new DOMParser().parseFromString(writeContent.content, 'text/html');

@@ -5,7 +5,7 @@ import MyContext from '../context'
 
 import { useSelector, useDispatch } from 'react-redux';
 import { writeListDataAnnoLink } from '../data/api.js';
-import { syncWriteListData, syncWriteListDataUpdate } from '../data/reducers.js';
+import { syncWriteListDataAnnoLink } from '../data/reducers.js';
 
 import { createEditor } from 'slate';
 import { Slate, Editable, withReact } from 'slate-react'
@@ -14,7 +14,7 @@ import deserialize from './hook/deserialize.js';
 
 function AnnoLink() {
 
-    const writeListState = useSelector((state) => state.WriteData);
+    const writeListState = useSelector((state) => state.WriteListDataAnnoLinkOn);
     var writeListArr = writeListState.data.write || [];
 
     const dispatch = useDispatch();
@@ -22,8 +22,7 @@ function AnnoLink() {
 
     useEffect(() => {
         dispatch(writeListDataAnnoLink());
-        dispatch(syncWriteListData());
-        dispatch(syncWriteListDataUpdate());
+        dispatch(syncWriteListDataAnnoLink());
     }, [dispatch]);
 
     const [writeListAnnoArr, setWriteListAnnoArr] = useState([]);
@@ -33,8 +32,9 @@ function AnnoLink() {
             if (ele !== null) {
                 newArr.push({ title: ele.title });
 
-                const parsedAnno = JSON.parse(ele.anno);
+                const parsedAnno = ele.anno !== undefined ? JSON.parse(ele.anno) : [];
                 const annoId = ele.id;
+
                 parsedAnno.forEach((annoItem) => {
                     newArr.push({ anno: annoItem.content, id: annoId });
                 });
@@ -84,7 +84,7 @@ function AnnoLink() {
     return (
         <div className='common_page'>
             <div className='content_area'>
-                <ul className="annolink_wrap" onContextMenu={(e) => annoBtn(e)} >
+                <div className="annolink_wrap" onContextMenu={(e) => annoBtn(e)} >
 
                     {writeListAnnoArr.map((a, i) => (
                         <AnnoLinkShow contentArr={a} key={i} />
@@ -97,7 +97,7 @@ function AnnoLink() {
                             </div>
                         </div>
                     </div>
-                </ul>
+                </div>
             </div>
         </div>
     )
@@ -118,6 +118,7 @@ function AnnoLink() {
             const annoLinkObj = document.querySelectorAll('.annolink li');
             for (var i = 0; i < annoLinkObj.length; i++) {
                 annoLinkObj[i].style.setProperty('--anno-link-num', `'${i + 1} )'`);
+                annoLinkObj[i].classList.add("anima");
             }
         }, []);
 

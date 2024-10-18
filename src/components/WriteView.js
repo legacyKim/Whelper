@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect, useContext, useRef } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { syncWriteListData, syncWriteListDataUpdate } from '../data/reducers.js';
@@ -16,9 +16,19 @@ import { token_check } from '../data/token_check.js'
 
 function WriteView() {
 
-    const { isAuth, annoString, setAnnoString } = useContext(MyContext);
+    const { isAuth, annoString, setAnnoString, prevPathname } = useContext(MyContext);
 
-    const writeListState = useSelector((state) => state.WriteData);
+    const writeListState = useSelector((state) => {
+        if (prevPathname === "/") {
+            return state.WriteListDateDataOn;
+        } else if (prevPathname === "/components/AnnoLink") {
+            return state.WriteListDataAnnoLinkOn;
+        } else if (prevPathname === "/components/Write") {
+            return state.WriteListView;
+        } else {
+            return state.WriteListPageDataOn;
+        }
+    });
     var writeListArr = writeListState.data.write || [];
 
     let { id } = useParams();
@@ -27,40 +37,72 @@ function WriteView() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    useEffect(() => {
-        dispatch(syncWriteListData());
-        dispatch(syncWriteListDataUpdate());
-    }, [dispatch]);
+    const refresh = async (id) => {
+        const num_id = Number(id);
+        const refresh_data = await dispatch(writeListDataView(num_id));
+        setWriteContent(refresh_data.payload.write);
+    }
 
     useEffect(() => {
         if (writeListState.data.write.length === 0) {
-            const refresh = async () => {
-                const refresh_data = await dispatch(writeListDataView());
-                setWriteContent(writeListCheck(refresh_data.payload.write, localStorage.getItem('writeId')));
-            }
-            refresh();
+            const refreshId = localStorage.getItem('writeId');
+            refresh(refreshId);
         }
     }, []);
 
     const writeListCheck = (writeListArr, id) => {
-        for (var i = 0; i < writeListArr.length; i++) {
-            if (writeListArr[i].id === Number(id)) {
-                return writeListArr[i];
+        if (id !== '9999') {
+            for (var i = 0; i < writeListArr.length; i++) {
+                if (writeListArr[i].id === Number(id)) {
+                    return writeListArr[i];
+                }
             }
+        } else {
+            return writeListArr;
         }
     };
 
     const [writeContent, setWriteContent] = useState(writeListCheck(writeListArr, id));
 
-    const titleDoc = (writeContent !== undefined) ? new DOMParser().parseFromString(writeContent.title, 'text/html') : null;
-    const subTitleDoc = (writeContent !== undefined) ? new DOMParser().parseFromString(writeContent.subTitle, 'text/html') : null;
-    const contentDoc = (writeContent !== undefined) ? new DOMParser().parseFromString(writeContent.content, 'text/html') : null;
+    const [titleDoc, setTitleDoc] = useState(() => {
+        if (writeContent?.title) {
+            return new DOMParser().parseFromString(writeContent.title, 'text/html');
+        } else {
+            return null;
+        }
+    });
+    const [subTitleDoc, setSubTitleDoc] = useState(() => {
+        if (writeContent?.subTitle) {
+            return new DOMParser().parseFromString(writeContent.subTitle, 'text/html');
+        } else {
+            return null;
+        }
+    });
+    const [contentDoc, setContentDoc] = useState(() => {
+        if (writeContent?.content) {
+            return new DOMParser().parseFromString(writeContent.content, 'text/html');
+        } else {
+            return null;
+        }
+    });
 
     const lsKeywords = JSON.parse(localStorage.getItem('view_keywords')) || [];
-    const keywordsParse = (writeContent !== undefined) ? JSON.parse(writeContent.keywords) : lsKeywords;
+    const [keywordsParse, setKeywordsParse] = useState(() => {
+        if (writeContent?.keywords) {
+            return JSON.parse(writeContent.keywords);
+        } else {
+            return lsKeywords;
+        }
+    });
     localStorage.setItem('view_keywords', JSON.stringify(keywordsParse));
 
-    const [annoArr, setAnnoArr] = useState((writeContent !== undefined) ? JSON.parse(writeContent.anno) : []);
+    const [annoArr, setAnnoArr] = useState(() => {
+        if (writeContent !== undefined && writeContent.anno) {
+            return JSON.parse(writeContent.anno);
+        } else {
+            return [];
+        }
+    });
 
     useEffect((id) => {
         setTimeout(() => {
@@ -71,16 +113,8 @@ function WriteView() {
         }, 100);
     }, [writeListArr]);
 
-    const delWriteList = async (e) => {
-
-        e.preventDefault();
-        const isTokenValid = await token_check(navigate);
-
-        if (isTokenValid) {
-            dispatch(writeListDataDel(writeContent.id));
-            navigate('/components/WriteList');
-        }
-    }
+    // write delete
+    const [modalDeleteWrite, setModalDeleteWrite] = useState(false);
 
     const { annoListBtn, setAnnoListBtn, annoClick, setAnnoClick } = useContext(MyContext);
 
@@ -131,19 +165,12 @@ function WriteView() {
         }
     }
 
-    useEffect(() => {
-        if (writeContent !== undefined) {
-            const parsedAnno = JSON.parse(writeContent.anno);
-            setAnnoArr(parsedAnno);
-        }
-    }, [writeContent]);
-
     const writeKey = false;
 
     return (
 
         <div className='view_page opacity'>
-            <div className='common_page'>
+            <div className='common_page ofX-hidden'>
                 <div className='content_area'>
                     <div className='view_content all'>
 
@@ -158,20 +185,52 @@ function WriteView() {
 
                     <AnnoList id={id} annoArr={annoArr} annoListBtn={annoListBtn} setAnnoListBtn={setAnnoListBtn} annoClick={annoClick} setAnnoClick={setAnnoClick} annoString={annoString} setAnnoString={setAnnoString} writeKey={writeKey} />
 
-                    {isAuth === true && (
+                    {isAuth === true && id !== '9999' && (
                         <div className='page_btn'>
-                            <Link className='icon-trash' onClick={delWriteList}></Link>
+                            <Link className='icon-trash' onClick={(e) => {
+                                e.preventDefault();
+                                setModalDeleteWrite(true);
+                            }}></Link>
                             <Link className='icon-edit-alt' onClick={writeNavi}></Link>
                         </div>
                     )}
 
                 </div>
+
+                {modalDeleteWrite === true && (
+                    <ModalDeleteWrite writeContent={writeContent} writeListDataDel={writeListDataDel} />
+                )}
             </div>
         </div>
     );
 
     function WriteKeyword({ writeListKeyword }) {
         return <Link to={`/components/Category/${writeListKeyword}`}>#{writeListKeyword}</Link>
+    }
+
+    function ModalDeleteWrite({ writeContent }) {
+
+        const deleteWriteInModal = async (writeContent) => {
+
+            const isTokenValid = await token_check(navigate);
+            if (isTokenValid) {
+                dispatch(writeListDataDel(writeContent.id));
+                navigate('/components/WriteList');
+            }
+            setModalDeleteWrite(false);
+        }
+
+        return (
+            <div className="modal">
+                <div className="modal_box">
+                    <span>글을 삭제하시겠습니까?</span>
+                    <div className="btn_wrap">
+                        <button onClick={() => setModalDeleteWrite(false)}>취소</button>
+                        <button onClick={() => deleteWriteInModal(writeContent)}>삭제</button>
+                    </div>
+                </div>
+            </div>
+        )
     }
 
 }
