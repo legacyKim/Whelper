@@ -160,6 +160,7 @@ const memoInitialState = {
     data: {
         memo: [],
         totalPages: null,
+        page: 1,
     },
     loading: false,
     error: null,
@@ -170,6 +171,10 @@ const memoData = createSlice({
     initialState: memoInitialState,
     reducers: {
 
+        setMemoPage(state, action) {
+            state.data.page = action.payload;
+        },
+        
         syncMemoListDataAdd(state, action) {
             if (action.payload !== undefined) {
                 state.data = {
@@ -355,7 +360,7 @@ const bookData = createSlice({
 });
 
 export const { syncWriteListData } = WriteListView.actions;
-export const { syncMemoListDataAdd, syncMemoListDelete, syncMemoListDataUpdate, syncMemoListAnno, syncMemoListAnnoUpdate, syncMemoListAnnoDelete, resetMemo } = memoData.actions;
+export const { syncMemoListDataAdd, syncMemoListDelete, syncMemoListDataUpdate, syncMemoListAnno, syncMemoListAnnoUpdate, syncMemoListAnnoDelete, resetMemo, setMemoPage } = memoData.actions;
 export const { syncWriteListPageData, syncWriteListPageDataUpdate } = WriteListPageDataOn.actions;
 export const { syncWriteListDateData } = WriteListDateDataOn.actions;
 export const { resetWriteCate } = WriteListCateDataOn.actions;

@@ -10,7 +10,7 @@ function Login() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
-    const { setAuth } = useContext(MyContext);
+    const { setAuth, setAuthLevel } = useContext(MyContext);
 
     const username = useRef();
     const userPassword = useRef();
@@ -21,6 +21,7 @@ function Login() {
         const result = await dispatch(userCheck({ username_v, userpassword_v }));
 
         if (!result.payload.message) {
+            setAuthLevel(result.payload.info.authority);
             setAuth(true);
             navigate('/');
         } else {

@@ -8,6 +8,8 @@ import MyContext from '../context';
 
 import { debounce } from 'lodash';
 
+import useScrollAnima from './hook/useScrollAnima.js'
+
 import ViewEdit from './SlateView.js'
 import { token_check } from '../data/token_check.js'
 
@@ -21,7 +23,7 @@ function Category() {
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const { rootHeight, cateScrollPosition, setCateScrollPosition, isAuth } = useContext(MyContext);
+    const { rootHeight, cateScrollPosition, setCateScrollPosition, isAuth, isAuthLevel } = useContext(MyContext);
 
     useEffect(() => {
         dispatch(cateListData_cate());
@@ -222,7 +224,7 @@ function Category() {
                                 <li key={i}>
                                     <CategoryList cate={a} cateArr={cateArr} setCateArr={setCateArr} />
 
-                                    {isAuth === true && (
+                                    {isAuth === true && isAuthLevel === 0 && (
                                         <button onClick={(e) => { cateDelete(e) }}><i className='icon-trash'></i></button>
                                     )}
                                 </li>
@@ -267,6 +269,9 @@ function Category() {
     )
 
     function CategoryList({ cate, cateArr, setCateArr }) {
+
+        const objClassName = '.cate_result>li';
+        useScrollAnima(objClassName, cateScrollPosition, rootHeight);
 
         const cate_check = cate.category
         const [cateActive, setCateActive] = useState(cateArr.includes(cate_check));

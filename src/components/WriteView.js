@@ -16,7 +16,7 @@ import { token_check } from '../data/token_check.js'
 
 function WriteView() {
 
-    const { isAuth, annoString, setAnnoString, prevPathname } = useContext(MyContext);
+    const { isAuth, isAuthLevel, annoString, setAnnoString, prevPathname } = useContext(MyContext);
 
     const writeListState = useSelector((state) => {
         if (prevPathname === "/") {
@@ -185,7 +185,7 @@ function WriteView() {
 
                     <AnnoList id={id} annoArr={annoArr} annoListBtn={annoListBtn} setAnnoListBtn={setAnnoListBtn} annoClick={annoClick} setAnnoClick={setAnnoClick} annoString={annoString} setAnnoString={setAnnoString} writeKey={writeKey} />
 
-                    {isAuth === true && id !== '9999' && (
+                    {isAuth === true && id !== '9999' && isAuthLevel === 0 && (
                         <div className='page_btn'>
                             <Link className='icon-trash' onClick={(e) => {
                                 e.preventDefault();

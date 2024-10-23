@@ -6,19 +6,23 @@ import MyContext from '../context'
 
 import { debounce } from 'lodash';
 
+import useScrollAnima from './hook/useScrollAnima.js'
+
 import { memoListData, memoListDataPost, memoListDataUpdate, memoListDataDelete, memoListAnnoPost, memoListAnnoUpdate, memoListAnnoDelete, bookListData, bookListDataPost, bookListDataDelete } from "../data/api"
-import { syncMemoListDataAdd, syncMemoListDelete, syncMemoListDataUpdate, syncMemoListAnno, syncMemoListAnnoUpdate, syncMemoListAnnoDelete, resetMemo, syncBookListDataAdd, syncBookListDelete } from "../data/reducers.js"
+import { syncMemoListDataAdd, syncMemoListDelete, syncMemoListDataUpdate, syncMemoListAnno, syncMemoListAnnoUpdate, syncMemoListAnnoDelete, resetMemo, syncBookListDataAdd, syncBookListDelete, setMemoPage } from "../data/reducers.js"
 import { token_check } from '../data/token_check.js'
 
 function Memo() {
 
-    const { isAuth, rootHeight, MemoScrollPosition, setMemoScrollPosition } = useContext(MyContext);
+    const { isAuth, isAuthLevel, rootHeight, MemoScrollPosition, setMemoScrollPosition } = useContext(MyContext);
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
     useEffect(() => {
         dispatch(bookListData());
+
+        dispatch(setMemoPage());
         dispatch(syncBookListDataAdd());
 
         dispatch(syncMemoListDataAdd());
@@ -30,14 +34,13 @@ function Memo() {
         dispatch(syncMemoListAnnoDelete());
     }, [dispatch]);
 
-    const [page, setPage] = useState(1);
-
     const memoListState = useSelector((state) => state.memoData);
     const bookListState = useSelector((state) => state.bookData);
 
     const memoListArr = memoListState.data.memo || [];
     const bookListArr = bookListState.data.book || [];
 
+    const page = memoListState.data.page;
     const [totalPages, setTotalPages] = useState(memoListState.data.totalPages);
 
     const bookLocalStorage = localStorage.getItem('bookTitle');
@@ -64,7 +67,7 @@ function Memo() {
 
         if (page <= totalPages) {
             if (Math.ceil(MemoScrollPosition + rootHeight) <= memoAreaHeight) {
-                setPage((prevPage) => prevPage + 1);
+                dispatch(setMemoPage(page + 1));
             }
         }
     }, [MemoScrollPosition]);
@@ -73,7 +76,7 @@ function Memo() {
         if (page <= totalPages) {
             dispatch(memoListData({ page, bookTitle }));
         }
-    }, [page]);
+    }, [page, dispatch]);
 
     const [memoArr, setMemoArr] = useState(memoListArr);
 
@@ -392,11 +395,10 @@ function Memo() {
         }
 
         setMemoCurrent(null);
-
+        
         dispatch(resetMemo());
-        dispatch(memoListData({ page: 1, bookTitle })).then(() => {
+        dispatch(memoListData({ page, bookTitle })).then(() => {
             setTotalPages(memoListState.data.totalPages);
-            setPage(1);
         });
 
     }, [bookTitle]);
@@ -520,7 +522,7 @@ function Memo() {
 
     // when add new one
     useEffect(() => {
-        if (memoCurrent !== null) {
+        if (memoCurrent && memoCurrent.memoSource) {
             var index = memoCurrent.id;
             const memoRecent = memoArr.filter(item => item.id === index)
             setMemoCurrent(memoRecent[0]);
@@ -544,13 +546,13 @@ function Memo() {
 
         <div className='common_page'>
             <div className='content_area content_area_memo reverse'>
-                <div className={`book_list_pos ${isAuth === true ? 'auth' : ''}`}>
+                <div className={`book_list_pos`}>
                     <div className='book_list'>
                         <div className={`book_list_current ${MemoScrollPosition > 0 ? "scroll_event" : ""}`} onClick={bookListOn}>
                             <i className='icon-book'></i>
                             <strong className={`${bookListActive ? bookListActive : ''}`}>{bookTitle}</strong>
                             <b onClick={(e) => refreshTitle(e)} className={`icon-cancel ${bookTitle !== '전체' ? 'active' : ''}`}></b>
-                            {isAuth === true && (
+                            {isAuth === true && isAuthLevel === 0 && (
                                 <b onClick={(e) => {
                                     e.stopPropagation()
                                     setModalDeleteBook(true);
@@ -583,7 +585,10 @@ function Memo() {
                     {isAuth === true && (
                         <div className={`memo_btn ${MemoScrollPosition > 0 ? "scroll_event" : ""}`}>
                             <button onClick={memoAddOn} className='icon-pencil-alt'></button>
-                            <button onClick={bookAddOn} className='icon-book-2'></button>
+
+                            {isAuthLevel === 0 && (
+                                <button onClick={bookAddOn} className='icon-book-2'></button>
+                            )}
                         </div>
                     )}
                 </div>
@@ -594,8 +599,8 @@ function Memo() {
                             memoArr.map(function (a, i) {
                                 return (
                                     <div className='memo_content' key={i}>
-                                        <div className='memoList_btn'>
-                                            {isAuth === true && (
+                                        <div className={`memoList_btn ${isAuth === true ? 'auth' : ''}`}>
+                                            {isAuth === true && isAuthLevel === 0 && (
                                                 <button className='icon-edit-alt' onClick={() => memoCorrectOn(a)}></button>
                                             )}
                                             {/* <button className='icon-trash' onClick={() => delMemoList(i)}></button> */}
@@ -612,13 +617,13 @@ function Memo() {
 
                 {/* memoDetail */}
                 <div className={`memo_content_pos ${memoActive ? memoActive : ""}`}>
-                    {memoCurrent !== null && <MemoView memo={memoCurrent} />}
+                    {memoCurrent && memoCurrent.memoSource && <MemoView memo={memoCurrent} />}
                 </div>
                 {/* memoDetail */}
 
                 {/* memoCorrect */}
                 <div className={`memo_content_pos ${memoCorrectActive ? memoCorrectActive : ""}`}>
-                    {memoCurrent !== null && <MemoCorrect memo={memoCurrent} />}
+                    {memoCurrent && memoCurrent.memoSource && <MemoCorrect memo={memoCurrent} />}
                     <div className='page_btn'>
                         <button className='icon-ok-circled' onClick={() => memoCorrectBtn(memoCurrent)}></button>
                     </div>
@@ -671,15 +676,8 @@ function Memo() {
 
     function MemoContentBox({ memoArr, i, a }) {
 
-        useEffect(() => {
-            const memoContent = document.querySelectorAll('.memo_content');
-
-            memoContent.forEach((ele, i) => {
-                if (MemoScrollPosition + rootHeight - ele.offsetHeight * 2 > ele.offsetTop - ele.offsetHeight) {
-                    ele.classList.add("anima");
-                }
-            });
-        }, []);
+        const objClassName = '.memo_content';
+        useScrollAnima(objClassName, MemoScrollPosition, rootHeight);
 
         return (
             <div className='memo_content_box'>
@@ -748,7 +746,7 @@ function Memo() {
                 {memo.memoAnnotation !== null && <MemoAnno memo={memo} />}
 
                 <div className='memoDetail_btn'>
-                    {isAuth === true && (
+                    {isAuth === true && isAuthLevel === 0 && (
                         <div className='flex'>
                             <button className='icon-flow-split' onClick={() => {
                                 setMemoAnnoActive('active');

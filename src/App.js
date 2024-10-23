@@ -28,6 +28,7 @@ function App() {
     const prevPathname = prevPathRef.current;
 
     const [isAuth, setAuth] = useState(false);
+    const [isAuthLevel, setAuthLevel] = useState(false);
 
     useEffect(() => {
         const checkAuth = () => {
@@ -46,6 +47,7 @@ function App() {
     const loggedOut = async () => {
         const result = await dispatch(logout());
         setAuth(false);
+        setAuthLevel(false);
     };
 
     // write 검증
@@ -215,8 +217,9 @@ function App() {
             wlScrollPosition, setWlScrollPosition, MemoScrollPosition, setMemoScrollPosition, cateScrollPosition, setCateScrollPosition, searchScrollPosition, setSearchScrollPosition,
             rootHeight,
             isAuth, setAuth,
+            isAuthLevel, setAuthLevel,
             annoListBtn, setAnnoListBtn, annoClick, setAnnoClick, annoString, setAnnoString,
-            prevPathname
+            prevPathname,
         }}>
             <div id='app' className={`App ${theme}`}>
 

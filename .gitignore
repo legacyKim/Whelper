@@ -7,9 +7,6 @@
 /venv
 /myenv
 
-# server
-/proxy
-
 # testing
 /coverage
 
