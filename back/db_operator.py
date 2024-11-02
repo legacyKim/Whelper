@@ -329,6 +329,29 @@ def post_data_from_pwd(data):
         return 'Error occurred while authenticating user', 500
 
     finally:
+        session.close()
+
+
+def get_user_info_from_db(data):
+    try:
+        session = Session_login()
+        username = data.get('username_v')
+        user = session.query(User).filter_by(username=username).first()
+
+        if user:
+            user_info = {
+                "username": user.username,
+                "authority": user.authority
+            }
+            return user_info
+        else:
+            return False
+
+    except Exception as e:
+        print(f"Error authenticating user: {e}")
+        return 'Error occurred while authenticating user', 500
+
+    finally:
         # 세션 닫기
         session.close()
 

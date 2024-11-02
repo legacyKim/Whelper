@@ -3,7 +3,7 @@ from flask import Flask, request, jsonify, session, make_response
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity, set_access_cookies, unset_jwt_cookies
 from flask_cors import CORS
 from db_connector import get_data_from_write, get_data_from_memo
-from db_operator import post_data_to_write, update_data_from_write, delete_data_from_write, post_data_to_cate, post_data_from_memo, update_data_from_memo, delete_data_from_memo, post_data_from_memoAnno, update_data_from_memoAnno, delete_data_from_memoAnno, delete_data_from_cate, post_data_from_book, delete_data_from_book, post_data_from_pwd
+from db_operator import post_data_to_write, update_data_from_write, delete_data_from_write, post_data_to_cate, post_data_from_memo, update_data_from_memo, delete_data_from_memo, post_data_from_memoAnno, update_data_from_memoAnno, delete_data_from_memoAnno, delete_data_from_cate, post_data_from_book, delete_data_from_book, post_data_from_pwd, get_user_info_from_db
 from datetime import datetime, timedelta
 import json
 
@@ -432,19 +432,26 @@ def delete_data_book(memoSource):
 def post_data_login():
     try:
         data = request.get_json()
-        result = post_data_from_pwd(data)
+        if data:
+            result = post_data_from_pwd(data)
 
-        if result:
-            session['user_name'] = result['username']
-            session['user_authority'] = result['authority']
+            if result:
+                session['user_name'] = result['username']
+                session['user_authority'] = result['authority']
 
-            access_token = create_access_token(identity=result['username'])
-            response = jsonify({'info': result})
-            set_access_cookies(response, access_token)
-            return response
-
+                access_token = create_access_token(identity=result['username'])
+                response = jsonify({'info': result})
+                set_access_cookies(response, access_token)
+                return response
+            else:
+                return jsonify({'message': 'Invalid username or password'}), 401
         else:
-            return jsonify({'message': 'Invalid username or password'}), 401
+            current_user = get_jwt_identity()
+            user_info = get_user_info_from_db(current_user)
+            if user_info:
+                return jsonify({'info': user_info}), 200
+            else:
+                return jsonify({'message': 'User not found'}), 404
     except Exception as e:
         print(f"Error: {e}")
         return jsonify({'error': str(e)}), 500

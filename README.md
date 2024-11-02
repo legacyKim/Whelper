@@ -1,70 +1,59 @@
-# Getting Started with Create React App
+** 프로젝트 이름과 간단한 설명
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+    WHELPER = WRITE HELPER, (글을 쓸 때 도움이 될만한 기능 구현)
 
-## Available Scripts
 
-In the project directory, you can run:
+** 사용 방법 (Usage)
+    
+    - 글쓰기의 경우 "Slate.js" 라이브러리를 활용.
+    - 로그인을 해야 CRUD 이용이 가능.
 
-### `npm start`
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+** 파일 구조
+    │
+    ├── back
+    │   ├── db_config.py                # config 파일
+    │   ├── db_connector.py             # DB 와 서버를 연결시키는 코드
+    │   ├── db_operator.py              # sqlalchemy 를 활용한 DB 구조 결정
+    │   └── route.py                    # API
+    ├── src
+    │   ├── components
+    │   │   ├── hook
+    │   │   │   ├── deserialize.js      # Slate 라이브러리 역직렬화 코드
+    │   │   │   ├── serialize.js        # Slate 라이브러리 직렬화 코드
+    │   │   │   ├── useAnno.js          # 주석 기능 공통 코드
+    │   │   │   ├── useScrollAnima.js   # scroll animation 공통 코드
+    │   │   │   └── useSlateRender.js   # Slate 라이브러리 렌더링 관련 공통 코드
+    │   │   ├── Anno.js                 # 우측 주석 페이지
+    │   │   ├── AnnoLink.js             # 주석 모음 페이지
+    │   │   ├── Category.js             # 카테고리에 따른 분류
+    │   │   ├── Correct.js              # 글 수정 페이지
+    │   │   ├── Date.js                 # 날짜별 정리 페이지
+    │   │   ├── Home.js                 # Home
+    │   │   ├── Login.js                # 로그인 컴포넌트
+    │   │   ├── Memo.js                 # 메모 컴포넌트
+    │   │   ├── Side.js                 # 우측 검색 사이드 창
+    │   │   ├── SlateView.js            # Slate View 공통 페이지
+    │   │   ├── Work.js                 # 퍼블리싱 작업물 모음 (임시)
+    │   │   ├── Write.js                # 글작성 페이지
+    │   │   ├── WriteCorrect.js         # 글수정 페이지
+    │   │   ├── WriteList.js            # 글목록 페이지
+    │   │   └── WriteView.js            # 글 상세보기 페이지
+    │   ├── css
+    │   │   ├── fontello                # [폰텔로 아이콘 ](https://fontello.com/)
+    │   │   ├── base.css                # 웹 스타일 초기화 파일
+    │   │   ├── components.css          # 컴포넌트 공통 css
+    │   │   ├── style.css               # 스타일시트
+    │   │   └── work.css                # Work 컴포넌트 스타일
+    │   ├── data
+    │   │   ├── api.js                  # api 엔드포인트
+    │   │   ├── reducers.js             # Redux
+    │   │   └── token_check.js          # Login 컴포넌트 관련 토큰 체크
+    │   ├── font                        # 폰트
+    │   └── img                         # Work 컴포넌트 관련 이미지 모음 
+    └── requirements.txt                # 파이썬 라이브러리
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
 
-### `npm test`
+** 문의 및 지원
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+    arbam486@naver.com

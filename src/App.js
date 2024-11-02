@@ -11,7 +11,8 @@ import 'react-toastify/dist/ReactToastify.css';
 
 import './css/style.css';
 import Routes from './Routes'
-import { logout } from './data/api.js'
+import { logout, userCheck } from './data/api.js'
+
 
 function App() {
 
@@ -30,15 +31,24 @@ function App() {
     const [isAuth, setAuth] = useState(false);
     const [isAuthLevel, setAuthLevel] = useState(false);
 
+    console.log(isAuthLevel)
+
     useEffect(() => {
-        const checkAuth = () => {
+        const checkAuth =  async () => {
             const cookieName = 'csrf_access_token';
             const cookies = document.cookie.split(';');
             const hasCookie = cookies.some(cookie => {
                 const trimmedCookie = cookie.trim();
                 return trimmedCookie.startsWith(`${cookieName}=`);
             });
-            if (hasCookie) setAuth(true);
+
+            const result = await dispatch(userCheck());
+            console.log(result)
+
+            if (hasCookie) {
+                setAuth(true);
+                setAuthLevel(result.payload.info.authority);
+            };
         };
 
         checkAuth();
