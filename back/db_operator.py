@@ -345,14 +345,50 @@ def get_user_info_from_db(data):
             }
             return user_info
         else:
-            return False
+            return None  # False 대신 None 반환, 없을 때 처리 일관성 유지
 
     except Exception as e:
         print(f"Error authenticating user: {e}")
-        return 'Error occurred while authenticating user', 500
+        # 오류 발생 시 JSON 형식의 오류 메시지 반환
+        return {"error": "Error occurred while authenticating user"}, 500
 
     finally:
-        # 세션 닫기
+        session.close()
+
+
+def check_id_in_database(new_username):
+    session = Session_login()
+    try:
+        user = session.query(User).filter_by(username=new_username).first()
+        return user is not None
+    finally:
+        session.close()
+
+
+def post_data_signup(data):
+    session = Session_login()
+    try:
+
+        newUsername = data.get("id")
+
+        newUserpassword = data.get("password")
+        hashed_password = hash_password(newUserpassword)
+
+        authority = 1
+
+        new_user = User(username=newUsername,
+                        password=hashed_password, authority=authority)
+
+        session.add(new_user)
+        session.commit()
+        return {"message": "회원가입이 성공적으로 완료되었습니다."}
+
+    except Exception as e:
+        session.rollback()
+        print(f"Error: {e}")
+        return {"error": "회원가입 중 오류가 발생했습니다."}
+
+    finally:
         session.close()
 
 

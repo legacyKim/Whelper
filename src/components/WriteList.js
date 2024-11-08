@@ -16,7 +16,7 @@ import { token_check } from '../data/token_check.js';
 
 function WriteList() {
 
-    const { isAuth, isAuthLevel, rootHeight, wlScrollPosition, setWlScrollPosition } = useContext(MyContext);
+    const { isAuth, rootHeight, wlScrollPosition, setWlScrollPosition } = useContext(MyContext);
     
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -114,7 +114,7 @@ function WriteList() {
         return (
 
             <div>
-                {isAuth === true && isAuthLevel === 0 && (
+                {(isAuth === 0 || isAuth === 1) && (
                     <div className='write_btn'>
                         <Link className='icon-edit-alt' onClick={writeNavi}></Link>
                     </div>

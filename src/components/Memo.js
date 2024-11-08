@@ -14,7 +14,7 @@ import { token_check } from '../data/token_check.js'
 
 function Memo() {
 
-    const { isAuth, isAuthLevel, rootHeight, MemoScrollPosition, setMemoScrollPosition } = useContext(MyContext);
+    const { isAuth, rootHeight, MemoScrollPosition, setMemoScrollPosition } = useContext(MyContext);
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -395,7 +395,7 @@ function Memo() {
         }
 
         setMemoCurrent(null);
-        
+
         dispatch(resetMemo());
         dispatch(memoListData({ page, bookTitle })).then(() => {
             setTotalPages(memoListState.data.totalPages);
@@ -552,7 +552,7 @@ function Memo() {
                             <i className='icon-book'></i>
                             <strong className={`${bookListActive ? bookListActive : ''}`}>{bookTitle}</strong>
                             <b onClick={(e) => refreshTitle(e)} className={`icon-cancel ${bookTitle !== '전체' ? 'active' : ''}`}></b>
-                            {isAuth === true && isAuthLevel === 0 && (
+                            {isAuth === 0 && (
                                 <b onClick={(e) => {
                                     e.stopPropagation()
                                     setModalDeleteBook(true);
@@ -582,25 +582,22 @@ function Memo() {
                             </ul>
                         </div>
                     </div>
-                    {isAuth === true && (
+                    {(isAuth === 0 || isAuth === 1) && (
                         <div className={`memo_btn ${MemoScrollPosition > 0 ? "scroll_event" : ""}`}>
                             <button onClick={memoAddOn} className='icon-pencil-alt'></button>
-
-                            {isAuthLevel === 0 && (
-                                <button onClick={bookAddOn} className='icon-book-2'></button>
-                            )}
+                            <button onClick={bookAddOn} className='icon-book-2'></button>
                         </div>
                     )}
                 </div>
 
-                <div className={`memo_scroll ${isAuth === true ? 'auth' : ''}`}>
+                <div className={`memo_scroll ${(isAuth === 0 || isAuth === 1) ? 'auth' : ''}`}>
                     <div className={`memo_wrap`}>
                         {
                             memoArr.map(function (a, i) {
                                 return (
                                     <div className='memo_content' key={i}>
-                                        <div className={`memoList_btn ${isAuth === true ? 'auth' : ''}`}>
-                                            {isAuth === true && isAuthLevel === 0 && (
+                                        <div className={`memoList_btn ${(isAuth === 0 || isAuth === 1) ? 'auth' : ''}`}>
+                                            {(isAuth === 0 || isAuth === 1) && (
                                                 <button className='icon-edit-alt' onClick={() => memoCorrectOn(a)}></button>
                                             )}
                                             {/* <button className='icon-trash' onClick={() => delMemoList(i)}></button> */}
@@ -746,7 +743,7 @@ function Memo() {
                 {memo.memoAnnotation !== null && <MemoAnno memo={memo} />}
 
                 <div className='memoDetail_btn'>
-                    {isAuth === true && isAuthLevel === 0 && (
+                    {isAuth === 1 && (
                         <div className='flex'>
                             <button className='icon-flow-split' onClick={() => {
                                 setMemoAnnoActive('active');
@@ -761,7 +758,8 @@ function Memo() {
                                         memoDetailClose();
                                     }}></button>
                             )}
-                            {memo.id !== undefined && (
+
+                            {memo.id !== undefined && isAuth === 0 && (
                                 <button className='icon-trash'
                                     onClick={() => {
                                         setModalDeleteMemo(true)
@@ -769,6 +767,7 @@ function Memo() {
                                     }}>
                                 </button>
                             )}
+
                         </div>
                     )}
                     <button className='icon-cancel' onClick={() => {

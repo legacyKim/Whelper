@@ -23,7 +23,7 @@ function Category() {
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const { rootHeight, cateScrollPosition, setCateScrollPosition, isAuth, isAuthLevel } = useContext(MyContext);
+    const { rootHeight, cateScrollPosition, setCateScrollPosition, isAuth } = useContext(MyContext);
 
     useEffect(() => {
         dispatch(cateListData_cate());
@@ -212,7 +212,7 @@ function Category() {
         <div className='content_area content_area_cate'>
             <div className="cate_list_btn">
                 <button onClick={cateBoxOpen}><i className="icon-book"></i></button>
-                {isAuth === true && (
+                {(isAuth === 0 || isAuth === 1) && (
                     <button className='cate_add_btn' onClick={cateAdd}><i className='icon-pencil-alt'></i></button>
                 )}
             </div>
@@ -224,7 +224,7 @@ function Category() {
                                 <li key={i}>
                                     <CategoryList cate={a} cateArr={cateArr} setCateArr={setCateArr} />
 
-                                    {isAuth === true && isAuthLevel === 0 && (
+                                    {(isAuth === 0 || isAuth === 1) && (
                                         <button onClick={(e) => { cateDelete(e) }}><i className='icon-trash'></i></button>
                                     )}
                                 </li>
@@ -233,8 +233,8 @@ function Category() {
                     }
                 </ul>
             </div>
-            <div className={`cate_box ${isAuth === true ? 'auth' : ''}`}>
-                <div className={`cate_request ${isAuth === true ? 'auth' : ''}`}>
+            <div className={`cate_box ${(isAuth === 0 || isAuth === 1) ? 'auth' : ''}`}>
+                <div className={`cate_request ${(isAuth === 0 || isAuth === 1) ? 'auth' : ''}`}>
                     {
                         cateArr.map(function (a, i) {
                             return (

@@ -11,8 +11,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 import './css/style.css';
 import Routes from './Routes'
-import { logout, userCheck } from './data/api.js'
-
+import { logout, userCheckRefresh } from './data/api.js'
 
 function App() {
 
@@ -29,9 +28,6 @@ function App() {
     const prevPathname = prevPathRef.current;
 
     const [isAuth, setAuth] = useState(false);
-    const [isAuthLevel, setAuthLevel] = useState(false);
-
-    console.log(isAuthLevel)
 
     useEffect(() => {
         const checkAuth =  async () => {
@@ -42,13 +38,10 @@ function App() {
                 return trimmedCookie.startsWith(`${cookieName}=`);
             });
 
-            const result = await dispatch(userCheck());
-            console.log(result)
-
             if (hasCookie) {
-                setAuth(true);
-                setAuthLevel(result.payload.info.authority);
-            };
+                const result = await dispatch(userCheckRefresh());
+                setAuth(result.payload?.info.authority);
+            }
         };
 
         checkAuth();
@@ -57,7 +50,6 @@ function App() {
     const loggedOut = async () => {
         const result = await dispatch(logout());
         setAuth(false);
-        setAuthLevel(false);
     };
 
     // write 검증
@@ -227,7 +219,6 @@ function App() {
             wlScrollPosition, setWlScrollPosition, MemoScrollPosition, setMemoScrollPosition, cateScrollPosition, setCateScrollPosition, searchScrollPosition, setSearchScrollPosition,
             rootHeight,
             isAuth, setAuth,
-            isAuthLevel, setAuthLevel,
             annoListBtn, setAnnoListBtn, annoClick, setAnnoClick, annoString, setAnnoString,
             prevPathname,
         }}>
@@ -306,9 +297,9 @@ function App() {
                     </div>
                 </div>
 
-                <div className='gotop'>
+                {/* <div className='gotop'>
                     <button className='icon-'></button>
-                </div>
+                </div> */}
             </div>
         </MyContext.Provider >
     )

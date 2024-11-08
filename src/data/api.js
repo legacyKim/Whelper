@@ -15,7 +15,7 @@ export const writeListData = createAsyncThunk('writeData/getData', async () => {
     }
 });
 
-export const writeListPageData = createAsyncThunk('writeData/getData', async (page) => {
+export const writeListPageData = createAsyncThunk('writeData/getPageData', async (page) => {
     try {
         const response = await axios.get(`${API_URL}/api/WriteListPage`, {
             params: { page, limit: 10 }
@@ -27,7 +27,7 @@ export const writeListPageData = createAsyncThunk('writeData/getData', async (pa
     }
 });
 
-export const writeListCateData = createAsyncThunk('writeData/getData', async ({ page, cateArr }) => {
+export const writeListCateData = createAsyncThunk('writeData/getDataCate', async ({ page, cateArr }) => {
     try {
         const response = await axios.get(`${API_URL}/api/WriteListCate`, {
             params: { page, cateArr: JSON.stringify(cateArr), limit: 10 }
@@ -274,6 +274,58 @@ export const userCheck = createAsyncThunk('user', async (data, thunkAPI) => {
         return response.data;
     } catch (error) {
         return thunkAPI.rejectWithValue(error.response.data);
+    }
+});
+
+function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+    return null;
+}
+
+export const userCheckRefresh = createAsyncThunk('user', async (_, thunkAPI) => {
+    try {
+        const csrfToken = getCookie('csrf_access_token');
+        const response = await axios.post(`${API_URL}/api/userCheckRefresh`, {}, {
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': csrfToken,
+            },
+            withCredentials: true,
+        });
+        return response.data;
+        return response.data;
+    } catch (error) {
+        return thunkAPI.rejectWithValue(error.response.data);
+    }
+});
+
+export const userIdDuplicateCheck = createAsyncThunk('userDupliCheck', async (data) => {
+    try {
+        const response = await axios.post(`${API_URL}/api/duplicateId`, data);
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
+});
+
+export const emailSendCertifyNum = createAsyncThunk('emailCertifyNumSend', async (data) => {
+    try {
+        const response = await axios.post(`${API_URL}/api/sendCertifyNum`, { email: data.selectedEmail });
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
+});
+
+export const signupComplete = createAsyncThunk('signup', async (data) => {
+    console.log(data);
+    try {
+        const response = await axios.post(`${API_URL}/api/signup`, { id: data.newUsername, password: data.newUserPasswordConfirm });
+        return response.data;
+    } catch (error) {
+        throw error;
     }
 });
 

@@ -3,8 +3,11 @@ from flask import Flask, request, jsonify, session, make_response
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity, set_access_cookies, unset_jwt_cookies
 from flask_cors import CORS
 from db_connector import get_data_from_write, get_data_from_memo
-from db_operator import post_data_to_write, update_data_from_write, delete_data_from_write, post_data_to_cate, post_data_from_memo, update_data_from_memo, delete_data_from_memo, post_data_from_memoAnno, update_data_from_memoAnno, delete_data_from_memoAnno, delete_data_from_cate, post_data_from_book, delete_data_from_book, post_data_from_pwd, get_user_info_from_db
+from db_operator import post_data_to_write, update_data_from_write, delete_data_from_write, post_data_to_cate, post_data_from_memo, update_data_from_memo, delete_data_from_memo, post_data_from_memoAnno, update_data_from_memoAnno, delete_data_from_memoAnno, delete_data_from_cate, post_data_from_book, delete_data_from_book, post_data_from_pwd, get_user_info_from_db, check_id_in_database, post_data_signup
+from send_email import send_email
 from datetime import datetime, timedelta
+import random
+import smtplib
 import json
 
 app = Flask(__name__)
@@ -432,29 +435,87 @@ def delete_data_book(memoSource):
 def post_data_login():
     try:
         data = request.get_json()
-        if data:
-            result = post_data_from_pwd(data)
+        result = post_data_from_pwd(data)
 
-            if result:
-                session['user_name'] = result['username']
-                session['user_authority'] = result['authority']
+        if result:
+            session['user_name'] = result['username']
+            session['user_authority'] = result['authority']
 
-                access_token = create_access_token(identity=result['username'])
-                response = jsonify({'info': result})
-                set_access_cookies(response, access_token)
-                return response
-            else:
-                return jsonify({'message': 'Invalid username or password'}), 401
+            access_token = create_access_token(identity=result['username'])
+            response = jsonify({'info': result})
+            set_access_cookies(response, access_token)
+            return response
         else:
-            current_user = get_jwt_identity()
-            user_info = get_user_info_from_db(current_user)
-            if user_info:
-                return jsonify({'info': user_info}), 200
-            else:
-                return jsonify({'message': 'User not found'}), 404
+            return jsonify({'message': 'Invalid username or password'}), 401
+
     except Exception as e:
         print(f"Error: {e}")
         return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/userCheckRefresh', methods=['POST'])
+@jwt_required(optional=True)
+def usercheck_refresh():
+    current_user = get_jwt_identity()
+    if current_user:
+        user_info = get_user_info_from_db({"username_v": current_user})
+
+        if user_info and not isinstance(user_info, tuple):
+            return jsonify({'info': user_info}), 200
+        elif isinstance(user_info, tuple):
+            return jsonify(user_info[0]), user_info[1]
+        else:
+            return jsonify({'message': 'User not found'}), 404
+    else:
+        return jsonify({'message': 'User not found'}), 404
+
+
+@app.route('/api/duplicateId', methods=['POST'])
+def post_data_deplicId():
+    try:
+        data = request.get_json()
+        new_username = data.get("newUsername_v")
+
+        existing_user = check_id_in_database(new_username)
+
+        if existing_user:
+            return jsonify({'message': 'ID already exists'}), 200
+        else:
+            return jsonify({'message': 'Success'}), 200
+
+    except Exception as e:
+        print(f"Error: {e}")
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/sendCertifyNum', methods=['POST'])
+def send_certify_num():
+
+    data = request.get_json()
+    email = data.get("email")
+
+    print(email)
+    certify_num = str(random.randint(100000, 999999))
+
+    certify_codes = {}
+    certify_codes[email] = certify_num
+
+    try:
+        send_email(email, certify_num)
+        print(f"Sending certify number {certify_num} to {email}")
+        return jsonify({"success": True, "certifyNum": certify_num}), 200
+    except Exception as e:
+        print(f"Failed to send email: {e}")
+        return jsonify({"success": False, "error": str(e)}), 500
+
+
+@app.route('/api/signup', methods=['POST'])
+def signup():
+
+    data = request.get_json()
+    result = post_data_signup(data)
+
+    return jsonify({'message': 'Success'}), 201 if "message" in result else 500
 
 
 @app.route('/api/protected', methods=['GET'])
