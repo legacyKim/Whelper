@@ -38,6 +38,7 @@
     │   │   ├── Home.js                 # Home
     │   │   ├── Login.js                # 로그인 컴포넌트 ( 로그인 및 아이디 생성 )
     │   │   ├── Memo.js                 # 메모 컴포넌트
+    │   │   ├── MemoInWrite.js          # Write 컴포넌트 내부에서 memo 불러오기
     │   │   ├── Side.js                 # 우측 검색 사이드 창
     │   │   ├── SlateView.js            # Slate View 공통 페이지
     │   │   ├── Work.js                 # 퍼블리싱 작업물 모음 (임시)

@@ -152,6 +152,44 @@ def post_data_WriteList():
         return jsonify({'error': 'Error handling write post request'}), 500
 
 
+@app.route('/api/Write/memo', methods=['GET'])
+def get_memodata_in_write():
+
+    results = get_data_from_memo()
+    memoList = json.loads(results[0])
+
+    bookTitle = request.args.get('selectValue')
+    filtered_memoList = [
+        memo for memo in memoList if memo.get('memoSource') == bookTitle]
+
+    try:
+        data = {
+            'memo': filtered_memoList,
+        }
+        return jsonify(data)
+
+    except json.decoder.JSONDecodeError as e:
+        print(f"JSON Decode Error: {e}")
+        return jsonify({'error': 'Invalid JSON data'}), 500
+
+
+@app.route('/api/Write', methods=['GET'])
+def get_bookdata_in_write():
+
+    results = get_data_from_memo()
+    bookList = json.loads(results[1])
+
+    try:
+        data = {
+            'book': bookList,
+        }
+        return jsonify(data)
+
+    except json.decoder.JSONDecodeError as e:
+        print(f"JSON Decode Error: {e}")
+        return jsonify({'error': 'Invalid JSON data'}), 500
+
+
 @app.route('/api/WriteCorrect', methods=['POST'])
 def update_data_WriteList():
     try:

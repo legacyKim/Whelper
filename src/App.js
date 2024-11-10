@@ -28,9 +28,12 @@ function App() {
     const prevPathname = prevPathRef.current;
 
     const [isAuth, setAuth] = useState(false);
+    console.log(isAuth);
 
     useEffect(() => {
-        const checkAuth =  async () => {
+
+        const checkAuth = async () => {
+
             const cookieName = 'csrf_access_token';
             const cookies = document.cookie.split(';');
             const hasCookie = cookies.some(cookie => {
@@ -40,11 +43,16 @@ function App() {
 
             if (hasCookie) {
                 const result = await dispatch(userCheckRefresh());
-                setAuth(result.payload?.info.authority);
+                if (result.payload?.info.authority === 0 || result.payload?.info.authority === 1) {
+                    setAuth(result.payload.info.authority);
+                } else {
+                    setAuth(null);
+                }
             }
         };
 
         checkAuth();
+
     }, [isAuth]);
 
     const loggedOut = async () => {
@@ -56,6 +64,7 @@ function App() {
     const writeNavi = async (e) => {
         e.preventDefault();
         const isTokenValid = await token_check(navigate);
+        console.log(isTokenValid);
         if (isTokenValid) {
             navigate('/components/Write');
         }
@@ -156,6 +165,10 @@ function App() {
     const [annoString, setAnnoString] = useState();
     //// anno ui
 
+    // memoInWrite 
+    const [memoInWriteBtn, setMemoInWriteBtn] = useState(false);
+    //// memoInWrite
+
     // default right click, copy
     useEffect(() => {
         if (isAuth === false) {
@@ -221,6 +234,7 @@ function App() {
             isAuth, setAuth,
             annoListBtn, setAnnoListBtn, annoClick, setAnnoClick, annoString, setAnnoString,
             prevPathname,
+            memoInWriteBtn, setMemoInWriteBtn,
         }}>
             <div id='app' className={`App ${theme}`}>
 

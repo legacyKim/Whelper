@@ -10,90 +10,12 @@ import { Slate, Editable, withReact } from 'slate-react';
 
 import MyContext from '../context';
 import AnnoList from './Anno.js';
+import MemoInWrite from './MemoInWrite.js';
 
 import useAnno from './hook/useAnno.js';
 import serialize from './hook/serialize.js';
 import useSlateRender from './hook/useSlateRender.js';
-
-// slate editor
-const CustomEditor = {
-
-    isBoldMarkActive(editor) {
-        const marks = Editor.marks(editor)
-        return marks ? marks.bold === true : false
-    },
-
-    isUnderlineActive(editor) {
-        const marks = Editor.marks(editor)
-        return marks ? marks.underline === true : false
-    },
-
-    isHighlightActive(editor) {
-        const marks = Editor.marks(editor)
-        return marks ? marks.highlight === true : false
-    },
-
-    isQuote(editor) {
-        const marks = Editor.marks(editor)
-        return marks ? marks.quote === true : false
-    },
-
-    isAnnotation(editor) {
-        const marks = Editor.marks(editor)
-        return marks ? marks.annotation === true : false
-    },
-
-    toggleBoldMark(editor) {
-        const isActive = CustomEditor.isBoldMarkActive(editor)
-        if (isActive) {
-            Editor.removeMark(editor, 'bold')
-        } else {
-            Editor.addMark(editor, 'bold', true)
-        }
-    },
-
-    toggleUnderline(editor) {
-        const isActive = CustomEditor.isUnderlineActive(editor)
-        if (isActive) {
-            Editor.removeMark(editor, 'underline')
-        } else {
-            Editor.addMark(editor, 'underline', true)
-        }
-    },
-
-    toggleHighlight(editor) {
-        const isActive = CustomEditor.isHighlightActive(editor);
-        if (isActive) {
-            Editor.removeMark(editor, 'highlight');
-        } else {
-            Editor.addMark(editor, 'highlight', true);
-        }
-    },
-
-    toggleQuote(editor) {
-        const isActive = CustomEditor.isQuote(editor);
-        if (isActive) {
-            Editor.removeMark(editor, 'quote');
-        } else {
-            Editor.addMark(editor, 'quote', true);
-        }
-    },
-
-    toggleAnnotation(editor, annoTextboxOpen, onlyAnnoClose, annoRemove) {
-        const isActive = CustomEditor.isAnnotation(editor);
-
-        if (isActive) {
-            annoRemove();
-        } else {
-            Editor.addMark(editor, 'annotation', true);
-            annoTextboxOpen();
-            onlyAnnoClose();
-        }
-
-    },
-
-}
-//// slate editor
+import CustomEditor from './hook/customEditor.js'
 
 function Write() {
 
@@ -152,7 +74,9 @@ function Write() {
     const { renderElement, renderLeaf } = useSlateRender();
 
     // anno save
-    const { annoListBtn, setAnnoListBtn, annoClick, setAnnoClick, annoString, setAnnoString } = useContext(MyContext);
+    const { annoListBtn, setAnnoListBtn, annoClick, setAnnoClick, annoString, setAnnoString,
+        memoInWriteBtn, setMemoInWriteBtn
+    } = useContext(MyContext);
 
     const [annoArrLs, setAnnoArrLs] = useState(JSON.parse(localStorage.getItem('writeAnno')));
     const [annoArr, setAnnoArr] = useState(annoArrLs !== null ? annoArrLs : []);
@@ -170,7 +94,7 @@ function Write() {
     const [edTitle, setEdTitle] = useState(titleValue);
     const [edSubTitle, setEdSubTitle] = useState(subTitleValue);
     const [editorValue, setEditorValue] = useState(contentValue);
-    
+
     localStorage.setItem('writeTitle', JSON.stringify(edTitle));
     localStorage.setItem('writeSubTitle', JSON.stringify(edSubTitle));
     localStorage.setItem('writeContent', JSON.stringify(editorValue));
@@ -258,7 +182,6 @@ function Write() {
     useEffect(() => {
         localStorage.setItem('writeAnno', JSON.stringify(annoArr));
     }, [annoArr])
-
 
     return (
 
@@ -393,8 +316,10 @@ function Write() {
             <div className='page_btn'>
                 <button className='icon-ok-circled write_btn_save' onClick={() => { popupClick(); }}></button>
             </div>
-            
-            <AnnoList annoArr={annoArr} setAnnoArr={setAnnoArr} annoListBtn={annoListBtn} setAnnoListBtn={setAnnoListBtn} annoClick={annoClick} setAnnoClick={setAnnoClick} setAnnoRemoveNumbering={setAnnoRemoveNumbering} annoString={annoString} setAnnoString={setAnnoString} writeKey={writeKey} />
+
+            <AnnoList annoArr={annoArr} setAnnoArr={setAnnoArr} annoListBtn={annoListBtn} setAnnoListBtn={setAnnoListBtn} annoClick={annoClick} setAnnoClick={setAnnoClick} setAnnoRemoveNumbering={setAnnoRemoveNumbering} annoString={annoString} setAnnoString={setAnnoString} writeKey={writeKey} setMemoInWriteBtn={setMemoInWriteBtn} />
+
+            <MemoInWrite memoInWriteBtn={memoInWriteBtn} setMemoInWriteBtn={setMemoInWriteBtn} setAnnoListBtn={setAnnoListBtn} />
 
             {/* category popup */}
             <div className={`popup ${popupActive ? popupActive : ""}`}>

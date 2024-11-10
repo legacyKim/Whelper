@@ -1,19 +1,20 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from "react-router-dom";
 
-function AnnoList({ id, annoArr, setAnnoArr, annoListBtn, setAnnoListBtn, annoClick, setAnnoClick, setAnnoRemoveNumbering, annoString, setAnnoString, writeKey }) {
+function AnnoList({ id, annoArr, setAnnoArr, annoListBtn, setAnnoListBtn, setMemoInWriteBtn, annoClick, setAnnoClick, setAnnoRemoveNumbering, annoString, setAnnoString, writeKey }) {
 
     const navigate = useNavigate();
 
     useEffect(() => {
         setAnnoListBtn(false);
-    }, [])
+    }, []);
 
     const annoListBtnActive = () => {
         if (annoListBtn === true) {
             setAnnoListBtn(false);
         } else {
             setAnnoListBtn(true);
+            setMemoInWriteBtn(false);
         }
     }
 
@@ -224,8 +225,9 @@ function AnnoList({ id, annoArr, setAnnoArr, annoListBtn, setAnnoListBtn, annoCl
             <button className="annotation_btn" onClick={annoListBtnActive}>
                 <i className='icon-list-bullet'></i>
             </button>
+
             {annoListBtn === true && (
-                <button className="annotation_wide" id='annoWideBtn' onMouseDown={mouseDownHandler}>
+                <button className="annotation_wide" onMouseDown={mouseDownHandler}>
                     <i className='icon-resize-horizontal'></i>
                 </button>
             )}
@@ -246,7 +248,6 @@ function AnnoList({ id, annoArr, setAnnoArr, annoListBtn, setAnnoListBtn, annoCl
                                 </div>
                             </li>
                         )
-
                     })
                 }
             </ul>

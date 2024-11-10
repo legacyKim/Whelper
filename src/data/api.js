@@ -1,5 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
+import cookieBox from '../components/hook/cookie'
 
 // const API_URL = 'http://localhost:5000';
 const API_URL = 'https://bambueong.net';
@@ -237,6 +238,17 @@ export const memoListAnnoDelete = createAsyncThunk('memoData/annoDelete', async 
     }
 });
 
+export const MemoListInWrite = createAsyncThunk('memoData/memoInWrite', async (data) => {
+    try {
+        const response = await axios.get(`${API_URL}/api/Write/memo`, {
+            params: { selectValue: data.selectedValue }
+        });
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
+});
+
 // get bookdata
 export const bookListData = createAsyncThunk('bookData/getBook',
     async () => {
@@ -268,6 +280,18 @@ export const bookListDataDelete = createAsyncThunk('bookData/bookDelete', async 
     }
 });
 
+export const bookDataInWrite = createAsyncThunk('bookData/bookInWrite',
+    async () => {
+        try {
+            const response = await axios.get(`${API_URL}/api/Write`);
+            return response.data;
+        } catch (error) {
+            console.error('Error fetching bookListData:', error);
+            throw error;
+        }
+    },
+);
+
 export const userCheck = createAsyncThunk('user', async (data, thunkAPI) => {
     try {
         const response = await axios.post(`${API_URL}/api/Login`, data, { withCredentials: true });
@@ -277,16 +301,9 @@ export const userCheck = createAsyncThunk('user', async (data, thunkAPI) => {
     }
 });
 
-function getCookie(name) {
-    const value = `; ${document.cookie}`;
-    const parts = value.split(`; ${name}=`);
-    if (parts.length === 2) return parts.pop().split(';').shift();
-    return null;
-}
-
 export const userCheckRefresh = createAsyncThunk('user', async (_, thunkAPI) => {
     try {
-        const csrfToken = getCookie('csrf_access_token');
+        const csrfToken = cookieBox.getCookie('csrf_access_token');
         const response = await axios.post(`${API_URL}/api/userCheckRefresh`, {}, {
             headers: {
                 'Content-Type': 'application/json',
@@ -295,8 +312,11 @@ export const userCheckRefresh = createAsyncThunk('user', async (_, thunkAPI) => 
             withCredentials: true,
         });
         return response.data;
-        return response.data;
     } catch (error) {
+        if (error.response && error.response.status === 401) {
+            cookieBox.deleteCookie('csrf_access_token');
+            cookieBox.deleteCookie('access_token_cookie');
+        }
         return thunkAPI.rejectWithValue(error.response.data);
     }
 });
@@ -320,7 +340,6 @@ export const emailSendCertifyNum = createAsyncThunk('emailCertifyNumSend', async
 });
 
 export const signupComplete = createAsyncThunk('signup', async (data) => {
-    console.log(data);
     try {
         const response = await axios.post(`${API_URL}/api/signup`, { id: data.newUsername, password: data.newUserPasswordConfirm });
         return response.data;

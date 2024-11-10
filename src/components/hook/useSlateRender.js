@@ -4,6 +4,8 @@ const useSlateRender = () => {
 
     const renderElement = useCallback(({ attributes, children, element }) => {
         switch (element.type) {
+            case 'blockquote':
+                return <blockquote {...attributes} className="editor_quote">{children}</blockquote>;
             case 'paragraph':
                 return <p {...attributes}>{children}</p>;
             default:

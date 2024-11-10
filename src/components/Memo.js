@@ -239,7 +239,6 @@ function Memo() {
     //// book list
 
     // memo save
-
     var newMemoSource = useRef(null);
     var newMemoSourcePage = useRef(null);
     var newMemoAuthor = useRef(null);
@@ -743,7 +742,7 @@ function Memo() {
                 {memo.memoAnnotation !== null && <MemoAnno memo={memo} />}
 
                 <div className='memoDetail_btn'>
-                    {isAuth === 1 && (
+                    {(isAuth === 0 || isAuth === 1) && (
                         <div className='flex'>
                             <button className='icon-flow-split' onClick={() => {
                                 setMemoAnnoActive('active');
