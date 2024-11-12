@@ -21,8 +21,10 @@ function AnnoLink() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        dispatch(writeListDataAnnoLink());
-        dispatch(syncWriteListDataAnnoLink());
+        if (!writeListArr.length) {
+            dispatch(writeListDataAnnoLink());
+            dispatch(syncWriteListDataAnnoLink());
+        }
     }, [dispatch]);
 
     const [writeListAnnoArr, setWriteListAnnoArr] = useState([]);

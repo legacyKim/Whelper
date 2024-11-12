@@ -23,8 +23,6 @@ function MemoInWrite({ memoInWriteBtn, setMemoInWriteBtn, setAnnoListBtn }) {
     const [memoListInWrite, setMemoListInWrite] = useState([]);
     const [bookListInWrite, setBookListInWrite] = useState([]);
 
-    console.log(memoListInWrite)
-
     useEffect(() => {
         const fetchData = async () => {
             const result = await dispatch(bookDataInWrite());
@@ -37,7 +35,7 @@ function MemoInWrite({ memoInWriteBtn, setMemoInWriteBtn, setAnnoListBtn }) {
     const memoSearchBtn = async (e) => {
 
         const selectedValue = e.target.value;
-    
+
         const result = await dispatch(MemoListInWrite({ selectedValue }));
         setMemoListInWrite(result.payload.memo);
     }
@@ -109,8 +107,8 @@ function MemoInWrite({ memoInWriteBtn, setMemoInWriteBtn, setAnnoListBtn }) {
                                     </span>
                                     <ol className='memolist_in_write_anno'>
                                         {
-                                            memoListInWrite[i].memoAnnotation.map(function(n, j){
-                                                return(
+                                            memoListInWrite[i].memoAnnotation.map(function (n, j) {
+                                                return (
                                                     <li key={j}>
                                                         <p>{memoListInWrite[i].memoAnnotation[j]}</p>
                                                     </li>
@@ -118,13 +116,17 @@ function MemoInWrite({ memoInWriteBtn, setMemoInWriteBtn, setAnnoListBtn }) {
                                             })
                                         }
                                     </ol>
+                                    {memoListInWrite[i].memoSourcePage && (
+                                        <b>- {memoListInWrite[i].memoSourcePage}p</b>
+                                    )}
+
                                 </li>
                             )
                         })
                     }
                 </ul>
             </div>
-        </div>
+        </div >
 
     )
 }

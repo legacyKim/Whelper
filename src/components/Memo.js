@@ -39,6 +39,7 @@ function Memo() {
 
     const memoListArr = memoListState.data.memo || [];
     const bookListArr = bookListState.data.book || [];
+    const isLoading = memoListState.loading;
 
     const page = memoListState.data.page;
     const [totalPages, setTotalPages] = useState(memoListState.data.totalPages);
@@ -73,7 +74,7 @@ function Memo() {
     }, [MemoScrollPosition]);
 
     useEffect(() => {
-        if (page <= totalPages) {
+        if (page <= totalPages && !isLoading) {
             dispatch(memoListData({ page, bookTitle }));
         }
     }, [page, dispatch]);

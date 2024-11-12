@@ -515,10 +515,11 @@ button i { transition: all 0.3s ease-in-out; }
 .memolist_in_write_result { max-height: 60vh; } 
 .memolist_in_write_result>li { margin-bottom: 8px; animation: memolist_in_write 0.5s 1 forwards; } 
 .memolist_in_write_result>li>span { display: flex; justify-content: flex-start; font-size: 13px; font-weight: 400; line-height: 1.4; margin-bottom: 6px; } 
-.memolist_in_write_result>li>span::before { content: ''; position: relative; width: 4px; height: 4px; border-radius: 50%; background-color: var(--font-color); margin-right: 4px; margin-top: 5px; } 
+.memolist_in_write_result>li>span::before { content: ''; position: relative; min-width: 4px; height: 4px; border-radius: 50%; background-color: var(--font-color); margin-right: 4px; margin-top: 5px; } 
 .memolist_in_write_result>li>ol { } 
 .memolist_in_write_anno>li { margin-bottom: 6px; margin-left: 8px; } 
 .memolist_in_write_anno>li>p { font-size: 13px; font-weight: 400; line-height: 1.4; opacity: 0.8; } 
+.memolist_in_write_result>li>b { font-size: 12px; font-weight: 400; line-height: 1.4; opacity: 0.8; margin-left: 8px; } 
 
 @keyframes memolist_in_write { 
  0% { opacity: 0; } 

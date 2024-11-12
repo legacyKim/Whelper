@@ -25,19 +25,18 @@ function Category() {
     const dispatch = useDispatch();
     const { rootHeight, cateScrollPosition, setCateScrollPosition, isAuth } = useContext(MyContext);
 
-    useEffect(() => {
-        dispatch(cateListData_cate());
-        dispatch(resetWriteCate());
-    }, [dispatch]);
-
-    const [page, setPage] = useState(1);
-
     const writeListState = useSelector((state) => state.WriteListCateDataOn);
     const cateListState = useSelector((state) => state.cateData);
 
     const [writeListArr, setWriteListArr] = useState(writeListState.data.write || []);
     const cateListArr = cateListState.data.cate || [];
 
+    useEffect(() => {
+        dispatch(cateListData_cate());
+        dispatch(resetWriteCate());
+    }, [dispatch]);
+
+    const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(writeListState.data.totalPages);
 
     // cate arr setting

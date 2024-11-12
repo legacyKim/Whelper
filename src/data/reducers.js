@@ -160,7 +160,7 @@ const memoInitialState = {
     data: {
         memo: [],
         totalPages: null,
-        page: 1,
+        page: null,
     },
     loading: false,
     error: null,

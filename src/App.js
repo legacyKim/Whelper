@@ -28,7 +28,6 @@ function App() {
     const prevPathname = prevPathRef.current;
 
     const [isAuth, setAuth] = useState(false);
-    console.log(isAuth);
 
     useEffect(() => {
 
@@ -64,7 +63,6 @@ function App() {
     const writeNavi = async (e) => {
         e.preventDefault();
         const isTokenValid = await token_check(navigate);
-        console.log(isTokenValid);
         if (isTokenValid) {
             navigate('/components/Write');
         }

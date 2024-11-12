@@ -210,8 +210,6 @@ function Login() {
             const newUsername_v = newUsername.current.value;
             const result = await dispatch(signupComplete({ newUsername: newUsername_v, newUserPasswordConfirm: newUserPasswordConfirm }));
 
-            console.log(result.payload)
-
             if (result.payload?.message === 'Success') {
                 alert('회원가입이 완료되었습니다.');
                 navigate('/');
@@ -252,7 +250,6 @@ function Login() {
                         <option>naver.com</option>
                         <option>google.com</option>
                         <option>daum.net</option>
-                        <option>직접 입력</option>
                     </select>
                     <button onClick={getCertifyNum} className='email_certify_btn'><i className='icon-ok-circled'></i></button>
                 </div>

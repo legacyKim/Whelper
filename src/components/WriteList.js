@@ -60,7 +60,7 @@ function WriteList() {
     }, [wlScrollPosition]);
 
     useEffect(() => {
-        if (page <= totalPages) {
+        if (page <= totalPages && !writeListArr.length) {
             dispatch(writeListPageData(page));
         }
     }, [page]);
