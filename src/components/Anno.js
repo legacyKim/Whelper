@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from "react-router-dom";
 
-function AnnoList({ id, annoArr, setAnnoArr, annoListBtn, setAnnoListBtn, setMemoInWriteBtn, annoClick, setAnnoClick, setAnnoRemoveNumbering, annoString, setAnnoString, writeKey }) {
+function AnnoList({ id, annoArr, setAnnoArr, annoListBtn, setAnnoListBtn, setMemoInWriteBtn, setLinkListBtn, annoClick, setAnnoClick, setAnnoRemoveNumbering, annoString, setAnnoString, writeKey }) {
 
     const navigate = useNavigate();
 
@@ -14,7 +14,9 @@ function AnnoList({ id, annoArr, setAnnoArr, annoListBtn, setAnnoListBtn, setMem
             setAnnoListBtn(false);
         } else {
             setAnnoListBtn(true);
+
             setMemoInWriteBtn(false);
+            setLinkListBtn(false);
         }
     }
 
@@ -190,10 +192,10 @@ function AnnoList({ id, annoArr, setAnnoArr, annoListBtn, setAnnoListBtn, setMem
         });
     }, [annoString])
 
-    // annoList Wide adjust
-    const annoListArea = document.querySelector('.annotation_list');
+    const area = document.querySelector('.annotation_list');
+    const [listWidth, setListWidth] = useState(266);
+
     let x = 0;
-    const [annoListWidth, setAnnoListWidth] = useState(266);
 
     const mouseDownHandler = function (e) {
 
@@ -204,25 +206,25 @@ function AnnoList({ id, annoArr, setAnnoArr, annoListBtn, setAnnoListBtn, setMem
     };
 
     const mouseMoveHandler = function (e) {
-        const dx = e.clientX - x;
-        const newAnnoListWidth = annoListWidth - dx;
 
-        annoListArea.style.minWidth = `${newAnnoListWidth}px`;
-        annoListArea.style.maxWidth = `${newAnnoListWidth}px`;
-        annoListArea.style.right = `-${newAnnoListWidth}px`;
+        const dx = e.clientX - x;
+        const newAnnoListWidth = listWidth - dx;
+
+        area.style.minWidth = `${newAnnoListWidth}px`;
+        area.style.maxWidth = `${newAnnoListWidth}px`;
+        area.style.right = `-${newAnnoListWidth}px`;
     };
 
     const mouseUpHandler = function () {
-        setAnnoListWidth(annoListArea.getBoundingClientRect().width);
+        setListWidth(area.getBoundingClientRect().width);
         document.removeEventListener('mousemove', mouseMoveHandler);
         document.removeEventListener('mouseup', mouseUpHandler);
     };
-    //// annoList Wide adjust
 
     return (
 
         <div className={`annotation_list ${annoListBtn === true ? 'active' : ''} `} onClick={() => { setAnnoBtnActive(false) }}>
-            <button className="annotation_btn" onClick={annoListBtnActive}>
+            <button className={`annotation_btn`} onClick={annoListBtnActive}>
                 <i className='icon-list-bullet'></i>
             </button>
 

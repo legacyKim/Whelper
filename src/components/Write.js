@@ -11,11 +11,14 @@ import { Slate, Editable, withReact } from 'slate-react';
 import MyContext from '../context';
 import AnnoList from './Anno.js';
 import MemoInWrite from './MemoInWrite.js';
+import LinkList from './LinkList.js';
+import LinkPopup from './LinkPopup.js';
 
 import useAnno from './hook/useAnno.js';
 import serialize from './hook/serialize.js';
 import useSlateRender from './hook/useSlateRender.js';
-import CustomEditor from './hook/customEditor.js'
+import CustomEditor from './hook/customEditor.js';
+import LinksWith from './hook/LinksWith.js';
 
 function Write() {
 
@@ -39,10 +42,10 @@ function Write() {
     };
     //// category popup
 
-    // slate text editor
+    // slate text editor    
     const [titleEditor] = useState(() => withReact(createEditor()));
     const [subTitleEditor] = useState(() => withReact(createEditor()));
-    const [editor] = useState(() => withReact(createEditor()));
+    const [editor] = useState(() => LinksWith(withReact(createEditor())));
 
     const writeTitleLocal = localStorage.getItem('writeTitle');
     const writeSubTitleLocal = localStorage.getItem('writeSubTitle');
@@ -75,7 +78,9 @@ function Write() {
 
     // anno save
     const { annoListBtn, setAnnoListBtn, annoClick, setAnnoClick, annoString, setAnnoString,
-        memoInWriteBtn, setMemoInWriteBtn
+        memoInWriteBtn, setMemoInWriteBtn,
+        linkListBtn, setLinkListBtn,
+        linkList, setLinkList
     } = useContext(MyContext);
 
     const [annoArrLs, setAnnoArrLs] = useState(JSON.parse(localStorage.getItem('writeAnno')));
@@ -178,6 +183,10 @@ function Write() {
         annoAddWrite
     );
 
+    // link popup open
+    const [linkActive, setLinkActive] = useState(false);
+    //// link popup open
+
     const writeKey = true;
     useEffect(() => {
         localStorage.setItem('writeAnno', JSON.stringify(annoArr));
@@ -268,6 +277,20 @@ function Write() {
                                 CustomEditor.toggleAnnotation(editor, annoTextboxOpen, onlyAnnoClose, annoRemove);
                             }}>
                         </button>
+                        <button className='icon-link'
+                            onMouseDown={event => {
+                                event.preventDefault();
+
+                                if (CustomEditor.isLink(editor) === false) {
+                                    setLinkActive(true);
+                                    toolbarClose();
+                                } else {
+                                    CustomEditor.toggleLink(editor);
+                                    toolbarClose();
+                                }
+
+                            }}>
+                        </button>
                     </div>
                     <div className={`anno_add ${annoTextboxActive ? annoTextboxActive : ""}`}>
                         <textarea ref={annoAddWrite} placeholder='newAnnoComment'
@@ -290,26 +313,6 @@ function Write() {
                     editor={editor}
                     renderElement={renderElement}
                     renderLeaf={renderLeaf}
-                    onKeyDown={event => {
-
-                        if (!event.ctrlKey) {
-                            return
-                        }
-                        switch (event.key) {
-
-                            case 'b': {
-                                event.preventDefault()
-                                CustomEditor.toggleBoldMark(editor)
-                                break
-                            }
-
-                            case 'h': {
-                                event.preventDefault();
-                                CustomEditor.toggleHighlight(editor);
-                                break
-                            }
-                        }
-                    }}
                 />
             </Slate>
 
@@ -317,9 +320,9 @@ function Write() {
                 <button className='icon-ok-circled write_btn_save' onClick={() => { popupClick(); }}></button>
             </div>
 
-            <AnnoList annoArr={annoArr} setAnnoArr={setAnnoArr} annoListBtn={annoListBtn} setAnnoListBtn={setAnnoListBtn} annoClick={annoClick} setAnnoClick={setAnnoClick} setAnnoRemoveNumbering={setAnnoRemoveNumbering} annoString={annoString} setAnnoString={setAnnoString} writeKey={writeKey} setMemoInWriteBtn={setMemoInWriteBtn} />
-
-            <MemoInWrite memoInWriteBtn={memoInWriteBtn} setMemoInWriteBtn={setMemoInWriteBtn} setAnnoListBtn={setAnnoListBtn} />
+            <AnnoList annoArr={annoArr} setAnnoArr={setAnnoArr} annoListBtn={annoListBtn} setAnnoListBtn={setAnnoListBtn} annoClick={annoClick} setAnnoClick={setAnnoClick} setAnnoRemoveNumbering={setAnnoRemoveNumbering} annoString={annoString} setAnnoString={setAnnoString} writeKey={writeKey} setMemoInWriteBtn={setMemoInWriteBtn} setLinkListBtn={setLinkListBtn} />
+            <LinkList editor={editor} linkList={linkList} setLinkList={setLinkList} linkListBtn={linkListBtn} setAnnoListBtn={setAnnoListBtn} setMemoInWriteBtn={setMemoInWriteBtn} setLinkListBtn={setLinkListBtn} />
+            <MemoInWrite memoInWriteBtn={memoInWriteBtn} setMemoInWriteBtn={setMemoInWriteBtn} setAnnoListBtn={setAnnoListBtn} setLinkListBtn={setLinkListBtn} />
 
             {/* category popup */}
             <div className={`popup ${popupActive ? popupActive : ""}`}>
@@ -340,6 +343,11 @@ function Write() {
                     <Link to={`/components/WriteView/${recentId}`} className='icon-ok-circled write_btn_save' onClick={() => { WriteSaveBtn(); }}></Link>
                 </div>
             </div>
+
+            {linkActive === true && (
+                <LinkPopup linkList={linkList} setLinkList={setLinkList} linkActive={linkActive} setLinkActive={setLinkActive} editor={editor} CustomEditor={CustomEditor} />
+            )}
+
         </div>
     )
 

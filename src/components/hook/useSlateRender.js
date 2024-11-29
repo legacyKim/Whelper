@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react'
 
-const useSlateRender = () => {
+const useSlateRender = (contentEditableFalse) => {
 
     const renderElement = useCallback(({ attributes, children, element }) => {
         switch (element.type) {
@@ -8,6 +8,20 @@ const useSlateRender = () => {
                 return <blockquote {...attributes} className="editor_quote">{children}</blockquote>;
             case 'paragraph':
                 return <p {...attributes}>{children}</p>;
+            case 'link': {
+                return (
+                    <a
+                        {...attributes}
+                        href={element.url}
+                        target="_blank"
+                        className="editor_link"
+                        contentEditable={contentEditableFalse !== true ? true : false}
+                        suppressContentEditableWarning
+                    >
+                        {children}
+                    </a>
+                );
+            }
             default:
                 return <div {...attributes}>{children}</div>;
         }
@@ -15,8 +29,8 @@ const useSlateRender = () => {
 
     const renderLeaf = useCallback(({ attributes, children, leaf }) => {
 
-        let style = {};
         let classNames = '';
+        let style = {};
 
         if (leaf.bold) {
             classNames = 'bold';
@@ -30,6 +44,7 @@ const useSlateRender = () => {
             style.textUnderlinePosition = 'under';
             classNames += ' editor_underline';
         }
+
         if (leaf.annotation) {
             const anno_num = document.querySelectorAll('.editor_anno');
             anno_num.forEach((element, index) => {
@@ -50,8 +65,6 @@ const useSlateRender = () => {
     }, []);
 
     return { renderElement, renderLeaf };
-
-}
-
+};
 
 export default useSlateRender;

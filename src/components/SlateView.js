@@ -28,10 +28,10 @@ const ViewEdit = ({ titleDoc, subTitleDoc, contentDoc }) => {
             localStorage.setItem('view_subTitle', JSON.stringify(subTitleValue));
             localStorage.setItem('view_content', JSON.stringify(contentValue));
         }
-    }, [])
+    }, []);
 
-
-    const { renderElement, renderLeaf } = useSlateRender();
+    var contentEditableFalse = true;
+    const { renderElement, renderLeaf } = useSlateRender(contentEditableFalse);
 
     return (
         <div className='view_common'>

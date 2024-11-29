@@ -303,9 +303,10 @@ function Category() {
 
         return (
             <div className='write_list'>
-                <Link to={`/components/WriteView/${index}`}>
+                <div className="fake_div">
                     <ViewEdit titleDoc={titleDoc} subTitleDoc={subTitleDoc} contentDoc={contentDoc}></ViewEdit>
-                </Link>
+                </div>
+                <Link to={`/components/WriteView/${index}`}></Link>
                 <div className='write_keyword'>
                     <ul className='write_keyword_list'>
                         {

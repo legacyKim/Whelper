@@ -1,23 +1,25 @@
 import escapeHtml from 'escape-html'
-import { Text, Element as SlateElement } from 'slate';
+import { Text } from 'slate';
 
 const serialize = (nodes) => {
 
     return nodes.map(node => {
-
         if (Text.isText(node)) {
             let string = escapeHtml(node.text);
+
             if (node.bold) {
                 string = `<strong>${string}</strong>`;
-            } else if (node.highlight) {
-                string = `<span class="editor_highlight">${string}</span>`;
-            } else if (node.underline) {
-                string = `<span class="editor_underline">${string}</span>`
-            } else if (node.quote) {
-                string = `<span class="editor_quote">${string}</span>`
-            } else if (node.annotation) {
-                string = `<span class="editor_anno editing">${string}</span>`
             }
+            if (node.highlight) {
+                string = `<span class="editor_highlight">${string}</span>`;
+            }
+            if (node.underline) {
+                string = `<span class="editor_underline">${string}</span>`;
+            }
+            if (node.annotation) {
+                string = `<span class="editor_anno editing">${string}</span>`;
+            }
+
             return string;
         }
 
@@ -30,16 +32,17 @@ const serialize = (nodes) => {
                 return `<span class="editor_underline">${children}</span>`;
             case 'highlight':
                 return `<span class="editor_highlight">${children}</span>`;
-            case 'quote':
-                return `<span class="editor_quote">${children}</span>`;
+            case 'blockquote':
+                return `<blockquote class="editor_quote">${children}</blockquote>`;
             case 'annotation':
                 return `<span class="editor_anno editing">${children}</span>`;
             case 'paragraph':
                 return `<p>${children}</p>`;
+            case 'link':
+                return `<a href="${node.url}" data-url-explain="${node.url_explain}" class="editor_link">${children}</a>`;
             default:
                 return children;
         }
-
 
     }).join('');
 

@@ -8,6 +8,7 @@ import { useParams } from 'react-router-dom';
 
 import MyContext from '../context'
 import AnnoList from './Anno.js'
+import LinkList from './LinkList.js'
 
 import ViewEdit from './SlateView.js'
 import { writeListDataView } from '../data/api.js';
@@ -78,6 +79,8 @@ function WriteView() {
             return null;
         }
     });
+
+    const lsContentValue = JSON.parse(localStorage.getItem('view_content')) || null;
     const [contentDoc, setContentDoc] = useState(() => {
         if (writeContent?.content) {
             return new DOMParser().parseFromString(writeContent.content, 'text/html');
@@ -85,6 +88,7 @@ function WriteView() {
             return null;
         }
     });
+    const [contentDocLink, setContentDocLink] = useState(contentDoc !== null ? contentDoc : lsContentValue);
 
     const lsKeywords = JSON.parse(localStorage.getItem('view_keywords')) || [];
     const [keywordsParse, setKeywordsParse] = useState(() => {
@@ -116,7 +120,7 @@ function WriteView() {
     // write delete
     const [modalDeleteWrite, setModalDeleteWrite] = useState(false);
 
-    const { annoListBtn, setAnnoListBtn, annoClick, setAnnoClick } = useContext(MyContext);
+    const { setMemoInWriteBtn, annoListBtn, setAnnoListBtn, annoClick, setAnnoClick, linkListBtn, setLinkListBtn, linkList, setLinkList } = useContext(MyContext);
 
     const anno_numbering = () => {
 
@@ -183,7 +187,10 @@ function WriteView() {
                         </div>
                     </div>
 
-                    <AnnoList id={id} annoArr={annoArr} annoListBtn={annoListBtn} setAnnoListBtn={setAnnoListBtn} annoClick={annoClick} setAnnoClick={setAnnoClick} annoString={annoString} setAnnoString={setAnnoString} writeKey={writeKey} />
+                    <AnnoList id={id} annoArr={annoArr} annoListBtn={annoListBtn} setAnnoListBtn={setAnnoListBtn} annoClick={annoClick} setAnnoClick={setAnnoClick} annoString={annoString} setAnnoString={setAnnoString} writeKey={writeKey} setLinkListBtn={setLinkListBtn} setMemoInWriteBtn={setMemoInWriteBtn} />
+                    {contentDocLink !== null && (
+                        <LinkList editor={contentDocLink} linkList={linkList} setLinkList={setLinkList} linkListBtn={linkListBtn} setAnnoListBtn={setAnnoListBtn} setLinkListBtn={setLinkListBtn} setMemoInWriteBtn={setMemoInWriteBtn} />
+                    )}
 
                     {(isAuth === 1 || isAuth === 0) && id !== '9999' && (
                         <div className='page_btn'>

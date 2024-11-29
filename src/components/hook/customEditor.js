@@ -18,9 +18,6 @@ const CustomEditor = {
     },
 
     isQuote(editor) {
-        // const marks = Editor.marks(editor)
-        // return marks ? marks.quote === true : false
-
         const [match] = Editor.nodes(editor, {
             match: n => n.type === 'blockquote',
             mode: 'block',
@@ -31,6 +28,24 @@ const CustomEditor = {
     isAnnotation(editor) {
         const marks = Editor.marks(editor)
         return marks ? marks.annotation === true : false
+    },
+
+    isLink(editor) {
+        const [match] = Editor.nodes(editor, {
+            match: n => n.type === 'link',
+            mode: 'all',
+        });
+        return !!match;
+    },
+
+    isValidUrl(url) {
+        try {
+            new URL(url);
+            return true;
+        } catch (_) {
+            const regex = /^(www\.)?[a-zA-Z0-9-]+\.[a-zA-Z]{2,}(\/.*)?$/;
+            return regex.test(url);
+        }
     },
 
     toggleBoldMark(editor) {
@@ -83,9 +98,50 @@ const CustomEditor = {
             annoTextboxOpen();
             onlyAnnoClose();
         }
-
     },
 
+    toggleLink(editor, url, explain, mode) {
+
+        const isActive = CustomEditor.isLink(editor);
+        const isUrlCheck = CustomEditor.isValidUrl(url);
+
+        if (isActive) {
+            Transforms.unwrapNodes(editor, {
+                match: n => n.type === 'link',
+            });
+        } else {
+
+            if (!isUrlCheck) {
+                alert('유효하지 않은 URL입니다.');
+                return false;
+            }
+
+            const { selection } = editor;
+            const selectedText = Editor.string(editor, selection);
+
+             if (selection && selectedText !== '') {
+
+                Transforms.wrapNodes(
+                    editor,
+                    {
+                        type: 'link',
+                        url,
+                        url_explain: explain,
+                        children: [{ text: selectedText }],
+                    },
+                    { split: true }
+                );
+
+                Transforms.insertNodes(
+                    editor,
+                    { type: 'paragraph', children: [] },
+                    { at: Editor.end(editor, []), select: false }
+                );
+            }
+        }
+
+        return true;
+    }
 }
 
 export default CustomEditor;

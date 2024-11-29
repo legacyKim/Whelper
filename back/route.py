@@ -532,7 +532,6 @@ def send_certify_num():
     data = request.get_json()
     email = data.get("email")
 
-    print(email)
     certify_num = str(random.randint(100000, 999999))
 
     certify_codes = {}

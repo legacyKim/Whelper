@@ -64,7 +64,7 @@ function Memo() {
             });
         }
 
-        const memoAreaHeight = document.querySelector('.content_area_memo').offsetHeight
+        const memoAreaHeight = document.querySelector('.content_area_memo').offsetHeight;
 
         if (page <= totalPages) {
             if (Math.ceil(MemoScrollPosition + rootHeight) <= memoAreaHeight) {
@@ -83,7 +83,7 @@ function Memo() {
 
     useEffect(() => {
         setMemoArr(memoListArr)
-    }, [memoListState])
+    }, [memoListState]);
 
     // book Add
     const [isBookAdd, setIsBookAdd] = useState(false);
@@ -236,7 +236,7 @@ function Memo() {
                 setBookListActive('none');
             }, 100);
         }
-    }, [bookListActive])
+    }, [bookListActive]);
     //// book list
 
     // memo save
@@ -397,7 +397,7 @@ function Memo() {
         setMemoCurrent(null);
 
         dispatch(resetMemo());
-        dispatch(memoListData({ page, bookTitle })).then(() => {
+        dispatch(memoListData({ page: 1, bookTitle })).then(() => {
             setTotalPages(memoListState.data.totalPages);
         });
 
@@ -453,7 +453,6 @@ function Memo() {
             setMemoAnnoActive('');
             setTextAreaHeight(null);
         }
-
     }
     //// memo anno add
 

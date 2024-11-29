@@ -22,20 +22,28 @@
     │   ├── db_operator.py              # sqlalchemy 를 활용한 mysql DB 내에 table 생성.
     │   ├── send_email.py               # 구글에서 제공하는 이메일 보내는 기능을 활용해 인증버호 확인 기능 추가 
     │   └── route.py                    # 각종 api 모음.
+    │
     ├── src
     │   ├── components
     │   │   ├── hook
+    │   │   │   ├── cookie.js           # 로그인 관련 쿠키 처리
+    │   │   │   ├── customEditor.js     # Slate 라이브러리 에디터 커스텀
     │   │   │   ├── deserialize.js      # Slate 라이브러리 역직렬화 코드
+    │   │   │   ├── LinkCheck.js        # 링크 기능을 공유하는 컴포넌트 별로 상이한 로직 적용
+    │   │   │   ├── LinksWith.js        # Slate editor Link 줄바꿈 적용
     │   │   │   ├── serialize.js        # Slate 라이브러리 직렬화 코드
     │   │   │   ├── useAnno.js          # 주석 기능 공통 코드
     │   │   │   ├── useScrollAnima.js   # scroll animation 공통 코드
     │   │   │   └── useSlateRender.js   # Slate 라이브러리 렌더링 관련 공통 코드
+    │   │   │
     │   │   ├── Anno.js                 # 우측 주석 페이지
     │   │   ├── AnnoLink.js             # 주석 모음 페이지
     │   │   ├── Category.js             # 카테고리에 따른 분류
     │   │   ├── Correct.js              # 글 수정 페이지
     │   │   ├── Date.js                 # 날짜별 정리 페이지
     │   │   ├── Home.js                 # Home
+    │   │   ├── LinkList.js             # 우측 사이드 링크 리스트 정렬
+    │   │   ├── LinkPopup.js            # 링크 팝업 컴포넌트
     │   │   ├── Login.js                # 로그인 컴포넌트 ( 로그인 및 아이디 생성 )
     │   │   ├── Memo.js                 # 메모 컴포넌트
     │   │   ├── MemoInWrite.js          # Write 컴포넌트 내부에서 memo 불러오기
@@ -46,22 +54,26 @@
     │   │   ├── WriteCorrect.js         # 글수정 페이지
     │   │   ├── WriteList.js            # 글목록 페이지
     │   │   └── WriteView.js            # 글 상세보기 페이지
+    │   │
     │   ├── css
     │   │   ├── fontello                # [폰텔로 아이콘 ](https://fontello.com/)
     │   │   ├── base.css                # 웹 스타일 초기화 파일
     │   │   ├── components.css          # 컴포넌트 공통 css
     │   │   ├── style.css               # 스타일시트
     │   │   └── work.css                # Work 컴포넌트 스타일
+    │   │
     │   ├── data
     │   │   ├── api.js                  # api 엔드포인트
     │   │   ├── reducers.js             # Redux
     │   │   └── token_check.js          # Login 컴포넌트 관련 토큰 체크
+    │   │
     │   ├── font                        # 폰트
     │   ├── img                         # Work 컴포넌트 관련 이미지 모음 
     │   ├── App.js                      # 루트 컴포넌트
     │   ├── context.js                  # context api 라이브러리 
     │   ├── index.js                    # index
     │   └── Routes.js                   # 라우팅 모음
+    │
     └── requirements.txt                # 파이썬 라이브러리 설치 파일
 ```
 

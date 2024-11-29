@@ -42,10 +42,16 @@ function App() {
 
             if (hasCookie) {
                 const result = await dispatch(userCheckRefresh());
-                if (result.payload?.info.authority === 0 || result.payload?.info.authority === 1) {
+                if (result.payload?.info?.authority === 0 || result.payload?.info?.authority === 1) {
                     setAuth(result.payload.info.authority);
                 } else {
                     setAuth(null);
+                }
+            } else {
+                if (isAuth !== false) {
+                    alert("다시 로그인 해주세요.");
+                    navigate('/components/Login');
+                    return;
                 }
             }
         };
@@ -167,6 +173,15 @@ function App() {
     const [memoInWriteBtn, setMemoInWriteBtn] = useState(false);
     //// memoInWrite
 
+    // linkListBtn
+    const [linkListBtn, setLinkListBtn] = useState(false);
+    const [linkList, setLinkList] = useState([]);
+    //// linkListBtn
+
+    // customEditor mode
+    const [mode, setMode] = useState();
+    //// customEditor mode
+
     // default right click, copy
     useEffect(() => {
         if (isAuth === false) {
@@ -220,7 +235,7 @@ function App() {
         return () => {
             document.removeEventListener('mouseover', handleMouseOver);
         };
-    }, [scrollPosition])
+    }, [scrollPosition]);
 
     return (
 
@@ -233,6 +248,9 @@ function App() {
             annoListBtn, setAnnoListBtn, annoClick, setAnnoClick, annoString, setAnnoString,
             prevPathname,
             memoInWriteBtn, setMemoInWriteBtn,
+            linkListBtn, setLinkListBtn,
+            linkList, setLinkList,
+            mode, setMode
         }}>
             <div id='app' className={`App ${theme}`}>
 

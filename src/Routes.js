@@ -20,7 +20,6 @@ import WriteView from './components/WriteView.js'
 import WriteCorrect from './components/WriteCorrect.js'
 import AnnoLink from './components/AnnoLink.js'
 
-import Book from './components/Book.js'
 import Category from './components/Category.js'
 import Search from './components/Search.js'
 

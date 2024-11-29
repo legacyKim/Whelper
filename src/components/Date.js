@@ -93,7 +93,7 @@ function Date_sort() {
             ) : (
                 Object.keys(groupedByDate).map(date => (
                     <div className='date_box' key={date}>
-                        <h2><i className='icon-level-down'></i>{date}</h2>
+                        <h2><i className='icon-calendar'></i>{date}</h2>
                         <ul className='data_list_wrap'>
                             {groupedByDate[date].map((item) => (
                                 <li className='date_list' key={item.id}>
@@ -117,9 +117,13 @@ function WriteShowContents({ writeListArr }) {
     const contentDoc = new DOMParser().parseFromString(writeContent.content, 'text/html');
 
     return (
-        <Link to={`/components/WriteView/${writeListArr.id}`}>
-            <ViewEdit titleDoc={titleDoc} subTitleDoc={subTitleDoc} contentDoc={contentDoc}></ViewEdit>
-        </Link>
+        <div className="date_content_box">
+            <div className="fake_div">
+                <ViewEdit titleDoc={titleDoc} subTitleDoc={subTitleDoc} contentDoc={contentDoc}></ViewEdit>
+            </div>
+            <Link to={`/components/WriteView/${writeListArr.id}`}></Link>
+        </div>
+
     );
 }
 

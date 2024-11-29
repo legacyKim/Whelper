@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { MemoListInWrite, bookDataInWrite } from '../data/api.js';
 
-function MemoInWrite({ memoInWriteBtn, setMemoInWriteBtn, setAnnoListBtn }) {
+function MemoInWrite({ memoInWriteBtn, setMemoInWriteBtn, setAnnoListBtn, setLinkListBtn }) {
 
     const dispatch = useDispatch();
 
@@ -16,7 +16,9 @@ function MemoInWrite({ memoInWriteBtn, setMemoInWriteBtn, setAnnoListBtn }) {
             setMemoInWriteBtn(false);
         } else {
             setMemoInWriteBtn(true);
+
             setAnnoListBtn(false);
+            setLinkListBtn(false);
         }
     }
 
@@ -31,7 +33,6 @@ function MemoInWrite({ memoInWriteBtn, setMemoInWriteBtn, setAnnoListBtn }) {
         fetchData();
     }, []);
 
-
     const memoSearchBtn = async (e) => {
 
         const selectedValue = e.target.value;
@@ -40,10 +41,10 @@ function MemoInWrite({ memoInWriteBtn, setMemoInWriteBtn, setAnnoListBtn }) {
         setMemoListInWrite(result.payload.memo);
     }
 
-    // memoList Wide adjust
-    const memoListArea = document.querySelector('.memo_in_write');
+    const area = document.querySelector('.memo_in_write');
+    const [listWidth, setListWidth] = useState(266);
+
     let x = 0;
-    const [memoListWidth, setMemoListWidth] = useState(266);
 
     const mouseDownHandler = function (e) {
 
@@ -54,20 +55,20 @@ function MemoInWrite({ memoInWriteBtn, setMemoInWriteBtn, setAnnoListBtn }) {
     };
 
     const mouseMoveHandler = function (e) {
-        const dx = e.clientX - x;
-        const newMemoListWidth = memoListWidth - dx;
 
-        memoListArea.style.minWidth = `${newMemoListWidth}px`;
-        memoListArea.style.maxWidth = `${newMemoListWidth}px`;
-        memoListArea.style.right = `-${newMemoListWidth}px`;
+        const dx = e.clientX - x;
+        const newMemoListWidth = listWidth - dx;
+
+        area.style.minWidth = `${newMemoListWidth}px`;
+        area.style.maxWidth = `${newMemoListWidth}px`;
+        area.style.right = `-${newMemoListWidth}px`;
     };
 
     const mouseUpHandler = function () {
-        setMemoListWidth(memoListArea.getBoundingClientRect().width);
+        setListWidth(area.getBoundingClientRect().width);
         document.removeEventListener('mousemove', mouseMoveHandler);
         document.removeEventListener('mouseup', mouseUpHandler);
     };
-    //// memoList Wide adjust
 
     return (
 

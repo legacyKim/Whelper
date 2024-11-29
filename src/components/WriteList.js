@@ -60,7 +60,7 @@ function WriteList() {
     }, [wlScrollPosition]);
 
     useEffect(() => {
-        if (page <= totalPages && !writeListArr.length) {
+        if (page <= totalPages) {
             dispatch(writeListPageData(page));
         }
     }, [page]);
@@ -121,9 +121,10 @@ function WriteList() {
                 )}
 
                 <div className='write_list'>
-                    <Link to={`/components/WriteView/${writeContent.id}`}>
+                    <div className="fake_div">
                         <ViewEdit titleDoc={titleDoc} subTitleDoc={subTitleDoc} contentDoc={contentDoc}></ViewEdit>
-                    </Link>
+                    </div>
+                    <Link to={`/components/WriteView/${writeContent.id}`}></Link>
                     <div className='write_keyword'>
                         <ul className='write_keyword_list'>
                             {

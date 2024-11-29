@@ -16,7 +16,15 @@ const WriteListView = createSlice({
     reducers: {
         syncWriteListData: (state, action) => {
             state.data.write = action.payload;
-        }
+        },
+        syncWriteListDataUpdate: (state, action) => {
+            if (action.payload !== undefined) {
+                const updatedWrite = state.data.write.map(item =>
+                    item.id === action.payload.id ? action.payload : item
+                );
+                state.data.write = updatedWrite;
+            }
+        },
     }
 })
 
@@ -160,7 +168,7 @@ const memoInitialState = {
     data: {
         memo: [],
         totalPages: null,
-        page: null,
+        page: 1,
     },
     loading: false,
     error: null,
@@ -174,7 +182,7 @@ const memoData = createSlice({
         setMemoPage(state, action) {
             state.data.page = action.payload;
         },
-        
+
         syncMemoListDataAdd(state, action) {
             if (action.payload !== undefined) {
                 state.data = {
@@ -359,7 +367,7 @@ const bookData = createSlice({
 
 });
 
-export const { syncWriteListData } = WriteListView.actions;
+export const { syncWriteListData, syncWriteListDataUpdate } = WriteListView.actions;
 export const { syncMemoListDataAdd, syncMemoListDelete, syncMemoListDataUpdate, syncMemoListAnno, syncMemoListAnnoUpdate, syncMemoListAnnoDelete, resetMemo, setMemoPage } = memoData.actions;
 export const { syncWriteListPageData, syncWriteListPageDataUpdate } = WriteListPageDataOn.actions;
 export const { syncWriteListDateData } = WriteListDateDataOn.actions;
