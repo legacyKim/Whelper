@@ -17,12 +17,16 @@ import { token_check } from '../data/token_check.js';
 function WriteList() {
 
     const { isAuth, rootHeight, wlScrollPosition, setWlScrollPosition } = useContext(MyContext);
-    
+
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
     useEffect(() => {
-        dispatch(syncWriteListPageData())
+        dispatch(syncWriteListPageData());
+
+        dispatch(writeListPageData(page)).then(() => {
+            setTotalPages(writeListState.data.totalPages)
+        });
     }, [dispatch])
 
     const [page, setPage] = useState(1);
@@ -31,6 +35,7 @@ function WriteList() {
     const writeListArr = writeListState.data.write || [];
 
     const [totalPages, setTotalPages] = useState(writeListState.data.totalPages);
+    console.log(totalPages);
 
     useEffect(() => {
         const updateScroll = debounce(() => {
@@ -43,17 +48,10 @@ function WriteList() {
     }, []);
 
     useEffect(() => {
-
-        if (totalPages === null) {
-            dispatch(writeListPageData(page)).then(() => {
-                setTotalPages(writeListState.data.totalPages)
-            });
-        }
-
         const writeAreaHeight = document.querySelector('.content_area_write').offsetHeight;
 
         if (page <= totalPages) {
-            if (Math.ceil(wlScrollPosition + rootHeight) <= writeAreaHeight) {
+            if (writeAreaHeight <= Math.ceil(wlScrollPosition + rootHeight)) {
                 setPage((prevPage) => prevPage + 1);
             }
         }

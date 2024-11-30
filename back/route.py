@@ -25,11 +25,11 @@ app.config['JWT_COOKIE_CSRF_PROTECT'] = True  # 필요에 따라 True로 설정
 app.config['JWT_CSRF_CHECK_FORM'] = True  # 필요에 따라 True로 설정
 jwt = JWTManager(app)
 
-CORS(app, resources={
-     r'*': {'origins': 'http://localhost:3000'}}, supports_credentials=True)
-
 # CORS(app, resources={
-#      r'*': {'origins': 'https://bambueong.net/'}}, supports_credentials=True)
+#      r'*': {'origins': 'http://localhost:3000'}}, supports_credentials=True)
+
+CORS(app, resources={
+     r'*': {'origins': 'https://bambueong.net/'}}, supports_credentials=True)
 
 
 @app.route('/api/date', methods=['GET'])
@@ -88,7 +88,6 @@ def common_write_data(id=None):
     if id is not None:
         if id == 9999:
             write_data = write_data[-1]
-            print(write_data)
         else:
             matching_data = next(
                 (item for item in write_data if item['id'] == id), None)
@@ -364,7 +363,7 @@ def get_data_memo():
             'memo': paginated_memo_data,
             'book': bookList,
             'currentPage': page,
-            'totalPages': (len(memoList) + limit - 1) // limit,
+            'totalPages': (len(filtered_memoList) + limit - 1) // limit,
             'bookTitle': bookTitle
         }
         return jsonify(data)

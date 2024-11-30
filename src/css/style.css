@@ -544,7 +544,7 @@ button i { transition: all 0.3s ease-in-out; }
 .link_wide { position: absolute; top: 30px; left: -32px; padding: 4px; cursor: grab; } 
 .link_wide:active { cursor: grabbing; } 
 
-.link_list_box { max-height: 65vh; min-height: 65vh; } 
+.link_list_box { max-height: 65vh; min-height: 65vh; overflow-x: hidden; } 
 .link_list_box>li { position: relative; display: block; margin-bottom: 12px; } 
 .link_list_box>li>a { margin-bottom: 4px; } 
 .link_list_box>li>a>span { display: flex; justify-content: flex-start; font-size: 13px; font-weight: 400; line-height: 1.4; margin-bottom: 6px; } 

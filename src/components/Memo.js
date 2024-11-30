@@ -19,6 +19,18 @@ function Memo() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
+    const memoListState = useSelector((state) => state.memoData);
+    const bookListState = useSelector((state) => state.bookData);
+
+    const memoListArr = memoListState.data.memo || [];
+    const bookListArr = bookListState.data.book || [];
+
+    const page = memoListState.data.page;
+    const [totalPages, setTotalPages] = useState(memoListState.data.totalPages);
+
+    const bookLocalStorage = localStorage.getItem('bookTitle');
+    const [bookTitle, setBookTitle] = useState(bookLocalStorage);
+
     useEffect(() => {
         dispatch(bookListData());
 
@@ -32,20 +44,8 @@ function Memo() {
         dispatch(syncMemoListAnno());
         dispatch(syncMemoListAnnoUpdate());
         dispatch(syncMemoListAnnoDelete());
+
     }, [dispatch]);
-
-    const memoListState = useSelector((state) => state.memoData);
-    const bookListState = useSelector((state) => state.bookData);
-
-    const memoListArr = memoListState.data.memo || [];
-    const bookListArr = bookListState.data.book || [];
-    const isLoading = memoListState.loading;
-
-    const page = memoListState.data.page;
-    const [totalPages, setTotalPages] = useState(memoListState.data.totalPages);
-
-    const bookLocalStorage = localStorage.getItem('bookTitle');
-    const [bookTitle, setBookTitle] = useState(bookLocalStorage);
 
     useEffect(() => {
         const updateScroll = debounce(() => {
@@ -58,26 +58,20 @@ function Memo() {
     }, []);
 
     useEffect(() => {
-        if (totalPages === null) {
-            dispatch(memoListData({ page, bookTitle })).then(() => {
-                setTotalPages(memoListState.data.totalPages);
-            });
-        }
-
         const memoAreaHeight = document.querySelector('.content_area_memo').offsetHeight;
 
         if (page <= totalPages) {
-            if (Math.ceil(MemoScrollPosition + rootHeight) <= memoAreaHeight) {
+            if (memoAreaHeight <= Math.ceil(MemoScrollPosition + rootHeight)) {
                 dispatch(setMemoPage(page + 1));
             }
         }
     }, [MemoScrollPosition]);
 
     useEffect(() => {
-        if (page <= totalPages && !isLoading) {
+        if (page <= totalPages) {
             dispatch(memoListData({ page, bookTitle }));
         }
-    }, [page, dispatch]);
+    }, [page]);
 
     const [memoArr, setMemoArr] = useState(memoListArr);
 
@@ -395,10 +389,10 @@ function Memo() {
         }
 
         setMemoCurrent(null);
-
         dispatch(resetMemo());
-        dispatch(memoListData({ page: 1, bookTitle })).then(() => {
-            setTotalPages(memoListState.data.totalPages);
+
+        dispatch(memoListData({ page: 1, bookTitle })).then((result) => {
+            setTotalPages(result.payload.totalPages);
         });
 
     }, [bookTitle]);

@@ -34,6 +34,10 @@ function Category() {
     useEffect(() => {
         dispatch(cateListData_cate());
         dispatch(resetWriteCate());
+
+        dispatch(writeListCateData({ page, cateArr })).then(() => {
+            setTotalPages(writeListState.data.totalPages);
+        });
     }, [dispatch]);
 
     const [page, setPage] = useState(1);
@@ -69,16 +73,11 @@ function Category() {
     }, []);
 
     useEffect(() => {
-        if (totalPages === null) {
-            dispatch(writeListCateData({ page, cateArr })).then(() => {
-                setTotalPages(writeListState.data.totalPages)
-            });
-        }
 
         const cateAreaHeight = document.querySelector('.content_area_cate').offsetHeight;
 
         if (page <= totalPages) {
-            if (Math.ceil(cateScrollPosition + rootHeight) === cateAreaHeight) {
+            if (cateAreaHeight <= Math.ceil(cateScrollPosition + rootHeight)) {
                 setPage((prevPage) => prevPage + 1);
             }
         }
@@ -187,7 +186,7 @@ function Category() {
             dispatch(syncCateListDataDel({ category }));
             dispatch(cateListDataDelete({ category }));
 
-            setCateArr(cateArr.filter((item) => item !== category))
+            setCateArr(cateArr.filter((item) => item !== category));
         }
     }
 

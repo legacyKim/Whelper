@@ -64,16 +64,10 @@ function Search() {
     }, []);
 
     useEffect(() => {
-        if (totalPages === null) {
-            dispatch(writeListSearchData({ page, searchPageInput })).then(() => {
-                setTotalPages(writeListState.data.totalPages);
-            });
-        }
-
         const searchAreaHeight = document.querySelector('.content_area_search').offsetHeight
 
         if (page <= totalPages) {
-            if (Math.ceil(searchScrollPosition + rootHeight) === searchAreaHeight) {
+            if (searchAreaHeight <= Math.ceil(searchScrollPosition + rootHeight)) {
                 setPage((prevPage) => prevPage + 1);
             }
         }
