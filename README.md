@@ -26,7 +26,7 @@
     ├── src
     │   ├── components
     │   │   ├── hook
-    │   │   │   │
+    │   │   │   ├── cateSaveBtn.js      # 카테고리 저장 공통 (Write, WriteCorrect, Category)
     │   │   │   ├── cookie.js           # 로그인 관련 쿠키 처리
     │   │   │   ├── customEditor.js     # Slate 라이브러리 에디터 커스텀
     │   │   │   ├── deserialize.js      # Slate 라이브러리 역직렬화 코드

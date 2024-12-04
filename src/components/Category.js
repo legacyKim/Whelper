@@ -8,13 +8,14 @@ import MyContext from '../context';
 
 import { debounce } from 'lodash';
 
-import useScrollAnima from './hook/useScrollAnima.js'
-
 import ViewEdit from './SlateView.js'
 import { token_check } from '../data/token_check.js'
 
 import { syncCateListData, syncCateListDataDel, resetWriteCate } from '../data/reducers.js'
 import { writeListCateData, cateListData_cate, cateListDataPost, cateListDataDelete } from '../data/api.js';
+
+import cateSaveBtn from './hook/cateSaveBtn.js'
+import useScrollAnima from './hook/useScrollAnima.js'
 
 function Category() {
 
@@ -23,7 +24,7 @@ function Category() {
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const { rootHeight, cateScrollPosition, setCateScrollPosition, isAuth } = useContext(MyContext);
+    const { rootHeight, cateScrollPosition, setCateScrollPosition, isAuth, prevPathname } = useContext(MyContext);
 
     const writeListState = useSelector((state) => state.WriteListCateDataOn);
     const cateListState = useSelector((state) => state.cateData);
@@ -145,40 +146,8 @@ function Category() {
 
     // category add popup
     const [catePopup, catePopupActive] = useState("");
-    const cateAdd = () => {
-        catePopupActive(!catePopup);
-        if (!catePopup) {
-            catePopupActive('active');
-        } else {
-            catePopupActive('');
-        }
-    }
-
     var cateInput = useRef(null);
-    const cateSaveBtn = async () => {
-
-        const isTokenValid = await token_check(navigate);
-
-        if (isTokenValid) {
-
-            const category = cateInput.current.value;
-            const cateCheck = cateListArr.filter((item) => item.category === category);
-
-            if (cateCheck.length > 0 && category !== '') {
-
-                alert('카테고리가 존재합니다.');
-                cateInput.current.value = '';
-                return;
-
-            } else {
-                dispatch(syncCateListData({ category }));
-                dispatch(cateListDataPost({ category }));
-
-                cateInput.current.value = '';
-            }
-
-        }
-    }
+    //// category add popup
 
     const cateDelete = async (e) => {
         e.stopPropagation();
@@ -192,10 +161,6 @@ function Category() {
 
             setCateArr(cateArr.filter((item) => item !== category));
         }
-    }
-
-    const cateCloseBtn = () => {
-        catePopupActive('');
     }
     //// category add popup
 
@@ -215,7 +180,7 @@ function Category() {
             <div className="cate_list_btn">
                 <button onClick={cateBoxOpen}><i className="icon-book"></i></button>
                 {(isAuth === 0 || isAuth === 1) && (
-                    <button className='cate_add_btn' onClick={cateAdd}><i className='icon-pencil-alt'></i></button>
+                    <button className='cate_add_btn' onClick={() => { catePopupActive("active") }}><i className='icon-pencil-alt'></i></button>
                 )}
             </div>
             <div className={`cate_list_pos scroll ${cateBox === true ? 'active' : ''}`}>
@@ -263,8 +228,8 @@ function Category() {
 
             <div className={`cateAdd ${catePopup ? catePopup : ""}`}>
                 <input type="text" ref={cateInput} placeholder='Category' />
-                <button onClick={cateSaveBtn}><i className='icon-ok'></i></button>
-                <button onClick={cateCloseBtn}><i className='icon-cancel'></i></button>
+                <button onClick={() => cateSaveBtn(navigate, prevPathname, cateInput, cateListArr, dispatch, syncCateListData, cateListDataPost, catePopupActive)}><i className='icon-ok'></i></button>
+                <button onClick={() => { catePopupActive("") }}><i className='icon-cancel'></i></button>
             </div>
         </div>
 

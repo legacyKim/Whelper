@@ -1,9 +1,9 @@
 import React, { useRef, useState, useMemo, useCallback, useEffect, useContext } from 'react';
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
-import { syncWriteListData } from "../data/reducers";
-import { writeListDataPost, cateListData } from '../data/api.js';
+import { syncWriteListData, syncCateListData } from "../data/reducers";
+import { writeListDataPost, cateListData, cateListDataPost } from '../data/api.js';
 
 import { createEditor, Editor, Element as SlateElement, Transforms } from 'slate';
 import { Slate, Editable, withReact } from 'slate-react';
@@ -20,10 +20,12 @@ import serialize from './hook/serialize.js';
 import useSlateRender from './hook/useSlateRender.js';
 import CustomEditor from './hook/customEditor.js';
 import LinksWith from './hook/LinksWith.js';
+import cateSaveBtn from './hook/cateSaveBtn.js'
 
 function Write() {
 
     const { isAuth } = useContext(MyContext);
+    const navigate = useNavigate();
 
     const dispatch = useDispatch();
     useEffect(() => {
@@ -86,6 +88,7 @@ function Write() {
         linkList, setLinkList,
         memoText, setMemoText,
         memoCopyActiveOn, setMemoCopyActiveOn,
+        prevPathname
     } = useContext(MyContext);
 
     const [annoArrLs, setAnnoArrLs] = useState(JSON.parse(localStorage.getItem('writeAnno')));
@@ -145,6 +148,19 @@ function Write() {
         setAnnoArr([]);
 
     };
+
+    // cate Add Btn
+    const [catePopup, catePopupActive] = useState("");
+    const cateAdd = () => {
+        catePopupActive(!catePopup);
+        if (!catePopup) {
+            catePopupActive('active');
+        } else {
+            catePopupActive('');
+        }
+    }
+    const cateInput = useRef();
+    //// cate Add Btn
 
     // save and keep the last num of id
     const recentId = '9999';
@@ -364,8 +380,22 @@ function Write() {
                     }
                 </ul>
 
+                {catePopup === 'active' && (
+                    <div className="modal">
+                        <div className="modal_box">
+                            <span>카테고리를 입력해 주세요.</span>
+                            <input type="text" placeholder="category" ref={cateInput} />
+                            <div className="btn_wrap">
+                                <button onClick={() => cateSaveBtn(navigate, prevPathname, cateInput, cateListArr, dispatch, syncCateListData, cateListDataPost, catePopupActive)}>저장</button>
+                                <button onClick={() => { catePopupActive('') }}>취소</button>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
                 <div className='page_btn'>
                     <button className="write_btn_back icon-reply" onClick={popupClick}></button>
+                    <button className="icon-tag" onClick={() => { catePopupActive("active") }}></button>
                     {(isAuth === 1 || isAuth === 0) && (
                         <Link to={`/components/WriteView/${recentId}`} className='icon-ok-circled write_btn_save' onClick={() => { WriteSaveBtn(); }}></Link>
                     )}

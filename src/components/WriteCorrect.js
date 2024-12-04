@@ -2,9 +2,9 @@ import React, { useRef, useState, useEffect, useCallback, useContext } from 'rea
 import { useDispatch, useSelector } from "react-redux"
 import { useParams, Link, useNavigate } from 'react-router-dom';
 
-// import { syncWriteListData, syncWriteListDataUpdate, syncWriteListPageDataUpdate } from "../data/reducers"
-import { syncWriteListPageDataUpdate, syncWriteListPageData } from "../data/reducers"
-import { cateListData, writeListDataUpdate } from '../data/api.js';
+import { syncWriteListPageDataUpdate, syncWriteListPageData, syncCateListData } from "../data/reducers"
+import { cateListData, writeListDataUpdate, cateListDataPost } from '../data/api.js';
+import { token_check } from '../data/token_check.js'
 
 import { createEditor, Editor, Element as SlateElement } from 'slate';
 import { Slate, Editable, withReact } from 'slate-react'
@@ -22,6 +22,7 @@ import deserialize from './hook/deserialize.js';
 import useSlateRender from './hook/useSlateRender.js'
 import CustomEditor from './hook/customEditor.js'
 import LinksWith from './hook/LinksWith.js';
+import cateSaveBtn from './hook/cateSaveBtn.js'
 
 function WriteCorrect() {
 
@@ -54,7 +55,7 @@ function WriteCorrect() {
             }
         }
     };
-    const cateListArr = cateListState.data.cate || [];
+    const cateListArr = cateListState.data.cate || []
 
     // category popup
     const [popupActive, popupActiveStyle] = useState(false);
@@ -101,6 +102,7 @@ function WriteCorrect() {
         linkList, setLinkList,
         memoText, setMemoText,
         memoCopyActiveOn, setMemoCopyActiveOn,
+        prevPathname
     } = useContext(MyContext);
     const [annoArr, setAnnoArr] = useState((writeContent !== undefined) ? JSON.parse(writeContent.anno) : JSON.parse(correctAnnoLs));
 
@@ -155,6 +157,12 @@ function WriteCorrect() {
         setAnnoArr([]);
 
     };
+    //// write correct
+
+    // cate Add Btn
+    const [catePopup, catePopupActive] = useState("");
+    const cateInput = useRef();
+    //// cate Add Btn
 
     // toolbar
     const [toolbarActive, setToolbarActive] = useState(false);
@@ -350,19 +358,34 @@ function WriteCorrect() {
 
             {/* category popup */}
             <div className={`popup ${popupActive ? popupActive : ""}`}>
-                <div className='popup_cate'>
+                <ul className='popup_cate'>
                     {
                         cateListArr.map(function (a, i) {
                             return (
-                                <div key={i}>
+                                <li key={i}>
                                     <CateListFac i={i} cateListArr={cateListArr} keywordArr={keywordArr} setKeywordArr={setKeywordArr}></CateListFac>
-                                </div>
+                                </li>
                             )
                         })
                     }
-                </div>
+                </ul>
+
+                {catePopup === 'active' && (
+                    <div className="modal">
+                        <div className="modal_box">
+                            <span>카테고리를 입력해 주세요.</span>
+                            <input type="text" placeholder="category" ref={cateInput} />
+                            <div className="btn_wrap">
+                                <button onClick={() => cateSaveBtn(navigate, prevPathname, cateInput, cateListArr, dispatch, syncCateListData, cateListDataPost, catePopupActive)}>저장</button>
+                                <button onClick={() => { catePopupActive('') }}>취소</button>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
                 <div className='page_btn'>
                     <button className="write_btn_back icon-reply" onClick={popupClick}></button>
+                    <button className="icon-tag" onClick={() => { catePopupActive('active'); }}></button>
                     <Link className='icon-ok-circled write_btn_save' to={`/components/WriteView/${writeContent !== undefined ? writeContent.id : localStorage.getItem('writeId')}`} onClick={() => { navigate(`/components/WriteView/${writeContent !== undefined ? writeContent.id : localStorage.getItem('writeId')}`); WriteCorrectBtn(); }}></Link>
                 </div>
             </div>

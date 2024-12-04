@@ -2,8 +2,8 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import cookieBox from '../components/hook/cookie'
 
-const API_URL = 'http://localhost:5000';
-// const API_URL = 'https://bambueong.net';
+// const API_URL = 'http://localhost:5000';
+const API_URL = 'https://bambueong.net';
 
 // get write data
 export const writeListData = createAsyncThunk('writeData/getData', async () => {
@@ -149,9 +149,10 @@ export const cateListData_cate = createAsyncThunk('cateData/getCate',
     },
 );
 
-export const cateListDataPost = createAsyncThunk('cateData/newCate', async (newData) => {
+export const cateListDataPost = createAsyncThunk('cateData/newCate', async (newData, cateLink) => {
     try {
-        const response = await axios.post(`${API_URL}/api/Category`, newData);
+        const proCateLink = cateLink.replace('/components/', '');
+        const response = await axios.post(`${API_URL}/api/${proCateLink}`, newData);
         return response.data;
     } catch (error) {
         throw error;

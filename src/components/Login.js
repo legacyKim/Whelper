@@ -10,7 +10,7 @@ function Login() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
-    const { setAuth } = useContext(MyContext);
+    const { setAuth, prevPathname } = useContext(MyContext);
 
     const username = useRef();
     const userPassword = useRef();
@@ -34,7 +34,7 @@ function Login() {
             return;
         } else {
             setAuth(result.payload?.info.authority);
-            navigate('/');
+            navigate(`${prevPathname}`);
         }
     };
 

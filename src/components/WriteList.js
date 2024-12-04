@@ -13,8 +13,6 @@ import ViewEdit from './SlateView.js';
 import writeNavi from './hook/writeNavi.js'
 import useScrollAnima from './hook/useScrollAnima.js'
 
-import { token_check } from '../data/token_check.js';
-
 function WriteList() {
 
     const { isAuth, rootHeight, wlScrollPosition, setWlScrollPosition } = useContext(MyContext);
