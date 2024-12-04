@@ -1,5 +1,5 @@
 
-import { React, useEffect, useState, useRef, useContext } from 'react';
+import { React, useEffect, useState, useRef, useContext, useCallback } from 'react';
 import { useSelector, useDispatch } from "react-redux"
 import { useParams, Link } from 'react-router-dom';
 
@@ -53,10 +53,14 @@ function Search() {
         });
     }, [searchPageInput])
 
-    useEffect(() => {
-        const updateScroll = debounce(() => {
+    const updateScroll = useCallback(
+        debounce(() => {
             setSearchScrollPosition(window.scrollY || document.documentElement.scrollTop);
-        });
+        }, 100),
+        []
+    );
+
+    useEffect(() => {
         window.addEventListener('scroll', updateScroll);
         return () => {
             window.removeEventListener('scroll', updateScroll);

@@ -1,4 +1,4 @@
-import { React, useEffect, useState, useContext } from 'react';
+import { React, useEffect, useState, useContext, useCallback } from 'react';
 
 import { Link, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -59,11 +59,14 @@ function Date_sort() {
     const rootHeight = document.getElementById('root').offsetHeight;
     const [scrollPosition, setScrollPosition] = useState(0);
 
-    useEffect((e) => {
-        const updateScrollDate = debounce(() => {
+    const updateScrollDate = useCallback(
+        debounce(() => {
             setScrollPosition(window.scrollY || document.documentElement.scrollTop);
-        });
+        }, 100),
+        []
+    );
 
+    useEffect((e) => {
         window.addEventListener('scroll', updateScrollDate);
         return () => {
             window.removeEventListener('scroll', updateScrollDate);

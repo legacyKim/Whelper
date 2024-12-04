@@ -7,12 +7,14 @@ import { writeListDataDel } from '../data/api.js'
 import { useParams } from 'react-router-dom';
 
 import MyContext from '../context'
-import AnnoList from './Anno.js'
-import LinkList from './LinkList.js'
+
+import AnnoList from './sideInWrite/Anno.js'
+import LinkList from './sideInWrite/LinkList.js'
 
 import ViewEdit from './SlateView.js'
 import { writeListDataView } from '../data/api.js';
 
+import writeNavi from './hook/writeNavi.js'
 import { token_check } from '../data/token_check.js'
 
 function WriteView() {
@@ -27,7 +29,11 @@ function WriteView() {
         } else if (prevPathname === "/components/Write") {
             return state.WriteListView;
         } else {
-            return state.WriteListPageDataOn;
+            if (state.WriteListPageDataOn.data.write.length === 0) {
+                return state.WriteListDateDataOn;
+            } else {
+                return state.WriteListPageDataOn;
+            }
         }
     });
     var writeListArr = writeListState.data.write || [];
@@ -161,14 +167,7 @@ function WriteView() {
         });
     }, []);
 
-    const writeNavi = async (e) => {
-        e.preventDefault();
-        const isTokenValid = await token_check(navigate);
-        if (isTokenValid) {
-            navigate(`/components/WriteCorrect/${writeContent !== undefined ? writeContent.id : localStorage.getItem('writeId')}`)
-        }
-    }
-
+    const writePath = `/components/WriteCorrect/${writeContent !== undefined ? writeContent.id : localStorage.getItem('writeId')}`
     const writeKey = false;
 
     return (
@@ -200,7 +199,7 @@ function WriteView() {
                                     setModalDeleteWrite(true);
                                 }}></Link>
                             )}
-                            <Link className='icon-edit-alt' onClick={writeNavi}></Link>
+                            <Link className='icon-edit-alt' onClick={(e) => { writeNavi(e, writePath, navigate, isAuth) }}></Link>
                         </div>
                     )}
 

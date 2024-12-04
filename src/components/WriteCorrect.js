@@ -10,10 +10,11 @@ import { createEditor, Editor, Element as SlateElement } from 'slate';
 import { Slate, Editable, withReact } from 'slate-react'
 
 import MyContext from '../context'
-import AnnoList from './Anno.js'
-import MemoInWrite from './MemoInWrite.js';
-import LinkList from './LinkList.js'
 import LinkPopup from './LinkPopup.js';
+
+import AnnoList from './sideInWrite/Anno.js'
+import MemoInWrite from './sideInWrite/MemoInWrite.js';
+import LinkList from './sideInWrite/LinkList.js'
 
 import useAnno from './hook/useAnno.js';
 import serialize from './hook/serialize.js';
@@ -35,7 +36,13 @@ function WriteCorrect() {
         dispatch(syncWriteListPageData());
     }, [dispatch]);
 
-    const writeListState = useSelector((state) => state.WriteListPageDataOn);
+    const writeListState = useSelector((state) => {
+        if (state.WriteListPageDataOn.data.write.length === 0) {
+            return state.WriteListDateDataOn;
+        } else {
+            return state.WriteListPageDataOn;
+        }
+    });
     const cateListState = useSelector((state) => state.cateData);
 
     const writeListArr = writeListState.data.write || [];
@@ -91,7 +98,9 @@ function WriteCorrect() {
     const { annoListBtn, setAnnoListBtn, annoClick, setAnnoClick, annoString, setAnnoString,
         memoInWriteBtn, setMemoInWriteBtn,
         linkListBtn, setLinkListBtn,
-        linkList, setLinkList
+        linkList, setLinkList,
+        memoText, setMemoText,
+        memoCopyActiveOn, setMemoCopyActiveOn,
     } = useContext(MyContext);
     const [annoArr, setAnnoArr] = useState((writeContent !== undefined) ? JSON.parse(writeContent.anno) : JSON.parse(correctAnnoLs));
 
@@ -191,6 +200,12 @@ function WriteCorrect() {
 
     const writeKey = true;
 
+    // memo copy 
+    useEffect(() => {
+        CustomEditor.toggleQuote(editor);
+    }, [memoCopyActiveOn]);
+    //// memo copy
+
     return (
         <div className='Write ofX-hidden'>
 
@@ -289,6 +304,16 @@ function WriteCorrect() {
 
                             }}>
                         </button>
+                        {memoText && (
+                            <button className='icon-popup'
+                                onMouseDown={event => {
+                                    event.preventDefault();
+
+                                    CustomEditor.toggleCopy(editor, memoText, setMemoText);
+                                    toolbarClose();
+                                }}>
+                            </button>
+                        )}
                     </div>
                     <div className={`anno_add ${annoTextboxActive ? annoTextboxActive : ""}`}>
                         <textarea ref={annoAddWrite} placeholder='newAnnoComment'
@@ -321,7 +346,7 @@ function WriteCorrect() {
 
             <AnnoList annoArr={annoArr} setAnnoArr={setAnnoArr} annoListBtn={annoListBtn} setAnnoListBtn={setAnnoListBtn} annoClick={annoClick} setAnnoClick={setAnnoClick} setAnnoRemoveNumbering={setAnnoRemoveNumbering} annoString={annoString} setAnnoString={setAnnoString} writeKey={writeKey} setMemoInWriteBtn={setMemoInWriteBtn} setLinkListBtn={setLinkListBtn} />
             <LinkList editor={editor} linkList={linkList} setLinkList={setLinkList} linkListBtn={linkListBtn} setAnnoListBtn={setAnnoListBtn} setMemoInWriteBtn={setMemoInWriteBtn} setLinkListBtn={setLinkListBtn} />
-            <MemoInWrite memoInWriteBtn={memoInWriteBtn} setMemoInWriteBtn={setMemoInWriteBtn} setAnnoListBtn={setAnnoListBtn} setLinkListBtn={setLinkListBtn} />
+            <MemoInWrite memoInWriteBtn={memoInWriteBtn} setMemoInWriteBtn={setMemoInWriteBtn} setAnnoListBtn={setAnnoListBtn} setLinkListBtn={setLinkListBtn} setMemoText={setMemoText} setMemoCopyActiveOn={setMemoCopyActiveOn} />
 
             {/* category popup */}
             <div className={`popup ${popupActive ? popupActive : ""}`}>

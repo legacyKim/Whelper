@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from "react-redux";
 
-import { MemoListInWrite, bookDataInWrite } from '../data/api.js';
+import { MemoListInWrite, bookDataInWrite } from '../../data/api.js';
 
-function MemoInWrite({ memoInWriteBtn, setMemoInWriteBtn, setAnnoListBtn, setLinkListBtn }) {
+function MemoInWrite({ memoInWriteBtn, setMemoInWriteBtn, setAnnoListBtn, setLinkListBtn, setMemoText, setMemoCopyActiveOn }) {
 
     const dispatch = useDispatch();
 
@@ -70,9 +70,45 @@ function MemoInWrite({ memoInWriteBtn, setMemoInWriteBtn, setAnnoListBtn, setLin
         document.removeEventListener('mouseup', mouseUpHandler);
     };
 
+    // memo Copy btn
+    const [memoCopyBtnActive, setMemoCopyBtnActive] = useState(false);
+    var memoTextContent;
+
+    const memoCopyBtn = (e) => {
+        e.preventDefault();
+        if (e._reactName === 'onContextMenu' && e.target.classList.contains('memolist_in_write_content') || e.target.classList.contains('memolist_in_write_anno_content')) {
+
+            const mouseX = e.clientX;
+            const mouseY = e.clientY;
+
+            const memoInWrite = document.querySelector('.memo_in_write');
+            const btnPos = document.querySelector('.btn_wrap_pos_memo');
+
+            if (btnPos && memoInWrite) {
+                const parentRect = memoInWrite.getBoundingClientRect();
+
+                const relativeX = mouseX - parentRect.left;
+                const relativeY = mouseY - parentRect.top;
+
+                btnPos.style.top = relativeY - 10 + 'px';
+                btnPos.style.left = relativeX - 10 + 'px';
+            }
+
+            memoTextContent = e.target.innerHTML;
+            setMemoText(memoTextContent);
+
+            setMemoCopyBtnActive(true);
+
+        }
+    };
+
+    const memoCopyActiveBtn = () => {
+        setMemoCopyActiveOn(true);
+    }
+
     return (
 
-        <div className={`memo_in_write ${memoInWriteBtn === true ? 'active' : ''}`}>
+        <div className={`memo_in_write ${memoInWriteBtn === true ? 'active' : ''}`} onClick={() => { setMemoCopyBtnActive(false) }}>
 
             <button className="memo_in_write_btn" onClick={memoInWriteBtnActive}>
                 <i className='icon-comment'></i>
@@ -98,12 +134,12 @@ function MemoInWrite({ memoInWriteBtn, setMemoInWriteBtn, setAnnoListBtn, setLin
                     }
                 </select>
 
-                <ul className='memolist_in_write_result scroll'>
+                <ul className='memolist_in_write_result scroll' onContextMenu={memoCopyBtn}>
                     {
                         memoListInWrite.map(function (a, i) {
                             return (
-                                <li key={i}>
-                                    <span>
+                                <li key={i} className="">
+                                    <span className="memolist_in_write_content">
                                         {memoListInWrite[i].memoComment}
                                     </span>
                                     <ol className='memolist_in_write_anno'>
@@ -111,7 +147,7 @@ function MemoInWrite({ memoInWriteBtn, setMemoInWriteBtn, setAnnoListBtn, setLin
                                             memoListInWrite[i].memoAnnotation.map(function (n, j) {
                                                 return (
                                                     <li key={j}>
-                                                        <p>{memoListInWrite[i].memoAnnotation[j]}</p>
+                                                        <p className='memolist_in_write_anno_content'>{memoListInWrite[i].memoAnnotation[j]}</p>
                                                     </li>
                                                 )
                                             })
@@ -126,6 +162,16 @@ function MemoInWrite({ memoInWriteBtn, setMemoInWriteBtn, setAnnoListBtn, setLin
                         })
                     }
                 </ul>
+
+                <div className='btn_wrap_pos_memo'>
+                    <div className={`btn_list ${memoCopyBtnActive === true ? 'active' : ''} `}>
+
+                        <div className="btn_wrap">
+                            <button className="icon-popup" onClick={memoCopyActiveBtn}></button>
+                        </div>
+
+                    </div>
+                </div>
             </div>
         </div >
 

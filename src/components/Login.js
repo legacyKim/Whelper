@@ -38,7 +38,9 @@ function Login() {
         }
     };
 
-    const LoginClick = () => {
+    const LoginClick = (e) => {
+        e.preventDefault();
+
         loginCheck().catch(error => {
             console.error(error);
         });
@@ -70,26 +72,25 @@ function Login() {
 
     return (
         <div className='login'>
-            <div className={`form ${loginOn}`}>
-
+            <form className={`form ${loginOn}`} onSubmit={LoginClick} noValidate>
                 <strong>Login</strong>
                 <p>My portfolio Sign in</p>
 
                 <span>Admin ID</span>
-                <input ref={username}></input>
+                <input ref={username} autoComplete="username" required />
 
                 <span>Password</span>
                 <div className='input_box'>
-                    <input type='password' ref={userPassword}></input>
-                    <button onClick={showPasswordBtn}><i className={`${showPassword}`}></i></button>
+                    <input type='password' ref={userPassword} autoComplete="current-password" required />
+                    <button type="button" onClick={showPasswordBtn}><i className={`${showPassword}`}></i></button>
                 </div>
 
                 <div className='btn'>
-                    <button onClick={LoginClick} className=''>Sign in <i className='icon-rocket'></i></button>
-                    <button onClick={createAccount}>Sign up <i className='icon-paper-plane'></i></button>
+                    <button type="submit" className=''>Sign in <i className='icon-rocket'></i></button>
+                    <button type="button" onClick={createAccount}>Sign up <i className='icon-paper-plane'></i></button>
                     <NavLink to={'/'}>Close</NavLink>
                 </div>
-            </div>
+            </form>
 
             {account === true && (
                 <Account />
@@ -157,12 +158,34 @@ function Login() {
         }
 
         const [certifyNum, setCertifyNum] = useState();
-        const getCertifyNum = async () => {
-            const selectedEmail = `${email.current.value}@${document.querySelector('select').value}`;
-            const result = await dispatch(emailSendCertifyNum({ selectedEmail }));
+        const selectRef = useRef();
 
-            setCertifyNum(result.payload.certifyNum);
-            alert("인증번호를 발행했습니다.");
+        const getCertifyNum = async () => {
+
+            if (!selectRef.current.value) {
+                alert("도메인을 선택해주세요.");
+                return;
+            }
+
+            const selectedEmail = `${email.current.value}@${selectRef.current.value}`;
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+            if (!emailRegex.test(selectedEmail)) {
+                alert('이메일 형식이 올바르지 않습니다.');
+                return;
+            }
+
+            try {
+                const result = await dispatch(emailSendCertifyNum({ selectedEmail }));
+                if (result.error) {
+                    throw new Error(result.error.message || "인증번호 발송에 실패했습니다.");
+                }
+                setCertifyNum(result.payload.certifyNum);
+                alert("인증번호를 발행했습니다.");
+            } catch (error) {
+                alert(`에러 발생: ${error.message}`);
+            }
+
         }
 
         const [certifyCheck, setCertifyCheck] = useState('');
@@ -185,7 +208,7 @@ function Login() {
                 setNotice("ID 중복을 확인해 주세요.");
             } else if (newUserPassword === '') {
                 setNotice("비밀번호를 입력해 주세요.");
-            } else if ( newUserPassword.length < 6) {
+            } else if (newUserPassword.length < 6) {
                 setNotice("비밀번호를 6자 이상 입력해 주세요.")
             } else if (newUserPasswordConfirm === '') {
                 setNotice("확인 비밀번호를 입력해 주세요.");
@@ -205,7 +228,8 @@ function Login() {
 
         }, [certifyCheck, idCheck, newUserPassword, newUserPasswordConfirm]);
 
-        const confirm_complete = async () => {
+        const confirm_complete = async (e) => {
+            e.preventDefault();
 
             const newUsername_v = newUsername.current.value;
             const result = await dispatch(signupComplete({ newUsername: newUsername_v, newUserPasswordConfirm: newUserPasswordConfirm }));
@@ -220,53 +244,54 @@ function Login() {
         }
 
         return (
-            <div className={`form ${accountAnima}`}>
+            <form className={`form ${accountAnima}`} onSubmit={confirm_complete} noValidate>
                 <strong>Account</strong>
                 <p>Portfolio Sign up</p>
 
                 <span>Admin ID</span>
                 <div className="input_box">
-                    <input ref={newUsername}></input>
-                    <button className={`${idCheck}`} onClick={idDuplicateCheckBtn}><i className='icon-ok-circled'></i></button>
+                    <input ref={newUsername} required />
+                    <button type="button" className={`${idCheck}`} onClick={idDuplicateCheckBtn}><i className='icon-ok-circled'></i></button>
                 </div>
 
                 <span>Password</span>
                 <div className="input_box">
-                    <input type='password' ref={newUserPasswordRef} onChange={(e)=>{setNewUserPassword(e.target.value)}}></input>
-                    <button className={`${showPwConfirm}`} onClick={showPasswordBtnConfirm}><i className={`${showPasswordConfirm}`}></i></button>
+                    <input type='password' ref={newUserPasswordRef} onChange={(e) => { setNewUserPassword(e.target.value) }} required />
+                    <button type="button" className={`${showPwConfirm}`} onClick={showPasswordBtnConfirm}><i className={`${showPasswordConfirm}`}></i></button>
                 </div>
 
                 <span>Password confirm</span>
                 <div className="input_box">
-                    <input type='password' ref={newUserPasswordConfirmRef} onChange={(e)=>{setNewUserPasswordConfirm(e.target.value)}}></input>
-                    <button className={`${showPwConfirm}`} onClick={showPasswordBtnConfirm}><i className={`${showPasswordConfirm}`}></i></button>
+                    <input type='password' ref={newUserPasswordConfirmRef} onChange={(e) => { setNewUserPasswordConfirm(e.target.value) }} required />
+                    <button type="button" className={`${showPwConfirm}`} onClick={showPasswordBtnConfirm}><i className={`${showPasswordConfirm}`}></i></button>
                 </div>
 
                 <span>E-mail</span>
                 <div className='input_box'>
-                    <input type='email' ref={email}></input>
+                    <input type='email' ref={email} required />
                     <em>@</em>
-                    <select>
+                    <select ref={selectRef}>
+                        <option>선택</option>
                         <option>naver.com</option>
                         <option>google.com</option>
                         <option>daum.net</option>
                     </select>
-                    <button onClick={getCertifyNum} className='email_certify_btn'><i className='icon-ok-circled'></i></button>
+                    <button type="button" onClick={getCertifyNum} className='email_certify_btn'><i className='icon-ok-circled'></i></button>
                 </div>
 
                 <span>Certification number</span>
                 <div className="input_box">
-                    <input type='password' ref={certify_num}></input>
-                    <button onClick={checkCertifyNum}><i className='icon-ok-circled'></i></button>
+                    <input type='password' ref={certify_num} required />
+                    <button type="button" onClick={checkCertifyNum}><i className='icon-ok-circled'></i></button>
                 </div>
 
                 <div className="btn">
-                    <button onClick={confirm_complete} className={`confirm_btn ${confirmActive}`} disabled={confirmActive !== 'active'}>{notice}
+                    <button type="submit" className={`confirm_btn ${confirmActive}`} disabled={confirmActive !== 'active'}>{notice}
                         <i className='icon-paper-plane'></i>
                     </button>
-                    <button onClick={cancelAccount}>Cancel</button>
+                    <button type="button" onClick={cancelAccount}>Cancel</button>
                 </div>
-            </div>
+            </form>
         )
     }
 

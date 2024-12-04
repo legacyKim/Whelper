@@ -1,11 +1,11 @@
-import { React, useEffect, useState, useRef } from 'react';
+import { React, useEffect, useState, useRef, useCallback } from 'react';
 import { NavLink, useNavigate, Link, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux"
 
 import { debounce } from 'lodash';
 import MyContext from './context'
 
-import { token_check } from './data/token_check.js'
+import writeNavi from './components/hook/writeNavi.js'
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -66,13 +66,7 @@ function App() {
     };
 
     // write 검증
-    const writeNavi = async (e) => {
-        e.preventDefault();
-        const isTokenValid = await token_check(navigate);
-        if (isTokenValid) {
-            navigate('/components/Write');
-        }
-    };
+    const writePath = '/components/Write';
     //// write 검증
 
     // about change theme
@@ -171,6 +165,8 @@ function App() {
 
     // memoInWrite 
     const [memoInWriteBtn, setMemoInWriteBtn] = useState(false);
+    const [memoText, setMemoText] = useState('');
+    const [memoCopyActiveOn, setMemoCopyActiveOn] = useState(false);
     //// memoInWrite
 
     // linkListBtn
@@ -206,12 +202,15 @@ function App() {
     }, [isAuth])
     //// default right click, copy
 
+    const updateScrollHeader = useCallback(
+        debounce(() => {
+            setScrollPosition(window.scrollY || document.documentElement.scrollTop);
+        }, 100),
+        []
+    );
+
     const [showHeader, setShowHeader] = useState(false);
     useEffect((e) => {
-        const updateScrollHeader = debounce(() => {
-            setScrollPosition(window.scrollY || document.documentElement.scrollTop);
-        });
-
         window.addEventListener('scroll', updateScrollHeader);
         return () => {
             window.removeEventListener('scroll', updateScrollHeader);
@@ -248,9 +247,12 @@ function App() {
             annoListBtn, setAnnoListBtn, annoClick, setAnnoClick, annoString, setAnnoString,
             prevPathname,
             memoInWriteBtn, setMemoInWriteBtn,
+            memoText, setMemoText,
+            memoCopyActiveOn, setMemoCopyActiveOn,
             linkListBtn, setLinkListBtn,
             linkList, setLinkList,
             mode, setMode
+            
         }}>
             <div id='app' className={`App ${theme}`}>
 
@@ -262,7 +264,7 @@ function App() {
                     </div>
                     <ul className='header_btn'>
                         {/* <li className='btn'><NavLink to="/components/Slate" className='icon-vector-pencil' onClick={() => { navigate('/components/Slate') }}></NavLink></li> */}
-                        <li className='btn'><NavLink to="/components/Write" className='icon-vector-pencil' onClick={writeNavi}>
+                        <li className='btn'><NavLink to="/components/Write" className='icon-vector-pencil' onClick={(e) => { writeNavi(e, writePath, navigate, isAuth) }}>
                             <div className='tooltip'><span>Write</span></div>
                         </NavLink></li>
                         <li className='btn'><NavLink to="/components/WriteList" className='icon-clipboard' onClick={() => { navigate('/components/WriteList') }}>
@@ -277,7 +279,7 @@ function App() {
                             <div className='tooltip'><span>Annotation</span></div>
                         </NavLink></li>
 
-                        <li className='btn'><NavLink to={`/components/Category`} className='icon-bookmark' onClick={() => { navigate('/components/Category') }}>
+                        <li className='btn'><NavLink to={`/components/Category`} className='icon-tags' onClick={() => { navigate('/components/Category') }}>
                             <div className='tooltip'><span>Category</span></div>
                         </NavLink></li>
                         <li className='btn'><button className='icon-search' onClick={searchOn}>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useRef, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 import { useSelector, useDispatch } from "react-redux";
@@ -10,6 +10,7 @@ import { debounce } from 'lodash';
 import MyContext from '../context';
 import ViewEdit from './SlateView.js';
 
+import writeNavi from './hook/writeNavi.js'
 import useScrollAnima from './hook/useScrollAnima.js'
 
 import { token_check } from '../data/token_check.js';
@@ -35,20 +36,25 @@ function WriteList() {
     const writeListArr = writeListState.data.write || [];
 
     const [totalPages, setTotalPages] = useState(writeListState.data.totalPages);
-    console.log(totalPages);
+
+    const updateScroll = useCallback(
+        debounce(() => {
+            setWlScrollPosition(window.scrollY || document.documentElement.scrollTop);
+        }, 100),
+        []
+    );
 
     useEffect(() => {
-        const updateScroll = debounce(() => {
-            setWlScrollPosition(window.scrollY || document.documentElement.scrollTop);
-        });
         window.addEventListener('scroll', updateScroll);
         return () => {
             window.removeEventListener('scroll', updateScroll);
         };
     }, []);
 
+    const contentAreaRef = useRef(null);
+
     useEffect(() => {
-        const writeAreaHeight = document.querySelector('.content_area_write').offsetHeight;
+        const writeAreaHeight = contentAreaRef.current.offsetHeight;
 
         if (page <= totalPages) {
             if (writeAreaHeight <= Math.ceil(wlScrollPosition + rootHeight)) {
@@ -65,7 +71,7 @@ function WriteList() {
 
     return (
         <div className='common_page'>
-            <div className='content_area content_area_write'>
+            <div className='content_area content_area_write' ref={contentAreaRef}>
                 <div className='write_list_scroll'>
                     <div className='write_list_wrap'>
                         {
@@ -97,14 +103,7 @@ function WriteList() {
             day: '2-digit'
         });
 
-        const writeNavi = async (e) => {
-            e.preventDefault();
-            const isTokenValid = await token_check(navigate);
-
-            if (isTokenValid) {
-                navigate(`/components/WriteCorrect/${writeListArr[i].id}`);
-            }
-        };
+        const writePath = `/components/WriteCorrect/${writeListArr[i].id}`;
 
         const objClassName = '.WriteDiv';
         useScrollAnima(objClassName, wlScrollPosition, rootHeight);
@@ -114,7 +113,7 @@ function WriteList() {
             <div>
                 {(isAuth === 0 || isAuth === 1) && (
                     <div className='write_btn'>
-                        <Link className='icon-edit-alt' onClick={writeNavi}></Link>
+                        <Link className='icon-edit-alt' onClick={(e) => { writeNavi(e, writePath, navigate, isAuth) }}></Link>
                     </div>
                 )}
 

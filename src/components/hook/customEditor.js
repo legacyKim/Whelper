@@ -119,7 +119,7 @@ const CustomEditor = {
             const { selection } = editor;
             const selectedText = Editor.string(editor, selection);
 
-             if (selection && selectedText !== '') {
+            if (selection && selectedText !== '') {
 
                 Transforms.wrapNodes(
                     editor,
@@ -141,6 +141,14 @@ const CustomEditor = {
         }
 
         return true;
+    },
+
+    toggleCopy(editor, memoText, setMemoText) {
+        Transforms.insertNodes(editor, {
+            type: 'paragraph',
+            children: [{ text: memoText }],
+        });
+        setMemoText('');
     }
 }
 

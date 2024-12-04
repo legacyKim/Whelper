@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import LinkCheck from './hook/LinkCheck.js'
+import LinkCheck from '../hook/LinkCheck.js'
 
 function LinkList({ editor, linkList, setLinkList, linkListBtn, setLinkListBtn, setAnnoListBtn, setMemoInWriteBtn }) {
 

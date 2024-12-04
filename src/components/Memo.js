@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useContext } from 'react';
+import React, { useState, useEffect, useRef, useContext, useCallback } from 'react';
 import { useNavigate } from "react-router-dom";
 
 import { useDispatch, useSelector } from "react-redux"
@@ -47,10 +47,14 @@ function Memo() {
 
     }, [dispatch]);
 
-    useEffect(() => {
-        const updateScroll = debounce(() => {
+    const updateScroll = useCallback(
+        debounce(() => {
             setMemoScrollPosition(window.scrollY || document.documentElement.scrollTop);
-        });
+        }, 100),
+        []
+    );
+
+    useEffect(() => {
         window.addEventListener('scroll', updateScroll);
         return () => {
             window.removeEventListener('scroll', updateScroll);
