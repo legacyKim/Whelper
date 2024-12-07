@@ -24,7 +24,7 @@ function Category() {
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const { rootHeight, cateScrollPosition, setCateScrollPosition, isAuth, prevPathname } = useContext(MyContext);
+    const { rootHeight, cateScrollPosition, setCateScrollPosition, isAuth, currentPathname } = useContext(MyContext);
 
     const writeListState = useSelector((state) => state.WriteListCateDataOn);
     const cateListState = useSelector((state) => state.cateData);
@@ -228,7 +228,7 @@ function Category() {
 
             <div className={`cateAdd ${catePopup ? catePopup : ""}`}>
                 <input type="text" ref={cateInput} placeholder='Category' />
-                <button onClick={() => cateSaveBtn(navigate, prevPathname, cateInput, cateListArr, dispatch, syncCateListData, cateListDataPost, catePopupActive)}><i className='icon-ok'></i></button>
+                <button onClick={() => cateSaveBtn(navigate, currentPathname, cateInput, cateListArr, dispatch, syncCateListData, cateListDataPost, catePopupActive)}><i className='icon-ok'></i></button>
                 <button onClick={() => { catePopupActive("") }}><i className='icon-cancel'></i></button>
             </div>
         </div>

@@ -88,7 +88,7 @@ function Write() {
         linkList, setLinkList,
         memoText, setMemoText,
         memoCopyActiveOn, setMemoCopyActiveOn,
-        prevPathname
+        currentPathname
     } = useContext(MyContext);
 
     const [annoArrLs, setAnnoArrLs] = useState(JSON.parse(localStorage.getItem('writeAnno')));
@@ -386,7 +386,7 @@ function Write() {
                             <span>카테고리를 입력해 주세요.</span>
                             <input type="text" placeholder="category" ref={cateInput} />
                             <div className="btn_wrap">
-                                <button onClick={() => cateSaveBtn(navigate, prevPathname, cateInput, cateListArr, dispatch, syncCateListData, cateListDataPost, catePopupActive)}>저장</button>
+                                <button onClick={() => cateSaveBtn(navigate, currentPathname, cateInput, cateListArr, dispatch, syncCateListData, cateListDataPost, catePopupActive)}>저장</button>
                                 <button onClick={() => { catePopupActive('') }}>취소</button>
                             </div>
                         </div>

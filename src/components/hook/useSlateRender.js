@@ -5,7 +5,7 @@ const useSlateRender = (contentEditableFalse) => {
     const renderElement = useCallback(({ attributes, children, element }) => {
         switch (element.type) {
             case 'blockquote':
-                return <blockquote {...attributes} className="editor_quote">{children}</blockquote>;
+                return <blockquote {...attributes} class="editor_quote">{children}</blockquote>;
             case 'paragraph':
                 return <p {...attributes}>{children}</p>;
             case 'link': {
@@ -14,7 +14,7 @@ const useSlateRender = (contentEditableFalse) => {
                         {...attributes}
                         href={element.url}
                         target="_blank"
-                        className="editor_link"
+                        class="editor_link"
                         contentEditable={contentEditableFalse !== true ? true : false}
                         suppressContentEditableWarning
                     >
@@ -57,7 +57,7 @@ const useSlateRender = (contentEditableFalse) => {
         }
 
         return (
-            <span {...attributes} style={style} className={classNames.trim()}>
+            <span {...attributes} style={style} class={classNames.trim()}>
                 {children}
             </span>
         );

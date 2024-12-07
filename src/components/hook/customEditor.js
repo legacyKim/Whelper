@@ -26,8 +26,8 @@ const CustomEditor = {
     },
 
     isAnnotation(editor) {
-        const marks = Editor.marks(editor)
-        return marks ? marks.annotation === true : false
+        const marks = Editor.marks(editor);
+        return marks?.annotation === true;
     },
 
     isLink(editor) {

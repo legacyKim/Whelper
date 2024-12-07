@@ -1,4 +1,5 @@
 function LinkCheck(editor) {
+
     const linkArr = [];
 
     function extractText(children) {
@@ -32,13 +33,10 @@ function LinkCheck(editor) {
     }
 
     if (Array.isArray(editor)) {
-
         processLinks(editor);
     } else if (editor?.children && Array.isArray(editor.children)) {
-
         processLinks(editor.children);
     } else if (editor instanceof Document) {
-        
         const links = editor.querySelectorAll('.editor_link');
 
         links.forEach(linkElement => {

@@ -25,11 +25,11 @@ app.config['JWT_COOKIE_CSRF_PROTECT'] = True  # 필요에 따라 True로 설정
 app.config['JWT_CSRF_CHECK_FORM'] = True  # 필요에 따라 True로 설정
 jwt = JWTManager(app)
 
-# CORS(app, resources={
-#      r'*': {'origins': 'http://localhost:3000'}}, supports_credentials=True)
-
 CORS(app, resources={
-     r'*': {'origins': 'https://bambueong.net/'}}, supports_credentials=True)
+     r'*': {'origins': 'http://localhost:3000'}}, supports_credentials=True)
+
+# CORS(app, resources={
+#      r'*': {'origins': 'https://bambueong.net/'}}, supports_credentials=True)
 
 
 @app.route('/api/date', methods=['GET'])

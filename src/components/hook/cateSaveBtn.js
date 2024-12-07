@@ -1,12 +1,12 @@
 import { token_check } from '../../data/token_check.js'
 
-const cateSaveBtn = async (navigate, prevPathname, cateInput, cateListArr, dispatch, syncCateListData, cateListDataPost, catePopupActive) => {
+const cateSaveBtn = async (navigate, currentPathname, cateInput, cateListArr, dispatch, syncCateListData, cateListDataPost, catePopupActive) => {
 
     const isTokenValid = await token_check(navigate);
 
     if (isTokenValid) {
 
-        const cateLink = prevPathname;
+        const cateLink = currentPathname;
         const category = cateInput.current.value;
         const cateCheck = cateListArr.filter((item) => item.category === category);
 
@@ -17,11 +17,13 @@ const cateSaveBtn = async (navigate, prevPathname, cateInput, cateListArr, dispa
             return;
 
         } else {
+
+            const proCateLink = cateLink.replace('/components/', '');
+
             dispatch(syncCateListData({ category }));
-            dispatch(cateListDataPost({ category, cateLink }));
+            dispatch(cateListDataPost({ category, proCateLink }));
 
             catePopupActive('');
-
             cateInput.current.value = '';
         }
     }

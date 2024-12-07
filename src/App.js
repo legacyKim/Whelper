@@ -26,6 +26,7 @@ function App() {
     }, [location.pathname]);
 
     const prevPathname = prevPathRef.current;
+    const currentPathname = location.pathname;
 
     const [isAuth, setAuth] = useState(false);
 
@@ -245,7 +246,7 @@ function App() {
             rootHeight,
             isAuth, setAuth,
             annoListBtn, setAnnoListBtn, annoClick, setAnnoClick, annoString, setAnnoString,
-            prevPathname,
+            prevPathname, currentPathname,
             memoInWriteBtn, setMemoInWriteBtn,
             memoText, setMemoText,
             memoCopyActiveOn, setMemoCopyActiveOn,
