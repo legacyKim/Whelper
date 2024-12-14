@@ -22,6 +22,7 @@ import AnnoLink from './components/AnnoLink.js'
 
 import Category from './components/Category.js'
 import Search from './components/Search.js'
+import Admin from './admin/Admin.js'
 
 import Work from './components/Work.js'
 
@@ -56,6 +57,7 @@ function Menu() {
 
                         <Route path="/components/Memo" element={<Memo />} />
                         <Route path="/components/Work" element={<Work />} />
+                        <Route path="/admin/Admin" element={<Admin />} />
 
                     </Routes>
                 </CSSTransition>

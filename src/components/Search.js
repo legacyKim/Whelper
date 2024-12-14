@@ -3,12 +3,18 @@ import { React, useEffect, useState, useRef, useContext, useCallback } from 'rea
 import { useSelector, useDispatch } from "react-redux"
 import { useParams, Link } from 'react-router-dom';
 
-import { debounce } from 'lodash';
-import MyContext from '../context'
-
-import ViewEdit from './SlateView.js'
 import { writeListSearchData } from '../data/api.js';
 import { resetWriteSearch } from "../data/reducers.js"
+
+import { debounce } from 'lodash';
+
+import MyContext from '../context'
+import ViewEdit from './ViewEdit.js'
+
+import writeNavi from './hook/writeNavi.js';
+
+import Gotop from './func/Gotop.js';
+import Lock from './func/Lock.js';
 
 function Search() {
 
@@ -18,7 +24,7 @@ function Search() {
     const [searchPageInput, setSearchPageInput] = useState(searchFrist);
 
     // about search
-    const { searchArr, setSearchArr, rootHeight, searchScrollPosition, setSearchScrollPosition } = useContext(MyContext);
+    const { isAuth, searchArr, setSearchArr, rootHeight, searchScrollPosition, setSearchScrollPosition, writeListCheckPwCorr, setWriteListCheckPwCorr } = useContext(MyContext);
 
     const newSearch = useRef();
     let newSearchBtn = () => {
@@ -114,12 +120,25 @@ function Search() {
         const contentDoc = new DOMParser().parseFromString(searchFilter[i].content, 'text/html');
         const keywordsParse = JSON.parse(searchFilter[i].keywords)
 
+        const write_password = searchFilter[i].password;
+        const writeContentId = searchFilter[i].id;
+
+        const writePath = `/components/WriteView/${writeContentId}`;
+
+        // lock pop
+        const [writeListCheckPop, setWriteListCheckPop] = useState(false);
+        //// lock pop
+
         return (
 
             <div>
-                <Link to={`/components/WriteView/${searchFilter[i].id}`}>
+                <div className="fake_div">
                     <ViewEdit titleDoc={titleDoc} subTitleDoc={subTitleDoc} contentDoc={contentDoc}></ViewEdit>
-                </Link>
+                    {write_password != null && write_password !== '' && (
+                        <i className="lock icon-lock-1"></i>
+                    )}
+                </div>
+
                 <div className='write_keyword'>
                     <ul className='write_keyword_list'>
                         {
@@ -130,10 +149,9 @@ function Search() {
                             ))
                         }
                     </ul>
-
-                    {/* <b className='write_date'>{writeDate}</b> */}
-
                 </div>
+
+                <Lock isAuth={isAuth} write_password={write_password} writeContentId={writeContentId} writeListCheckPwCorr={writeListCheckPwCorr} writeNavi={writeNavi} writePath={writePath} writeListCheckPop={writeListCheckPop} setWriteListCheckPop={setWriteListCheckPop}></Lock>
             </div>
 
         )

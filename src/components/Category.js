@@ -8,23 +8,28 @@ import MyContext from '../context';
 
 import { debounce } from 'lodash';
 
-import ViewEdit from './SlateView.js'
+import ViewEdit from './ViewEdit.js'
 import { token_check } from '../data/token_check.js'
 
 import { syncCateListData, syncCateListDataDel, resetWriteCate } from '../data/reducers.js'
 import { writeListCateData, cateListData_cate, cateListDataPost, cateListDataDelete } from '../data/api.js';
 
 import cateSaveBtn from './hook/cateSaveBtn.js'
+import writeNavi from './hook/writeNavi.js';
 import useScrollAnima from './hook/useScrollAnima.js'
 
+import Gotop from './func/Gotop.js';
+import Lock from './func/Lock.js';
+
 function Category() {
+
+    const { rootHeight, cateScrollPosition, setCateScrollPosition, isAuth, currentPathname, writeListCheckPwCorr } = useContext(MyContext);
 
     let { writeListKeyword } = useParams();
     const [cateProps, setCateProps] = useState(writeListKeyword);
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const { rootHeight, cateScrollPosition, setCateScrollPosition, isAuth, currentPathname } = useContext(MyContext);
 
     const writeListState = useSelector((state) => state.WriteListCateDataOn);
     const cateListState = useSelector((state) => state.cateData);
@@ -78,6 +83,12 @@ function Category() {
     }, []);
 
     useEffect(() => {
+
+        if (totalPages === null) {
+            dispatch(writeListCateData({ page, cateArr })).then(() => {
+                setTotalPages(writeListState.data.totalPages)
+            });
+        }
 
         const cateAreaHeight = document.querySelector('.content_area_cate').offsetHeight;
 
@@ -177,12 +188,14 @@ function Category() {
     return (
 
         <div className='content_area content_area_cate'>
+
             <div className="cate_list_btn">
                 <button onClick={cateBoxOpen}><i className="icon-book"></i></button>
                 {(isAuth === 0 || isAuth === 1) && (
                     <button className='cate_add_btn' onClick={() => { catePopupActive("active") }}><i className='icon-pencil-alt'></i></button>
                 )}
             </div>
+
             <div className={`cate_list_pos scroll ${cateBox === true ? 'active' : ''}`}>
                 <ul className='cate_list'>
                     {
@@ -200,6 +213,7 @@ function Category() {
                     }
                 </ul>
             </div>
+
             <div className={`cate_box ${(isAuth === 0 || isAuth === 1) ? 'auth' : ''}`}>
                 <div className={`cate_request ${(isAuth === 0 || isAuth === 1) ? 'auth' : ''}`}>
                     {
@@ -213,6 +227,7 @@ function Category() {
                     }
                     <button className={`icon-spin6 animate-spin ${removeBtn ? "active" : ""}`} onClick={clickRemoveAll}></button>
                 </div>
+
                 <ul className='cate_result'>
                     {
                         writeListArr.map(function (a, i) {
@@ -224,6 +239,8 @@ function Category() {
                         })
                     }
                 </ul>
+
+                <Gotop></Gotop>
             </div>
 
             <div className={`cateAdd ${catePopup ? catePopup : ""}`}>
@@ -267,14 +284,26 @@ function Category() {
         const contentDoc = new DOMParser().parseFromString(writeListArr[i].content, 'text/html');
         const keywordsParse = JSON.parse(writeListArr[i].keywords)
 
-        const index = writeListArr[i].id;
+        const write_password = writeListArr[i].password;
+        const writeContentId = writeListArr[i].id;
+
+        const writePath = `/components/WriteView/${writeContentId}`;
+
+        // lock pop
+        const [writeListCheckPop, setWriteListCheckPop] = useState(false);
+        //// lock pop
 
         return (
             <div className='write_list'>
                 <div className="fake_div">
                     <ViewEdit titleDoc={titleDoc} subTitleDoc={subTitleDoc} contentDoc={contentDoc}></ViewEdit>
+                    {write_password != null && write_password !== '' && (
+                        <i className="lock icon-lock-1"></i>
+                    )}
                 </div>
-                <Link to={`/components/WriteView/${index}`}></Link>
+
+                {/* <Link to={`/components/WriteView/${writeContentId}`}></Link> */}
+
                 <div className='write_keyword'>
                     <ul className='write_keyword_list'>
                         {
@@ -285,10 +314,10 @@ function Category() {
                             ))
                         }
                     </ul>
-
-                    {/* <b className='write_date'>{writeDate}</b> */}
-
                 </div>
+
+                <Lock isAuth={isAuth} write_password={write_password} writeContentId={writeContentId} writeListCheckPwCorr={writeListCheckPwCorr} writeNavi={writeNavi} writePath={writePath} writeListCheckPop={writeListCheckPop} setWriteListCheckPop={setWriteListCheckPop}></Lock>
+
             </div>
 
         )

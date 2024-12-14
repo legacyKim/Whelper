@@ -8,6 +8,8 @@ import { debounce } from 'lodash';
 
 import useScrollAnima from './hook/useScrollAnima.js'
 
+import Gotop from './func/Gotop.js';
+
 import { memoListData, memoListDataPost, memoListDataUpdate, memoListDataDelete, memoListAnnoPost, memoListAnnoUpdate, memoListAnnoDelete, bookListData, bookListDataPost, bookListDataDelete } from "../data/api"
 import { syncMemoListDataAdd, syncMemoListDelete, syncMemoListDataUpdate, syncMemoListAnno, syncMemoListAnnoUpdate, syncMemoListAnnoDelete, resetMemo, syncBookListDataAdd, syncBookListDelete, setMemoPage } from "../data/reducers.js"
 import { token_check } from '../data/token_check.js'
@@ -62,6 +64,7 @@ function Memo() {
     }, []);
 
     useEffect(() => {
+
         const memoAreaHeight = document.querySelector('.content_area_memo').offsetHeight;
 
         if (page <= totalPages) {
@@ -608,6 +611,8 @@ function Memo() {
                         }
                     </div>
                 </div>
+                
+                <Gotop></Gotop>
 
                 {/* memoDetail */}
                 <div className={`memo_content_pos ${memoActive ? memoActive : ""}`}>

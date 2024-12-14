@@ -38,7 +38,7 @@
     │   │   │   ├── useSlateRender.js   # Slate 라이브러리 렌더링 관련 공통 코드
     │   │   │   └── writeNavi.js        # 로그인 검증 함수
     │   │   │ 
-    │   │   ├── sideInWrite
+    │   │   ├── function
     │   │   │   └── Anno.js             # 우측 주석 페이지
     │   │   │   └── LinkList.js         # 우측 사이드 링크 리스트 정렬
     │   │   │   └── MemoInWrite.js      # Write 컴포넌트 내부에서 memo 불러오기
@@ -52,7 +52,7 @@
     │   │   ├── Login.js                # 로그인 컴포넌트 ( 로그인 및 아이디 생성 )
     │   │   ├── Memo.js                 # 메모 컴포넌트
     │   │   ├── Side.js                 # 우측 검색 사이드 창
-    │   │   ├── SlateView.js            # Slate View 공통 페이지
+    │   │   ├── ViewEdit.js            # Slate View 공통 페이지
     │   │   ├── Work.js                 # 퍼블리싱 작업물 모음 (임시)
     │   │   ├── Write.js                # 글작성 페이지
     │   │   ├── WriteCorrect.js         # 글수정 페이지

@@ -2,24 +2,23 @@ import React, { useState, useEffect, useContext, useRef } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 
 import { useSelector, useDispatch } from 'react-redux';
-import { syncWriteListData, syncWriteListDataUpdate } from '../data/reducers.js';
-import { writeListDataDel } from '../data/api.js'
 import { useParams } from 'react-router-dom';
 
 import MyContext from '../context'
 
-import AnnoList from './sideInWrite/Anno.js'
-import LinkList from './sideInWrite/LinkList.js'
+import AnnoList from './func/Anno.js'
+import LinkList from './func/LinkList.js'
 
-import ViewEdit from './SlateView.js'
-import { writeListDataView } from '../data/api.js';
+import ViewEdit from './ViewEdit.js'
+import { writeListDataView, writeListDataDel } from '../data/api.js';
+import { syncWriteListDelete } from '../data/reducers.js';
 
 import writeNavi from './hook/writeNavi.js'
 import { token_check } from '../data/token_check.js'
 
 function WriteView() {
 
-    const { isAuth, annoString, setAnnoString, prevPathname } = useContext(MyContext);
+    const { isAuth, annoString, loading, setLoading, setAnnoString, prevPathname } = useContext(MyContext);
 
     const writeListState = useSelector((state) => {
         if (prevPathname === "/") {
@@ -173,7 +172,7 @@ function WriteView() {
     return (
 
         <div className='view_page opacity'>
-            <div className='common_page ofX-hidden'>
+            <div className='common_page'>
                 <div className='content_area'>
                     <div className='view_content all'>
 
@@ -220,12 +219,19 @@ function WriteView() {
 
         const deleteWriteInModal = async (writeContent) => {
 
-            const isTokenValid = await token_check(navigate);
-            if (isTokenValid) {
-                dispatch(writeListDataDel(writeContent.id));
+            setLoading(true);
+            dispatch(writeListDataDel(writeContent.id));
+            try {
+                const isTokenValid = await token_check(navigate);
+                if (isTokenValid) {
+                    await dispatch(syncWriteListDelete(writeContent.id));
+                }
+            } catch (error) {
+                console.error("Error deleting write content:", error);
+            } finally {
+                setLoading(false);
                 navigate('/components/WriteList');
             }
-            setModalDeleteWrite(false);
         }
 
         return (

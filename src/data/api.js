@@ -2,8 +2,8 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import cookieBox from '../components/hook/cookie'
 
-const API_URL = 'http://localhost:5000';
-// const API_URL = 'https://bambueong.net';
+// const API_URL = 'http://localhost:5000';
+const API_URL = 'https://bambueong.net';
 
 // get write data
 export const writeListData = createAsyncThunk('writeData/getData', async () => {
@@ -50,7 +50,7 @@ export const writeListDateData = createAsyncThunk('writeData/getDateData', async
     }
 });
 
-export const writeListDataView = createAsyncThunk('writeData/getData', async (id) => {
+export const writeListDataView = createAsyncThunk('writeData/getDataView', async (id) => {
     try {
         const response = await axios.get(`${API_URL}/api/WriteView/${id}`);
         return response.data;
@@ -60,9 +60,9 @@ export const writeListDataView = createAsyncThunk('writeData/getData', async (id
     }
 });
 
-export const writeListDataCorrect = createAsyncThunk('writeData/getData', async () => {
+export const writeListDataCorrect = createAsyncThunk('writeData/getDataCorrect', async (id) => {
     try {
-        const response = await axios.get(`${API_URL}/api/WriteCorrect`);
+        const response = await axios.get(`${API_URL}/api/WriteCorrect/${id}`);
         return response.data;
     } catch (error) {
         console.error('Error fetching writeListData:', error);
@@ -332,10 +332,18 @@ export const userIdDuplicateCheck = createAsyncThunk('userDupliCheck', async (da
 
 export const emailSendCertifyNum = createAsyncThunk('emailCertifyNumSend', async (data) => {
     try {
-        const response = await axios.post(`${API_URL}/api/sendCertifyNum`, { email: data.selectedEmail });
+        const response = await axios.post(`${API_URL}/api/sendCertifyNum`, { email: data.selectedEmail }, {
+            timeout: 15000
+        });
         return response.data;
     } catch (error) {
-        throw error;
+        if (error.response) {
+            throw new Error(`Server Error: ${error.response.data.error || error.response.statusText}`);
+        } else if (error.request) {
+            throw new Error('No response received from the server.');
+        } else {
+            throw new Error(`Error: ${error.message}`);
+        }
     }
 });
 

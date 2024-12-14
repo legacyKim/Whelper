@@ -11,9 +11,9 @@ import { Slate, Editable, withReact } from 'slate-react';
 import MyContext from '../context';
 import LinkPopup from './LinkPopup.js';
 
-import AnnoList from './sideInWrite/Anno.js';
-import MemoInWrite from './sideInWrite/MemoInWrite.js';
-import LinkList from './sideInWrite/LinkList.js';
+import AnnoList from './func/Anno.js';
+import MemoInWrite from './func/MemoInWrite.js';
+import LinkList from './func/LinkList.js';
 
 import useAnno from './hook/useAnno.js';
 import serialize from './hook/serialize.js';
@@ -38,6 +38,17 @@ function Write() {
     // category popup
     const [popupActive, popupActiveStyle] = useState(false);
     const popupClick = () => {
+
+        if (edTitle[0].children[0].text === '') {
+            alert("제목을 입력해 주세요.")
+            return;
+        }
+
+        if (edSubTitle[0].children[0].text === '') {
+            alert("부제를 입력해 주세요.")
+            return;
+        }
+
         popupActiveStyle(!popupActive);
         if (!popupActive) {
             popupActiveStyle('active');
@@ -139,8 +150,10 @@ function Write() {
         const annoString = JSON.stringify(annoArr);
         const anno = annoString;
 
-        dispatch(syncWriteListData({ id, title, subTitle, content, keywords, anno, updated_at, created_at }));
-        dispatch(writeListDataPost({ title, subTitle, content, keywords, anno }));
+        var password = lockInput;
+
+        dispatch(syncWriteListData({ id, title, subTitle, content, keywords, anno, updated_at, created_at, password }));
+        dispatch(writeListDataPost({ title, subTitle, content, keywords, anno, password }));
 
         setEdTitle(contentPlaceholder);
         setEdSubTitle(contentPlaceholder);
@@ -151,16 +164,37 @@ function Write() {
 
     // cate Add Btn
     const [catePopup, catePopupActive] = useState("");
-    const cateAdd = () => {
-        catePopupActive(!catePopup);
-        if (!catePopup) {
-            catePopupActive('active');
-        } else {
-            catePopupActive('');
-        }
-    }
     const cateInput = useRef();
     //// cate Add Btn
+
+    // lock add
+    const [lockPopup, lockPopupActive] = useState("");
+    const [lockInput, setLockInput] = useState('');
+
+    useEffect(() => {
+        if (lockInput !== '' && /\s/.test(lockInput)) {
+            const updatedInput = lockInput.replace(/\s+/g, '');
+            setLockInput(updatedInput);
+            alert("띄어쓰기는 불가합니다.");
+            return;
+        }
+
+        if (lockInput.length > 12) {
+            setLockInput(lockInput.slice(0, 12));
+            alert("12자리 이하로 입력해 주세요.");
+            return;
+        }
+    }, [lockInput]);
+
+    const passwordCheck = () => {
+        if (lockInput.length < 4) {
+            alert("비밀번호는 4자리 이상으로 입력해 주세요.");
+            return;
+        }
+
+        lockPopupActive('')
+    }
+    //// lock add
 
     // save and keep the last num of id
     const recentId = '9999';
@@ -233,8 +267,9 @@ function Write() {
                     if (isAstChange) {
                         setEdTitle(value)
                     }
-                }}>
-                <Editable className='write_title' placeholder="Title" editor={titleEditor} />
+                }}
+            >
+                <Editable className='write_title' placeholder="Title" />
             </Slate>
 
             <Slate
@@ -248,9 +283,7 @@ function Write() {
                         setEdSubTitle(value)
                     }
                 }}>
-                <Editable className='write_subtitle'
-                    placeholder="Sub Title"
-                    editor={subTitleEditor} />
+                <Editable className='write_subtitle' placeholder="Sub Title" />
             </Slate>
 
             <Slate
@@ -328,6 +361,7 @@ function Write() {
                             </button>
                         )}
                     </div>
+
                     <div className={`anno_add ${annoTextboxActive ? annoTextboxActive : ""}`}>
                         <textarea ref={annoAddWrite} placeholder='newAnnoComment'
                             value={annoContent}
@@ -346,7 +380,6 @@ function Write() {
 
                 <Editable className='write_content scroll' onContextMenu={toolbarOpen} onClick={toolbarClose}
                     placeholder="작은 것들도 허투로 생각하지 말지어다. 큰 것들도 최초에는 작았다."
-                    editor={editor}
                     renderElement={renderElement}
                     renderLeaf={renderLeaf}
                     onKeyDown={event => {
@@ -393,8 +426,33 @@ function Write() {
                     </div>
                 )}
 
+                {lockPopup === 'active' && (
+                    <div className="modal">
+                        <div className="modal_box">
+                            <span>비밀번호를 입력해 주세요.</span>
+                            <input type="password" value={lockInput} placeholder="password"
+                                onChange={(e) => {
+                                    let inputValue = e.target.value;
+
+                                    if (!/^\d+$/.test(inputValue)) {
+                                        inputValue = inputValue.slice(0, -1);
+                                        alert("숫자만 입력해 주세요.")
+                                    }
+                                    setLockInput(inputValue);
+                                }}
+                            />
+                            <div className="btn_wrap">
+                                <button onClick={passwordCheck}>저장</button>
+                                <button onClick={() => { lockPopupActive('') }}>취소</button>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
                 <div className='page_btn'>
                     <button className="write_btn_back icon-reply" onClick={popupClick}></button>
+                    <button className="icon-lock-open-1" onClick={() => { lockPopupActive("active") }}></button>
+                    <button className="icon-lock-1" onClick={() => { lockPopupActive("active") }}></button>
                     <button className="icon-tag" onClick={() => { catePopupActive("active") }}></button>
                     {(isAuth === 1 || isAuth === 0) && (
                         <Link to={`/components/WriteView/${recentId}`} className='icon-ok-circled write_btn_save' onClick={() => { WriteSaveBtn(); }}></Link>

@@ -77,11 +77,11 @@ function Login() {
                 <p>My portfolio Sign in</p>
 
                 <span>Admin ID</span>
-                <input ref={username} autoComplete="username" required />
+                <input ref={username} required />
 
                 <span>Password</span>
                 <div className='input_box'>
-                    <input type='password' ref={userPassword} autoComplete="current-password" required />
+                    <input type='password' ref={userPassword} required />
                     <button type="button" onClick={showPasswordBtn}><i className={`${showPassword}`}></i></button>
                 </div>
 

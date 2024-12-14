@@ -11,8 +11,13 @@ import { createEditor } from 'slate';
 import { Slate, Editable, withReact } from 'slate-react'
 
 import deserialize from './hook/deserialize.js';
+import writeNavi from './hook/writeNavi.js';
+
+import Lock from './func/Lock.js';
 
 function AnnoLink() {
+
+    const { isAuth, annoString, setAnnoString, writeListCheckPwCorr } = useContext(MyContext);
 
     const writeListState = useSelector((state) => state.WriteListDataAnnoLinkOn);
     var writeListArr = writeListState.data.write || [];
@@ -32,13 +37,14 @@ function AnnoLink() {
         const newArr = [];
         writeListArr.forEach((ele) => {
             if (ele !== null) {
-                newArr.push({ title: ele.title });
+
+                newArr.push({ title: ele.title, password: ele.password  });
 
                 const parsedAnno = ele.anno !== undefined ? JSON.parse(ele.anno) : [];
                 const annoId = ele.id;
 
                 parsedAnno.forEach((annoItem) => {
-                    newArr.push({ anno: annoItem.content, id: annoId });
+                    newArr.push({ anno: annoItem.content, id: annoId, password: ele.password  });
                 });
             }
         });
@@ -46,13 +52,19 @@ function AnnoLink() {
         setWriteListAnnoArr(newArr);
     }, [writeListArr]);
 
-    const { annoString, setAnnoString } = useContext(MyContext);
     const annoStringParams = () => {
-        navigate(`/components/WriteView/${annoViewId}`)
+        if (writePassword === null) {
+            navigate(`/components/WriteView/${annoViewId}`)
+        } else {
+            setWriteListCheckPop(true);
+        }
     }
 
     const [annoBtnActive, setAnnoBtnActive] = useState();
     const [annoViewId, setAnnoViewId] = useState();
+
+    const [writePassword, setWritePassword] = useState('');
+    const writePath = `/components/WriteView/${annoViewId}`;
 
     // toolbar
     const annoBtn = (e) => {
@@ -79,13 +91,21 @@ function AnnoLink() {
             setAnnoViewId(writeListAnnoArr.find((ele) => ele.anno === e.target.innerHTML)?.id);
             setAnnoString(e.target.innerHTML);
             setAnnoBtnActive(true);
+
+            setWritePassword(writeListAnnoArr.find((ele) => ele.anno === e.target.innerHTML)?.password);
+
         }
     };
     //// toolbar
 
+    // lock pop
+    const [writeListCheckPop, setWriteListCheckPop] = useState(false);
+    //// lock pop
+
     return (
+
         <div className='common_page'>
-            <div className='content_area'>
+            <div className='content_area annolink_page'>
                 <div className="annolink_wrap" onContextMenu={(e) => annoBtn(e)} >
 
                     {writeListAnnoArr.map((a, i) => (
@@ -100,6 +120,11 @@ function AnnoLink() {
                         </div>
                     </div>
                 </div>
+
+                {writeListCheckPop && (
+                    <Lock isAuth={isAuth} write_password={writePassword} writeContentId={annoViewId} writeListCheckPwCorr={writeListCheckPwCorr} writeNavi={writeNavi} writePath={writePath} writeListCheckPop={writeListCheckPop} setWriteListCheckPop={setWriteListCheckPop}></Lock>
+                )}
+
             </div>
         </div>
     )
@@ -115,6 +140,7 @@ function AnnoLink() {
         const titleValue = titleDoc ? deserialize(titleDoc.body) : [{ text: '' }];
 
         const annoContent = writeContent.hasOwnProperty('anno') ? writeContent.anno : null;
+        const write_password = writeContent.password;
 
         useEffect(() => {
             const annoLinkObj = document.querySelectorAll('.annolink li');
@@ -139,7 +165,11 @@ function AnnoLink() {
                     <Slate editor={titleEditor} initialValue={titleValue}>
                         <div className="icon-level-down annolink_dot"></div>
                         <Editable className="title" readOnly />
+                        {write_password != null && write_password !== '' &&  (
+                            <i className="lock icon-lock-1"></i>
+                        )}
                     </Slate>
+
                 )}
 
                 {annoContent && (

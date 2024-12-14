@@ -3,6 +3,8 @@ import { useLocation } from "react-router-dom";
 import { createEditor, } from 'slate';
 import { Slate, Editable, withReact } from 'slate-react'
 
+import MyContext from '../context';
+
 import deserialize from './hook/deserialize.js';
 import useSlateRender from './hook/useSlateRender.js';
 
@@ -22,7 +24,7 @@ const ViewEdit = ({ titleDoc, subTitleDoc, contentDoc }) => {
     const subTitleValue = subTitleDoc !== null ? deserialize(subTitleDoc.body) : lsSubTitleValue;
     const contentValue = contentDoc !== null ? deserialize(contentDoc.body) : lsContentValue;
 
-    useEffect(()=>{
+    useEffect(() => {
         if (location.pathname === `/components/WriteView/${localStorage.getItem('writeId')}`) {
             localStorage.setItem('view_title', JSON.stringify(titleValue));
             localStorage.setItem('view_subTitle', JSON.stringify(subTitleValue));

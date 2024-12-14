@@ -26,6 +26,7 @@ class Write(Base_write):
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow,
                         onupdate=datetime.utcnow)
+    password = Column(String(255))
 
 
 class Category(Base_write):

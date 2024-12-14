@@ -3,18 +3,17 @@ import { useDispatch, useSelector } from "react-redux"
 import { useParams, Link, useNavigate } from 'react-router-dom';
 
 import { syncWriteListPageDataUpdate, syncWriteListPageData, syncCateListData } from "../data/reducers"
-import { cateListData, writeListDataUpdate, cateListDataPost } from '../data/api.js';
-import { token_check } from '../data/token_check.js'
+import { cateListData, writeListDataUpdate, cateListDataPost, writeListDataCorrect } from '../data/api.js';
 
-import { createEditor, Editor, Element as SlateElement } from 'slate';
+import { createEditor, Editor, Element as SlateElement, Transforms } from 'slate';
 import { Slate, Editable, withReact } from 'slate-react'
 
 import MyContext from '../context'
 import LinkPopup from './LinkPopup.js';
 
-import AnnoList from './sideInWrite/Anno.js'
-import MemoInWrite from './sideInWrite/MemoInWrite.js';
-import LinkList from './sideInWrite/LinkList.js'
+import AnnoList from './func/Anno.js'
+import MemoInWrite from './func/MemoInWrite.js';
+import LinkList from './func/LinkList.js'
 
 import useAnno from './hook/useAnno.js';
 import serialize from './hook/serialize.js';
@@ -102,7 +101,8 @@ function WriteCorrect() {
         linkList, setLinkList,
         memoText, setMemoText,
         memoCopyActiveOn, setMemoCopyActiveOn,
-        currentPathname
+        currentPathname,
+        setWriteListCheckPwCorr,
     } = useContext(MyContext);
     const [annoArr, setAnnoArr] = useState((writeContent !== undefined) ? JSON.parse(writeContent.anno) : JSON.parse(correctAnnoLs));
 
@@ -126,7 +126,7 @@ function WriteCorrect() {
     //// content and local storage change
 
     // write Correct
-    const WriteCorrectBtn = () => {
+    const WriteCorrectBtn = async () => {
 
         const id = writeContent.id;
 
@@ -147,14 +147,22 @@ function WriteCorrect() {
         const annoString = JSON.stringify(annoArr);
         const anno = annoString;
 
+        var password;
+        if (lockInput !== '') {
+            password = lockInput;
+        } else {
+            password = null;
+        }
+
         // dispatch(syncWriteListDataUpdate({ id, title, subTitle, content, keywords, anno, update_time }));
-        dispatch(syncWriteListPageDataUpdate({ id, title, subTitle, content, keywords, anno, update_time }));
-        dispatch(writeListDataUpdate({ id, title, subTitle, content, keywords, update_time, anno }))
+        dispatch(syncWriteListPageDataUpdate({ id, title, subTitle, content, keywords, anno, update_time, password }));
+        dispatch(writeListDataUpdate({ id, title, subTitle, content, keywords, update_time, anno, password }))
 
         setEdTitle(contentPlaceholder);
         setEdSubTitle(contentPlaceholder);
         setEditorValue(contentPlaceholder);
         setAnnoArr([]);
+        setWriteListCheckPwCorr(true);
 
     };
     //// write correct
@@ -163,6 +171,25 @@ function WriteCorrect() {
     const [catePopup, catePopupActive] = useState("");
     const cateInput = useRef();
     //// cate Add Btn
+
+    // lock add
+    const [lockPopup, lockPopupActive] = useState("");
+    const [lockDelPopup, lockDelPopupActive] = useState("");
+    const [lockInput, setLockInput] = useState(writeContent?.password);
+
+    const refresh = async (id) => {
+        const num_id = Number(id);
+        const refresh_data = await dispatch(writeListDataCorrect(num_id));
+        setWriteContent(refresh_data.payload.write);
+    }
+
+    useEffect(() => {
+        if (writeListState.data.write.length === 0) {
+            const refreshId = localStorage.getItem('writeId');
+            refresh(refreshId);
+        }
+    }, []);
+    //// lock add
 
     // toolbar
     const [toolbarActive, setToolbarActive] = useState(false);
@@ -215,7 +242,7 @@ function WriteCorrect() {
     //// memo copy
 
     return (
-        <div className='Write ofX-hidden'>
+        <div className='Write'>
 
             <Slate
                 editor={titleEditor}
@@ -228,7 +255,7 @@ function WriteCorrect() {
                         setEdTitle(value);
                     }
                 }}>
-                <Editable className='write_title' placeholder="Title" editor={titleEditor} />
+                <Editable className='write_title' placeholder="Title" />
             </Slate>
 
             <Slate
@@ -242,9 +269,7 @@ function WriteCorrect() {
                         setEdSubTitle(value)
                     }
                 }}>
-                <Editable className='write_subtitle'
-                    placeholder="Sub Title"
-                    editor={subTitleEditor} />
+                <Editable className='write_subtitle' placeholder="Sub Title" />
             </Slate>
 
             <Slate
@@ -341,9 +366,14 @@ function WriteCorrect() {
 
                 <Editable className='write_content scroll' onContextMenu={toolbarOpen} onClick={toolbarClose}
                     placeholder="작은 것들도 허투로 생각하지 말지어다. 큰 것들도 최초에는 작았다."
-                    editor={editor}
                     renderElement={renderElement}
                     renderLeaf={renderLeaf}
+                    onKeyDown={event => {
+                        if (event.shiftKey && event.code === 'Space') {
+                            event.preventDefault();
+                            Transforms.insertText(editor, '    ');
+                        }
+                    }}
                 />
             </Slate>
 
@@ -383,8 +413,39 @@ function WriteCorrect() {
                     </div>
                 )}
 
+                {lockPopup === 'active' && (
+                    <div className="modal">
+                        <div className="modal_box">
+                            <span>변경할 비밀번호를 입력해 주세요.</span>
+                            <input type="password" placeholder="password" onChange={(e) => {
+                                setLockInput(e.target.value);
+                            }} />
+                            <div className="btn_wrap">
+                                <button onClick={() => { lockPopupActive(''); }}>저장</button>
+                                <button onClick={() => { lockPopupActive(''); }}>취소</button>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {lockDelPopup === 'active' && (
+                    <div className="modal">
+                        <div className="modal_box">
+                            <span>비밀번호를 해제하시겠습니까?</span>
+                            <div className="btn_wrap">
+                                <button onClick={() => { lockDelPopupActive(''); setLockInput(null); }}>확인</button>
+                                <button onClick={() => { lockDelPopupActive('') }}>취소</button>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
                 <div className='page_btn'>
                     <button className="write_btn_back icon-reply" onClick={popupClick}></button>
+                    {lockInput !== null && (
+                        <button className="icon-lock-open-1" onClick={() => { lockDelPopupActive("active") }}></button>
+                    )}
+                    <button className="icon-lock-1" onClick={() => { lockPopupActive("active") }}></button>
                     <button className="icon-tag" onClick={() => { catePopupActive('active'); }}></button>
                     <Link className='icon-ok-circled write_btn_save' to={`/components/WriteView/${writeContent !== undefined ? writeContent.id : localStorage.getItem('writeId')}`} onClick={() => { navigate(`/components/WriteView/${writeContent !== undefined ? writeContent.id : localStorage.getItem('writeId')}`); WriteCorrectBtn(); }}></Link>
                 </div>

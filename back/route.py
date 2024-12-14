@@ -28,8 +28,8 @@ jwt = JWTManager(app)
 CORS(app, resources={
      r'*': {'origins': 'http://localhost:3000'}}, supports_credentials=True)
 
-# CORS(app, resources={
-#      r'*': {'origins': 'https://bambueong.net/'}}, supports_credentials=True)
+CORS(app, resources={
+     r'*': {'origins': 'https://bambueong.net/'}}, supports_credentials=True)
 
 
 @app.route('/api/date', methods=['GET'])
@@ -138,6 +138,11 @@ def get_data_WriteView(id):
 @app.route('/api/AnnoLink', methods=['GET'])
 def get_data_Annolink():
     return common_write_data()
+
+
+@app.route('/api/WriteCorrect/<int:id>', methods=['GET'])
+def get_data_WriteCorrect(id):
+    return common_write_data(id)
 
 
 @app.route('/api/Write', methods=['POST'])

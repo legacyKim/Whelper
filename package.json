@@ -22,9 +22,9 @@
     "react-transition-group": "^4.4.5",
     "redux": "^5.0.1",
     "redux-thunk": "^3.1.0",
-    "slate": "^0.101.1",
+    "slate": "^0.101.5",
     "slate-hyperscript": "^0.100.0",
-    "slate-react": "^0.101.3",
+    "slate-react": "^0.101.6",
     "web-vitals": "^2.1.4"
   },
   "scripts": {

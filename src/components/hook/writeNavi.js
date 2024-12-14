@@ -3,7 +3,7 @@ import { token_check } from '../../data/token_check.js'
 const writeNavi = async (e, path, navigate, isAuth) => {
 
     e.preventDefault();
-
+    
     if (typeof isAuth === 'number') {
         navigate(`${path}`);
         return;

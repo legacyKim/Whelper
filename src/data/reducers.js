@@ -48,6 +48,14 @@ const WriteListPageDataOn = createSlice({
                 state.data.write = updatedWrite;
             }
         },
+        syncWriteListDelete(state, action) {
+            if (action.payload !== undefined) {
+                const deleteWrite = state.data.write.filter(item =>
+                    item.id !== action.payload
+                )
+                state.data.write = deleteWrite;
+            }
+        },
     },
     extraReducers: (builder) => {
         builder.addCase(writeListPageData.pending, (state) => {
@@ -368,7 +376,7 @@ const bookData = createSlice({
 
 export const { syncWriteListData, syncWriteListDataUpdate } = WriteListView.actions;
 export const { syncMemoListDataAdd, syncMemoListDelete, syncMemoListDataUpdate, syncMemoListAnno, syncMemoListAnnoUpdate, syncMemoListAnnoDelete, resetMemo, setMemoPage } = memoData.actions;
-export const { syncWriteListPageData, syncWriteListPageDataUpdate } = WriteListPageDataOn.actions;
+export const { syncWriteListPageData, syncWriteListPageDataUpdate, syncWriteListDelete } = WriteListPageDataOn.actions;
 export const { syncWriteListDateData } = WriteListDateDataOn.actions;
 export const { resetWriteCate } = WriteListCateDataOn.actions;
 export const { resetWriteSearch } = WriteListSearchDataOn.actions;

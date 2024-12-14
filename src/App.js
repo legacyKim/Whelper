@@ -29,6 +29,7 @@ function App() {
     const currentPathname = location.pathname;
 
     const [isAuth, setAuth] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
 
@@ -179,6 +180,10 @@ function App() {
     const [mode, setMode] = useState();
     //// customEditor mode
 
+    // password check for corr
+    const [writeListCheckPwCorr, setWriteListCheckPwCorr] = useState();
+    //// password check for corr
+
     // default right click, copy
     useEffect(() => {
         if (isAuth === false) {
@@ -245,6 +250,7 @@ function App() {
             wlScrollPosition, setWlScrollPosition, MemoScrollPosition, setMemoScrollPosition, cateScrollPosition, setCateScrollPosition, searchScrollPosition, setSearchScrollPosition,
             rootHeight,
             isAuth, setAuth,
+            loading, setLoading,
             annoListBtn, setAnnoListBtn, annoClick, setAnnoClick, annoString, setAnnoString,
             prevPathname, currentPathname,
             memoInWriteBtn, setMemoInWriteBtn,
@@ -252,8 +258,8 @@ function App() {
             memoCopyActiveOn, setMemoCopyActiveOn,
             linkListBtn, setLinkListBtn,
             linkList, setLinkList,
-            mode, setMode
-            
+            mode, setMode,
+            writeListCheckPwCorr, setWriteListCheckPwCorr,
         }}>
             <div id='app' className={`App ${theme}`}>
 
@@ -293,6 +299,12 @@ function App() {
                             <div className='tooltip'><span>Work</span></div>
                         </NavLink></li>
 
+                        {isAuth === 0 && (
+                            <li className='btn'><NavLink to={`/admin/Admin`} className='icon-key' onClick={() => { navigate('/admin/Admin') }}>
+                                <div className='tooltip'><span>Admin</span></div>
+                            </NavLink></li>
+                        )}
+
                         {isAuth === false ? (
                             <li className='btn'><NavLink to={`/components/Login`} className='icon-login' onClick={() => { navigate('/components/Login') }}>
                                 <div className='tooltip'><span>Log-In</span></div>
@@ -302,8 +314,6 @@ function App() {
                                 <div className='tooltip'><span>Log-Out</span></div>
                             </button></li>
                         )}
-
-                        {/* <li><div id='theme_screen' className='icon-arrows-ccw' onClick={themeChangeBtn}></div></li> */}
                     </ul>
                 </div>
 

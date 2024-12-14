@@ -3,13 +3,18 @@ import { React, useEffect, useState, useContext, useCallback } from 'react';
 import { Link, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
+import MyContext from '../context';
+
 import { debounce } from 'lodash';
 import { format, compareDesc } from 'date-fns';
 
 import 'react-toastify/dist/ReactToastify.css';
 
 import { writeListDateData } from '../data/api.js';
-import ViewEdit from './SlateView.js';
+import ViewEdit from './ViewEdit.js';
+
+import writeNavi from './hook/writeNavi.js';
+import Lock from './func/Lock.js';
 
 const useRouteChange = (callback) => {
     const location = useLocation();
@@ -113,18 +118,33 @@ function Date_sort() {
 
 function WriteShowContents({ writeListArr }) {
 
+    const { isAuth, writeListCheckPwCorr } = useContext(MyContext);
+
     const [writeContent, setWriteContent] = useState(writeListArr);
 
     const titleDoc = new DOMParser().parseFromString(writeContent.title, 'text/html');
     const subTitleDoc = new DOMParser().parseFromString(writeContent.subTitle, 'text/html');
     const contentDoc = new DOMParser().parseFromString(writeContent.content, 'text/html');
 
+    const write_password = writeContent.password;
+    const writeContentId = writeListArr.id;
+
+    const writePath = `/components/WriteView/${writeContentId}`;
+
+    const [writeListCheckPop, setWriteListCheckPop] = useState(false);
+
     return (
         <div className="date_content_box">
-            <div className="fake_div">
+            <div className="date_content_box_anima"></div>
+            <div className={`fake_div ${writeListCheckPop ? 'active' : ''}`}>
                 <ViewEdit titleDoc={titleDoc} subTitleDoc={subTitleDoc} contentDoc={contentDoc}></ViewEdit>
+                {write_password != null && write_password !== '' && (
+                    <i className="lock icon-lock-1"></i>
+                )}
             </div>
-            <Link to={`/components/WriteView/${writeListArr.id}`}></Link>
+
+            <Lock isAuth={isAuth} write_password={write_password} writeContentId={writeContentId} writeListCheckPwCorr={writeListCheckPwCorr} writeNavi={writeNavi} writePath={writePath} writeListCheckPop={writeListCheckPop} setWriteListCheckPop={setWriteListCheckPop}></Lock>
+
         </div>
 
     );
