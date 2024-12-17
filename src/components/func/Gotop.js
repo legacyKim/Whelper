@@ -5,18 +5,19 @@ import MyContext from '../../context.js';
 
 function Gotop() {
     
-    const { rootHeight, wlScrollPosition, setWlScrollPosition, memoScrollPosition, setMemoScrollPosition, cateScrollPosition, setCateScrollPosition, searchScrollPosition, setSearchScrollPosition } = useContext(MyContext);
+    const { rootHeight, wlScrollPosition, setWlScrollPosition, MemoScrollPosition, setMemoScrollPosition, cateScrollPosition, setCateScrollPosition, searchScrollPosition, setSearchScrollPosition } = useContext(MyContext);
     const location = useLocation();
 
     const [scrollGotop, setScrollGotop] = useState(0);
     const [updateScrollPosition, setUpdateScrollPosition] = useState(() => () => {});
 
     useEffect(() => {
+
         if (location.pathname.includes('WriteList')) {
             setScrollGotop(wlScrollPosition);
             setUpdateScrollPosition(() => setWlScrollPosition);
         } else if (location.pathname.includes('Memo')) {
-            setScrollGotop(memoScrollPosition);
+            setScrollGotop(MemoScrollPosition);
             setUpdateScrollPosition(() => setMemoScrollPosition);
         } else if (location.pathname.includes('Category')) {
             setScrollGotop(cateScrollPosition);
@@ -25,7 +26,8 @@ function Gotop() {
             setScrollGotop(searchScrollPosition);
             setUpdateScrollPosition(() => setSearchScrollPosition);
         }
-    }, [location.pathname, wlScrollPosition, memoScrollPosition, cateScrollPosition, searchScrollPosition]);
+
+    }, [location.pathname, wlScrollPosition, MemoScrollPosition, cateScrollPosition, searchScrollPosition]);
 
     const [gotopActive, setGotopActive] = useState('inactive');
     useEffect(() => {

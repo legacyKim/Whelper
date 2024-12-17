@@ -451,7 +451,6 @@ function Write() {
 
                 <div className='page_btn'>
                     <button className="write_btn_back icon-reply" onClick={popupClick}></button>
-                    <button className="icon-lock-open-1" onClick={() => { lockPopupActive("active") }}></button>
                     <button className="icon-lock-1" onClick={() => { lockPopupActive("active") }}></button>
                     <button className="icon-tag" onClick={() => { catePopupActive("active") }}></button>
                     {(isAuth === 1 || isAuth === 0) && (

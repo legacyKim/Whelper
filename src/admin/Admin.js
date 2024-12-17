@@ -1,20 +1,35 @@
-import { React } from 'react';
+import { React, useState } from 'react';
+import { useLocation } from 'react-router-dom';
+import { QueryClient, QueryClientProvider, useQuery } from '@tanstack/react-query';
+
+import '../css/admin.css';
+
+import Admin_menu from './Admin_menu.js';
+import Admin_routes from './Admin_routes.js';
+
+const queryClient = new QueryClient();
 
 function Admin() {
 
+    const location = useLocation();
+
     return (
-        <div className="admin">
-            <p style={{ color: '#fff', whiteSpace: 'pre-line' }}>
-                ** admin 페이지
+        <QueryClientProvider client={queryClient}>
+            <div className="admin">
 
-                1. 접속로그? 조회수 확인해 보기
-                2. 계정 권한 변경?
-                3. 검색 노출?
-                4. 서버 부하 이런 것들도 이해해야함.
-            </p>
+                <Admin_menu />
 
-            
-        </div>
+                <div className='admin_wrap'>
+                    {location.pathname === "/admin/Admin" && (
+                        <div className="admin_notice">
+                            뭘 넣으면 될까?
+                        </div>
+                    )}
+
+                    <Admin_routes location={location} />
+                </div>
+            </div>
+        </QueryClientProvider>
     )
 }
 

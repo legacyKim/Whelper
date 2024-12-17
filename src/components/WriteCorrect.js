@@ -155,7 +155,7 @@ function WriteCorrect() {
         }
 
         // dispatch(syncWriteListDataUpdate({ id, title, subTitle, content, keywords, anno, update_time }));
-        dispatch(syncWriteListPageDataUpdate({ id, title, subTitle, content, keywords, anno, update_time, password }));
+        dispatch(syncWriteListPageDataUpdate({ id, title, subTitle, content, keywords, update_time, anno, password }));
         dispatch(writeListDataUpdate({ id, title, subTitle, content, keywords, update_time, anno, password }))
 
         setEdTitle(contentPlaceholder);

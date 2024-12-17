@@ -278,6 +278,7 @@ function Login() {
                     </select>
                     <button type="button" onClick={getCertifyNum} className='email_certify_btn'><i className='icon-ok-circled'></i></button>
                 </div>
+                <em className='notice'>(이메일 정보는 수집하지 않습니다.)</em>
 
                 <span>Certification number</span>
                 <div className="input_box">

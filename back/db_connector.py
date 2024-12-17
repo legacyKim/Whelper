@@ -48,8 +48,6 @@ def excute_query_get_data(queries, conn):
 
                     data.append(row_data)
 
-                # JSON 형식으로 데이터 만들기
-
                 result = json.dumps(data, indent=2)
                 results.append(result)
 
@@ -75,8 +73,7 @@ def excute_query_get_data(queries, conn):
 def get_data_from_write():
     conn = get_db_connection(0)
 
-    queries = ["SELECT * FROM tb_write;",
-               "SELECT * FROM tb_cate;"]
+    queries = ["SELECT * FROM tb_write;", "SELECT * FROM tb_cate;"]
     results = excute_query_get_data(queries, conn)
 
     return results[0], results[1]
@@ -91,6 +88,14 @@ def get_data_from_memo():
     return results[0], results[1]
 
 
+def get_data_from_user():
+    conn = get_db_connection(2)
+
+    queries = ["SELECT id, username, authority FROM tb_user;"]
+    results = excute_query_get_data(queries, conn)
+
+    return results[0]
+
+
 if __name__ == '__main__':
-    # db_connector.py 파일이 독립적으로 실행될 때의 동작 정의
     pass

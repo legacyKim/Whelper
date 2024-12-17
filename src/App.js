@@ -1,6 +1,6 @@
 import { React, useEffect, useState, useRef, useCallback } from 'react';
-import { NavLink, useNavigate, Link, useLocation } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux"
+import { NavLink, useNavigate, Link, useLocation, Route, Routes } from "react-router-dom";
+import { useDispatch } from "react-redux"
 
 import { debounce } from 'lodash';
 import MyContext from './context'
@@ -10,7 +10,10 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import './css/style.css';
-import Routes from './Routes'
+
+import Menu_Routes from './Menu_Routes';
+import Menu_Routes_admin from './Menu_Routes_admin.js';
+
 import { logout, userCheckRefresh } from './data/api.js'
 
 function App() {
@@ -245,6 +248,7 @@ function App() {
     return (
 
         <MyContext.Provider value={{
+            location,
             showHeader,
             searchArr, setSearchArr,
             wlScrollPosition, setWlScrollPosition, MemoScrollPosition, setMemoScrollPosition, cateScrollPosition, setCateScrollPosition, searchScrollPosition, setSearchScrollPosition,
@@ -270,43 +274,41 @@ function App() {
                         <NavLink to="/" className='bambueong_logo' onClick={() => { navigate('/') }}></NavLink>
                     </div>
                     <ul className='header_btn'>
-                        {/* <li className='btn'><NavLink to="/components/Slate" className='icon-vector-pencil' onClick={() => { navigate('/components/Slate') }}></NavLink></li> */}
-                        <li className='btn'><NavLink to="/components/Write" className='icon-vector-pencil' onClick={(e) => { writeNavi(e, writePath, navigate, isAuth) }}>
+                        <li className='btn'><NavLink className='icon-vector-pencil' onClick={(e) => { writeNavi(e, writePath, navigate, isAuth) }}>
                             <div className='tooltip'><span>Write</span></div>
                         </NavLink></li>
-                        <li className='btn'><NavLink to="/components/WriteList" className='icon-clipboard' onClick={() => { navigate('/components/WriteList') }}>
+                        <li className='btn'><NavLink to="/components/WriteList" className='icon-clipboard' >
                             <div className='tooltip'><span>Write-List</span></div>
                         </NavLink></li>
-                        <li className='btn'><NavLink to="/components/Memo" className='icon-comment' onClick={() => { navigate('/components/Memo') }}>
+                        <li className='btn'><NavLink to="/components/Memo" className='icon-comment' >
                             <div className='tooltip'><span>Memo</span></div>
                         </NavLink></li>
-                        {/* <li className='btn'><NavLink to="/components/Book" className='icon-book-1' onClick={() => { navigate('/components/Book') }}></NavLink></li> */}
 
-                        <li className='btn'><NavLink to={`/components/AnnoLink`} className='icon-flow-split' onClick={() => { navigate('/components/AnnoLink') }}>
+                        <li className='btn'><NavLink to={`/components/AnnoLink`} className='icon-flow-split' >
                             <div className='tooltip'><span>Annotation</span></div>
                         </NavLink></li>
 
-                        <li className='btn'><NavLink to={`/components/Category`} className='icon-tags' onClick={() => { navigate('/components/Category') }}>
+                        <li className='btn'><NavLink to={`/components/Category`} className='icon-tags' >
                             <div className='tooltip'><span>Category</span></div>
                         </NavLink></li>
                         <li className='btn'><button className='icon-search' onClick={searchOn}>
                             <div className='tooltip'><span>Search</span></div>
                         </button></li>
-                        <li className='btn'><NavLink to={`/components/Search/${searchInputValue}`} className='icon-link-1' onClick={() => { navigate('/components/Search') }}>
+                        <li className='btn'><NavLink to={`/components/Search/${searchInputValue}`} className='icon-link-1' >
                             <div className='tooltip'><span>Search Res</span></div>
                         </NavLink></li>
-                        <li className='btn'><NavLink to={`/components/Work`} className='icon-list-bullet' onClick={() => { navigate('/components/Work') }}>
+                        <li className='btn'><NavLink to={`/components/Work`} className='icon-list-bullet' >
                             <div className='tooltip'><span>Work</span></div>
                         </NavLink></li>
 
                         {isAuth === 0 && (
-                            <li className='btn'><NavLink to={`/admin/Admin`} className='icon-key' onClick={() => { navigate('/admin/Admin') }}>
+                            <li className='btn'><NavLink to={`/admin/Admin`} className='icon-key' >
                                 <div className='tooltip'><span>Admin</span></div>
                             </NavLink></li>
                         )}
 
                         {isAuth === false ? (
-                            <li className='btn'><NavLink to={`/components/Login`} className='icon-login' onClick={() => { navigate('/components/Login') }}>
+                            <li className='btn'><NavLink to={`/components/Login`} className='icon-login' >
                                 <div className='tooltip'><span>Log-In</span></div>
                             </NavLink></li>
                         ) : (
@@ -317,7 +319,8 @@ function App() {
                     </ul>
                 </div>
 
-                <Routes></Routes>
+                <Menu_Routes></Menu_Routes>
+                <Menu_Routes_admin></Menu_Routes_admin>
 
                 <div className={`search ${searchActive ? searchActive : ""}`}>
                     <div className="search_box">
@@ -339,10 +342,6 @@ function App() {
                         </ol>
                     </div>
                 </div>
-
-                {/* <div className='gotop'>
-                    <button className='icon-'></button>
-                </div> */}
             </div>
         </MyContext.Provider >
     )

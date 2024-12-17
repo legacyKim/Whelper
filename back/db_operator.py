@@ -346,11 +346,10 @@ def get_user_info_from_db(data):
             }
             return user_info
         else:
-            return None  # False 대신 None 반환, 없을 때 처리 일관성 유지
+            return FileNotFoundError
 
     except Exception as e:
         print(f"Error authenticating user: {e}")
-        # 오류 발생 시 JSON 형식의 오류 메시지 반환
         return {"error": "Error occurred while authenticating user"}, 500
 
     finally:

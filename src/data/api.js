@@ -372,3 +372,8 @@ export const logout = createAsyncThunk('user/logout', async (data) => {
         console.error('Logout error', error);
     }
 });
+
+export const useInfoData = async () => {
+    const response = await axios.get(`${API_URL}/api/admin/Info`);
+    return response.data;
+};
