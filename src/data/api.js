@@ -373,7 +373,27 @@ export const logout = createAsyncThunk('user/logout', async (data) => {
     }
 });
 
+// React-query
+
 export const useInfoData = async () => {
-    const response = await axios.get(`${API_URL}/api/admin/Info`);
+    const response = await axios.get(`${API_URL}/api/admin/info`);
     return response.data;
 };
+
+export const userInfoDataChange = async (id, auth) => {
+    const response = await axios.post(`${API_URL}/api/admin/info/auth`, { id, auth }, {
+        headers: {
+            "Content-Type": "application/json",
+        },
+    });
+    return response.data;
+};
+
+export const userInfoDataDelete = async (id) => {
+    try {
+        const response = await axios.delete(`${API_URL}/api/admin/info/userDel/${id}`);
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
+}

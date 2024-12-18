@@ -6,7 +6,7 @@ function Stats() {
 
     return (
         <div className="admin_stats">
-            Admin_stats
+            <h4 className='admin_tit'>통계확인</h4>
         </div>
     )
 }

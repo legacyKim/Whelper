@@ -105,27 +105,19 @@ def post_data_to_write(data):
 
 
 def update_data_from_write(data, write_id):
-    session = Session_write()
     try:
-
+        session = Session_write()
         write_instance = session.query(Write).filter_by(id=write_id).first()
 
         if write_instance:
             for key, value in data.items():
                 setattr(write_instance, key, value)
-
-            # 세션 커밋
             session.commit()
-            print(f"Data with id={write_id} updated successfully")
-        else:
-            print(f"No data found with id={write_id}")
 
     except Exception as e:
         print(f"Error updating data: {e}")
-        # 에러 발생 시 롤백
         session.rollback()
     finally:
-        # 세션 닫기
         session.close()
 
 
@@ -138,9 +130,6 @@ def delete_data_from_write(write_id):
             if write_instance:
                 session.delete(write_instance)
                 session.commit()
-                print(f"Data with id={write_id} deleted successfully")
-            else:
-                print(f"No data found with id={write_id}")
     except Exception as e:
         print(f"Error deleting data: {e}")
 
@@ -164,9 +153,6 @@ def delete_data_from_cate(category_name):
             if cate_instance:
                 session.delete(cate_instance)
                 session.commit()
-                print(f"Data with name={category_name} deleted successfully")
-            else:
-                print(f"No data found with name={category_name}")
     except Exception as e:
         print(f"Error deleting data: {e}")
 
@@ -191,11 +177,7 @@ def update_data_from_memo(data, memo_id):
             for key, value in data.items():
                 setattr(memo_instance, key, value)
 
-            # 세션 커밋
             session.commit()
-            print(f"Data with id={memo_id} updated successfully")
-        else:
-            print(f"No data found with id={memo_id}")
 
     except Exception as e:
         print(f"Error updating data: {e}")
@@ -214,9 +196,6 @@ def delete_data_from_memo(memo_id):
             if memo_instance:
                 session.delete(memo_instance)
                 session.commit()
-                print(f"Data with id={memo_id} deleted successfully")
-            else:
-                print(f"No data found with id={memo_id}")
     except Exception as e:
         print(f"Error deleting data: {e}")
 
@@ -268,7 +247,6 @@ def delete_data_from_memoAnno(anno_id, corrAnnotationKeys):
             updated_annotation = json.dumps(annotation_list)
             memo_instance.memoAnnotation = updated_annotation
             session.commit()
-            print("Annotation deleted successfully.")
 
     except Exception as e:
         print(f"Error deleting data: {e}")
@@ -293,10 +271,6 @@ def delete_data_from_book(memoSource):
             if memo_instance:
                 session.delete(memo_instance)
                 session.commit()
-                print(
-                    f"Data with memoSource={memoSource} deleted successfully")
-            else:
-                print(f"No data found with memoSource={memoSource}")
     except Exception as e:
         print(f"Error deleting data: {e}")
 
@@ -326,7 +300,6 @@ def post_data_from_pwd(data):
             return False
 
     except Exception as e:
-        print(f"Error authenticating user: {e}")
         return 'Error occurred while authenticating user', 500
 
     finally:
@@ -349,11 +322,39 @@ def get_user_info_from_db(data):
             return FileNotFoundError
 
     except Exception as e:
-        print(f"Error authenticating user: {e}")
         return {"error": "Error occurred while authenticating user"}, 500
 
     finally:
         session.close()
+
+
+def post_user_info(data):
+    try:
+        session = Session_login()
+
+        user_id = data.get("id")
+        user_auth = data.get("auth")
+
+        user_instance = session.query(User).filter_by(id=user_id).first()
+
+        if user_instance:
+            user_instance.authority = user_auth
+            session.commit()
+
+    finally:
+        session.close()
+
+
+def delete_user(user_id):
+    try:
+        with Session_login() as session:
+            user_intance = session.query(User).filter_by(id=user_id).first()
+
+            if user_intance:
+                session.delete(user_intance)
+                session.commit()
+    except Exception as e:
+        print(f"Error deleting data: {e}")
 
 
 def check_id_in_database(new_username):
@@ -385,21 +386,7 @@ def post_data_signup(data):
 
     except Exception as e:
         session.rollback()
-        print(f"Error: {e}")
         return {"error": "회원가입 중 오류가 발생했습니다."}
 
     finally:
         session.close()
-
-
-# 일단 주석 처리
-# if __name__ == '__main__':
-#     create_table()
-
-#     data = {'title': 'Example Title', 'subTitle': 'Example Subtitle',
-#             'content': 'Example Content', 'keywords': 'Example Keyword'}
-
-#     post_data_from_write(data)
-#     post_data_from_memo(data)
-#     update_data_from_write(data)
-#     update_data_from_memo(data)

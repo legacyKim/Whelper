@@ -21,9 +21,7 @@ function Admin() {
 
                 <div className='admin_wrap'>
                     {location.pathname === "/admin/Admin" && (
-                        <div className="admin_notice">
-                            뭘 넣으면 될까?
-                        </div>
+                        <h4 className='admin_tit'>여기엔 뭐하지..?</h4>
                     )}
 
                     <Admin_routes location={location} />

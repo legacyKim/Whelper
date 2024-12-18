@@ -147,6 +147,10 @@ function Login() {
                 alert("ID 를 입력해 주세요.");
                 setIdCheck('');
                 return;
+            } else if (/admin/.test(newUsername_v)) {
+                alert(`"admin" 은 사용할 수 없습니다.`);
+                setIdCheck('');
+                return;
             } else if (result.payload.message === 'ID already exists') {
                 alert("ID 가 중복됩니다.");
                 setIdCheck('');

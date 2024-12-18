@@ -301,7 +301,7 @@ function App() {
                             <div className='tooltip'><span>Work</span></div>
                         </NavLink></li>
 
-                        {isAuth === 0 && (
+                        {(isAuth === 0 || isAuth === 1) && (
                             <li className='btn'><NavLink to={`/admin/Admin`} className='icon-key' >
                                 <div className='tooltip'><span>Admin</span></div>
                             </NavLink></li>

@@ -26,7 +26,8 @@
     "slate": "^0.101.5",
     "slate-hyperscript": "^0.100.0",
     "slate-react": "^0.101.6",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "zustand": "^5.0.2"
   },
   "scripts": {
     "start": "react-scripts start",
