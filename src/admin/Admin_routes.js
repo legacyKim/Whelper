@@ -8,7 +8,7 @@ import Admin from './Admin.js';
 import User from './User.js';
 import Log from './Log.js';
 import Stats from './Stats.js';
-import Updates from './Updates.js';
+import Notice from './Notice.js';
 
 function Admin_routes({ location }) {
 
@@ -25,7 +25,7 @@ function Admin_routes({ location }) {
                         <Route path="/User" element={<User />} />
                         <Route path="/Log" element={<Log />} />
                         <Route path="/Stats" element={<Stats />} />
-                        <Route path="/Updates" element={<Updates />} />
+                        <Route path="/Notice" element={<Notice />} />
                     </Routes>
                 </CSSTransition>
             </TransitionGroup>

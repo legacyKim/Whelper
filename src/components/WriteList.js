@@ -84,15 +84,9 @@ function WriteList() {
             <div className='content_area content_area_write' ref={contentAreaRef}>
                 <div className='write_list_scroll'>
                     <div className='write_list_wrap'>
-                        {
-                            writeListArr.map(function (a, i) {
-                                return (
-                                    <div key={i} className="WriteDiv">
-                                        <WriteShowContents i={i} writeListArr={writeListArr} />
-                                    </div>
-                                )
-                            })
-                        }
+                        {writeListArr.map((item, index) => (
+                            <WriteShowContents key={index} writeListArr={item} />
+                        ))}
                     </div>
                 </div>
 
@@ -104,12 +98,12 @@ function WriteList() {
 
     function WriteShowContents({ i, writeListArr }) {
 
-        const [writeContent, setWriteContent] = useState(writeListArr[i]);
+        const [writeContent, setWriteContent] = useState(writeListArr);
 
-        const titleDoc = new DOMParser().parseFromString(writeContent.title, 'text/html');
-        const subTitleDoc = new DOMParser().parseFromString(writeContent.subTitle, 'text/html');
+        const titleDoc = writeContent.title;
+        const subTitleDoc = writeContent.subTitle;
         const contentDoc = new DOMParser().parseFromString(writeContent.content, 'text/html');
-        const keywordsParse = JSON.parse(writeListArr[i].keywords)
+        const keywordsParse = JSON.parse(writeListArr.keywords)
         const create_date = new Date(writeContent.created_at).toLocaleDateString('ko-KR', {
             year: 'numeric',
             month: '2-digit',
@@ -119,17 +113,17 @@ function WriteList() {
         const write_password = writeContent.password;
         const writeContentId = writeContent.id;
 
+        const writeUsername = writeContent.username;
+        const writeViews = writeContent.views;
+
         const writePath = `/components/WriteCorrect/${writeContentId}`;
-        const objClassName = '.WriteDiv';
-        useScrollAnima(objClassName, wlScrollPosition, rootHeight);
 
         // lock pop
         const [writeListCheckPop, setWriteListCheckPop] = useState(false);
         //// lock pop
 
         return (
-
-            <div>
+            <>
                 {(isAuth === 0 || isAuth === 1) && (
                     <div className='write_btn' onClick={(e) => {
                         if (write_password === null) {
@@ -151,6 +145,8 @@ function WriteList() {
                         )}
                     </div>
 
+                    <Lock isAuth={isAuth} write_password={write_password} writeContentId={writeContentId} writeListCheckPwCorr={writeListCheckPwCorr} writeNavi={writeNavi} writePath={writePath} writeListCheckPop={writeListCheckPop} setWriteListCheckPop={setWriteListCheckPop}></Lock>
+
                     <div className='write_keyword'>
                         <ul className='write_keyword_list'>
                             {
@@ -161,13 +157,23 @@ function WriteList() {
                                 ))
                             }
                         </ul>
-                        <b className='write_date'>{create_date}</b>
+                        <div className='write_info'>
+                            <b className='write_date'>{create_date}</b>
+                            {writeUsername && (
+                                <Link className="write_username" onClick={() => {
+                                    alert("준비 중 입니다.")
+                                }}>{writeUsername}</Link>
+                            )}
+                            {writeViews !== 0 && (
+                                <div>
+                                    <i className='icon-sight'></i>
+                                    <b className="write_views">{writeViews}</b>
+                                </div>
+                            )}
+                        </div>
                     </div>
-
-                    <Lock isAuth={isAuth} write_password={write_password} writeContentId={writeContentId} writeListCheckPwCorr={writeListCheckPwCorr} writeNavi={writeNavi} writePath={writePath} writeListCheckPop={writeListCheckPop} setWriteListCheckPop={setWriteListCheckPop}></Lock>
-
                 </div>
-            </div>
+            </>
         )
     }
 

@@ -38,13 +38,13 @@ function AnnoLink() {
         writeListArr.forEach((ele) => {
             if (ele !== null) {
 
-                newArr.push({ title: ele.title, password: ele.password  });
+                newArr.push({ title: ele.title, password: ele.password });
 
                 const parsedAnno = ele.anno !== undefined ? JSON.parse(ele.anno) : [];
                 const annoId = ele.id;
 
                 parsedAnno.forEach((annoItem) => {
-                    newArr.push({ anno: annoItem.content, id: annoId, password: ele.password  });
+                    newArr.push({ anno: annoItem.content, id: annoId, password: ele.password });
                 });
             }
         });
@@ -105,7 +105,7 @@ function AnnoLink() {
     return (
 
         <div className='common_page'>
-            <div className='content_area annolink_page'>
+            <div className='content_area annolink_page' onClick={(e)=> {setAnnoBtnActive(false);}}>
                 <div className="annolink_wrap" onContextMenu={(e) => annoBtn(e)} >
 
                     {writeListAnnoArr.map((a, i) => (
@@ -133,11 +133,9 @@ function AnnoLink() {
 
         const [writeContent] = useState(contentArr);
 
-        const [titleEditor] = useState(() => withReact(createEditor()));
         const titleDoc = writeContent.hasOwnProperty('title')
-            ? new DOMParser().parseFromString(writeContent.title, 'text/html')
+            ? writeContent.title
             : null;
-        const titleValue = titleDoc ? deserialize(titleDoc.body) : [{ text: '' }];
 
         const annoContent = writeContent.hasOwnProperty('anno') ? writeContent.anno : null;
         const write_password = writeContent.password;
@@ -146,7 +144,6 @@ function AnnoLink() {
             const annoLinkObj = document.querySelectorAll('.annolink li');
             for (var i = 0; i < annoLinkObj.length; i++) {
                 annoLinkObj[i].style.setProperty('--anno-link-num', `'${i + 1} )'`);
-                annoLinkObj[i].classList.add("anima");
             }
         }, []);
 
@@ -162,14 +159,13 @@ function AnnoLink() {
             <ul className={`annolink ${writeContent.hasOwnProperty('title') ? 'annolink_title' : ''}`}>
 
                 {writeContent.hasOwnProperty('title') && (
-                    <Slate editor={titleEditor} initialValue={titleValue}>
+                    <div className="annolink">
                         <div className="icon-level-down annolink_dot"></div>
-                        <Editable className="title" readOnly />
-                        {write_password != null && write_password !== '' &&  (
+                        <title className="title">{titleDoc}</title>
+                        {write_password != null && write_password !== '' && (
                             <i className="lock icon-lock-1"></i>
                         )}
-                    </Slate>
-
+                    </div>
                 )}
 
                 {annoContent && (

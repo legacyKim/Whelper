@@ -35,17 +35,18 @@ function Admin_menu() {
                     <i className="icon-info"></i>
                     <span>정보관리</span>
                 </NavLink>
-                <NavLink to="/admin/Admin/Log">
-                    <i className="icon-flag-1"></i>
-                    <span>접속로그</span>
-                </NavLink>
                 <NavLink to="/admin/Admin/Stats">
                     <i className="icon-chart-line"></i>
                     <span>통계확인</span>
                 </NavLink>
-                <NavLink to="/admin/Admin/Updates">
+                {/* <NavLink to="/admin/Admin/Log"> */}
+                <NavLink onClick={() => { alert("준비 중 입니다.") }}>
+                    <i className="icon-flag-1"></i>
+                    <span>접속로그</span>
+                </NavLink>
+                <NavLink to="/admin/Admin/Notice">
                     <i className="icon-wrench"></i>
-                    <span>업데이트</span>
+                    <span>공지사항</span>
                 </NavLink>
             </div>
         </div>

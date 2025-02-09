@@ -20,13 +20,13 @@ function Search() {
 
     let { searchInputValue } = useParams();
 
-    const [searchFrist, setFirstSearch] = useState(searchInputValue);
+    const [searchFrist, setFirstSearch] = useState(searchInputValue !== 'undefined' ? searchInputValue : '');
     const [searchPageInput, setSearchPageInput] = useState(searchFrist);
 
     // about search
     const { isAuth, searchArr, setSearchArr, rootHeight, searchScrollPosition, setSearchScrollPosition, writeListCheckPwCorr, setWriteListCheckPwCorr } = useContext(MyContext);
 
-    const newSearch = useRef();
+    const newSearch = useRef('');
     let newSearchBtn = () => {
         setSearchPageInput(searchFrist);
         setSearchArr((prevKeywordArr) =>
@@ -95,7 +95,7 @@ function Search() {
         <div className='content_area content_area_search'>
             <div className='search_result'>
                 <span className='search_input search_input_limit'>
-                    <input type='text' ref={newSearch} value={searchFrist} onInput={(e) => setFirstSearch(e.target.value)}></input>
+                    <input type='text' ref={newSearch} value={searchFrist} placeholder='검색어를 입력해 주세요' onInput={(e) => setFirstSearch(e.target.value)}></input>
                     <button className='icon-search search_input_btn' onClick={newSearchBtn}></button>
                 </span>
                 <ul className='search_result_list'>
@@ -115,8 +115,8 @@ function Search() {
 
     function SearchResult({ i, searchFilter }) {
 
-        const titleDoc = new DOMParser().parseFromString(searchFilter[i].title, 'text/html');
-        const subTitleDoc = new DOMParser().parseFromString(searchFilter[i].subTitle, 'text/html');
+        const titleDoc = searchFilter[i].title;
+        const subTitleDoc = searchFilter[i].subTitle;
         const contentDoc = new DOMParser().parseFromString(searchFilter[i].content, 'text/html');
         const keywordsParse = JSON.parse(searchFilter[i].keywords)
 

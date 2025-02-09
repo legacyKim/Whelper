@@ -1,5 +1,5 @@
 const deserialize = (el, markAttributes = {}) => {
-    
+
     if (el.nodeType === 3) {
         return { text: el.textContent, ...markAttributes };
     } else if (el.nodeType !== 1) {

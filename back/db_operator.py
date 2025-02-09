@@ -27,6 +27,8 @@ class Write(Base_write):
     updated_at = Column(DateTime, default=datetime.utcnow,
                         onupdate=datetime.utcnow)
     password = Column(String(255))
+    views = Column(Integer, default=0)
+    username = Column(Text)
 
 
 class Category(Base_write):
@@ -62,6 +64,16 @@ class User(Base_user):
     username = Column(String(255))
     password = Column(String(255))
     authority = Column(Integer)
+
+
+class Notice(Base_user):
+    __tablename__ = 'tb_notice'
+
+    id = Column(Integer, primary_key=True)
+    title = Column(String(255), nullable=False)
+    notice = Column(String(1255), nullable=False)
+    height = Column(Integer, default=0)
+    created_at = Column(DateTime, default=datetime.utcnow)
 
 
 config_write, config_memo, config_login = db_config()
@@ -132,6 +144,35 @@ def delete_data_from_write(write_id):
                 session.commit()
     except Exception as e:
         print(f"Error deleting data: {e}")
+
+
+def update_to_write_view(id):
+    session = Session_write()
+
+    print(id, "id 값은 잘 들어오는데....")
+
+    try:
+        session.execute(
+            text("UPDATE tb_write SET views = views + 1 WHERE id = :id"),
+            {"id": id}
+        )
+        session.commit()
+
+        updated_views = session.execute(
+            text("SELECT views FROM tb_write WHERE id = :id"),
+            {"id": id}
+        ).scalar()
+
+        print(updated_views, "updated_views 프린트가 안 되네???")
+
+        return updated_views
+
+    except Exception as e:
+        session.rollback()
+        print(f"An error occurred: {e}")
+        raise e
+    finally:
+        session.close()
 
 
 def post_data_to_cate(data):
@@ -357,6 +398,41 @@ def delete_user(user_id):
         print(f"Error deleting data: {e}")
 
 
+def post_notice_info(data):
+    try:
+        session = Session_login()
+
+        new_notice = Notice(
+            title=data.get("title"),
+            notice=data.get("notice"),
+        )
+
+        session.add(new_notice)
+        session.commit()
+
+    finally:
+        session.close()
+
+
+def update_data_from_notice(data):
+    try:
+        notice_id = data['id']
+
+        session = Session_login()
+        notice_instance = session.query(Notice).filter_by(id=notice_id).first()
+
+        if notice_instance:
+            for key, value in data.items():
+                setattr(notice_instance, key, value)
+            session.commit()
+
+    except Exception as e:
+        print(f"Error updating data: {e}")
+        session.rollback()
+    finally:
+        session.close()
+
+
 def check_id_in_database(new_username):
     session = Session_login()
     try:
@@ -375,7 +451,7 @@ def post_data_signup(data):
         newUserpassword = data.get("password")
         hashed_password = hash_password(newUserpassword)
 
-        authority = 1
+        authority = 2
 
         new_user = User(username=newUsername,
                         password=hashed_password, authority=authority)

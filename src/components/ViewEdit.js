@@ -12,17 +12,11 @@ const ViewEdit = ({ titleDoc, subTitleDoc, contentDoc }) => {
 
     const location = useLocation();
 
-    const [titleEditor] = useState(() => withReact(createEditor()));
-    const [subTitleEditor] = useState(() => withReact(createEditor()));
     const [editor] = useState(() => withReact(createEditor()));
 
-    const lsTitleValue = JSON.parse(localStorage.getItem('view_title')) || null;
-    const lsSubTitleValue = JSON.parse(localStorage.getItem('view_subTitle')) || null;
-    const lsContentValue = JSON.parse(localStorage.getItem('view_content')) || null;
-
-    const titleValue = titleDoc !== null ? deserialize(titleDoc.body) : lsTitleValue;
-    const subTitleValue = subTitleDoc !== null ? deserialize(subTitleDoc.body) : lsSubTitleValue;
-    const contentValue = contentDoc !== null ? deserialize(contentDoc.body) : lsContentValue;
+    const titleValue = titleDoc;
+    const subTitleValue = subTitleDoc;
+    const [contentValue] = useState(deserialize(contentDoc.body));
 
     useEffect(() => {
         if (location.pathname === `/components/WriteView/${localStorage.getItem('writeId')}`) {
@@ -37,13 +31,9 @@ const ViewEdit = ({ titleDoc, subTitleDoc, contentDoc }) => {
 
     return (
         <div className='view_common'>
-            <Slate editor={titleEditor} initialValue={titleValue}>
-                <Editable className="title" readOnly />
-            </Slate>
-
-            <Slate editor={subTitleEditor} initialValue={subTitleValue}>
-                <Editable className="subtitle" readOnly />
-            </Slate>
+            
+            <title className='write_title'>{titleValue}</title>
+            <h3 className="write_subtitle">{subTitleValue}</h3>
 
             <Slate editor={editor} initialValue={contentValue}>
                 <Editable className="content" renderElement={renderElement} renderLeaf={renderLeaf} readOnly />

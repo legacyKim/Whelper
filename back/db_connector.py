@@ -55,7 +55,6 @@ def excute_query_get_data(queries, conn):
 
             return results
 
-        # 연결 닫기
         conn.close()
         print("MySQL connection closed")
 
@@ -64,7 +63,6 @@ def excute_query_get_data(queries, conn):
         raise
 
     finally:
-        # 연결 닫기
         if conn.is_connected():
             conn.close()
             print("MySQL connection closed")
@@ -95,6 +93,20 @@ def get_data_from_user():
     results = excute_query_get_data(queries, conn)
 
     return results[0]
+
+
+def get_data_from_notice(limit=None):
+
+    conn = get_db_connection(2)
+
+    query = "SELECT * FROM tb_notice"
+    if limit:
+        query += f" LIMIT {limit};"
+    else:
+        query += ";"
+
+    results = excute_query_get_data([query], conn)
+    return json.loads(results[0])
 
 
 if __name__ == '__main__':

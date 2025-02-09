@@ -256,7 +256,6 @@ function AnnoList({ id, annoArr, setAnnoArr, annoListBtn, setAnnoListBtn, setMem
 
             <div className='btn_wrap_pos'>
                 <div className={`btn_list ${annoBtnActive === true ? 'active' : ''} `}>
-
                     {writeKey === true ? (
                         <div className="btn_wrap">
                             <button className="icon-vector-pencil" onClick={annoArrCorrect}></button>
@@ -267,7 +266,6 @@ function AnnoList({ id, annoArr, setAnnoArr, annoListBtn, setAnnoListBtn, setMem
                             <button className='icon-link' onClick={annoLinkBtn}></button>
                         </div>
                     )}
-
                 </div>
             </div>
 

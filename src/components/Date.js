@@ -16,6 +16,9 @@ import ViewEdit from './ViewEdit.js';
 import writeNavi from './hook/writeNavi.js';
 import Lock from './func/Lock.js';
 
+import { useQuery } from '@tanstack/react-query';
+import { updateNotice } from '../data/api.js';
+
 const useRouteChange = (callback) => {
     const location = useLocation();
     useEffect(() => {
@@ -92,7 +95,38 @@ function Date_sort() {
 
     useEffect(() => {
         dataListScroll();
-    }, [scrollPosition])
+    }, [scrollPosition]);
+
+    // notice popup
+    const [noticePopup, setUpdatePopup] = useState(() => {
+        const hideUntil = localStorage.getItem('hideNotice');
+        if (hideUntil) {
+            const hideUntilDate = new Date(hideUntil);
+            const now = new Date();
+            return hideUntilDate < now;
+        }
+        return true;
+    });
+    //// notice popup
+
+    const { data, isLoading, error } = useQuery({
+        queryKey: ['notice', { limit: 5 }],
+        queryFn: updateNotice,
+    });
+
+    const [noticeInfo, setNoticeInfo] = useState([]);
+
+    useEffect(() => {
+        if (data) {
+            setNoticeInfo(data);
+        }
+    }, [data]);
+
+    const [activeNoticeId, setActiveNoticeId] = useState(null);
+    useEffect(() => {
+        setActiveNoticeId(noticeInfo.length - 1);
+    }, [noticeInfo]);
+
 
     return (
         <div className={`content_area date ${writeListActive}`}>
@@ -112,6 +146,74 @@ function Date_sort() {
                     </div>
                 ))
             )}
+
+            {(noticePopup && noticeInfo.length !== 0) && (
+                <div className='notice_popup_bg'>
+                    <div className='notice_popup' style={{ animation: noticeInfo.length > 0 ? 'ease-in 0.3s both updatePopup' : '' }}>
+                        <div className="notice_popup_header">
+                            <h3>Notice</h3>
+                            <button onClick={() => { setUpdatePopup(false) }}>
+                                <i className="icon-cancel"></i>
+                            </button>
+                        </div>
+                        <ul className="notice_popup_body scroll">
+                            {
+                                noticeInfo.map((item, i) => {
+                                    return (
+                                        <li
+                                            key={i}
+                                            className={`${activeNoticeId === i ? 'active' : ''}`}
+                                            onClick={() => setActiveNoticeId(activeNoticeId === i ? null : i)}
+                                        >
+                                            <div className="notice_popup_list">
+                                                <span className='title'>
+                                                    {item.title}
+                                                </span>
+                                                <b className='date'>
+                                                    {new Date(item.created_at).toLocaleDateString()}
+                                                </b>
+                                            </div>
+                                            <div
+                                                className={`notice_content ${activeNoticeId === i ? 'active' : ''}`}
+                                                ref={el => {
+                                                    if (el) {
+                                                        if (activeNoticeId === i) {
+                                                            el.style.height = `${el.scrollHeight}px`;
+                                                        } else {
+                                                            el.style.height = '0px';
+                                                        }
+                                                    }
+                                                }}>
+                                                <p className="" style={{ height: item.height }}>
+                                                    {item.notice}
+                                                </p>
+                                            </div>
+                                        </li>
+                                    )
+                                })
+                            }
+                        </ul>
+                        <div className="notice_popup_footer">
+                            <input
+                                type="checkbox"
+                                id="hideNotice"
+                                onChange={(e) => {
+                                    if (e.target.checked) {
+                                        const tomorrow = new Date();
+                                        tomorrow.setDate(tomorrow.getDate() + 1);
+                                        localStorage.setItem('hideNotice', tomorrow.toISOString());
+                                        setUpdatePopup(false);
+                                    }
+                                }}
+                            />
+
+
+                            <label htmlFor="hideNotice">오늘 하루 동안 보지 않기</label>
+                        </div>
+                    </div>
+                </div>
+            )}
+
         </div>
     );
 }
@@ -122,8 +224,8 @@ function WriteShowContents({ writeListArr }) {
 
     const [writeContent, setWriteContent] = useState(writeListArr);
 
-    const titleDoc = new DOMParser().parseFromString(writeContent.title, 'text/html');
-    const subTitleDoc = new DOMParser().parseFromString(writeContent.subTitle, 'text/html');
+    const titleDoc = writeContent.title;
+    const subTitleDoc = writeContent.subTitle;
     const contentDoc = new DOMParser().parseFromString(writeContent.content, 'text/html');
 
     const write_password = writeContent.password;

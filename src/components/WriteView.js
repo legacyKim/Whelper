@@ -70,20 +70,8 @@ function WriteView() {
 
     const [writeContent, setWriteContent] = useState(writeListCheck(writeListArr, id));
 
-    const [titleDoc, setTitleDoc] = useState(() => {
-        if (writeContent?.title) {
-            return new DOMParser().parseFromString(writeContent.title, 'text/html');
-        } else {
-            return null;
-        }
-    });
-    const [subTitleDoc, setSubTitleDoc] = useState(() => {
-        if (writeContent?.subTitle) {
-            return new DOMParser().parseFromString(writeContent.subTitle, 'text/html');
-        } else {
-            return null;
-        }
-    });
+    const titleDoc = writeContent.title;
+    const subTitleDoc = writeContent.subTitle;
 
     const lsContentValue = JSON.parse(localStorage.getItem('view_content')) || null;
     const [contentDoc, setContentDoc] = useState(() => {

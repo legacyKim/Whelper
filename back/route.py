@@ -2,8 +2,8 @@ import os
 from flask import Flask, request, jsonify, session, make_response
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity, set_access_cookies, unset_jwt_cookies
 from flask_cors import CORS
-from db_connector import get_data_from_write, get_data_from_memo, get_data_from_user
-from db_operator import post_data_to_write, update_data_from_write, delete_data_from_write, post_data_to_cate, post_data_from_memo, update_data_from_memo, delete_data_from_memo, post_data_from_memoAnno, update_data_from_memoAnno, delete_data_from_memoAnno, delete_data_from_cate, post_data_from_book, delete_data_from_book, post_data_from_pwd, post_user_info, get_user_info_from_db, delete_user, check_id_in_database, post_data_signup
+from db_connector import get_data_from_write, get_data_from_memo, get_data_from_user, get_data_from_notice
+from db_operator import post_data_to_write, update_data_from_write, delete_data_from_write, update_to_write_view, post_data_to_cate, post_data_from_memo, update_data_from_memo, delete_data_from_memo, post_data_from_memoAnno, update_data_from_memoAnno, delete_data_from_memoAnno, delete_data_from_cate, post_data_from_book, delete_data_from_book, post_data_from_pwd, post_user_info, get_user_info_from_db, delete_user, check_id_in_database, post_data_signup, post_notice_info, update_data_from_notice
 from send_email import send_email
 from datetime import datetime, timedelta
 import random
@@ -145,6 +145,15 @@ def get_data_WriteCorrect(id):
     return common_write_data(id)
 
 
+@app.route('/api/WriteView/<int:id>/increment', methods=['POST'])
+def increment_view(id):
+    try:
+        writeView = update_to_write_view(id)
+        return jsonify({"id": id, "views": writeView}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
 @app.route('/api/Write', methods=['POST'])
 def post_data_WriteList():
     try:
@@ -194,7 +203,7 @@ def get_bookdata_in_write():
         return jsonify({'error': 'Invalid JSON data'}), 500
 
 
-@app.route('/api/WriteCorrect', methods=['POST'])
+@app.route('/api/WriteCorrect', methods=['PUT'])
 def update_data_WriteList():
     try:
         data = request.get_json()
@@ -257,7 +266,7 @@ def get_data_to_cate():
         return jsonify({'error': 'Invalid JSON data'}), 500
 
 
-@app.route('/api/<path:cateLink>', methods=['POST'])
+@app.route('/api/cate/<path:cateLink>', methods=['POST'])
 def post_data_cate(cateLink):
     try:
         data = request.get_json()
@@ -339,25 +348,11 @@ def get_data_memo():
     memoList, bookList = json.loads(results[0]), json.loads(results[1])
 
     bookTitle = request.args.get('bookTitle')
-    page = int(request.args.get('page', 1))
-    limit = int(request.args.get('limit', 10))
-
-    if bookTitle != '전체':
-        filtered_memoList = [
-            memo for memo in memoList if memo.get('memoSource') == bookTitle]
-    else:
-        filtered_memoList = memoList
 
     try:
-        start = (page - 1) * limit
-        end = start + limit
-        paginated_memo_data = filtered_memoList[start:end]
-
         data = {
-            'memo': paginated_memo_data,
+            'memo': memoList,
             'book': bookList,
-            'currentPage': page,
-            'totalPages': (len(filtered_memoList) + limit - 1) // limit,
             'bookTitle': bookTitle
         }
         return jsonify(data)
@@ -382,7 +377,7 @@ def post_data_memo():
         return jsonify({'error': 'Error handling memo post request'}), 500
 
 
-@app.route('/api/Memo/update', methods=['POST'])
+@app.route('/api/Memo/update', methods=['PUT'])
 def update_data_memo():
     try:
         data = request.get_json()
@@ -526,6 +521,46 @@ def delete_user_info(id):
         return jsonify({'error': 'Error handling delete request'}), 500
 
 
+@app.route('/api/admin/Stats', methods=['GET'])
+def get_writeList_stats():
+    results = get_data_from_write()
+    writeList = results[0]
+
+    statsInfo = json.loads(writeList)
+    return jsonify(statsInfo)
+
+
+@app.route('/api/Notice', methods=['GET'])
+def get_notice():
+    limit = request.args.get('limit', type=int)
+    notice = get_data_from_notice(limit)
+    return jsonify(notice)
+
+
+@app.route('/api/admin/Notice', methods=['POST'])
+def post_notice():
+    try:
+        data = request.get_json()
+        post_notice_info(data)
+
+        return jsonify({'message': 'notice saved successfully'}), 200
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/admin/Notice/update', methods=['POST'])
+def post_Notice_update():
+    try:
+        data = request.get_json()
+
+        result = update_data_from_notice(data)
+        return jsonify(result), 201
+    except Exception as e:
+        print(f"Error: {e}")
+        return jsonify({'error': 'Error handling write post request'}), 500
+
+
 @app.route('/api/duplicateId', methods=['POST'])
 def post_data_deplicId():
     try:
@@ -540,7 +575,6 @@ def post_data_deplicId():
             return jsonify({'message': 'Success'}), 200
 
     except Exception as e:
-        print(f"Error: {e}")
         return jsonify({'error': str(e)}), 500
 
 
@@ -557,10 +591,8 @@ def send_certify_num():
 
     try:
         send_email(email, certify_num)
-        print(f"Sending certify number {certify_num} to {email}")
         return jsonify({"success": True, "certifyNum": certify_num}), 200
     except Exception as e:
-        print(f"Failed to send email: {e}")
         return jsonify({"success": False, "error": str(e)}), 500
 
 

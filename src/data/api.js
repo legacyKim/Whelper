@@ -2,8 +2,8 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import cookieBox from '../components/hook/cookie'
 
-// const API_URL = 'http://localhost:5000';
-const API_URL = 'https://bambueong.net';
+const API_URL = 'http://localhost:5000';
+// const API_URL = 'https://bambueong.net';
 
 // get write data
 export const writeListData = createAsyncThunk('writeData/getData', async () => {
@@ -60,6 +60,15 @@ export const writeListDataView = createAsyncThunk('writeData/getDataView', async
     }
 });
 
+export const writeListDataViewIncrement = createAsyncThunk('writeData/postDataView/increment', async (id) => {
+    try {
+        const response = await axios.post(`${API_URL}/api/WriteView/${id}/increment`);
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
+});
+
 export const writeListDataCorrect = createAsyncThunk('writeData/getDataCorrect', async (id) => {
     try {
         const response = await axios.get(`${API_URL}/api/WriteCorrect/${id}`);
@@ -93,7 +102,7 @@ export const writeListDataPost = createAsyncThunk('writeData/newData', async (ne
 // update write data
 export const writeListDataUpdate = createAsyncThunk('writeData/updateData', async (newData) => {
     try {
-        const response = await axios.post(`${API_URL}/api/WriteCorrect`, newData);
+        const response = await axios.put(`${API_URL}/api/WriteCorrect`, newData);
         return response.data;
     } catch (error) {
         throw error;
@@ -151,7 +160,7 @@ export const cateListData_cate = createAsyncThunk('cateData/getCate',
 
 export const cateListDataPost = createAsyncThunk('cateData/newCate', async ({ category, proCateLink }) => {
     try {
-        const response = await axios.post(`${API_URL}/api/${proCateLink}`, { category });
+        const response = await axios.post(`${API_URL}/api/cate/${proCateLink}`, { category });
         return response.data;
     } catch (error) {
         throw error;
@@ -397,3 +406,71 @@ export const userInfoDataDelete = async (id) => {
         throw error;
     }
 }
+
+export const statsWriteList = async () => {
+    const response = await axios.get(`${API_URL}/api/admin/Stats`);
+    return response.data;
+};
+
+export const updateNotice = async ({ queryKey }) => {
+    const [, params] = queryKey;
+    const response = await axios.get(`${API_URL}/api/Notice`, {
+        params: params || {},
+    });
+    return response.data;
+};
+
+export const updateNoticePost = async (data) => {
+    const response = await axios.post(`${API_URL}/api/admin/Notice`, data);
+    return response.data;
+};
+
+export const updateNoticePostUpdate = async (data) => {
+    const response = await axios.post(`${API_URL}/api/admin/Notice/update`, data);
+    return response.data;
+};
+
+// Memo api
+
+export const getMemo = async ({ queryKey }) => {
+    const [, params] = queryKey;
+    const response = await axios.get(`${API_URL}/api/Memo`, {
+        params: params || {},
+    });
+    return response.data;
+};
+
+export const postMemo = async (data) => {
+    const response = await axios.post(`${API_URL}/api/Memo`, data);
+    return response.data;
+};
+
+export const updateMemo = async (data) => {
+    const response = await axios.put(`${API_URL}/api/Memo/update`, data);
+    return response.data;
+};
+
+export const deleteMemo = async (memo_id) => {
+    const response = axios.delete(`${API_URL}/api/Memo/${memo_id}`);
+    return response.data;
+}
+
+export const postMemoAnno = async (newData) => {
+    const response = await axios.post(`${API_URL}/api/Memo/anno`, newData);
+    return response.data;
+};
+
+export const updateMemoAnno = async (data) => {
+    const response = await axios.put(`${API_URL}/api/Memo/updateAnno`, data);
+    return response.data;
+};
+
+export const deleteMemoAnno = async (data) => {
+    const response = axios.delete(`${API_URL}/api/Memo/${data.id}/${data.corrAnnotationKeys}`);
+    return response.data;
+}
+
+export const bookPost = async (data) => {
+    const response = await axios.post(`${API_URL}/api/Memo/book`, data);
+    return response.data;
+};

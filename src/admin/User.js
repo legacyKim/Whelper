@@ -72,6 +72,7 @@ function User() {
             <h4 className='admin_tit'>권한설정</h4>
 
             <ul className='admin_info_list scroll'>
+
                 <li className='tb_header'>
                     <span className='num'>No</span>
                     <span className='name'>ID</span>
@@ -88,7 +89,7 @@ function User() {
                             {[0, 1, 2, 3].map((authLevel) => {
                                 const inputId = `radio_auth_${user.id}_${authLevel}`;
                                 return (
-                                    <div className='input_radio_box'>
+                                    <div className='input_radio_box' key={authLevel}>
                                         <input
                                             id={`${inputId}`}
                                             type="radio"
@@ -147,6 +148,7 @@ function User() {
                 {isModalOpen === true && (
                     <Modal isModalText={isModalText} setModalClose={setModalClose} setModalFuncActive={setModalFuncActive}></Modal>
                 )}
+                
             </ul>
         </div>
     )

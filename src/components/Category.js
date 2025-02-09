@@ -279,8 +279,8 @@ function Category() {
 
     function CategoryResult({ i, writeListArr }) {
 
-        const titleDoc = new DOMParser().parseFromString(writeListArr[i].title, 'text/html');
-        const subTitleDoc = new DOMParser().parseFromString(writeListArr[i].subTitle, 'text/html');
+        const titleDoc = writeListArr[i].title;
+        const subTitleDoc = writeListArr[i].subTitle;
         const contentDoc = new DOMParser().parseFromString(writeListArr[i].content, 'text/html');
         const keywordsParse = JSON.parse(writeListArr[i].keywords)
 

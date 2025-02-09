@@ -2,11 +2,9 @@ import React, { useState, useContext } from 'react';
 
 import { TransitionGroup, CSSTransition } from "react-transition-group";
 
-import axios from 'axios';
 import MyContext from './context.js';
 
 import { Route, Routes, useLocation } from "react-router-dom";
-import history from './history.ts';
 
 import Date from './components/Date.js';
 import Login from './components/Login.js';
@@ -20,8 +18,6 @@ import AnnoLink from './components/AnnoLink.js';
 
 import Category from './components/Category.js';
 import Search from './components/Search.js';
-
-import Work from './components/Work.js';
 
 function Menu() {
 
@@ -53,8 +49,6 @@ function Menu() {
                         <Route path="/components/Search/:searchInputValue" element={<Search />} />
 
                         <Route path="/components/Memo" element={<Memo />} />
-
-                        <Route path="/components/Work" element={<Work />} />
 
                     </Routes>
                 </CSSTransition>

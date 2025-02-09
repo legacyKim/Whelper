@@ -1,5 +1,5 @@
 import { createSlice, configureStore } from '@reduxjs/toolkit';
-import { writeListData, writeListPageData, writeListCateData, writeListSearchData, writeListDateData, writeListDataAnnoLink, writeListDataPost, memoListData, cateListData, bookListData } from './api.js'
+import { writeListData, writeListPageData, writeListDataViewIncrement, writeListCateData, writeListSearchData, writeListDateData, writeListDataAnnoLink, writeListDataPost, memoListData, cateListData, bookListData } from './api.js'
 
 const writeInitialState = () => ({
     data: {
@@ -72,6 +72,18 @@ const WriteListPageDataOn = createSlice({
         }).addCase(writeListPageData.rejected, (state, action) => {
             state.error = action.payload ?? action.error
         })
+
+        .addCase(writeListDataViewIncrement.fulfilled, (state, action) => {
+            if (action.payload) {
+                const updatedWrite = state.data.write.map(item =>
+                    item.id === action.payload.id ? { ...item, views: action.payload.views } : item
+                );
+                state.data.write = updatedWrite;
+            }
+        })
+        .addCase(writeListDataViewIncrement.rejected, (state, action) => {
+            state.error = action.payload ?? action.error;
+        });
 
     },
 });

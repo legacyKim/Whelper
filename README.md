@@ -29,6 +29,9 @@
     npm install --save-dev webpack-cli              :: Webpack 명령줄 인터페이스(CLI) 도구
     npm install --save-dev webpack-dev-server       :: 개발 중 로컬 서버를 제공하는 도구
 
+    npm install react-window                        :: 인피니티 무한 스크롤 적용.
+    npm install react-infinite-scroll-component     :: 인피니티 무한 스크롤 적용.
+
     ( ** 파이썬의 경우 requirement.txt 참조 )
 
 ```
@@ -75,7 +78,6 @@
     │   │   ├── Search.js               # 글목록 검색
     │   │   ├── Side.js                 # 우측 검색 사이드 창
     │   │   ├── ViewEdit.js             # Slate View 공통 페이지
-    │   │   ├── Work.js                 # 퍼블리싱 작업물 모음 (임시)
     │   │   ├── Write.js                # 글작성 페이지
     │   │   ├── WriteCorrect.js         # 글수정 페이지
     │   │   ├── WriteList.js            # 글목록 페이지
@@ -86,8 +88,7 @@
     │   │   ├── admin.css               # 관리자 관련 스타일시트
     │   │   ├── base.css                # 웹 스타일 초기화 파일
     │   │   ├── components.css          # 컴포넌트 공통 css
-    │   │   ├── style.css               # 스타일시트
-    │   │   └── work.css                # Work 컴포넌트 스타일
+    │   │   └── style.css               # 스타일시트
     │   │
     │   ├── data
     │   │   ├── api.js                  # api 엔드포인트
@@ -95,7 +96,6 @@
     │   │   └── token_check.js          # Login 컴포넌트 관련 토큰 체크
     │   │
     │   ├── font                        # 폰트
-    │   ├── img                         # Work 컴포넌트 관련 이미지 모음 
     │   ├── App.js                      # 루트 컴포넌트
     │   ├── context.js                  # context api 라이브러리 
     │   ├── index.js                    # index

@@ -24,7 +24,7 @@ import cateSaveBtn from './hook/cateSaveBtn.js'
 
 function Write() {
 
-    const { isAuth } = useContext(MyContext);
+    const { isAuth, isUser } = useContext(MyContext);
     const navigate = useNavigate();
 
     const dispatch = useDispatch();
@@ -34,17 +34,16 @@ function Write() {
 
     const cateListState = useSelector((state) => state.cateData);
     const cateListArr = cateListState.data.cate || [];
-
     // category popup
     const [popupActive, popupActiveStyle] = useState(false);
     const popupClick = () => {
 
-        if (edTitle[0].children[0].text === '') {
+        if (edTitle === '') {
             alert("제목을 입력해 주세요.")
             return;
         }
 
-        if (edSubTitle[0].children[0].text === '') {
+        if (edSubTitle === '') {
             alert("부제를 입력해 주세요.")
             return;
         }
@@ -59,8 +58,6 @@ function Write() {
     //// category popup
 
     // slate text editor    
-    const [titleEditor] = useState(() => withReact(createEditor()));
-    const [subTitleEditor] = useState(() => withReact(createEditor()));
     const [editor] = useState(() => LinksWith(withReact(createEditor())));
 
     const writeTitleLocal = localStorage.getItem('writeTitle');
@@ -73,17 +70,7 @@ function Write() {
         },
     ];
 
-    // initial value...
-    const titleValue = useMemo(() => {
-        const parsedContent = writeTitleLocal !== null ? JSON.parse(writeTitleLocal) : contentPlaceholder;
-        return parsedContent;
-    }, []);
-
-    const subTitleValue = useMemo(() => {
-        const parsedContent = writeSubTitleLocal !== null ? JSON.parse(writeSubTitleLocal) : contentPlaceholder;
-        return parsedContent;
-    }, []);
-
+    // initial value...       
     const contentValue = useMemo(() => {
         const parsedContent = writeContentLocal !== null ? JSON.parse(writeContentLocal) : contentPlaceholder;
         return parsedContent;
@@ -115,8 +102,8 @@ function Write() {
     // content and local storage change
     const [keywordArr, setKeywordArr] = useState([]);
 
-    const [edTitle, setEdTitle] = useState(titleValue);
-    const [edSubTitle, setEdSubTitle] = useState(subTitleValue);
+    const [edTitle, setEdTitle] = useState(writeTitleLocal !== null ? JSON.parse(writeTitleLocal) : '');
+    const [edSubTitle, setEdSubTitle] = useState(writeSubTitleLocal !== null ? JSON.parse(writeSubTitleLocal) : '');
     const [editorValue, setEditorValue] = useState(contentValue);
 
     localStorage.setItem('writeTitle', JSON.stringify(edTitle));
@@ -128,12 +115,10 @@ function Write() {
     const WriteSaveBtn = () => {
 
         localStorage.removeItem('writeTitle');
-        const titleString = serialize(edTitle);
-        const title = titleString;
+        const title = edTitle;
 
         localStorage.removeItem('writeSubTitle');
-        const subTitleString = serialize(edSubTitle);
-        const subTitle = subTitleString;
+        const subTitle = edSubTitle;
 
         localStorage.removeItem('writeContent');
         const contentString = serialize(editorValue);
@@ -151,12 +136,14 @@ function Write() {
         const anno = annoString;
 
         var password = lockInput;
+        var views = 0;
+        var username = isUser;
 
-        dispatch(syncWriteListData({ id, title, subTitle, content, keywords, anno, updated_at, created_at, password }));
-        dispatch(writeListDataPost({ title, subTitle, content, keywords, anno, password }));
+        dispatch(syncWriteListData({ id, title, subTitle, content, keywords, anno, updated_at, created_at, password, views, username }));
+        dispatch(writeListDataPost({ title, subTitle, content, keywords, anno, password, views, username }));
 
-        setEdTitle(contentPlaceholder);
-        setEdSubTitle(contentPlaceholder);
+        setEdTitle('');
+        setEdSubTitle('');
         setEditorValue(contentPlaceholder);
         setAnnoArr([]);
 
@@ -195,10 +182,6 @@ function Write() {
         lockPopupActive('')
     }
     //// lock add
-
-    // save and keep the last num of id
-    const recentId = '9999';
-    //// save content
 
     // toolbar
     const [toolbarActive, setToolbarActive] = useState(false);
@@ -257,34 +240,33 @@ function Write() {
 
         <div className='Write'>
 
-            <Slate
+            <input className='write_title' placeholder="Title" value={edTitle} onChange={(e) => {
+                setEdTitle(e.target.value);
+            }} />
+
+            {/* <Slate
                 editor={titleEditor}
                 initialValue={titleValue}
-                onChange={value => {
-                    const isAstChange = titleEditor.operations.some(
-                        op => 'set_selection' !== op.type
-                    )
-                    if (isAstChange) {
-                        setEdTitle(value)
-                    }
-                }}
-            >
-                <Editable className='write_title' placeholder="Title" />
-            </Slate>
 
-            <Slate
+            >
+                <Editable />
+            </Slate> */}
+
+            <input className='write_subtitle' placeholder="Sub Title" value={edSubTitle} onChange={(e) => {
+                setEdSubTitle(e.target.value);
+            }} />
+
+            {/* <Slate
                 editor={subTitleEditor}
                 initialValue={subTitleValue}
                 onChange={value => {
-                    const isAstChange = subTitleEditor.operations.some(
-                        op => 'set_selection' !== op.type
-                    )
+                  
                     if (isAstChange) {
                         setEdSubTitle(value)
                     }
                 }}>
                 <Editable className='write_subtitle' placeholder="Sub Title" />
-            </Slate>
+            </Slate> */}
 
             <Slate
                 editor={editor}
@@ -454,7 +436,7 @@ function Write() {
                     <button className="icon-lock-1" onClick={() => { lockPopupActive("active") }}></button>
                     <button className="icon-tag" onClick={() => { catePopupActive("active") }}></button>
                     {(isAuth === 1 || isAuth === 0) && (
-                        <Link to={`/components/WriteView/${recentId}`} className='icon-ok-circled write_btn_save' onClick={() => { WriteSaveBtn(); }}></Link>
+                        <Link to={`/components/WriteList`} className='icon-ok-circled write_btn_save' onClick={() => { WriteSaveBtn(); }}></Link>
                     )}
                 </div>
             </div>

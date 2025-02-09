@@ -9,8 +9,6 @@ import writeNavi from './components/hook/writeNavi.js'
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-import './css/style.css';
-
 import Menu_Routes from './Menu_Routes';
 import Menu_Routes_admin from './Menu_Routes_admin.js';
 
@@ -32,6 +30,7 @@ function App() {
     const currentPathname = location.pathname;
 
     const [isAuth, setAuth] = useState(false);
+    const [isUser, setUser] = useState('');
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
@@ -48,6 +47,7 @@ function App() {
             if (hasCookie) {
                 const result = await dispatch(userCheckRefresh());
                 if (result.payload?.info?.authority === 0 || result.payload?.info?.authority === 1) {
+                    setUser(result.payload.info.username);
                     setAuth(result.payload.info.authority);
                 } else {
                     setAuth(null);
@@ -124,7 +124,6 @@ function App() {
     // about scroll
     const [scrollPosition, setScrollPosition] = useState(0);
     const [wlScrollPosition, setWlScrollPosition] = useState(0);
-    const [MemoScrollPosition, setMemoScrollPosition] = useState(0);
     const [cateScrollPosition, setCateScrollPosition] = useState(0);
     const [searchScrollPosition, setSearchScrollPosition] = useState(0);
     const rootHeight = document.getElementById('root').offsetHeight;
@@ -246,13 +245,13 @@ function App() {
     }, [scrollPosition]);
 
     return (
-
         <MyContext.Provider value={{
             location,
             showHeader,
             searchArr, setSearchArr,
-            wlScrollPosition, setWlScrollPosition, MemoScrollPosition, setMemoScrollPosition, cateScrollPosition, setCateScrollPosition, searchScrollPosition, setSearchScrollPosition,
+            wlScrollPosition, setWlScrollPosition, cateScrollPosition, setCateScrollPosition, searchScrollPosition, setSearchScrollPosition,
             rootHeight,
+            isUser, setUser,
             isAuth, setAuth,
             loading, setLoading,
             annoListBtn, setAnnoListBtn, annoClick, setAnnoClick, annoString, setAnnoString,
@@ -296,9 +295,6 @@ function App() {
                         </button></li>
                         <li className='btn'><NavLink to={`/components/Search/${searchInputValue}`} className='icon-link-1' >
                             <div className='tooltip'><span>Search Res</span></div>
-                        </NavLink></li>
-                        <li className='btn'><NavLink to={`/components/Work`} className='icon-list-bullet' >
-                            <div className='tooltip'><span>Work</span></div>
                         </NavLink></li>
 
                         {(isAuth === 0 || isAuth === 1) && (

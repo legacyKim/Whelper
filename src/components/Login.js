@@ -10,7 +10,7 @@ function Login() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
-    const { setAuth, prevPathname } = useContext(MyContext);
+    const { setUser, setAuth, prevPathname } = useContext(MyContext);
 
     const username = useRef();
     const userPassword = useRef();
@@ -33,6 +33,7 @@ function Login() {
             alert('아이디 또는 비밀번호가 틀렸습니다.');
             return;
         } else {
+            setUser(result.payload?.info.username);
             setAuth(result.payload?.info.authority);
             navigate(`${prevPathname}`);
         }
