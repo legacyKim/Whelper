@@ -16,7 +16,7 @@ const ViewEdit = ({ titleDoc, subTitleDoc, contentDoc }) => {
 
     const titleValue = titleDoc;
     const subTitleValue = subTitleDoc;
-    const [contentValue] = useState(deserialize(contentDoc.body));
+    const [contentValue] = useState(contentDoc);
 
     useEffect(() => {
         if (location.pathname === `/components/WriteView/${localStorage.getItem('writeId')}`) {

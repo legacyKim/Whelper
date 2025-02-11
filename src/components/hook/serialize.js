@@ -3,6 +3,8 @@ import { Text } from 'slate';
 
 const serialize = (nodes) => {
 
+    console.log(nodes);
+
     return nodes.map(node => {
         if (Text.isText(node)) {
             let string = escapeHtml(node.text);

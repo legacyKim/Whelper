@@ -4,91 +4,83 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from "react-redux";
 import { syncWriteListPageData, syncWriteListDelete } from '../data/reducers.js'
 import { writeListPageData } from '../data/api.js';
-
-import { debounce } from 'lodash';
+import deserialize from './hook/deserialize.js';
 
 import MyContext from '../context';
 import ViewEdit from './ViewEdit.js';
 
 import writeNavi from './hook/writeNavi.js';
-import useScrollAnima from './hook/useScrollAnima.js';
 
 import Gotop from './func/Gotop.js';
 import Lock from './func/Lock.js';
 
+import { FixedSizeList as List } from "react-window";
+
 function WriteList() {
 
-    const { isAuth, rootHeight, wlScrollPosition, setWlScrollPosition, writeListCheckPwCorr, setWriteListCheckPwCorr } = useContext(MyContext);
+    const { isAuth, rootHeight, writeListCheckPwCorr, setWriteListCheckPwCorr } = useContext(MyContext);
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
     useEffect(() => {
         dispatch(syncWriteListPageData());
-
-        dispatch(writeListPageData(page)).then(() => {
-            setTotalPages(writeListState.data.totalPages)
-        });
+        dispatch(writeListPageData());
     }, [dispatch]);
-
-    const [page, setPage] = useState(1);
 
     const writeListState = useSelector((state) => state.WriteListPageDataOn);
     const writeListArr = writeListState.data.write || [];
 
-    const [totalPages, setTotalPages] = useState(writeListState.data.totalPages);
+    const WriteRow = ({ index, style, data }) => {
+        const { writeListArr, isAuth } = data;
 
-    const updateScroll = useCallback(
-        debounce(() => {
-            setWlScrollPosition(window.scrollY || document.documentElement.scrollTop);
-        }, 100),
-        []
-    );
+        return (
+            <div className='write_list_box' style={style} key={index}>
+                <WriteShowContents writeListArr={writeListArr[index]}></WriteShowContents>
+            </div>
+        );
+    };
+
+    const content_area_write = useRef(null);
+    const [listHeight, setListHeight] = useState(0);
+
+    let contentBoxHeight;
+
+    if (isAuth === false) {
+        contentBoxHeight = 225;
+    } else {
+        contentBoxHeight = 249;
+    }
 
     useEffect(() => {
-        window.addEventListener('scroll', updateScroll);
-        return () => {
-            window.removeEventListener('scroll', updateScroll);
-        };
-    }, []);
-
-    const contentAreaRef = useRef(null);
-
-    useEffect(() => {
-        if (totalPages === null) {
-            dispatch(writeListPageData({ page: 1 })).then((response) => {
-                setTotalPages(response.payload.totalPages);
-            });
+        if (content_area_write.current) {
+            setListHeight(content_area_write.current.clientHeight);
         }
-    }, [totalPages, dispatch]);
 
-    useEffect(() => {
-        const writeAreaHeight = contentAreaRef.current.offsetHeight;
-
-        if (page <= totalPages) {
-            if (writeAreaHeight <= Math.ceil(wlScrollPosition + rootHeight)) {
-                setPage((prevPage) => prevPage + 1);
+        const handleResize = () => {
+            if (content_area_write.current) {
+                setListHeight(content_area_write.current.clientHeight);
             }
-        }
+        };
 
-    }, [wlScrollPosition]);
-
-    useEffect(() => {
-        if (page <= totalPages) {
-            dispatch(writeListPageData(page));
-        }
-    }, [page]);
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize);
+    }, []);
 
     return (
         <div className='common_page'>
-            <div className='content_area content_area_write' ref={contentAreaRef}>
-                <div className='write_list_scroll'>
-                    <div className='write_list_wrap'>
-                        {writeListArr.map((item, index) => (
-                            <WriteShowContents key={index} writeListArr={item} />
-                        ))}
-                    </div>
-                </div>
+            <div className='content_area content_area_write' ref={content_area_write}>
+                {content_area_write && writeListArr && (
+                    <List className={`write_virtualize virtualize ${isAuth !== false ? 'auth' : ''}`}
+                        height={listHeight}
+                        itemCount={writeListArr.length}
+                        itemSize={contentBoxHeight}
+                        width="100%"
+                        itemData={{ writeListArr, isAuth }}
+                    >
+                        {WriteRow}
+                    </List>
+                )}
 
                 <Gotop></Gotop>
 
@@ -102,7 +94,7 @@ function WriteList() {
 
         const titleDoc = writeContent.title;
         const subTitleDoc = writeContent.subTitle;
-        const contentDoc = new DOMParser().parseFromString(writeContent.content, 'text/html');
+        const contentDoc = deserialize(new DOMParser().parseFromString(writeContent.content, 'text/html').body);
         const keywordsParse = JSON.parse(writeListArr.keywords)
         const create_date = new Date(writeContent.created_at).toLocaleDateString('ko-KR', {
             year: 'numeric',

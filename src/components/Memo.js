@@ -5,8 +5,6 @@ import { useQuery } from '@tanstack/react-query';
 import { useDispatch, useSelector } from "react-redux"
 import MyContext from '../context'
 
-import useScrollAnima from './hook/useScrollAnima.js'
-
 import Gotop from './func/Gotop.js';
 
 import {
@@ -17,7 +15,6 @@ import { syncBookListDataAdd, syncBookListDelete } from "../data/reducers.js"
 import { token_check } from '../data/token_check.js'
 
 import { FixedSizeList as List } from "react-window";
-
 
 function Memo() {
 
@@ -491,22 +488,6 @@ function Memo() {
     }
     //// anno textarea height
 
-    const MemoRow = ({ index, style, data }) => {
-        const { memoArr, isAuth, memoCorrectOn } = data;
-        const a = memoArr[index];
-
-        return (
-            <div className="memo_content" style={style} key={index} >
-                <div className={`memoList_btn ${(isAuth === 0 || isAuth === 1) ? "auth" : ""}`}>
-                    {(isAuth === 0 || isAuth === 1) && (
-                        <button className="icon-edit-alt" onClick={() => memoCorrectOn(a)}></button>
-                    )}
-                </div>
-                <MemoContentBox memoArr={memoArr} i={index} a={a} />
-            </div>
-        );
-    };
-
     const content_area_memo = useRef(null);
     const [listHeight, setListHeight] = useState(0);
 
@@ -532,6 +513,23 @@ function Memo() {
         window.addEventListener("resize", handleResize);
         return () => window.removeEventListener("resize", handleResize);
     }, []);
+
+
+    const MemoRow = ({ index, style, data }) => {
+        const { memoArr, isAuth, memoCorrectOn } = data;
+        const a = memoArr[index];
+
+        return (
+            <div className="memo_content" style={style} key={index} >
+                <div className={`memoList_btn ${(isAuth === 0 || isAuth === 1) ? "auth" : ""}`}>
+                    {(isAuth === 0 || isAuth === 1) && (
+                        <button className="icon-edit-alt" onClick={() => memoCorrectOn(a)}></button>
+                    )}
+                </div>
+                <MemoContentBox memoArr={memoArr} i={index} a={a} />
+            </div>
+        );
+    };
 
     return (
 
@@ -582,10 +580,10 @@ function Memo() {
                 </div>
 
                 {content_area_memo && memoArr && (
-                    <List className={`memoVirtualize ${isAuth !== false ? 'auth' : ''}`}
+                    <List className={`memo_virtualize virtualize ${isAuth !== false ? 'auth' : ''}`}
                         height={listHeight}
                         itemCount={memoArr.length}
-                        itemSize={contentBoxHeight + 10}
+                        itemSize={contentBoxHeight}
                         width="100%"
                         itemData={{ memoArr, isAuth, memoCorrectOn }}
                     >

@@ -18,6 +18,7 @@ import LinkList from './func/LinkList.js';
 import useAnno from './hook/useAnno.js';
 import serialize from './hook/serialize.js';
 import useSlateRender from './hook/useSlateRender.js';
+import onlyTokenCheck from '../data/onlyTokenCheck.js';
 import CustomEditor from './hook/customEditor.js';
 import LinksWith from './hook/LinksWith.js';
 import cateSaveBtn from './hook/cateSaveBtn.js'
@@ -26,6 +27,10 @@ function Write() {
 
     const { isAuth, isUser } = useContext(MyContext);
     const navigate = useNavigate();
+
+    useEffect(() => {
+        onlyTokenCheck(navigate);
+    }, []);
 
     const dispatch = useDispatch();
     useEffect(() => {

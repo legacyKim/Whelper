@@ -19,6 +19,7 @@ import useAnno from './hook/useAnno.js';
 import serialize from './hook/serialize.js';
 import deserialize from './hook/deserialize.js';
 import useSlateRender from './hook/useSlateRender.js'
+import onlyTokenCheck from '../data/onlyTokenCheck.js';
 import CustomEditor from './hook/customEditor.js'
 import LinksWith from './hook/LinksWith.js';
 import cateSaveBtn from './hook/cateSaveBtn.js'
@@ -29,6 +30,10 @@ function WriteCorrect() {
     localStorage.setItem('writeId', id);
 
     const navigate = useNavigate();
+
+    useEffect(() => {
+        onlyTokenCheck(navigate);
+    }, []);
 
     const dispatch = useDispatch();
     useEffect(() => {
@@ -78,8 +83,8 @@ function WriteCorrect() {
     const correctContentLs = localStorage.getItem('correctContent');
     const correctAnnoLs = localStorage.getItem('correctAnno');
 
-    const titleValue = (writeContent !== undefined) ? deserialize(new DOMParser().parseFromString(writeContent.title, 'text/html').body) : JSON.parse(correctTitleLs);
-    const subTitleValue = (writeContent !== undefined) ? deserialize(new DOMParser().parseFromString(writeContent.subTitle, 'text/html').body) : JSON.parse(correctSubtitleLs);
+    const titleValue = (writeContent !== undefined) ? writeContent.title : JSON.parse(correctTitleLs);
+    const subTitleValue = (writeContent !== undefined) ? writeContent.subTitle : JSON.parse(correctSubtitleLs);
     const contentValue = (writeContent !== undefined) ? deserialize(new DOMParser().parseFromString(writeContent.content, 'text/html').body) : JSON.parse(correctContentLs);
     const keywordsParse = (writeContent !== undefined) ? JSON.parse(writeContent.keywords) : [];
 
@@ -130,11 +135,8 @@ function WriteCorrect() {
 
         const id = writeContent.id;
 
-        const titleString = serialize(edTitle);
-        const title = titleString;
-
-        const subTitleString = serialize(edSubTitle);
-        const subTitle = subTitleString;
+        const title = edTitle;
+        const subTitle = edSubTitle;
 
         const contentString = serialize(editorValue);
         const content = contentString;
@@ -244,33 +246,13 @@ function WriteCorrect() {
     return (
         <div className='Write'>
 
-            <Slate
-                editor={titleEditor}
-                initialValue={titleValue}
-                onChange={value => {
-                    const isAstChange = titleEditor.operations.some(
-                        op => 'set_selection' !== op.type
-                    )
-                    if (isAstChange) {
-                        setEdTitle(value);
-                    }
-                }}>
-                <Editable className='write_title' placeholder="Title" />
-            </Slate>
+            <input className='write_title' placeholder="Title" value={edTitle} onChange={(e) => {
+                setEdTitle(e.target.value);
+            }} />
 
-            <Slate
-                editor={subTitleEditor}
-                initialValue={subTitleValue}
-                onChange={value => {
-                    const isAstChange = subTitleEditor.operations.some(
-                        op => 'set_selection' !== op.type
-                    )
-                    if (isAstChange) {
-                        setEdSubTitle(value)
-                    }
-                }}>
-                <Editable className='write_subtitle' placeholder="Sub Title" />
-            </Slate>
+            <input className='write_subtitle' placeholder="Sub Title" value={edSubTitle} onChange={(e) => {
+                setEdSubTitle(e.target.value);
+            }} />
 
             <Slate
                 editor={editor}

@@ -15,6 +15,7 @@ import ViewEdit from './ViewEdit.js';
 
 import writeNavi from './hook/writeNavi.js';
 import Lock from './func/Lock.js';
+import deserialize from './hook/deserialize.js';
 
 import { useQuery } from '@tanstack/react-query';
 import { updateNotice } from '../data/api.js';
@@ -226,7 +227,7 @@ function WriteShowContents({ writeListArr }) {
 
     const titleDoc = writeContent.title;
     const subTitleDoc = writeContent.subTitle;
-    const contentDoc = new DOMParser().parseFromString(writeContent.content, 'text/html');
+    const contentDoc = deserialize(new DOMParser().parseFromString(writeContent.content, 'text/html').body);
 
     const write_password = writeContent.password;
     const writeContentId = writeListArr.id;

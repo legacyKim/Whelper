@@ -8,6 +8,7 @@ import MyContext from '../context'
 
 import AnnoList from './func/Anno.js'
 import LinkList from './func/LinkList.js'
+import deserialize from './hook/deserialize.js';
 
 import ViewEdit from './ViewEdit.js'
 import { writeListDataView, writeListDataDel } from '../data/api.js';
@@ -70,15 +71,15 @@ function WriteView() {
 
     const [writeContent, setWriteContent] = useState(writeListCheck(writeListArr, id));
 
-    const titleDoc = writeContent.title;
-    const subTitleDoc = writeContent.subTitle;
+    const titleDoc = writeContent?.title ? writeContent.title : JSON.parse(localStorage.getItem('view_title'));
+    const subTitleDoc = writeContent?.subTitle ? writeContent.subTitle : JSON.parse(localStorage.getItem('view_subTitle'));
 
     const lsContentValue = JSON.parse(localStorage.getItem('view_content')) || null;
     const [contentDoc, setContentDoc] = useState(() => {
         if (writeContent?.content) {
-            return new DOMParser().parseFromString(writeContent.content, 'text/html');
+            return deserialize(new DOMParser().parseFromString(writeContent.content, 'text/html').body);
         } else {
-            return null;
+            return lsContentValue;
         }
     });
     const [contentDocLink, setContentDocLink] = useState(contentDoc !== null ? contentDoc : lsContentValue);

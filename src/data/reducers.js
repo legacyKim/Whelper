@@ -4,7 +4,6 @@ import { writeListData, writeListPageData, writeListDataViewIncrement, writeList
 const writeInitialState = () => ({
     data: {
         write: [],
-        totalPages: null,
     },
     loading: false,
     error: null,
@@ -62,12 +61,11 @@ const WriteListPageDataOn = createSlice({
             state.loading = true;
         }).addCase(writeListPageData.fulfilled, (state, action) => {
             state.loading = false;
-            if (action.payload.totalPages) {
+            if (action.payload) {
                 const newWriteData = action.payload.write.filter(newItem =>
                     !state.data.write.some(existingItem => existingItem.id === newItem.id)
                 );
                 state.data.write = [...state.data.write, ...newWriteData];
-                state.data.totalPages = action.payload.totalPages;
             }
         }).addCase(writeListPageData.rejected, (state, action) => {
             state.error = action.payload ?? action.error
@@ -142,12 +140,11 @@ const WriteListCateDataOn = createSlice({
         }).addCase(writeListCateData.fulfilled, (state, action) => {
             state.loading = false;
 
-            if (action.payload.totalPages) {
+            if (action.payload) {
                 const newWriteData = action.payload.write.filter(newItem =>
                     !state.data.write.some(existingItem => existingItem.id === newItem.id)
                 );
                 state.data.write = [...state.data.write, ...newWriteData];
-                state.data.totalPages = action.payload.totalPages;
             }
         }).addCase(writeListCateData.rejected, (state, action) => {
             state.error = action.payload ?? action.error
@@ -169,13 +166,11 @@ const WriteListSearchDataOn = createSlice({
             state.loading = true;
         }).addCase(writeListSearchData.fulfilled, (state, action) => {
             state.loading = false;
-
-            if (action.payload.totalPages) {
+            if (action.payload) {
                 const newWriteData = action.payload.write.filter(newItem =>
                     !state.data.write.some(existingItem => existingItem.id === newItem.id)
                 );
                 state.data.write = [...state.data.write, ...newWriteData];
-                state.data.totalPages = action.payload.totalPages;
             }
         }).addCase(writeListSearchData.rejected, (state, action) => {
             state.error = action.payload ?? action.error
@@ -187,8 +182,6 @@ const WriteListSearchDataOn = createSlice({
 const memoInitialState = {
     data: {
         memo: [],
-        totalPages: null,
-        page: 1,
     },
     error: null,
 }
@@ -293,7 +286,6 @@ const memoData = createSlice({
                     !state.data.memo.some(existingItem => existingItem.id === newItem.id)
                 );
                 state.data.memo = [...state.data.memo, ...newMemoData];
-                state.data.totalPages = action.payload.totalPages;
             }
         }).addCase(memoListData.rejected, (state, action) => {
             state.error = action.payload ?? action.error

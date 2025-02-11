@@ -102,27 +102,9 @@ def common_write_data(id=None):
 def get_data_WriteList_page():
 
     write_data, cate_data = process_write_data()
+    data = {'write': write_data, 'cate': cate_data}
 
-    page = int(request.args.get('page', 1))
-    limit = int(request.args.get('limit', 10))
-
-    try:
-        start = (page - 1) * limit
-        end = start + limit
-        paginated_write_data = write_data[start:end]
-
-        data = {
-            'write': paginated_write_data,
-            'cate': cate_data,
-            'currentPage': page,
-            'totalPages': (len(write_data) + limit - 1) // limit,
-        }
-
-        return jsonify(data)
-
-    except json.decoder.JSONDecodeError as e:
-        print(f"JSON Decode Error: {e}")
-        return jsonify({'error': 'Invalid JSON data'}), 500
+    return jsonify(data)
 
 
 @app.route('/api/WriteList', methods=['GET'])
@@ -223,34 +205,19 @@ def get_data_to_Search():
     writeList = json.loads(results[0])
 
     searchPageInput = request.args.get('searchPageInput')
-    page = int(request.args.get('page', 1))
-    limit = int(request.args.get('limit', 10))
 
     if searchPageInput:
         search_terms = searchPageInput.split()
-        filtered_writeList = [
+        data = [
             write for write in writeList if any(
                 search_term in write.get('content', '') for search_term in search_terms
             )
         ]
     else:
-        filtered_writeList = []
+        data = []
 
-    try:
-        start = (page - 1) * limit
-        end = start + limit
-        paginated_write_data = filtered_writeList[start:end]
-
-        data = {
-            'write': paginated_write_data,
-            'currentPage': page,
-            'totalPages': (len(writeList) + limit - 1) // limit,
-        }
-        return jsonify(data)
-
-    except json.decoder.JSONDecodeError as e:
-        print(f"JSON Decode Error: {e}")
-        return jsonify({'error': 'Invalid JSON data'}), 500
+    data = {'write': data}
+    return jsonify(data)
 
 
 @app.route('/api/Category', methods=['GET'])

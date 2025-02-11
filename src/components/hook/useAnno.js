@@ -191,7 +191,7 @@ const useAnno = (
 
         anno_numbering();
         setAnnoArr(updatedAnnoArr);
-    }, [annoLengthState])
+    }, [annoLengthState]);
 
     const toolbarClose = (e) => {
 

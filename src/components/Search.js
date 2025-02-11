@@ -6,15 +6,16 @@ import { useParams, Link } from 'react-router-dom';
 import { writeListSearchData } from '../data/api.js';
 import { resetWriteSearch } from "../data/reducers.js"
 
-import { debounce } from 'lodash';
-
 import MyContext from '../context'
 import ViewEdit from './ViewEdit.js'
 
 import writeNavi from './hook/writeNavi.js';
 
-import Gotop from './func/Gotop.js';
 import Lock from './func/Lock.js';
+import deserialize from './hook/deserialize.js';
+
+
+import { FixedSizeList as List } from "react-window";
 
 function Search() {
 
@@ -24,7 +25,7 @@ function Search() {
     const [searchPageInput, setSearchPageInput] = useState(searchFrist);
 
     // about search
-    const { isAuth, searchArr, setSearchArr, rootHeight, searchScrollPosition, setSearchScrollPosition, writeListCheckPwCorr, setWriteListCheckPwCorr } = useContext(MyContext);
+    const { isAuth, searchArr, setSearchArr, rootHeight, writeListCheckPwCorr } = useContext(MyContext);
 
     const newSearch = useRef('');
     let newSearchBtn = () => {
@@ -44,51 +45,50 @@ function Search() {
 
     // about search result filter
     const dispatch = useDispatch();
-    const [page, setPage] = useState(1);
 
     const writeListState = useSelector((state) => state.WriteListSearchDataOn);
     const searchFilter = writeListState.data.write || [];
 
-    const [totalPages, setTotalPages] = useState(writeListState.data.totalPages);
-
     useEffect(() => {
         dispatch(resetWriteSearch());
-        dispatch(writeListSearchData({ page: 1, searchPageInput })).then(() => {
-            setTotalPages(writeListState.data.totalPages);
-            setPage(1);
-        });
-    }, [searchPageInput])
+        dispatch(writeListSearchData({ searchPageInput }))
+    }, [searchPageInput]);
 
-    const updateScroll = useCallback(
-        debounce(() => {
-            setSearchScrollPosition(window.scrollY || document.documentElement.scrollTop);
-        }, 100),
-        []
-    );
+    const SearchRow = ({ index, style, data }) => {
+        const { searchFilter } = data;
+
+        return (
+            <li style={style} key={index}>
+                <SearchResult searchFilter={searchFilter[index]} />
+            </li>
+        );
+    };
+
+    const content_area_search = useRef(null);
+    const [listHeight, setListHeight] = useState(0);
+
+    let contentBoxHeight;
+
+    if (isAuth === false) {
+        contentBoxHeight = 225;
+    } else {
+        contentBoxHeight = 225;
+    }
 
     useEffect(() => {
-        window.addEventListener('scroll', updateScroll);
-        return () => {
-            window.removeEventListener('scroll', updateScroll);
-        };
-    }, []);
+        if (content_area_search.current) {
+            setListHeight(content_area_search.current.clientHeight);
+        }
 
-    useEffect(() => {
-        const searchAreaHeight = document.querySelector('.content_area_search').offsetHeight
-
-        if (page <= totalPages) {
-            if (searchAreaHeight <= Math.ceil(searchScrollPosition + rootHeight)) {
-                setPage((prevPage) => prevPage + 1);
+        const handleResize = () => {
+            if (content_area_search.current) {
+                setListHeight(content_area_search.current.clientHeight);
             }
-        }
-    }, [searchScrollPosition]);
+        };
 
-    useEffect(() => {
-        if (page <= totalPages) {
-            dispatch(writeListSearchData({ page, searchPageInput }));
-        }
-    }, [page]);
-    //// about search result filter
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize);
+    }, []);
 
     return (
 
@@ -98,16 +98,18 @@ function Search() {
                     <input type='text' ref={newSearch} value={searchFrist} placeholder='검색어를 입력해 주세요' onInput={(e) => setFirstSearch(e.target.value)}></input>
                     <button className='icon-search search_input_btn' onClick={newSearchBtn}></button>
                 </span>
-                <ul className='search_result_list'>
-                    {
-                        searchFilter.map((a, i) => {
-                            return (
-                                <li key={i}>
-                                    <SearchResult i={i} searchFilter={searchFilter} />
-                                </li>
-                            )
-                        })
-                    }
+                <ul className='search_result_list' ref={content_area_search}>
+                    {content_area_search && searchFilter && (
+                        <List className={`write_virtualize virtualize ${isAuth !== false ? 'auth' : ''}`}
+                            height={listHeight}
+                            itemCount={searchFilter.length}
+                            itemSize={contentBoxHeight}
+                            width="100%"
+                            itemData={{ searchFilter, isAuth }}
+                        >
+                            {SearchRow}
+                        </List>
+                    )}
                 </ul>
             </div>
         </div>
@@ -115,13 +117,15 @@ function Search() {
 
     function SearchResult({ i, searchFilter }) {
 
-        const titleDoc = searchFilter[i].title;
-        const subTitleDoc = searchFilter[i].subTitle;
-        const contentDoc = new DOMParser().parseFromString(searchFilter[i].content, 'text/html');
-        const keywordsParse = JSON.parse(searchFilter[i].keywords)
+        console.log(searchFilter);
 
-        const write_password = searchFilter[i].password;
-        const writeContentId = searchFilter[i].id;
+        const titleDoc = searchFilter.title;
+        const subTitleDoc = searchFilter.subTitle;
+        const contentDoc = deserialize(new DOMParser().parseFromString(searchFilter.content, 'text/html').body);
+        const keywordsParse = JSON.parse(searchFilter.keywords)
+
+        const write_password = searchFilter.password;
+        const writeContentId = searchFilter.id;
 
         const writePath = `/components/WriteView/${writeContentId}`;
 
@@ -131,7 +135,7 @@ function Search() {
 
         return (
 
-            <div>
+            <div className='write_list'>
                 <div className="fake_div">
                     <ViewEdit titleDoc={titleDoc} subTitleDoc={subTitleDoc} contentDoc={contentDoc}></ViewEdit>
                     {write_password != null && write_password !== '' && (

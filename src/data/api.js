@@ -2,8 +2,8 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import cookieBox from '../components/hook/cookie'
 
-const API_URL = 'http://localhost:5000';
-// const API_URL = 'https://bambueong.net';
+// const API_URL = 'http://localhost:5000';
+const API_URL = 'https://bambueong.net';
 
 // get write data
 export const writeListData = createAsyncThunk('writeData/getData', async () => {
@@ -16,11 +16,9 @@ export const writeListData = createAsyncThunk('writeData/getData', async () => {
     }
 });
 
-export const writeListPageData = createAsyncThunk('writeData/getPageData', async (page) => {
+export const writeListPageData = createAsyncThunk('writeData/getPageData', async () => {
     try {
-        const response = await axios.get(`${API_URL}/api/WriteListPage`, {
-            params: { page, limit: 10 }
-        });
+        const response = await axios.get(`${API_URL}/api/WriteListPage`);
         return response.data;
     } catch (error) {
         console.error('Error fetching writeListData:', error);
@@ -111,10 +109,10 @@ export const writeListDataUpdate = createAsyncThunk('writeData/updateData', asyn
 
 // get write data in search
 export const writeListSearchData = createAsyncThunk('writeData/getData',
-    async ({ page, searchPageInput }) => {
+    async ({ searchPageInput }) => {
         try {
             const response = await axios.get(`${API_URL}/api/Search`, {
-                params: { page, searchPageInput, limit: 10 }
+                params: { searchPageInput }
             });
             return response.data;
         } catch (error) {

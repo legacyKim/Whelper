@@ -1,14 +1,21 @@
-import { React, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { React, useState, useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import '../css/admin.css';
 
 import Admin_menu from './Admin_menu.js';
 import Admin_routes from './Admin_routes.js';
 
+import onlyTokenCheck from '../data/onlyTokenCheck.js';
+
 function Admin() {
 
     const location = useLocation();
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        onlyTokenCheck(navigate);
+    }, []);
 
     return (
         <div className="admin">

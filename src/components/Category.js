@@ -16,14 +16,14 @@ import { writeListCateData, cateListData_cate, cateListDataPost, cateListDataDel
 
 import cateSaveBtn from './hook/cateSaveBtn.js'
 import writeNavi from './hook/writeNavi.js';
-import useScrollAnima from './hook/useScrollAnima.js'
 
 import Gotop from './func/Gotop.js';
 import Lock from './func/Lock.js';
+import deserialize from './hook/deserialize.js';
 
 function Category() {
 
-    const { rootHeight, cateScrollPosition, setCateScrollPosition, isAuth, currentPathname, writeListCheckPwCorr } = useContext(MyContext);
+    const { rootHeight, isAuth, currentPathname, writeListCheckPwCorr } = useContext(MyContext);
 
     let { writeListKeyword } = useParams();
     const [cateProps, setCateProps] = useState(writeListKeyword);
@@ -40,14 +40,10 @@ function Category() {
     useEffect(() => {
         dispatch(cateListData_cate());
         dispatch(resetWriteCate());
-
-        dispatch(writeListCateData({ page, cateArr })).then(() => {
-            setTotalPages(writeListState.data.totalPages);
-        });
+        dispatch(writeListCateData({ page, cateArr }));
     }, [dispatch]);
 
     const [page, setPage] = useState(1);
-    const [totalPages, setTotalPages] = useState(writeListState.data.totalPages);
 
     // cate arr setting
     const keywordArrLocalString = localStorage.getItem('cateHistory');
@@ -67,43 +63,6 @@ function Category() {
     useEffect(() => {
         setWriteListArr(writeListState.data.write);
     }, [writeListState]);
-
-    const updateScroll = useCallback(
-        debounce(() => {
-            setCateScrollPosition(window.scrollY || document.documentElement.scrollTop);
-        }, 100),
-        []
-    );
-
-    useEffect(() => {
-        window.addEventListener('scroll', updateScroll);
-        return () => {
-            window.removeEventListener('scroll', updateScroll);
-        };
-    }, []);
-
-    useEffect(() => {
-
-        if (totalPages === null) {
-            dispatch(writeListCateData({ page, cateArr })).then(() => {
-                setTotalPages(writeListState.data.totalPages)
-            });
-        }
-
-        const cateAreaHeight = document.querySelector('.content_area_cate').offsetHeight;
-
-        if (page <= totalPages) {
-            if (cateAreaHeight <= Math.ceil(cateScrollPosition + rootHeight)) {
-                setPage((prevPage) => prevPage + 1);
-            }
-        }
-    }, [cateScrollPosition]);
-
-    useEffect(() => {
-        if (page <= totalPages) {
-            dispatch(writeListCateData({ page, cateArr }));
-        }
-    }, [page]);
 
     // cate Array
     const clickRemove = (i) => {
@@ -126,11 +85,7 @@ function Category() {
         if (cateArrLength < cateArr.length) {
 
             dispatch(resetWriteCate());
-            dispatch(writeListCateData({ page: 1, cateArr })).then(() => {
-                setTotalPages(writeListState.data.totalPages);
-                setPage(1);
-                setCateProps(undefined);
-            });
+            dispatch(writeListCateData({ page: 1, cateArr }));
 
         } else {
 
@@ -254,9 +209,6 @@ function Category() {
 
     function CategoryList({ cate, cateArr, setCateArr }) {
 
-        const objClassName = '.cate_result>li';
-        useScrollAnima(objClassName, cateScrollPosition, rootHeight);
-
         const cate_check = cate.category
         const [cateActive, setCateActive] = useState(cateArr.includes(cate_check));
 
@@ -281,7 +233,7 @@ function Category() {
 
         const titleDoc = writeListArr[i].title;
         const subTitleDoc = writeListArr[i].subTitle;
-        const contentDoc = new DOMParser().parseFromString(writeListArr[i].content, 'text/html');
+        const contentDoc = deserialize(new DOMParser().parseFromString(writeListArr[i].content, 'text/html').body);
         const keywordsParse = JSON.parse(writeListArr[i].keywords)
 
         const write_password = writeListArr[i].password;
